@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "allowJs": true,
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "types": ["../typings/global"],
+    "resolveJsonModule": true,
+      "allowSyntheticDefaultImports": true,
+      "moduleResolution": "Node",
+    "baseUrl": "."
+  },
+  "include": ["**/*"]
+}

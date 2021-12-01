@@ -1,0 +1,7 @@
+{
+  "name": "@wisdom-plus/test-utils",
+  "private": true,
+  "version": "0.0.5",
+  "main": "dist/index.js",
+  "license": "MIT"
+}
