@@ -36,7 +36,7 @@ import { useFormItem, useGlobalConfig } from '@wisdom-plus/hooks'
 import { buttonGroupContextKey } from '@wisdom-plus/tokens'
 import { lighten, darken } from '@wisdom-plus/utils/color'
 import { buttonEmits, buttonProps } from '@wisdom-plus/components/button/src/button'
-import {WpIcon} from "@wisdom-plus/components";
+import WpIcon from "@wisdom-plus/components/Icon";
 
 export default defineComponent({
     name: 'WpButton',
