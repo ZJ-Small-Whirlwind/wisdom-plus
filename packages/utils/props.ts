@@ -172,7 +172,7 @@ export const buildProps = <
       ? D extends BuildPropType<T, V, C>
         ? BuildPropOption<T, D, R, V, C>
         : never
-      : never
+      : any
   }
 >(
   props: O
