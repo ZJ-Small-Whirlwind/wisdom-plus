@@ -17,7 +17,7 @@ export const buttonSize = ['', 'large', 'medium', 'small', 'mini'] as const
 export const buttonNativeType = ['button', 'submit', 'reset'] as const
 
 export const buttonProps = buildProps({
-  ...useFormItemProps,
+  ...<any>useFormItemProps,
   type: {
     type: String,
     values: buttonType,
