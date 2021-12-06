@@ -1,32 +1,29 @@
 <template>
-  <button
-    :class="[
-        'wp-button'
+    <button
+        ref="buttonRef"
+        :class="[
+      'wp-button',
+      buttonType ? 'wp-button--' + buttonType : '',
+      buttonSize ? 'wp-button--' + buttonSize : '',
     ]"
-    ref="buttonRef"
-  >
+    >
       <slot></slot>
-  </button>
+    </button>
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue"
-import { buttonEmits, buttonProps } from './button'
-
+import { computed, inject, defineComponent, Text, ref } from 'vue'
+import { buttonEmits, buttonProps } from '@wisdom-plus/components/Button/src/button'
 export default defineComponent({
-  name: 'WpButton',
+    name: 'WpButton',
+    components: {
+    },
+    props: buttonProps,
+    emits: buttonEmits,
+    setup(props, { emit, slots }) {
 
-  components: {
-
-  },
-
-  props: buttonProps,
-  emits: buttonEmits,
-
-  setup(props, { emit, slots }) {
-    return {
-
-    }
-  },
+        return {
+        }
+    },
 })
 </script>
