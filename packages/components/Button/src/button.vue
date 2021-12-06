@@ -24,8 +24,8 @@
             v-if="$slots.default"
             :class="{ 'wp-button__text--expand': shouldAddSpace }"
         >
-      <slot></slot>
-    </span>
+          <slot></slot>
+        </span>
     </button>
 </template>
 
@@ -37,8 +37,9 @@ import { buttonGroupContextKey } from '@wisdom-plus/tokens'
 import { lighten, darken } from '@wisdom-plus/utils/color'
 import { buttonEmits, buttonProps } from '@wisdom-plus/components/button/src/button'
 import {WpIcon} from "@wisdom-plus/components";
+
 export default defineComponent({
-    name: 'ElButton',
+    name: 'WpButton',
     components: {WpIcon},
     props: buttonProps,
     emits: buttonEmits,

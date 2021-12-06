@@ -1,11 +1,20 @@
 <template>
-    <div class="Icon">
-        $END$
-    </div>
+    <i :class="[
+        'wp-icon'
+    ]">
+        撒打算大
+    </i>
 </template>
 
 <script lang="ts">
-export default {
-    name: "WpIcon"
-}
+import {defineComponent} from "vue"
+import {iconProps} from "@wisdom-plus/components/icon/src/icon";
+
+export default defineComponent({
+    name:"WpIcon",
+    props:iconProps,
+    setup(){
+
+    }
+})
 </script>
