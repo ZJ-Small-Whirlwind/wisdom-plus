@@ -9,12 +9,15 @@
     "crowdin-credentials": "sucrase-node .vitepress/build/crowdin-credentials.ts"
   },
   "dependencies": {
+    "@docsearch/css": "^3.0.0-alpha.42",
+    "@docsearch/js": "1.0.0-alpha.28",
+    "@docsearch/react": "^3.0.0-alpha.42",
     "@vueuse/core": "7.1.0",
     "axios": "0.24.0",
     "clipboard-copy": "4.0.1",
-    "wisdom-plus": "npm:wisdom-plus@latest",
     "normalize.css": "8.0.1",
-    "nprogress": "0.2.0"
+    "nprogress": "0.2.0",
+    "wisdom-plus": "npm:wisdom-plus@latest"
   },
   "devDependencies": {
     "@crowdin/cli": "3.7.2",
