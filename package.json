@@ -8,10 +8,7 @@
     "build": "gulp --require sucrase/register/ts -f build/gulpfile.ts",
     "build:theme": "pnpm run build -C packages/theme-chalk",
     "clean": "pnpm run clean:lib && pnpm run clean -r --stream",
-    "clean:lib": "rimraf dist",
-    "docs:dev": "pnpm run -C docs dev",
-    "docs:build": "pnpm run -C docs build",
-    "docs:serve": "pnpm run -C docs serve"
+    "clean:lib": "rimraf dist"
   },
   "repository": {
     "type": "git",
