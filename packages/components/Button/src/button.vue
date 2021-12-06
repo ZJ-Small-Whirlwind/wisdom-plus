@@ -1,6 +1,8 @@
 <template>
   <button
-    class="wp-button"
+    :class="[
+        'wp-button'
+    ]"
     ref="buttonRef"
   >
       <slot></slot>

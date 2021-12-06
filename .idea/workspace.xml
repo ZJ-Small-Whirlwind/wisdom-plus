@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49d03bb8-f538-46e8-8779-a4389a7b8e12" name="Changes" comment="[del] docs">
-      <change afterPath="$PROJECT_DIR$/packages/theme-chalk/src/button.scss" afterDir="false" />
+    <list default="true" id="49d03bb8-f538-46e8-8779-a4389a7b8e12" name="Changes" comment="[add] button">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/components/Button/src/button.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/components/Button/src/button.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/components/Button/style/css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/components/Button/style/css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/components/Button/style/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/components/Button/style/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/theme-chalk/src/index.scss" beforeDir="false" afterPath="$PROJECT_DIR$/packages/theme-chalk/src/index.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/theme-chalk/gulpfile.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/theme-chalk/gulpfile.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/theme-chalk/src/button.scss" beforeDir="false" afterPath="$PROJECT_DIR$/packages/theme-chalk/src/button.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/theme-chalk/src/mixins/config.scss" beforeDir="false" afterPath="$PROJECT_DIR$/packages/theme-chalk/src/mixins/config.scss" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,9 +108,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.build" />
         <item itemvalue="npm.build:theme" />
         <item itemvalue="npm.dev" />
-        <item itemvalue="npm.build" />
         <item itemvalue="npm.docs:build" />
         <item itemvalue="npm.dev (1)" />
       </list>
@@ -129,7 +129,7 @@
       <workItem from="1638320867045" duration="827000" />
       <workItem from="1638321821342" duration="5000" />
       <workItem from="1638492382992" duration="82000" />
-      <workItem from="1638768466832" duration="2743000" />
+      <workItem from="1638768466832" duration="3783000" />
     </task>
     <task id="LOCAL-00001" summary="[add] docs">
       <created>1638768939506</created>
@@ -152,7 +152,14 @@
       <option name="project" value="LOCAL" />
       <updated>1638769092223</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="[add] button">
+      <created>1638771325656</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1638771325656</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -172,6 +179,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="[add] docs" />
     <MESSAGE value="[del] docs" />
-    <option name="LAST_COMMIT_MESSAGE" value="[del] docs" />
+    <MESSAGE value="[del] button" />
+    <MESSAGE value="[add] button" />
+    <option name="LAST_COMMIT_MESSAGE" value="[add] button" />
   </component>
 </project>

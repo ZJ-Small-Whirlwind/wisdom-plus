@@ -100,8 +100,8 @@
   @include when(active) {
     color: var(--wp-button-active-text-color);
     border-color: var(
-                    --wp-button-active-border-color,
-                    --wp-button-active-bg-color
+      --wp-button-active-border-color,
+      --wp-button-active-bg-color
     );
     background-color: var(--wp-button-active-bg-color);
     outline: none;
