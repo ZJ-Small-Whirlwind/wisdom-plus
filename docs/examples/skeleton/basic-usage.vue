@@ -1,3 +1,0 @@
-<template>
-  <el-skeleton />
-</template>
