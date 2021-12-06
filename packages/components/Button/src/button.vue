@@ -19,6 +19,7 @@
         :style="buttonStyle"
         @click="handleClick"
     >
+        <wp-icon></wp-icon>
         <span
             v-if="$slots.default"
             :class="{ 'wp-button__text--expand': shouldAddSpace }"
@@ -35,9 +36,10 @@ import { useFormItem, useGlobalConfig } from '@wisdom-plus/hooks'
 import { buttonGroupContextKey } from '@wisdom-plus/tokens'
 import { lighten, darken } from '@wisdom-plus/utils/color'
 import { buttonEmits, buttonProps } from '@wisdom-plus/components/button/src/button'
+import {WpIcon} from "@wisdom-plus/components";
 export default defineComponent({
     name: 'ElButton',
-    components: {},
+    components: {WpIcon},
     props: buttonProps,
     emits: buttonEmits,
     setup(props, { emit, slots }) {
