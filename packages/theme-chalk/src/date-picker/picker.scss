@@ -8,9 +8,9 @@
 @include b(picker) {
   @include e(popper) {
     @include picker-popper(
-      var(--el-color-white),
-      1px solid var(--el-datepicker-border-color),
-      var(--el-box-shadow-light)
+      var(--wp-color-white),
+      1px solid var(--wp-datepicker-border-color),
+      var(--wp-box-shadow-light)
     );
   }
 }
@@ -24,27 +24,27 @@
 
   &.#{$namespace}-input,
   &.#{$namespace}-input__inner {
-    width: var(--el-date-editor-width);
+    width: var(--wp-date-editor-width);
   }
 
   @include m((monthrange)) {
     &.#{$namespace}-input,
     &.#{$namespace}-input__inner {
-      width: var(--el-date-editor-monthrange-width);
+      width: var(--wp-date-editor-monthrange-width);
     }
   }
 
   @include m((daterange, timerange)) {
     &.#{$namespace}-input,
     &.#{$namespace}-input__inner {
-      width: var(--el-date-editor-daterange-width);
+      width: var(--wp-date-editor-daterange-width);
     }
   }
 
   @include m(datetimerange) {
     &.#{$namespace}-input,
     &.#{$namespace}-input__inner {
-      width: var(--el-date-editor-datetimerange-width);
+      width: var(--wp-date-editor-datetimerange-width);
     }
   }
 
@@ -63,7 +63,7 @@
     cursor: pointer;
 
     &:hover {
-      color: var(--el-text-color-secondary);
+      color: var(--wp-text-color-secondary);
     }
   }
 
@@ -71,7 +71,7 @@
     height: inherit;
     font-size: 14px;
     margin-left: -5px;
-    color: var(--el-text-color-placeholder);
+    color: var(--wp-text-color-placeholder);
     float: left;
 
     svg {
@@ -89,11 +89,11 @@
     padding: 0;
     width: 39%;
     text-align: center;
-    font-size: var(--el-font-size-base);
-    color: var(--el-text-color-regular);
+    font-size: var(--wp-font-size-base);
+    color: var(--wp-text-color-regular);
 
     &::placeholder {
-      color: var(--el-text-color-placeholder);
+      color: var(--wp-text-color-placeholder);
     }
   }
 
@@ -107,18 +107,18 @@
     line-height: 32px;
     font-size: 14px;
     word-break: keep-all;
-    color: var(--el-text-color-primary);
+    color: var(--wp-text-color-primary);
   }
 
   .#{$namespace}-range__close-icon {
     font-size: 14px;
-    color: var(--el-text-color-placeholder);
+    color: var(--wp-text-color-placeholder);
     height: inherit;
     width: unset;
     cursor: pointer;
 
     &:hover {
-      color: var(--el-text-color-secondary);
+      color: var(--wp-text-color-secondary);
     }
 
     svg {
@@ -144,10 +144,10 @@
   }
 
   @include when(active) {
-    border-color: var(--el-color-primary);
+    border-color: var(--wp-color-primary);
 
     &:hover {
-      border-color: var(--el-color-primary);
+      border-color: var(--wp-color-primary);
     }
   }
 

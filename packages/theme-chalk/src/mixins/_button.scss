@@ -3,16 +3,16 @@
 @use '../common/var' as *;
 
 @mixin button-plain($color, $type) {
-  --el-button-text-color: var(--el-color-#{$type});
-  --el-button-bg-color: #{map.get($colors, $type, 'light-9')};
-  --el-button-border-color: #{map.get($colors, $type, 'light-6')};
+  --wp-button-text-color: var(--wp-color-#{$type});
+  --wp-button-bg-color: #{map.get($colors, $type, 'light-9')};
+  --wp-button-border-color: #{map.get($colors, $type, 'light-6')};
 
-  --el-button-hover-text-color: var(--el-color-white);
-  --el-button-hover-bg-color: var(--el-color-#{$type});
-  --el-button-hover-border-color: var(--el-color-#{$type});
+  --wp-button-hover-text-color: var(--wp-color-white);
+  --wp-button-hover-bg-color: var(--wp-color-#{$type});
+  --wp-button-hover-border-color: var(--wp-color-#{$type});
 
-  --el-button-active-text-color: var(--el-color-white);
-  --el-button-active-border-color: var(--el-color-#{$type});
+  --wp-button-active-text-color: var(--wp-color-white);
+  --wp-button-active-border-color: var(--wp-color-#{$type});
 
   &.is-disabled {
     &,
@@ -27,10 +27,10 @@
 }
 
 @mixin button-variant($type) {
-  --el-button-text-color: var(--el-color-white);
-  --el-button-disabled-text-color: var(--el-color-white);
+  --wp-button-text-color: var(--wp-color-white);
+  --wp-button-disabled-text-color: var(--wp-color-white);
   &.is-plain {
-    @include button-plain(var(--el-button-bg-color), $type);
+    @include button-plain(var(--wp-button-bg-color), $type);
   }
 }
 
