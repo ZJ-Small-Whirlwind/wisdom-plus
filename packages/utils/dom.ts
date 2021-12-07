@@ -10,33 +10,33 @@ const trimArr = function (s: string) {
 }
 
 /* istanbul ignore next */
-export const on = function (
+export const on = function <K extends keyof DocumentEventMap >(
   element: HTMLElement | Document | Window,
-  event: string,
-  handler: EventListenerOrEventListenerObject,
+  event: K | string,
+  handler: (this: Document, ev: DocumentEventMap[K]) => any,
   useCapture = false
 ): void {
-  if (element && event && handler) {
-    element?.addEventListener(event, handler, useCapture)
+  if (element && event && <any>handler) {
+    element?.addEventListener(event, <any>handler, useCapture)
   }
 }
 
 /* istanbul ignore next */
-export const off = function (
+export const off = function <K extends keyof DocumentEventMap>(
   element: HTMLElement | Document | Window,
-  event: string,
-  handler: EventListenerOrEventListenerObject,
+  event: K | string,
+  handler: (this: Document, ev: DocumentEventMap[K]) => any,
   useCapture = false
 ): void {
-  if (element && event && handler) {
-    element?.removeEventListener(event, handler, useCapture)
+  if (element && event && <any>handler) {
+    element?.removeEventListener(event, <any>handler, useCapture)
   }
 }
 
 /* istanbul ignore next */
-export const once = function (
+export const once = function <K extends keyof DocumentEventMap>(
   el: HTMLElement,
-  event: string,
+  event: K,
   fn: EventListener
 ): void {
   const listener = function (this: any, ...args: any) {

@@ -49,7 +49,7 @@ import type { Trigger } from './use-target-events'
 export type PopperEffect = 'light' | 'dark'
 export type Offset = [number, number] | number
 
-type ElementType = ComponentPublicInstance | HTMLElement
+type ElementType = Nullable<ComponentPublicInstance | HTMLElement>
 
 export const DARK_EFFECT = 'dark'
 export const LIGHT_EFFECT = 'light'
@@ -241,12 +241,12 @@ export const usePopperHook = () => {
       ? unwrappedTrigger
       : (unwrappedTrigger as ComponentPublicInstance).$el
 
-    popperInstance = createPopper($el, popperRef.value, buildPopperOptions())
+    popperInstance = createPopper($el, <HTMLElement>popperRef.value, buildPopperOptions())
     popperInstance.update()
   }
 
   function buildPopperOptions() {
-    const modifiers = [...defaultModifiers, ...props.popperOptions.modifiers]
+    const modifiers = [...defaultModifiers, ...<any>props.popperOptions.modifiers]
 
     if (props.showArrow) {
       modifiers.push({
@@ -269,14 +269,14 @@ export const usePopperHook = () => {
 
   const events = useTargetEvents(delayShow, delayHide, onToggle)
 
-  const arrowRefAttacher = refAttacher(arrowRef)
-  const popperRefAttacher = refAttacher(popperRef)
-  const triggerRefAttacher = refAttacher(triggerRef)
+  const arrowRefAttacher = refAttacher(<any>arrowRef)
+  const popperRefAttacher = refAttacher(<any>popperRef)
+  const triggerRefAttacher = refAttacher(<any>triggerRef)
 
   // renderers
   function popupRenderer() {
     const mouseUpAndDown = props.stopPopperMouseEvent ? stop : NOOP
-    return h(
+      return h(
       Transition as any,
       {
         name: props.transition,
@@ -289,7 +289,7 @@ export const usePopperHook = () => {
         default: () => () =>
           visible.value
             ? h(
-                'div',
+                <any>'div',
                 {
                   'aria-hidden': false,
                   class: [
@@ -300,7 +300,7 @@ export const usePopperHook = () => {
                   ],
                   style: popperStyle.value,
                   id: popperId,
-                  ref: popperRefAttacher,
+                  ref: <any>popperRefAttacher,
                   role: 'tooltip',
                   onMouseenter: onPopperMouseEnter,
                   onMouseleave: onPopperMouseLeave,
@@ -323,13 +323,13 @@ export const usePopperHook = () => {
   function arrowRenderer() {
     return props.showArrow
       ? h(
-          'div',
+          <any>'div',
           {
-            ref: arrowRefAttacher,
+            ref: <any>arrowRefAttacher,
             class: 'el-popper__arrow',
             'data-popper-arrow': '',
           },
-          null
+          <any>null
         )
       : null
   }

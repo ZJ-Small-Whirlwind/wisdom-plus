@@ -19,7 +19,7 @@ export const i18n = (fn: (...args: any[]) => string) => {
   i18nHandler = fn
 }
 
-export const restoreHandler = () => (i18nHandler = defaultTranslator)
+export const restoreHandler = () => (i18nHandler = <any>defaultTranslator)
 
 function template(str: string, option) {
   if (!str || !option) return str
@@ -46,9 +46,9 @@ const defaultTranslator = (...args: any[]) => {
 export const t = (...args: any[]): string => {
   if (i18nHandler) {
     const translation = i18nHandler(...args)
-    return translation || defaultTranslator(...args)
+    return translation || <string>defaultTranslator(...args)
   }
-  return defaultTranslator(...args)
+  return <string>defaultTranslator(...args)
 }
 
 export const use = (l: Language): void => {

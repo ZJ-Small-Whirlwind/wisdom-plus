@@ -1,7 +1,7 @@
 import isServer from './isServer'
 
-const globalNodes = []
-let target = isServer ? undefined : document.body
+const globalNodes:Array<HTMLElement> = []
+let target:HTMLElement = <HTMLElement>(isServer ? undefined : document.body)
 
 export function createGlobalNode(id?: string) {
   const el = document.createElement('div')

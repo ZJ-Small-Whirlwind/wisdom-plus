@@ -6,13 +6,13 @@ import type { TimeoutHandle } from '@wisdom-plus/utils/types'
 export default function (loading: Ref<boolean>, throttle = 0) {
   if (throttle === 0) return loading
   const throttled = ref(false)
-  let timeoutHandle: TimeoutHandle = 0
+  let timeoutHandle: TimeoutHandle = <any>0
 
   const dispatchThrottling = () => {
     if (timeoutHandle) {
       clearTimeout(timeoutHandle)
     }
-    timeoutHandle = window.setTimeout(() => {
+    timeoutHandle = <any>window.setTimeout(() => {
       throttled.value = loading.value
     }, throttle)
   }

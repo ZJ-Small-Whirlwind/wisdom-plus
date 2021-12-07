@@ -17,7 +17,7 @@ const Resize: ObjectDirective = {
     addResizeListener(el, el._handleResize)
   },
   beforeUnmount(el: ResizeEl) {
-    removeResizeListener(el, el._handleResize)
+    removeResizeListener(el, <any>el._handleResize)
   },
 }
 

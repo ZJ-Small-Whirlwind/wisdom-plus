@@ -2,7 +2,7 @@ import { EVENT_CODE, triggerEvent } from '../aria'
 import SubMenu from './submenu'
 
 class MenuItem {
-  public submenu: SubMenu = null
+  public submenu: SubMenu | null = null
   constructor(public domNode: HTMLElement) {
     this.submenu = null
     this.init()

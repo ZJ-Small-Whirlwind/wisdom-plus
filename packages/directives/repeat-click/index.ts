@@ -1,10 +1,12 @@
 import { on, once } from '@wisdom-plus/utils/dom'
 
 import type { ObjectDirective, DirectiveBinding } from 'vue'
+// @ts-ignore
+import {NodeJS} from "timers";
 
 export default {
   beforeMount(el: HTMLElement, binding: DirectiveBinding) {
-    let interval = null
+    let interval:NodeJS.Timer = null
     let startTime: number
     const handler = () => binding.value && binding.value()
     const clear = () => {

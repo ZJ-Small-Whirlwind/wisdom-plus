@@ -9,18 +9,18 @@ import type {
 import type { Nullable } from '@wisdom-plus/utils/types'
 
 type DocumentHandler = <T extends MouseEvent>(mouseup: T, mousedown: T) => void
-type FlushList = Map<
-  HTMLElement,
-  {
+type FlushListValueType = {
     documentHandler: DocumentHandler
     bindingFn: (...args: unknown[]) => unknown
-  }[]
+}[]
+type FlushList = Map<
+  HTMLElement,
+  FlushListValueType
 >
 
 const nodeList: FlushList = new Map()
 
 let startClick: MouseEvent
-
 if (!isServer) {
   on(document, 'mousedown', (e: MouseEvent) => (startClick = e))
   on(document, 'mouseup', (e: MouseEvent) => {
@@ -85,7 +85,7 @@ const ClickOutside: ObjectDirective = {
       nodeList.set(el, [])
     }
 
-    nodeList.get(el).push({
+    (<FlushListValueType>nodeList.get(el)).push({
       documentHandler: createDocumentHandler(el, binding),
       bindingFn: binding.value,
     })
@@ -95,7 +95,7 @@ const ClickOutside: ObjectDirective = {
       nodeList.set(el, [])
     }
 
-    const handlers = nodeList.get(el)
+    const handlers = <FlushListValueType>nodeList.get(el)
     const oldHandlerIndex = handlers.findIndex(
       (item) => item.bindingFn === binding.oldValue
     )

@@ -32,7 +32,7 @@ export function toObject<T>(arr: Array<T>): Record<string, T> {
 }
 
 export const getValueByPath = (obj, paths = ''): unknown => {
-  let ret: unknown = obj
+  let ret: any = obj
   paths.split('.').map((path) => {
     ret = ret?.[path]
   })
@@ -163,7 +163,7 @@ export function rafThrottle<T extends (...args: any) => any>(fn: T): T {
 
 export const clearTimer = (timer: Ref<TimeoutHandle>) => {
   clearTimeout(timer.value)
-  timer.value = null
+  timer.value = <any>null
 }
 
 /**

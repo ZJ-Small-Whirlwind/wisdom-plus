@@ -18,12 +18,12 @@ export default function scrollIntoView(
     container !== pointer &&
     container.contains(pointer)
   ) {
-    offsetParents.push(pointer)
+    offsetParents.push(<never>pointer)
     pointer = (pointer as HTMLElement).offsetParent
   }
   const top =
     selected.offsetTop +
-    offsetParents.reduce((prev, curr) => prev + curr.offsetTop, 0)
+    offsetParents.reduce((prev, curr:any) => prev + curr.offsetTop, 0)
   const bottom = top + selected.offsetHeight
   const viewRectTop = container.scrollTop
   const viewRectBottom = viewRectTop + container.clientHeight

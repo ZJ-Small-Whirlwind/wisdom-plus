@@ -15,7 +15,7 @@ export interface ITrapFocusElement extends HTMLElement {
   [TRAP_FOCUS_HANDLER]: (e: KeyboardEvent) => void
 }
 
-const FOCUS_STACK = []
+const FOCUS_STACK:Array<any> = []
 
 const FOCUS_HANDLER = (e: KeyboardEvent) => {
   // Getting the top layer.

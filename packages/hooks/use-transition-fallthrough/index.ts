@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 import { getCurrentInstance } from 'vue'
+import {ComponentInternalInstance} from "@vue/runtime-core";
 
 const AFTER_APPEAR = 'after-appear'
 const AFTER_ENTER = 'after-enter'
@@ -59,7 +60,7 @@ export const useTransitionFallthroughEmits = [
  */
 
 export const useTransitionFallthrough = () => {
-  const { emit } = getCurrentInstance()
+  const { emit } = <ComponentInternalInstance>getCurrentInstance()
 
   return {
     onAfterAppear: () => {

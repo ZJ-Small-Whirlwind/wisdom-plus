@@ -25,7 +25,7 @@ const makeInstaller = (components: Plugin[] = []) => {
 
     if (option.locale) {
       const localeProvides = localeProviderMaker(opts.locale)
-      app.provide(LocaleInjectionKey, localeProvides)
+      app.provide<any>(LocaleInjectionKey, localeProvides)
     }
 
     app.config.globalProperties.$ELEMENT = option

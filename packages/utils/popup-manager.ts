@@ -46,7 +46,7 @@ const onModalClick = () => {
 let hasModal = false
 let zIndex: number
 
-const getModal = function (): HTMLElement {
+const getModal = function (): HTMLElement | void {
   if (isServer) return
   let modalDom = PopupManager.modalDom
   if (modalDom) {
@@ -65,9 +65,12 @@ const getModal = function (): HTMLElement {
 
 const instances = {}
 
+
+
 const PopupManager: IPopupManager = {
   modalFade: true,
   modalDom: undefined,
+  // @ts-ignore
   zIndex,
 
   getInstance(id) {
@@ -117,7 +120,7 @@ const PopupManager: IPopupManager = {
       }
     }
 
-    const modalDom = getModal()
+    const modalDom:HTMLElement = <HTMLElement>getModal()
 
     addClass(modalDom, 'v-modal')
     if (this.modalFade && !hasModal) {
@@ -148,7 +151,7 @@ const PopupManager: IPopupManager = {
 
   closeModal(id) {
     const modalStack = this.modalStack
-    const modalDom = getModal()
+    const modalDom:HTMLElement = <HTMLElement>getModal()
 
     if (modalStack.length > 0) {
       const topItem = modalStack[modalStack.length - 1]
@@ -160,7 +163,7 @@ const PopupManager: IPopupManager = {
 
         modalStack.pop()
         if (modalStack.length > 0) {
-          modalDom.style.zIndex = modalStack[modalStack.length - 1].zIndex
+          modalDom.style.zIndex = <any>modalStack[modalStack.length - 1].zIndex
         }
       } else {
         for (let i = modalStack.length - 1; i >= 0; i--) {
