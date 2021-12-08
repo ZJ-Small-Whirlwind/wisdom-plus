@@ -4,4 +4,4 @@ import Space from './src/space'
 export const WpSpace = withInstall(Space)
 export default WpSpace
 
-export { SpaceProps } from './src/space'
+export type { SpaceProps } from './src/space'
