@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue'
 import Inspect from 'vite-plugin-inspect'
 import glob from 'fast-glob'
 import { epRoot, pkgRoot, projRoot } from '../build/utils/paths'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 
 import './vite.init'
 
@@ -31,6 +32,7 @@ export default defineConfig(async () => {
     },
     plugins: [
       vue(),
+      vueJsx(),
       Inspect(),
     ],
 

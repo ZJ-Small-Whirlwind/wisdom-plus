@@ -6,6 +6,7 @@ import vue from 'rollup-plugin-vue'
 import esbuild from 'rollup-plugin-esbuild'
 import replace from '@rollup/plugin-replace'
 import filesize from 'rollup-plugin-filesize'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import { parallel } from 'gulp'
 import { version } from '../packages/wisdom-plus/version'
 import { WisdomPlusAlias } from './plugins/wisdom-plus-alias'
@@ -32,6 +33,7 @@ export const buildFull = (minify: boolean) => async () => {
         sourceMap: minify,
         target: 'es2018',
       }),
+      vueJsx(),
       replace({
         'process.env.NODE_ENV': JSON.stringify('production'),
 

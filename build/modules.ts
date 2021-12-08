@@ -13,6 +13,7 @@ import { excludeFiles } from './utils/pkg'
 import { reporter } from './plugins/size-reporter'
 import { buildConfigEntries } from './build-info'
 import type { OutputOptions } from 'rollup'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 
 export const buildModules = async () => {
   const input = excludeFiles(
@@ -31,6 +32,7 @@ export const buildModules = async () => {
       nodeResolve({
         extensions: ['.mjs', '.js', '.json', '.ts'],
       }),
+      vueJsx(),
       commonjs(),
       esbuild({
         sourceMap: true,

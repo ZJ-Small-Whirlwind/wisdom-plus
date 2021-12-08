@@ -3,7 +3,8 @@
   "compilerOptions": {
     "module": "CommonJS",
     "target": "ESNext",
-    "lib": ["ESNext"]
+    "lib": ["ESNext"],
+    "jsx": "preserve"
   },
   "include": ["**/*.ts"]
 }
