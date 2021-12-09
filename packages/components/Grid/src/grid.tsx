@@ -15,7 +15,9 @@ export const gridProps = buildProps({
     defaultSpan: {
         type: Number,
         default: 1
-    }
+    },
+    placeItems: String,
+    placeContent: String
 })
 
 export type GridProps = ExtractPropTypes<typeof gridProps>
@@ -46,7 +48,9 @@ export default defineComponent({
         return () => (
             <div class="wp-grid" style={{
                 gridGap: gapMap.value.join(' '),
-                gridTemplateColumns: `repeat(${props.cols}, 1fr)`
+                gridTemplateColumns: `repeat(${props.cols}, 1fr)`,
+                placeItems: props.placeItems,
+                placeContent: props.placeContent
             }}>
                 { slots.default?.() }
             </div>
