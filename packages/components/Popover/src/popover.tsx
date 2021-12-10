@@ -1,11 +1,11 @@
-import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref, RendererNode } from 'vue'
+import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref } from 'vue'
 import { VBinder, VTarget, VFollower } from 'vueuc'
 
 import { buildProps } from '@wisdom-plus/utils/props'
 import type { ExtractPropTypes } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
-export type PopoverTrigger = 'click' | 'hover' | 'none'
+export type PopoverTrigger = 'click' | 'hover' | 'focus' | 'none'
 export type PopoverPlacement = 'top-start' | 'top' | 'top-end' | 'right-start' | 'right' | 'right-end' | 'bottom-start' | 'bottom' | 'bottom-end' | 'left-start' | 'left' | 'left-end'
 export const popoverProps = buildProps({
     modelValue: Boolean,
@@ -69,6 +69,7 @@ export default defineComponent({
             emit('update:modelValue', false)
         })
         const mouseMoveing = ref<ReturnType<typeof setTimeout> | null>(null)
+        const focsuing = ref<ReturnType<typeof setTimeout> | null>(null)
         /**
          * 处理事件
          */
@@ -79,6 +80,13 @@ export default defineComponent({
         }
         const handleMouseLeave = () => {
             mouseMoveing.value = setTimeout(() => emit('update:modelValue', false), props.duration)
+        }
+        const handleFocus = () => {
+            if (focsuing.value) clearTimeout(focsuing.value)
+            emit('update:modelValue', true)
+        }
+        const handleBlur = () => {
+            focsuing.value = setTimeout(() => emit('update:modelValue', false), props.duration)
         }
         const getReferenceNode = () => {
             const references = slots.reference?.()
@@ -96,6 +104,10 @@ export default defineComponent({
             if (props.trigger === 'hover') {
                 handlers.onMouseenter = handleMouseEnter
                 handlers.onMouseleave = handleMouseLeave
+            }
+            if (props.trigger === 'focus') {
+                handlers.onFocus = handleFocus
+                handlers.onBlur = handleBlur
             }
             reference.props = mergeProps(reference.props, handlers, {
                 '_wp_popover_': popoverId,
@@ -140,11 +152,11 @@ export default defineComponent({
                                             }}
                                             ref={popoverRef}
                                             onMouseenter={() => {
-                                                if (props.trigger === 'click') return
+                                                if (props.trigger !== 'hover') return
                                                 handleMouseEnter()
                                             }}
                                             onMouseleave={() => {
-                                                if (props.trigger === 'click') return
+                                                if (props.trigger !== 'hover') return
                                                 handleMouseLeave()
                                             }}
                                         >
