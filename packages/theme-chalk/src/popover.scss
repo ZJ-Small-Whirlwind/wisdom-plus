@@ -1,10 +1,8 @@
 .wp-popover {
-    --wp-popover-bg-color: #fff;
-    --wp-popover-color: #666;
     position: relative;
     box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
-    background-color: var(--wp-popover-bg-color);
-    color: var(--wp-popover-color);
+    background-color: var(--wp-popover-bg-color, #fff);
+    color: var(--wp-popover-color, #666);
     border-radius: 4px;
     &.wp-popover__dark {
         --wp-popover-bg-color: #000;
