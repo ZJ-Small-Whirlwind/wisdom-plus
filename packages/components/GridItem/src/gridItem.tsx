@@ -5,6 +5,7 @@ import type { ExtractPropTypes } from 'vue'
 
 export const gridItemProps = buildProps({
     span: Number,
+    rowSpan: Number,
     offset: {
         type: Number,
         default: 0
@@ -34,7 +35,8 @@ export default defineComponent({
                     ) : ''
                 }
                 <div class="wp-grid-item" style={{
-                    gridColumn: `span ${span.value} / span ${span.value}`
+                    gridColumn: `span ${span.value} / span ${span.value}`,
+                    gridRow: `span ${props.rowSpan || 1} / span ${props.rowSpan || 1}`
                 }}>
                     { slots.default?.() }
                 </div>

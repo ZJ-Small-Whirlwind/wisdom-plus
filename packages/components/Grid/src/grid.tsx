@@ -17,7 +17,8 @@ export const gridProps = buildProps({
         default: 1
     },
     placeItems: String,
-    placeContent: String
+    placeContent: String,
+    dense: Boolean
 })
 
 export type GridProps = ExtractPropTypes<typeof gridProps>
@@ -50,7 +51,8 @@ export default defineComponent({
                 gridGap: gapMap.value.join(' '),
                 gridTemplateColumns: `repeat(${props.cols}, 1fr)`,
                 placeItems: props.placeItems,
-                placeContent: props.placeContent
+                placeContent: props.placeContent,
+                gridAutoFlow: props.dense ? 'row dense' : ''
             }}>
                 { slots.default?.() }
             </div>
