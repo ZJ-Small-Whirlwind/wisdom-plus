@@ -185,8 +185,12 @@ export default defineComponent({
                         {
                             show.value ?
                                 props.raw ?
-                                    slots.default?.()
-                                    : (
+                                    (
+                                        <div>
+                                            { slots.default?.() }
+                                        </div>
+                                    ) :
+                                    (
                                         <div
                                             class={{
                                                 'wp-popover': true,
@@ -209,8 +213,8 @@ export default defineComponent({
                                                 { slots.default?.() }
                                             </div>
                                         </div>
-                                    )
-                                : null
+                                    ) :
+                                null
                         }
                     </Transition>
                 </VFollower>
