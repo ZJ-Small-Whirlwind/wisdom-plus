@@ -186,7 +186,18 @@ export default defineComponent({
                             show.value ?
                                 props.raw ?
                                     (
-                                        <div>
+                                        <div
+                                            class={popoverClassRef}
+                                            ref={popoverRef}
+                                            onMouseenter={() => {
+                                                if (props.trigger !== 'hover') return
+                                                handleMouseEnter()
+                                            }}
+                                            onMouseleave={() => {
+                                                if (props.trigger !== 'hover') return
+                                                handleMouseLeave()
+                                            }}
+                                        >
                                             { slots.default?.() }
                                         </div>
                                     ) :
