@@ -26,6 +26,7 @@
     &.wp-popover__top-start,
     &.wp-popover__top-end {
         margin-bottom: 10px;
+        transform-origin: bottom;
         .wp-popover-arrow {
             bottom: -3px;
             left: calc(50% - 3px);
@@ -47,6 +48,7 @@
     &.wp-popover__bottom,
     &.wp-popover__bottom-start,
     &.wp-popover__bottom-end {
+        transform-origin: top;
         margin-top: 10px;
         .wp-popover-arrow {
             top: -3px;
@@ -56,6 +58,7 @@
     &.wp-popover__right,
     &.wp-popover__right-start,
     &.wp-popover__right-end {
+        transform-origin: left;
         margin-left: 10px;
         .wp-popover-arrow {
             left: -3px;
@@ -65,6 +68,7 @@
     &.wp-popover__left,
     &.wp-popover__left-start,
     &.wp-popover__left-end {
+        transform-origin: right;
         margin-right: 10px;
         .wp-popover-arrow {
             right: -3px;
@@ -88,13 +92,13 @@
 
 .popover-transition-enter-from,
 .popover-transition-leave-to {
-    transition: .2s;
+    transition: transform .2s, opacity .2s;
     opacity: 0;
-    transform: scale(.5);
+    transform: scale(.6);
 }
 
 .popover-transition-leave-from,
 .popover-transition-enter-to {
-    transition: .2s;
+    transition: transform .2s, opacity .2s;
     opacity: 1;
 }
