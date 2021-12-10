@@ -1,4 +1,4 @@
-import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref } from 'vue'
+import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref, computed } from 'vue'
 import { VBinder, VTarget, VFollower } from 'vueuc'
 
 import { buildProps } from '@wisdom-plus/utils/props'
@@ -8,7 +8,9 @@ import { onClickOutside } from '@vueuse/core'
 export type PopoverTrigger = 'click' | 'hover' | 'focus' | 'none'
 export type PopoverPlacement = 'top-start' | 'top' | 'top-end' | 'right-start' | 'right' | 'right-end' | 'bottom-start' | 'bottom' | 'bottom-end' | 'left-start' | 'left' | 'left-end'
 export const popoverProps = buildProps({
-    modelValue: Boolean,
+    modelValue: {
+        type: Boolean
+    },
     trigger: {
         type: String as PropType<PopoverTrigger>,
         default: 'click'
@@ -57,6 +59,26 @@ export default defineComponent({
     props: popoverProps,
     setup(props, { slots, emit }) {
         /**
+         * 非受控模式
+         */
+        const popoverShow = ref(false)
+        const show = computed<boolean>({
+            get() {
+                if (typeof props.modelValue === 'undefined') {
+                    return popoverShow.value
+                } else {
+                    return props.modelValue
+                }
+            },
+            set(value) {
+                if (typeof props.modelValue === 'undefined') {
+                    popoverShow.value = value
+                } else {
+                    emit('update:modelValue', value)
+                }
+            }
+        })
+        /**
          * 点击外部自动关闭自身
          */
         const popoverRef = ref<HTMLDivElement | null>(null)
@@ -70,28 +92,26 @@ export default defineComponent({
                     return
                 }
             }
-            if (!props.modelValue) return
-            emit('update:modelValue', false)
+            if (!show.value) return
+            show.value = false
         })
         const mouseMoveing = ref<ReturnType<typeof setTimeout> | null>(null)
-        const focsuing = ref<ReturnType<typeof setTimeout> | null>(null)
         /**
          * 处理事件
          */
-        const handleClick = () => emit('update:modelValue', !props.modelValue)
+        const handleClick = () => show.value = !show.value
         const handleMouseEnter = () => {
             if (mouseMoveing.value) clearTimeout(mouseMoveing.value)
-            emit('update:modelValue', true)
+            show.value = true
         }
         const handleMouseLeave = () => {
-            mouseMoveing.value = setTimeout(() => emit('update:modelValue', false), props.duration)
+            mouseMoveing.value = setTimeout(() => show.value = false, props.duration)
         }
         const handleFocus = () => {
-            if (focsuing.value) clearTimeout(focsuing.value)
-            emit('update:modelValue', true)
+            show.value = true
         }
         const handleBlur = () => {
-            focsuing.value = setTimeout(() => emit('update:modelValue', false), props.duration)
+            show.value = false
         }
         const getReferenceNode = () => {
             const references = slots.reference?.()
@@ -120,9 +140,9 @@ export default defineComponent({
             })
             return reference
         }
-        const followerEnabled = ref(props.modelValue)
+        const followerEnabled = ref(show.value)
         return () => (
-            <VBinder syncTarget syncTargetWithParent>
+            <VBinder>
                 <VTarget>
                     { getReferenceNode() }
                 </VTarget>
@@ -141,11 +161,11 @@ export default defineComponent({
                             followerEnabled.value = true
                         }}
                         onAfterLeave = {() => {
-                            followerEnabled.value = true
+                            followerEnabled.value = false
                         }}
                     >
                         {
-                            props.modelValue ?
+                            show.value ?
                                 props.raw ?
                                     slots.default?.()
                                     : (
