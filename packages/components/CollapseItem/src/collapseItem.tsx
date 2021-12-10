@@ -2,7 +2,7 @@ import { defineComponent, inject, PropType, ComputedRef, computed } from 'vue'
 
 import { buildProps } from '@wisdom-plus/utils/props'
 import type { ExtractPropTypes } from 'vue'
-import type { CollapseSupport } from '../../Collapse/src/collapse'
+import type { CollapseSupport } from '../../Collapse'
 export const collapseItemProps = buildProps({
     title: {
         type: String,
@@ -17,7 +17,7 @@ export const collapseItemProps = buildProps({
 
 export type CollapseItemProps = ExtractPropTypes<typeof collapseItemProps>
 
-import CollapseTransition from '../../CollapseTransition/src/collapseTransition'
+import CollapseTransition from '../../CollapseTransition'
 
 export default defineComponent({
     name: 'Collapse',
