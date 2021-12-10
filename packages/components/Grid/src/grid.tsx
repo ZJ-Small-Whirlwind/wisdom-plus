@@ -48,7 +48,7 @@ export default defineComponent({
         provide('defaultSpan', props.defaultSpan || 1)
         return () => (
             <div class="wp-grid" style={{
-                gridGap: gapMap.value.join(' '),
+                gridGap: `${gapMap.value[1]} ${gapMap.value[0]}`,
                 gridTemplateColumns: `repeat(${props.cols}, 1fr)`,
                 placeItems: props.placeItems,
                 placeContent: props.placeContent,
