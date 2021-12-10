@@ -18,7 +18,7 @@
         width: 6px;
         height: 6px;
         transform: rotate(45deg);
-        background-color: var(--wp-popover-bg-color);
+        background-color: var(--wp-popover-bg-color, #fff);
     }
     &.wp-popover__top,
     &.wp-popover__top-start,
