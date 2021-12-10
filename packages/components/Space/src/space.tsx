@@ -72,10 +72,10 @@ export default defineComponent({
          * 如果你打算根据 attrs 或 slots 的更改应用副作用
          * 那么应该在 onBeforeUpdate 生命周期钩子中执行此操作
          */
-         let slotElements = context.slots.default?.() || []
-         onBeforeUpdate(() => {
-             slotElements = context.slots.default?.() || []
-         })
+        let slotElements = context.slots.default?.() || []
+        onBeforeUpdate(() => {
+            slotElements = context.slots.default?.() || []
+        })
         return () => (
             <div class={{
                 'wp-space': true,

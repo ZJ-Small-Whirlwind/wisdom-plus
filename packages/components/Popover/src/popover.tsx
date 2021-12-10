@@ -91,7 +91,7 @@ export default defineComponent({
         const getReferenceNode = () => {
             const references = slots.reference?.()
             if (!references) {
-                console.warn('没有找到 reference')
+                console.warn('WisdomPlus: Popover 组件没有找到 reference，请确保插槽中正确放入内容')
                 return
             }
             const reference = cloneVNode(references[0].el?.nodeName === '#text' ? h('span', null, references) : references[0])
