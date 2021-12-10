@@ -43,6 +43,10 @@ export const popoverProps = buildProps({
     closeOnClickOutside: {
         type: Boolean,
         default: true
+    },
+    popoverClass: {
+        type: [String, Object] as PropType<string | Record<string, boolean>>,
+        default: ''
     }
 })
 
@@ -56,8 +60,9 @@ export type PopoverEmits = typeof popoverEmits
 
 export default defineComponent({
     name: 'Popover',
+    inheritAttrs: false,
     props: popoverProps,
-    setup(props, { slots, emit }) {
+    setup(props, { slots, emit, attrs }) {
         /**
          * 非受控模式
          */
@@ -141,6 +146,18 @@ export default defineComponent({
             return reference
         }
         const followerEnabled = ref(show.value)
+        const popoverClassRef = computed(() => {
+            if (typeof props.popoverClass === 'string') {
+                const popoverClasses = props.popoverClass.split(' ')
+                const final: Record<string, boolean> = {}
+                popoverClasses.forEach(item => {
+                    final[item] = true
+                })
+                return final
+            } else {
+                return props.popoverClass
+            }
+        })
         return () => (
             <VBinder>
                 <VTarget>
@@ -173,7 +190,8 @@ export default defineComponent({
                                             class={{
                                                 'wp-popover': true,
                                                 'wp-popover__dark': props.dark,
-                                                [`wp-popover__${props.placement}`]: true
+                                                [`wp-popover__${props.placement}`]: true,
+                                                ...popoverClassRef
                                             }}
                                             ref={popoverRef}
                                             onMouseenter={() => {
