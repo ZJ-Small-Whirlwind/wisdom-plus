@@ -33,7 +33,11 @@ export const popoverProps = buildProps({
         type: Number,
         default: 100
     },
-    dark: Boolean
+    dark: Boolean,
+    transition: {
+        type: String,
+        default: 'popover-transition'
+    }
 })
 
 export type PopoverProps = ExtractPropTypes<typeof popoverProps>
@@ -117,7 +121,7 @@ export default defineComponent({
                     flip={props.flip}
                 >
                     <Transition
-                        name="popover-transition"
+                        name={props.transition}
                         onEnter={() => {
                             followerEnabled.value = true
                         }}
