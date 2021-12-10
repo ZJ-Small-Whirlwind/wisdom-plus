@@ -142,8 +142,7 @@ export default defineComponent({
                 handlers.onBlur = handleBlur
             }
             reference.props = mergeProps(reference.props, handlers, {
-                '_wp_popover_': popoverId,
-                internalSyncTargetWithParent: true
+                '_wp_popover_': popoverId
             })
             return reference
         }
