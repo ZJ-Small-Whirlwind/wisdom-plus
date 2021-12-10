@@ -1,4 +1,4 @@
-import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref, RendererNode, onMounted, computed } from 'vue'
+import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref, RendererNode } from 'vue'
 import { VBinder, VTarget, VFollower } from 'vueuc'
 
 import { buildProps } from '@wisdom-plus/utils/props'
@@ -68,7 +68,6 @@ export default defineComponent({
             if (!props.modelValue) return
             emit('update:modelValue', false)
         })
-        let referenceEl: RendererNode | null = null
         const mouseMoveing = ref<ReturnType<typeof setTimeout> | null>(null)
         /**
          * 处理事件
@@ -98,7 +97,6 @@ export default defineComponent({
                 handlers.onMouseenter = handleMouseEnter
                 handlers.onMouseleave = handleMouseLeave
             }
-            referenceEl = reference.el
             reference.props = mergeProps(reference.props, handlers, {
                 '_wp_popover_': popoverId,
                 internalSyncTargetWithParent: true
