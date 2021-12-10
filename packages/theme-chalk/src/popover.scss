@@ -1,0 +1,100 @@
+.wp-popover {
+    --wp-popover-bg-color: #fff;
+    --wp-popover-color: #666;
+    position: relative;
+    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    background-color: var(--wp-popover-bg-color);
+    color: var(--wp-popover-color);
+    border-radius: 4px;
+    &.wp-popover__dark {
+        --wp-popover-bg-color: #000;
+        --wp-popover-color: #fff;
+    }
+    &-content {
+        padding: 10px 15px;
+        z-index: 1;
+    }
+    .wp-popover-arrow {
+        z-index: 0;
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        transform: rotate(45deg);
+        background-color: var(--wp-popover-bg-color);
+    }
+    &.wp-popover__top,
+    &.wp-popover__top-start,
+    &.wp-popover__top-end {
+        margin-bottom: 10px;
+        .wp-popover-arrow {
+            bottom: -3px;
+            left: calc(50% - 3px);
+        }
+    }
+    &.wp-popover__top-start,
+    &.wp-popover__bottom-start {
+        .wp-popover-arrow {
+            left: 20%;
+        }
+    }
+    &.wp-popover__top-end,
+    &.wp-popover__bottom-end {
+        .wp-popover-arrow {
+            left: inherit;
+            right: 20%;
+        }
+    }
+    &.wp-popover__bottom,
+    &.wp-popover__bottom-start,
+    &.wp-popover__bottom-end {
+        margin-top: 10px;
+        .wp-popover-arrow {
+            top: -3px;
+            left: calc(50% - 3px);
+        }
+    }
+    &.wp-popover__right,
+    &.wp-popover__right-start,
+    &.wp-popover__right-end {
+        margin-left: 10px;
+        .wp-popover-arrow {
+            left: -3px;
+            top: calc(50% - 3px);
+        }
+    }
+    &.wp-popover__left,
+    &.wp-popover__left-start,
+    &.wp-popover__left-end {
+        margin-right: 10px;
+        .wp-popover-arrow {
+            right: -3px;
+            top: calc(50% - 3px);
+        }
+    }
+    &.wp-popover__right-start,
+    &.wp-popover__left-start {
+        .wp-popover-arrow {
+            top: 20%;
+        }
+    }
+    &.wp-popover__right-end,
+    &.wp-popover__left-end {
+        .wp-popover-arrow {
+            top: inherit;
+            bottom: 20%;
+        }
+    }
+}
+
+.popover-transition-enter-from,
+.popover-transition-leave-to {
+    transition: .2s;
+    opacity: 0;
+    transform: scale(.5);
+}
+
+.popover-transition-leave-from,
+.popover-transition-enter-to {
+    transition: .2s;
+    opacity: 1;
+}

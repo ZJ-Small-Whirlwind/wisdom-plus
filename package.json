@@ -33,9 +33,10 @@
     "vue": "^3.2.0"
   },
   "dependencies": {
+    "@css-render/vue3-ssr": "^0.15.6",
     "@element-plus/icons": "^0.0.11",
     "@popperjs/core": "^2.10.2",
-    "@vueuse/core": "^7.0.0",
+    "@vueuse/core": "^7.1.2",
     "@wisdom-plus/components": "workspace:*",
     "@wisdom-plus/directives": "workspace:*",
     "@wisdom-plus/hooks": "workspace:*",
@@ -48,7 +49,8 @@
     "dayjs": "^1.10.7",
     "lodash": "^4.17.21",
     "memoize-one": "^6.0.0",
-    "normalize-wheel-es": "^1.1.1"
+    "normalize-wheel-es": "^1.1.1",
+    "vueuc": "^0.4.18"
   },
   "devDependencies": {
     "@pnpm/find-workspace-packages": "^3.1.26",
