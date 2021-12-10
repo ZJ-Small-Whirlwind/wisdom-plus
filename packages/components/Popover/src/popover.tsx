@@ -37,6 +37,10 @@ export const popoverProps = buildProps({
     transition: {
         type: String,
         default: 'popover-transition'
+    },
+    closeOnClickOutside: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -58,6 +62,7 @@ export default defineComponent({
         const popoverRef = ref<HTMLDivElement | null>(null)
         const popoverId = Math.random().toString(36).slice(-8)
         onClickOutside(popoverRef, event => {
+            if (!props.closeOnClickOutside) return
             const path = (event as PointerEvent & { path: HTMLElement[] }).path
             for (const el of path) {
                 const wpPopover = el.getAttribute?.('_wp_popover_')
