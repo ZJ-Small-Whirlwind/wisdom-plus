@@ -49,7 +49,7 @@ export default defineComponent({
         return () => (
             <div class="wp-grid" style={{
                 gridGap: `${gapMap.value[1]} ${gapMap.value[0]}`,
-                gridTemplateColumns: `repeat(${props.cols}, 1fr)`,
+                gridTemplateColumns: `repeat(${props.cols}, minmax(0px, 1fr))`,
                 placeItems: props.placeItems,
                 placeContent: props.placeContent,
                 gridAutoFlow: props.dense ? 'row dense' : ''

@@ -1,0 +1,10 @@
+.wp-collapse-item {
+    &__title {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        cursor: default;
+    }
+    &__content {
+        padding: 10px;
+    }
+}
