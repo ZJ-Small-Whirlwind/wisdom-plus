@@ -26,7 +26,7 @@ export const popoverProps = buildProps({
     zIndex: Number,
     raw: Boolean,
     to: [String, Boolean, Object] as PropType<string | HTMLElement | false>,
-    width: Number as PropType<number | 'trigger'>,
+    width: Number as PropType<number | 'trigger' | 'target'>,
     flip: {
         type: Boolean,
         default: true
@@ -170,7 +170,7 @@ export default defineComponent({
                     zIndex={props.zIndex}
                     enabled={followerEnabled.value}
                     to={props.to}
-                    width={props.width === 'trigger' ? 'target' : undefined}
+                    width={props.width === 'trigger' || props.width === 'target' ? 'target' : undefined}
                     flip={props.flip}
                 >
                     <Transition
