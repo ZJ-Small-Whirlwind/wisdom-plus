@@ -26,7 +26,7 @@ export const popoverProps = buildProps({
     zIndex: Number,
     raw: Boolean,
     to: [String, Boolean, Object] as PropType<string | HTMLElement | false>,
-    width: [Number, String] as PropType<number | 'trigger'>,
+    width: Number as PropType<number | 'trigger'>,
     flip: {
         type: Boolean,
         default: true
@@ -170,7 +170,7 @@ export default defineComponent({
                     zIndex={props.zIndex}
                     enabled={followerEnabled.value}
                     to={props.to}
-                    width={props.width}
+                    width={props.width === 'trigger' ? 'target' : undefined}
                     flip={props.flip}
                 >
                     <Transition
@@ -197,6 +197,9 @@ export default defineComponent({
                                                 if (props.trigger !== 'hover') return
                                                 handleMouseLeave()
                                             }}
+                                            style={{
+                                                width: typeof props.width === 'number' ? `${props.width}px`: ''
+                                            }}
                                         >
                                             { slots.default?.() }
                                         </div>
@@ -217,6 +220,9 @@ export default defineComponent({
                                             onMouseleave={() => {
                                                 if (props.trigger !== 'hover') return
                                                 handleMouseLeave()
+                                            }}
+                                            style={{
+                                                width: typeof props.width === 'number' ? `${props.width}px`: ''
                                             }}
                                         >
                                             { props.arrow ? <div class="wp-popover-arrow" /> : null }
