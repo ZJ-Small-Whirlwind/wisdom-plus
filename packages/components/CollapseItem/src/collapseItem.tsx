@@ -11,7 +11,8 @@ export const collapseItemProps = buildProps({
     name: {
         type: [String, Number, Symbol] as PropType<CollapseSupport>,
         required: true
-    }
+    },
+    disabled: Boolean
 })
 
 export type CollapseItemProps = ExtractPropTypes<typeof collapseItemProps>
@@ -25,7 +26,8 @@ export default defineComponent({
         const collapseItems = inject<ComputedRef<CollapseSupport | CollapseSupport[]>>('collapseItems')
         const updateCollapseItems = inject<(value: CollapseSupport | CollapseSupport[]) => void>('update:collapseItems')
         const showItem = computed(() => {
-            if (typeof props.name === 'undefined') return
+            if (props.disabled) return false
+            if (typeof props.name === 'undefined') return false
             if (Array.isArray(collapseItems?.value)) {
                 return collapseItems?.value.includes(props.name)
             } else {
@@ -33,8 +35,12 @@ export default defineComponent({
             }
         })
         return () => (
-            <div class="wp-collapse-item">
+            <div class={{
+                "wp-collapse-item": true,
+                "wp-collapse-item--disabled": props.disabled
+            }}>
                 <div class="wp-collapse-item__title" onClick={() => {
+                    if (props.disabled) return
                     if (typeof props.name === 'undefined') return
                     if (typeof collapseItems?.value === 'undefined') {
                         console.warn('请把CollapseItem放在Collapse内')
