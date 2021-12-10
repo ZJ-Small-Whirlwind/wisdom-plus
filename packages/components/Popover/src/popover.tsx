@@ -26,7 +26,9 @@ export const popoverProps = buildProps({
     zIndex: Number,
     raw: Boolean,
     to: [String, Boolean, Object] as PropType<string | HTMLElement | false>,
-    width: Number as PropType<number | 'trigger' | 'target'>,
+    width: {
+        type: [Number, String] as PropType<number | 'trigger' | 'target'>
+    },
     flip: {
         type: Boolean,
         default: true
@@ -154,6 +156,7 @@ export default defineComponent({
                 popoverClasses.forEach(item => {
                     final[item] = true
                 })
+                console.log(final)
                 return final
             } else {
                 return props.popoverClass
@@ -210,7 +213,7 @@ export default defineComponent({
                                                 'wp-popover': true,
                                                 'wp-popover__dark': props.dark,
                                                 [`wp-popover__${props.placement}`]: true,
-                                                ...popoverClassRef
+                                                ...popoverClassRef.value
                                             }}
                                             ref={popoverRef}
                                             onMouseenter={() => {
