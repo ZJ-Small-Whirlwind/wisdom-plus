@@ -1,7 +1,8 @@
-import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref, computed, createTextVNode } from 'vue'
+import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref, computed, createTextVNode, provide, inject } from 'vue'
 import { VBinder, VTarget, VFollower } from 'vueuc'
 
-import { buildProps } from '@wisdom-plus/utils/props'
+import { definePropType, buildProps } from '@wisdom-plus/utils/props'
+
 import type { ExtractPropTypes } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
@@ -25,7 +26,7 @@ export const popoverProps = buildProps({
     },
     zIndex: Number,
     raw: Boolean,
-    to: [String, Boolean, Object] as PropType<string | HTMLElement | false>,
+    to: definePropType<string | HTMLElement | false>([String, Object, Boolean]),
     width: {
         type: [Number, String] as PropType<number | 'trigger' | 'target'>
     },
@@ -49,6 +50,9 @@ export const popoverProps = buildProps({
     popoverClass: {
         type: [String, Object] as PropType<string | Record<string, boolean>>,
         default: ''
+    },
+    offset: {
+        type: Array as PropType<number[]>
     }
 })
 
@@ -97,9 +101,7 @@ export default defineComponent({
             const path = (event as PointerEvent & { path: HTMLElement[] }).path
             for (const el of path) {
                 const wpPopover = el.getAttribute?.('_wp_popover_')
-                if (wpPopover === popoverId) {
-                    return
-                }
+                if (wpPopover === popoverId) return
             }
             if (!show.value) return
             show.value = false
@@ -156,7 +158,6 @@ export default defineComponent({
                 popoverClasses.forEach(item => {
                     final[item] = true
                 })
-                console.log(final)
                 return final
             } else {
                 return props.popoverClass
@@ -172,9 +173,10 @@ export default defineComponent({
                     placement={props.placement}
                     zIndex={props.zIndex}
                     enabled={followerEnabled.value}
-                    to={props.to}
+                    to={props.to === false ? undefined : props.to}
                     width={props.width === 'trigger' || props.width === 'target' ? 'target' : undefined}
                     flip={props.flip}
+                    teleportDisabled={props.to === false}
                 >
                     <Transition
                         name={props.transition}
@@ -201,7 +203,8 @@ export default defineComponent({
                                                 handleMouseLeave()
                                             }}
                                             style={{
-                                                width: typeof props.width === 'number' ? `${props.width}px`: ''
+                                                width: typeof props.width === 'number' ? `${props.width}px`: '',
+                                                transform: props.offset ? `translateX(${props.offset[0]}px) translateY(${props.offset[1]}px)` : ''
                                             }}
                                         >
                                             { slots.default?.() }
@@ -225,7 +228,8 @@ export default defineComponent({
                                                 handleMouseLeave()
                                             }}
                                             style={{
-                                                width: typeof props.width === 'number' ? `${props.width}px`: ''
+                                                width: typeof props.width === 'number' ? `${props.width}px`: '',
+                                                transform: props.offset ? `translateX(${props.offset[0]}px) translateY(${props.offset[1]}px)` : ''
                                             }}
                                         >
                                             { props.arrow ? <div class="wp-popover-arrow" /> : null }
