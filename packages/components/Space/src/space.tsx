@@ -1,4 +1,4 @@
-import { computed, defineComponent, PropType, onBeforeUpdate } from 'vue'
+import { computed, defineComponent, PropType } from 'vue'
 
 import { buildProps } from '@wisdom-plus/utils/props'
 import type { ExtractPropTypes } from 'vue'
@@ -67,36 +67,30 @@ export default defineComponent({
         }
         const parentAlignItems = computed(() => getFlexOption(props.align))
         const parentJustifyContent = computed(() => getFlexOption(props.justify))
-        /**
-         * @url https://v3.cn.vuejs.org/guide/composition-api-setup.html#context
-         * 如果你打算根据 attrs 或 slots 的更改应用副作用
-         * 那么应该在 onBeforeUpdate 生命周期钩子中执行此操作
-         */
-        let slotElements = context.slots.default?.() || []
-        onBeforeUpdate(() => {
-            slotElements = context.slots.default?.() || []
-        })
-        return () => (
-            <div class={{
-                'wp-space': true,
-                'wp-space-column': props.vertical,
-                'wp-space-wrap': props.wrap
-            }} style={{
-                marginBottom: slotElements.length > 0 ? parentMarginBottom.value : '',
-                alignItems: parentAlignItems.value,
-                justifyContent: parentJustifyContent.value
-            }}>
-                {
-                    slotElements.map((vNode, index) => (
-                        <div class="wp-space-item" style={{
-                            marginRight: index !== slotElements.length - 1 ? size.value[0] : '',
-                            paddingBottom: size.value[1]
-                        }}>
-                            { vNode }
-                        </div>
-                    ))
-                }
-            </div>
-        )
+        return () => {
+            const slotElements = context.slots.default?.() || []
+            return (
+                <div class={{
+                    'wp-space': true,
+                    'wp-space-column': props.vertical,
+                    'wp-space-wrap': props.wrap
+                }} style={{
+                    marginBottom: slotElements.length > 0 ? parentMarginBottom.value : '',
+                    alignItems: parentAlignItems.value,
+                    justifyContent: parentJustifyContent.value
+                }}>
+                    {
+                        slotElements.map((vNode, index) => (
+                            <div class="wp-space-item" style={{
+                                marginRight: index !== slotElements.length - 1 ? size.value[0] : '',
+                                paddingBottom: size.value[1]
+                            }}>
+                                { vNode }
+                            </div>
+                        ))
+                    }
+                </div>
+            )
+        }
     }
 })
