@@ -1,7 +1,7 @@
 import { computed, defineComponent, PropType } from 'vue'
 
 import { buildProps } from '@wisdom-plus/utils/props'
-import type { ExtractPropTypes } from 'vue'
+import type { ExtractPropTypes, CSSProperties } from 'vue'
 
 export const spaceProps = buildProps({
     vertical: {
@@ -23,6 +23,20 @@ export const spaceProps = buildProps({
     justify: {
         type: String as PropType<'start' | 'end' | 'center' | 'space-around' | 'space-between'>,
         default: 'start'
+    },
+    itemStyle: {
+        type: Object as PropType<{
+            common?: CSSProperties,
+            [x: number]: CSSProperties
+        }>,
+        default: () => {}
+    },
+    itemClass: {
+        type: Object as PropType<{
+            common?: Record<string, string>,
+            [x: number]: Record<string, string>
+        }>,
+        default: () => {}
     }
 })
 
@@ -81,9 +95,15 @@ export default defineComponent({
                 }}>
                     {
                         slotElements.map((vNode, index) => (
-                            <div class="wp-space-item" style={{
+                            <div class={{
+                                'wp-space-item': true,
+                                ...props.itemClass.common,
+                                ...props.itemClass[index]
+                            }} style={{
                                 marginRight: index !== slotElements.length - 1 ? size.value[0] : '',
-                                paddingBottom: size.value[1]
+                                paddingBottom: size.value[1],
+                                ...props.itemStyle.common,
+                                ...props.itemStyle[index]
                             }}>
                                 { vNode }
                             </div>
