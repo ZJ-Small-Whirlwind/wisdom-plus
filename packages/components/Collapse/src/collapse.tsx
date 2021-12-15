@@ -6,7 +6,8 @@ import type { ExtractPropTypes } from 'vue'
 export type CollapseSupport = string | number | symbol
 export const collapseProps = buildProps({
     modelValue: {
-        type: [String, Number, Symbol, Array] as PropType<CollapseSupport | CollapseSupport[]>
+        type: [String, Number, Symbol, Array] as PropType<CollapseSupport | CollapseSupport[]>,
+        default: undefined
     }
 })
 

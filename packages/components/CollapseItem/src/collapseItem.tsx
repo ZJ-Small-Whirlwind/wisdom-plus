@@ -22,7 +22,8 @@ import CollapseTransition from '../../CollapseTransition'
 export default defineComponent({
     name: 'Collapse',
     props: collapseItemProps,
-    setup(props, { slots }) {
+    emits: ['clickTitle'],
+    setup(props, { slots, emit }) {
         const collapseItems = inject<ComputedRef<CollapseSupport | CollapseSupport[]>>('collapseItems')
         const updateCollapseItems = inject<(value: CollapseSupport | CollapseSupport[]) => void>('update:collapseItems')
         const showItem = computed(() => {
@@ -61,6 +62,7 @@ export default defineComponent({
                          */
                         updateCollapseItems?.(props.name)
                     }
+                    emit('clickTitle', props.name)
                 }}>
                     { slots.title?.() || props.title }
                 </div>

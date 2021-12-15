@@ -1,0 +1,14 @@
+.wp-menu {
+    &-item-title {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+    }
+    .wp-collapse-item__title {
+        cursor: pointer;
+    }
+    .wp-collapse-item__content {
+        padding: 0;
+        padding-left: 20px;
+    }
+}
