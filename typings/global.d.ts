@@ -12,6 +12,7 @@ declare module 'vue' {
     WpSpace: typeof import('wisdom-plus')['WpSpace']
     WpIcon: typeof import('wisdom-plus')['WpIcon']
     WpTooltip: typeof import('wisdom-plus')['WpTooltip']
+    WpMenu: typeof import('wisdom-plus')['WpMenu']
   }
 }
 

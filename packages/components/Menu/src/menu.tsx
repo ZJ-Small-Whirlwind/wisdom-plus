@@ -1,4 +1,4 @@
-import { ref, computed, defineComponent, ExtractPropTypes, PropType, provide } from "vue"
+import { ref, computed, defineComponent, ExtractPropTypes, PropType, provide, watch } from "vue"
 import { buildProps } from '@wisdom-plus/utils/props'
 
 import { useVModel } from "@vueuse/core"
@@ -19,6 +19,14 @@ export const menuProps = buildProps({
     },
     unfold: {
         type: Array as PropType<string[]>
+    },
+    collapse: {
+        type: Boolean,
+        default: false
+    },
+    trigger: {
+        type: String as PropType<'hover' | 'click'>,
+        default: 'hover'
     }
 })
 export type MenuProps = ExtractPropTypes<typeof menuProps>
@@ -62,15 +70,39 @@ export default defineComponent({
             }
         })
         provide('unfold', unfoldItems)
+        let collapseRecord: string[] = []
+        provide('collapse', computed(() => props.collapse))
+        watch(() => props.collapse, () => {
+            if (props.collapse) {
+                collapseRecord = unfoldItems.value
+                unfoldItems.value = []
+            } else {
+                if (collapseRecord.length === 0) return
+                unfoldItems.value = collapseRecord
+                collapseRecord = []
+            }
+        }, {
+            immediate: true
+        })
+        provide('trigger', computed(() => props.trigger))
+        provide('vertical', computed(() => props.vertical))
         return () => {
             slotsRef.value = slots
             return (
-                <div class="wp-menu">
-                    <Collapse v-model={unfoldItems.value}>
-                        {
-                            props.list.map(item => <MenuItem {...item} />)
-                        }
-                    </Collapse>
+                <div class={{
+                    "wp-menu": true,
+                    "wp-menu__collapse" : props.collapse,
+                    "wp-menu__row": !props.vertical
+                }}>
+                    {
+                        props.vertical ? (
+                            <Collapse v-model={unfoldItems.value}>
+                                {
+                                    props.list.map(item => <MenuItem {...item} />)
+                                }
+                            </Collapse>
+                        ) : props.list.map(item => <MenuItem {...item} />)
+                    }
                 </div>
             )
         }
