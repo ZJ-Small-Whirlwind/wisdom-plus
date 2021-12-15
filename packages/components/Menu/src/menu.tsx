@@ -1,6 +1,8 @@
 import { ref, computed, defineComponent, ExtractPropTypes, PropType, provide } from "vue"
 import { buildProps } from '@wisdom-plus/utils/props'
 
+import { useVModel } from "@vueuse/core"
+
 import { MenuList, MenuRecord } from './typings'
 
 export const menuProps = buildProps({
@@ -37,6 +39,9 @@ export default defineComponent({
         provide('click', (record: MenuRecord) => {
             emit('click', record)
         })
+        const activeRef = ref<string | null>(null)
+        const active = typeof props.modelValue === 'undefined' ? activeRef : useVModel(props, 'modelValue', emit)
+        provide('active', active)
         const slotsRef = ref(slots)
         provide('slots', slotsRef)
         const items = ref<string[]>([])
@@ -56,6 +61,7 @@ export default defineComponent({
                 }
             }
         })
+        provide('unfold', unfoldItems)
         return () => {
             slotsRef.value = slots
             return (

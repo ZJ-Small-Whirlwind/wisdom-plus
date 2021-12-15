@@ -1,11 +1,28 @@
 .wp-menu {
+    max-width: 100%;
+    transition: width .2s;
     &-item-title {
         padding: 10px;
         border-bottom: 1px solid #eee;
         cursor: pointer;
+        transition: color .2s;
+        &:hover {
+            background-color: #fcfcfc;
+        }
+        &.wp-menu-item__active {
+            color: #2080f0;
+        }
+    }
+    .wp-collapse-item {
+        &.wp-menu-item__active .wp-collapse-item__title {
+            color: #2080f0;
+        }
     }
     .wp-collapse-item__title {
         cursor: pointer;
+        &:hover {
+            background-color: #fcfcfc;
+        }
     }
     .wp-collapse-item__content {
         padding: 0;
