@@ -96,7 +96,7 @@ export default defineComponent({
                 }}>
                     {
                         props.vertical ? (
-                            <Collapse v-model={unfoldItems.value}>
+                            <Collapse v-model={unfoldItems.value} class="wp-menu-collapse">
                                 {
                                     props.list.map(item => <MenuItem {...item} />)
                                 }
