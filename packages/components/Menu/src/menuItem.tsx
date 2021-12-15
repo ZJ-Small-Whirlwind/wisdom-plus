@@ -3,6 +3,7 @@ import { MenuList, MenuRecord } from './typings'
 import MenuItem from './menuItem'
 import CollapseItem from '../../CollapseItem'
 import Popover from '../../Popover'
+import Tooltip from '../../Tooltip'
 export default defineComponent({
     name: 'MenuItem',
     props: {
@@ -82,20 +83,29 @@ export default defineComponent({
                     }
                 </>
             )
-            const TitleBox = (needClick = true, isActive = false) => (
-                <div class={{
-                    'wp-menu-item-title': true,
-                    'wp-menu-item__active': isActive || active?.value === props.index,
-                    'wp-menu-item__diabeld': props.disabled
-                }} onClick={() => {
-                    if (props.disabled || !needClick) return
-                    closeParent()
-                    const afterClick = clickMethod?.(props)
-                    if (!afterClick && active) active.value = props.index
-                }}>
-                    { Title }
-                </div>
-            )
+            const TitleBox = (needClick = true, isActive = false) => {
+                const TitleRaw = (
+                    <div class={{
+                        'wp-menu-item-title': true,
+                        'wp-menu-item__active': isActive || active?.value === props.index,
+                        'wp-menu-item__diabeld': props.disabled
+                    }} onClick={() => {
+                        if (props.disabled || !needClick) return
+                        closeParent()
+                        const afterClick = clickMethod?.(props)
+                        if (!afterClick && active) active.value = props.index
+                    }}>
+                        { Title }
+                    </div>
+                )
+                return vertical?.value && collapse?.value && needClick && !props.isChild ? (
+                    <Tooltip trigger={trigger?.value || 'hover'} placement={'right'} v-slots={{
+                        title: () => parentSlots?.value?.title?.(props) || props.title
+                    }}>
+                        { TitleRaw }
+                    </Tooltip>
+                ) : TitleRaw
+            }
             return (
                 <div class="wp-menu-item">
                     {
