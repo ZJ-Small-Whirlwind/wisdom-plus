@@ -110,6 +110,7 @@ export default defineComponent({
                                     arrow={false}
                                     v-model={popoverShow.value}
                                     trigger={trigger?.value || 'hover'}
+                                    popoverClass={'wp-menu-popover'}
                                 >
                                     { props.children?.map(item => (
                                         <MenuItem {...item} isChild={true} />

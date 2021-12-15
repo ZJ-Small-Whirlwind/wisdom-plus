@@ -62,10 +62,12 @@
         }
     }
 }
-.wp-popover-content {
-    padding: 0;
-    overflow: hidden;
-    > .wp-menu-item {
-        width: 200px;
+.wp-menu-popover {
+    > .wp-popover-content {
+        padding: 0;
+        overflow: hidden;
+        > .wp-menu-item {
+            width: 200px;
+        }
     }
 }

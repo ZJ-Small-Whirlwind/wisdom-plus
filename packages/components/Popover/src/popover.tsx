@@ -196,7 +196,7 @@ export default defineComponent({
                                 props.raw ?
                                     (
                                         <div
-                                            class={popoverClassRef}
+                                            class={popoverClassRef.value}
                                             ref={popoverRef}
                                             onMouseenter={() => {
                                                 if (props.trigger !== 'hover') return
