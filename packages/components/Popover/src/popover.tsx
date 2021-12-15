@@ -1,4 +1,4 @@
-import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref, computed, createTextVNode, provide, inject } from 'vue'
+import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref, computed, createTextVNode } from 'vue'
 import { VBinder, VTarget, VFollower } from 'vueuc'
 
 import { definePropType, buildProps } from '@wisdom-plus/utils/props'
@@ -10,7 +10,8 @@ export type PopoverTrigger = 'click' | 'hover' | 'focus' | 'none'
 export type PopoverPlacement = 'top-start' | 'top' | 'top-end' | 'right-start' | 'right' | 'right-end' | 'bottom-start' | 'bottom' | 'bottom-end' | 'left-start' | 'left' | 'left-end'
 export const popoverProps = buildProps({
     modelValue: {
-        type: Boolean
+        type: Boolean,
+        default: undefined
     },
     trigger: {
         type: String as PropType<PopoverTrigger>,
@@ -26,7 +27,10 @@ export const popoverProps = buildProps({
     },
     zIndex: Number,
     raw: Boolean,
-    to: definePropType<string | HTMLElement | false>([String, Object, Boolean]),
+    to: {
+        type: definePropType<string | HTMLElement | false>([String, Object, Boolean]),
+        default: undefined
+    },
     width: {
         type: [Number, String] as PropType<number | 'trigger' | 'target'>
     },
