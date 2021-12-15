@@ -33,10 +33,6 @@
     }
 }
 .wp-menu-item {
-    &__diabeld {
-        opacity: .6;
-        cursor: not-allowed;
-    }
     &__icon {
         width: 1.2em;
         display: inline-flex;
@@ -60,6 +56,10 @@
         &.wp-menu-item__active {
             color: #2080f0;
         }
+    }
+    &__diabeld {
+        opacity: .6;
+        cursor: not-allowed;
     }
 }
 .wp-menu-popover {
