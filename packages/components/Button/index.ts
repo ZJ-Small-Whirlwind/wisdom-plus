@@ -4,4 +4,5 @@ import Button from './src/button.vue'
 export const WpButton = withInstall(Button, )
 export default WpButton
 
-export * from './src/button'
+// @ts-ignore
+export * from './src/button.ts'

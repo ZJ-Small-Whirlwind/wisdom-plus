@@ -1,6 +1,6 @@
 <p align="center">
 
-  <img width="300px" src="https://user-images.githubusercontent.com/10731096/95823103-9ce15780-0d5f-11eb-8010-1bd1b5910d4f.png">
+  <img width="300px" src="./wisdom-plus.png">
 
 </p>
 
@@ -22,7 +22,7 @@
 
 </p>
 
-<p align="center">Element Plus - A Vue.js 3 UI library</p>
+<p align="center">Wisdom Plus - A Vue.js 3 UI library</p>
 
 [comment]: <> (- 💪 Vue 3 Composition API)
 
