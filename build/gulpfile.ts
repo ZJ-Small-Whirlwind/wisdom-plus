@@ -19,6 +19,7 @@ export const copyFiles = () => {
   return Promise.all([
     run(`cp ${epPackage} ${path.join(epOutput, 'package.json')}`),
     run(`cp README.md ${epOutput}`),
+    run(`cp wisdom-plus.png ${epOutput}`),
     copyTypings(),
   ])
 }
