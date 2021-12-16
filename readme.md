@@ -1,6 +1,6 @@
 <p align="center">
 
-  <img width="300px" src="./wisdom-plus.png">
+  <img width="300px" src="https://zjzj-oss.zhijiasoft.com/zhijia/wisdom-plus.png">
 
 </p>
 
