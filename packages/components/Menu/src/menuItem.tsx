@@ -1,9 +1,10 @@
-import { defineComponent, PropType, Component, inject, Ref, computed, watch, ComputedRef, ref, provide } from "vue"
+import { defineComponent, PropType, Component, inject, Ref, computed, watch, ComputedRef, ref, provide, h } from "vue"
 import { MenuList, MenuRecord } from './typings'
 import MenuItem from './menuItem'
 import CollapseItem from '../../CollapseItem'
 import Popover from '../../Popover'
 import Tooltip from '../../Tooltip'
+import Icon from '../../Icon'
 export default defineComponent({
     name: 'MenuItem',
     props: {
@@ -74,7 +75,9 @@ export default defineComponent({
                     {
                         props.icon ? (
                             <div class="wp-menu-item__icon">
-                                { props.icon }
+                                <Icon>
+                                    { h(props.icon) }
+                                </Icon>
                             </div>
                         ) : null
                     }

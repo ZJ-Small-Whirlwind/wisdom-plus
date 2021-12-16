@@ -10,7 +10,7 @@
         }
     }
     &.wp-menu__collapse {
-        max-width: 40px;
+        max-width: 36px;
     }
     .wp-collapse-item {
         &.wp-menu-item__active > .wp-collapse-item__title {
@@ -34,9 +34,9 @@
 }
 .wp-menu-item {
     &__icon {
-        width: 1.2em;
+        width: 1em;
         display: inline-flex;
-        height: 1.2em;
+        height: 1em;
         align-items: center;
         justify-content: center;
         margin-right: 10px;
