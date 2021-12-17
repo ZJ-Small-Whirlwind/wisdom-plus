@@ -1,0 +1,20 @@
+.wp-scroll-list {
+    overflow: hidden;
+    position: relative;
+}
+
+.wp-scroll-list__cell {
+    transition: all var(--duration, 2s) ease;
+}
+
+.wp-scroll-flip-leave-to {
+    transform: translateY(-100%);
+}
+
+.wp-scroll-flip-enter-from {
+    transform: translateY(100%);
+}
+
+.wp-scroll-flip-leave-active {
+    position: absolute;
+}
