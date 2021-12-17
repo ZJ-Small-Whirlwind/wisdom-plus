@@ -4,3 +4,5 @@ dist
 .pnpm-debug.log
 /package-lock.json
 .DS_Store
+.temp
+.cache

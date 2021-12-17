@@ -20,7 +20,7 @@ export type GridItemProps = ExtractPropTypes<typeof gridItemProps>
 
 export default defineComponent({
     props: gridItemProps,
-    setup(props, { slots }) {
+    setup(props, { slots, attrs }) {
         const span = computed(() => {
             const defaultSpan = inject<number>('defaultSpan')
             return props.span || defaultSpan || 1
@@ -37,7 +37,7 @@ export default defineComponent({
                 <div class="wp-grid-item" style={{
                     gridColumn: `span ${span.value} / span ${span.value}`,
                     gridRow: `span ${props.rowSpan || 1} / span ${props.rowSpan || 1}`
-                }}>
+                }} {...attrs}>
                     { slots.default?.() }
                 </div>
                 {

@@ -29,14 +29,14 @@ export const spaceProps = buildProps({
             common?: CSSProperties,
             [x: number]: CSSProperties
         }>,
-        default: () => {}
+        default: () => ({})
     },
     itemClass: {
         type: Object as PropType<{
             common?: Record<string, string>,
             [x: number]: Record<string, string>
         }>,
-        default: () => {}
+        default: () => ({})
     }
 })
 
