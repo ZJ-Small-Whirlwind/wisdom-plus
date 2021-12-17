@@ -14,6 +14,7 @@ declare module 'vue' {
     WpTooltip: typeof import('wisdom-plus')['WpTooltip']
     WpMenu: typeof import('wisdom-plus')['WpMenu']
     WpScrollList: typeof import('wisdom-plus')['WpScrollList']
+    WpEllipsis: typeof import('wisdom-plus')['WpEllipsis']
   }
 }
 

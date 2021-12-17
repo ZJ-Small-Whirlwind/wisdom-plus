@@ -1,0 +1,12 @@
+.wp-ellipsis {
+    overflow: hidden;
+    &:not(.wp-ellipsis__line) {
+        display: inline-block;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    &__line {
+        display: -webkit-inline-box;
+        -webkit-box-orient: vertical;
+    }
+}
