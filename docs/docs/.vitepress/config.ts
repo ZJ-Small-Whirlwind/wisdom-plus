@@ -1,5 +1,6 @@
 module.exports = {
     title: 'Wisdom Plus',
+    base: '/wisdom-plus',
     themeConfig: {
         nav: [
             { text: '首页', link: '/' },
