@@ -10,7 +10,7 @@ export const collapseItemProps = buildProps({
     },
     name: {
         type: [String, Number, Symbol] as PropType<CollapseSupport>,
-        required: true
+        default: () => Symbol('name')
     },
     disabled: Boolean
 })

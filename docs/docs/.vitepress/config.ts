@@ -1,6 +1,5 @@
 module.exports = {
     title: 'Wisdom Plus',
-    base: '/wisdom-plus',
     themeConfig: {
         nav: [
             { text: '首页', link: '/' },
@@ -11,7 +10,7 @@ module.exports = {
         sidebar: {
             '/components/': [
                 {
-                    text: '基础组件',
+                    text: '布局组件',
                     children: [
                         {
                             text: 'Space 空间',
@@ -20,6 +19,10 @@ module.exports = {
                         {
                             text: 'Gird 网格',
                             link: '/components/grid'
+                        },
+                        {
+                            text: 'Collapse 折叠面板',
+                            link: '/components/collapse'
                         }
                     ]
                 }
