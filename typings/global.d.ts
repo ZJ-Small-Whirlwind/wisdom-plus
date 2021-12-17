@@ -13,6 +13,7 @@ declare module 'vue' {
     WpIcon: typeof import('wisdom-plus')['WpIcon']
     WpTooltip: typeof import('wisdom-plus')['WpTooltip']
     WpMenu: typeof import('wisdom-plus')['WpMenu']
+    WpScrollList: typeof import('wisdom-plus')['WpScrollList']
   }
 }
 
