@@ -19,6 +19,7 @@ export const gridItemProps = buildProps({
 export type GridItemProps = ExtractPropTypes<typeof gridItemProps>
 
 export default defineComponent({
+    name: 'WpGridItem',
     props: gridItemProps,
     setup(props, { slots, attrs }) {
         const span = computed(() => {

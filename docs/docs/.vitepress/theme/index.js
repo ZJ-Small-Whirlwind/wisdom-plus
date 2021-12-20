@@ -14,7 +14,8 @@ export default {
   enhanceApp({ app, router, siteData }) {
     for(const name in components) {
       if (components[name].install) {
-        app.component(name, components[name])
+        app.use(components[name])
+        // app.component(name, components[name])
       }
     }
     app.component('Demo', Demo)
