@@ -161,7 +161,7 @@ const menuList = [
 | trigger   | Popover 呼出方式     | _'hover' \| 'click'_                                                   | 'click'      |
 | showArrow | 是否显示指示箭头 | _boolean_ | true |
 | width | 宽度（仅在纵向模式且非折叠的情况下有效） | _string_ | '400px' |
-| click   | 点击任意项的事件回调，返回 _true_ 会阻止默认对激活项的修改     | _(record: MenuRecord) => boolean \| void_                                                   | -      |
+| click   | 点击任意项的事件回调，返回 _true_ 会阻止默认对激活项的修改     | _(record?: MenuRecord) => boolean \| void_                                                   | -      |
 
 ### Methods
 
