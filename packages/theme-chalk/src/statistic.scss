@@ -1,0 +1,40 @@
+.wp-statistic {
+    display: flex;
+    align-items: center;
+    &__label {
+        flex: 1;
+        font-size: 14px;
+        color: #999;
+        display: flex;
+        align-items: center;
+    }
+    &__value {
+        font-size: 18px;
+        flex: 1;
+        justify-content: flex-end;
+        align-items: flex-end;
+        display: flex;
+        &:only-child {
+            justify-content: center;
+        }
+    }
+    &.wp-statistic__vertical {
+        align-items: flex-start;
+        flex-direction: column;
+        .wp-statistic__value:not(:only-child) {
+            justify-content: flex-start;
+        }
+    }
+    &__prefix,
+    &__suffix {
+        font-size: 12px;
+    }
+    &.wp-statistic__reverse {
+        .wp-statistic__label {
+            justify-content: flex-end;
+        }
+        .wp-statistic__value:not(:only-child) {
+            justify-content: flex-start;
+        }
+    }
+}

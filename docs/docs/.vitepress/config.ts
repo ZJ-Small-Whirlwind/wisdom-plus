@@ -25,6 +25,19 @@ module.exports = {
                             link: '/components/collapse'
                         }
                     ]
+                },
+                {
+                    text: '展示组件',
+                    children: [
+                        {
+                            text: 'Scroll List 滚动列表',
+                            link: '/components/scroll-list'
+                        },
+                        {
+                            text: 'Statistic 数据统计',
+                            link: '/components/statistic'
+                        }
+                    ]
                 }
             ]
         }

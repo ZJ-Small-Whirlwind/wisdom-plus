@@ -6,7 +6,8 @@ import {
     StyleValue,
     h,
     onBeforeUnmount,
-    watch
+    watch,
+    PropType
 } from 'vue'
 import { flatten } from '../../../utils/flatten'
 import { definePropType, buildProps } from '@wisdom-plus/utils/props'
@@ -38,26 +39,56 @@ export const scrollListProps = buildProps({
     play: {
         type: Boolean,
         default: true
+    },
+    reverse: {
+        type: Boolean,
+        default: false
+    },
+    autoUpdate: {
+        type: Boolean,
+        default: true
+    },
+    base: {
+        type: String as PropType<'first' | 'last'>,
+        default: 'first'
     }
 })
 
 export type ScrollListProps = ExtractPropTypes<typeof scrollListProps>
 
 export default defineComponent({
-    name: 'ScrollList',
+    name: 'WpScrollList',
     props: scrollListProps,
-    setup(props, { slots }) {
+    setup(props, { slots, expose }) {
         let slotBackup = JSON.stringify(slots.default?.())
+        /**
+         * update elements
+         */
         const getSlotsElements = () => {
             const elements = slots.default?.() || []
-            return flatten(elements).map(element => ({
+            const flattenElements = flatten(elements).map(element => ({
                 ...element,
                 id: Symbol('id')
             }))
+            if (props.base === 'last') {
+                flattenElements.reverse()
+            }
+            return flattenElements
         }
         const slotsElements = ref(getSlotsElements())
+        const update = () => {
+            slotsElements.value = getSlotsElements()
+        }
+        watch([() => props.base, () => props.reverse], () => {
+            if (props.autoUpdate) update()
+        })
+        const scrollListRef = ref<{ $el: HTMLDivElement } | null>(null)
         const popList = () => {
+            if (!props.play) return
             if (slotsElements.value.length < 2) return
+            if (scrollListRef.value) {
+                if (scrollListRef.value.$el.scrollHeight <= scrollListRef.value.$el.offsetHeight) return
+            }
             const firstChild = slotsElements.value.shift()
             if (firstChild) {
                 firstChild.id = Symbol('id')
@@ -72,7 +103,6 @@ export default defineComponent({
             end()
             timer.value = setInterval(popList, props.duration)
         }
-        onBeforeUnmount(end)
         watch(() => props.play, () => {
             if (props.play) {
                 start()
@@ -82,22 +112,46 @@ export default defineComponent({
         }, {
             immediate: true
         })
-        return () => {
-            const slotBackupMap = JSON.stringify(slots.default?.())
-            if (slotBackupMap !== slotBackup) {
-                end()
-                slotBackup = slotBackupMap
-                slotsElements.value = getSlotsElements()
+        /**
+         * 解决 chrome 浏览器返回页面时动画加速的问题
+         */
+        const stopWhileHidden = () => {
+            if (!props.play) return
+            if (document.visibilityState === 'visible') {
                 start()
+            } else {
+                end()
+            }
+        }
+        
+        window.addEventListener('visibilitychange', stopWhileHidden)
+        onBeforeUnmount(() => {
+            end()
+            window.removeEventListener('visibilitychange', stopWhileHidden)
+        })
+        expose({ update })
+        return () => {
+            if (props.autoUpdate) {
+                const slotBackupMap = JSON.stringify(slots.default?.())
+                if (slotBackupMap !== slotBackup) {
+                    end()
+                    slotBackup = slotBackupMap
+                    update()
+                    start()
+                }
             }
             return (
                 h(TransitionGroup, {
-                    class: 'wp-scroll-list',
-                    name: 'wp-scroll-flip',
+                    class: {
+                        'wp-scroll-list': true,
+                        'wp-scroll-list-reverse': props.reverse
+                    },
+                    name: props.reverse ? 'wp-scroll-flip-reverse' : 'wp-scroll-flip',
                     tag: props.tag,
                     style: {
                         height: !isNaN(Number(props.height)) ? `${props.height}px` : props.height
                     },
+                    ref: scrollListRef,
                     onMouseenter: () => props.play && props.hoverToStop && end(),
                     onMouseleave: () => props.play && props.hoverToStop && start()
                 }, {
@@ -107,7 +161,7 @@ export default defineComponent({
                                 'wp-scroll-list__cell': true
                             }} style={{
                                 '--duration': props.animationDuration / 1000 + 's',
-                                marginBottom: index !== slotsElements.value.length - 1 ? (!isNaN(Number(props.space)) ? `${props.space}px` : props.space) : ''
+                                paddingBottom: index !== slotsElements.value.length - 1 ? (!isNaN(Number(props.space)) ? `${props.space}px` : props.space) : ''
                             } as StyleValue} key={element.id}>
                                 { element }
                             </div>

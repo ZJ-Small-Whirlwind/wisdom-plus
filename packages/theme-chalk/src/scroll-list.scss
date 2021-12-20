@@ -1,20 +1,27 @@
 .wp-scroll-list {
     overflow: hidden;
     position: relative;
+    &.wp-scroll-list-reverse {
+        display: flex;
+        flex-direction: column-reverse;
+    }
 }
 
 .wp-scroll-list__cell {
     transition: all var(--duration, 2s) ease;
 }
 
-.wp-scroll-flip-leave-to {
+.wp-scroll-flip-leave-to,
+.wp-scroll-flip-reverse-enter-from {
     transform: translateY(-100%);
 }
 
-.wp-scroll-flip-enter-from {
+.wp-scroll-flip-enter-from,
+.wp-scroll-flip-reverse-leave-to {
     transform: translateY(100%);
 }
 
-.wp-scroll-flip-leave-active {
+.wp-scroll-flip-leave-active,
+.wp-scroll-flip-reverse-leave-active {
     position: absolute;
 }
