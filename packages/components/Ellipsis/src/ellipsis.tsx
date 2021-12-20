@@ -23,7 +23,7 @@ export const ellipsisProps = buildProps({
 export type EllipsisProps = ExtractPropTypes<typeof ellipsisProps>
 
 export default defineComponent({
-    name: 'Ellipsis',
+    name: 'WpEllipsis',
     inheritAttrs: false,
     props: ellipsisProps,
     setup(props, { slots, attrs }) {

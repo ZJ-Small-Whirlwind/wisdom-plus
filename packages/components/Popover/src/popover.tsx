@@ -75,7 +75,7 @@ export type PopoverEmits = typeof popoverEmits
 const textVNodeType = createTextVNode('').type
 
 export default defineComponent({
-    name: 'Popover',
+    name: 'WpPopover',
     inheritAttrs: false,
     props: popoverProps,
     setup(props, { slots, emit }) {

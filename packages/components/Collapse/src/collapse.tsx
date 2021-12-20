@@ -27,7 +27,7 @@ export type CollapseProps = ExtractPropTypes<typeof collapseProps>
 export type CollapseEmits = typeof collapseEmits
 
 export default defineComponent({
-    name: 'Collapse',
+    name: 'WpCollapse',
     props: collapseProps,
     emits: collapseEmits,
     setup(props, { slots, emit }) {

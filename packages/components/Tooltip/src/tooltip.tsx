@@ -27,7 +27,7 @@ export const tooltipProps = {
 export type TooltipProps = ExtractPropTypes<typeof tooltipProps>
 
 export default defineComponent({
-    name: 'Tooltip',
+    name: 'WpTooltip',
     props: tooltipProps,
     setup(props, { slots }) {
         return () => (
