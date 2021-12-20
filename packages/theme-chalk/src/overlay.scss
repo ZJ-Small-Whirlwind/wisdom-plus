@@ -1,0 +1,16 @@
+.wp-overlay {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.wp-overlay-fade-enter-active,
+.wp-overlay-fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.wp-overlay-fade-enter-from,
+.wp-overlay-fade-leave-to {
+  opacity: 0;
+}

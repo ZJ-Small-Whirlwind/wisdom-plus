@@ -52,6 +52,10 @@ module.exports = {
                         {
                             text: 'Ellipsis 文本省略',
                             link: '/components/ellipsis'
+                        },
+                        {
+                            text: 'Overlay 遮罩',
+                            link: '/components/overlay'
                         }
                     ]
                 }
