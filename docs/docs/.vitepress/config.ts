@@ -34,6 +34,10 @@ module.exports = {
                             link: '/components/popover'
                         },
                         {
+                            text: 'Tooltip 文本提示',
+                            link: '/components/tooltip'
+                        },
+                        {
                             text: 'Menu 菜单',
                             link: '/components/menu'
                         },
@@ -44,6 +48,10 @@ module.exports = {
                         {
                             text: 'Statistic 数据统计',
                             link: '/components/statistic'
+                        },
+                        {
+                            text: 'Ellipsis 文本省略',
+                            link: '/components/ellipsis'
                         }
                     ]
                 }
