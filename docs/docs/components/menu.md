@@ -167,8 +167,8 @@ const menuList = [
 ### Slots
 
 | 名称    | 说明     | 参数 |
-| ------- | -------- | -------- |
-| title | 标题 | { ...MenuRecord } |
+| ------- | -------- | --- |
+| title | 标题 | ...MenuRecord |
 
 ## 类型
 

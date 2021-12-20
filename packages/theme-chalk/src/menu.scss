@@ -7,6 +7,8 @@
     --wp-menu-active-color: #2080f0;
     --wp-menu-arrow-color: #909399;
     --wp-menu-hover-color: #ecf5ff;
+    --wp-menu-indent: 20px;
+    --wp-menu-color: #333;
 }
 .wp-menu {
     max-width: var(--wp-menu-max-width);
@@ -31,10 +33,11 @@
     }
     .wp-collapse-item__content {
         padding: 0;
-        padding-left: 20px;
+        padding-left: var(--wp-menu-indent);
     }
 }
 .wp-menu-item {
+    color: var(--wp-menu-color);
     &__icon {
         width: 1em;
         display: inline-flex;
