@@ -1,1 +1,1 @@
-import '@element-plus/theme-chalk/src/base.scss'
+import 'wisdom-plus/theme-chalk/src/base.scss'
