@@ -39,14 +39,14 @@ export const menuProps = buildProps({
     width: {
         type: String,
         default: '400px'
-    }
+    },
+    click: Function as PropType<(record: MenuRecord) => boolean | void>
 })
 export type MenuProps = ExtractPropTypes<typeof menuProps>
 
 const menuEmits = {
     'update:modelValue': (value: CollapseSupport) => typeof value === 'string' || typeof value === 'number' || typeof value === 'symbol',
-    'update:unfold': (value: CollapseSupport[]) => Array.isArray(value),
-    'click': (value: MenuRecord) => typeof value === 'object'
+    'update:unfold': (value: CollapseSupport[]) => Array.isArray(value)
 }
 
 export default defineComponent({
@@ -55,7 +55,7 @@ export default defineComponent({
     emits: menuEmits,
     setup(props, { emit, slots, attrs }) {
         provide('click', (record: MenuRecord) => {
-            emit('click', record)
+            return props?.click(record)
         })
         const activeRef = ref<string | null>(null)
         const active = typeof props.modelValue === 'undefined' ? activeRef : useVModel(props, 'modelValue', emit)
