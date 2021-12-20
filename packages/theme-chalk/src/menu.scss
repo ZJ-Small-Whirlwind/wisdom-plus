@@ -1,7 +1,19 @@
+:root {
+    --wp-menu-padding-top-bottom: 15px;
+    --wp-menu-padding-left-right: 15px;
+    --wp-menu-font-size: 15px;
+    --wp-menu-max-width: 800px;
+    --wp-menu-item-min-width: 200px;
+    --wp-menu-active-color: #2080f0;
+    --wp-menu-arrow-color: #909399;
+    --wp-menu-hover-color: #ecf5ff;
+}
 .wp-menu {
-    max-width: 300px;
+    max-width: var(--wp-menu-max-width);
     transition: max-width .2s;
     overflow: hidden;
+    font-size: var(--wp-menu-font-size);
+    line-height: 1em;
     &.wp-menu__row {
         max-width: 100%;
         overflow: auto;
@@ -10,21 +22,11 @@
         }
     }
     &.wp-menu__collapse {
-        max-width: 36px;
+        max-width: calc(1em + var(--wp-menu-padding-left-right) * 2);
     }
     .wp-collapse-item {
         &.wp-menu-item__active > .wp-collapse-item__title {
-            color: #2080f0;
-        }
-    }
-    .wp-collapse-item__title {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        cursor: pointer;
-        border: 0;
-        &:not(.wp-menu-item__diabeld):hover {
-            background-color: #fcfcfc;
+            color: var(--wp-menu-active-color);
         }
     }
     .wp-collapse-item__content {
@@ -37,37 +39,65 @@
         width: 1em;
         display: inline-flex;
         height: 1em;
+        font-size: 1em;
         align-items: center;
         justify-content: center;
         margin-right: 10px;
-        vertical-align: middle;
         line-height: 0;
+        vertical-align: middle;
     }
-    &-title {
+    &__text {
+        vertical-align: middle;
+        display: inline-flex;
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis;
-        padding: 10px;
+        width: 100%;
+        transition: .2s;
+    }
+    .wp-collapse-item__title-icon {
+        font-size: 12px;
+        color: var(--wp-menu-arrow-color);
+    }
+    &__arrow {
+        position: absolute;
+        right: var(--wp-menu-padding-left-right);
+        top: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        color: var(--wp-menu-arrow-color);
+    }
+    &-title,
+    .wp-collapse-item__title {
+        position: relative;
+        white-space: nowrap;
+        padding: var(--wp-menu-padding-top-bottom) var(--wp-menu-padding-left-right);
         cursor: pointer;
-        transition: color .2s;
+        transition: color .2s, background-color .2s;
+        border: 0;
         &:not(.wp-menu-item__diabeld):hover {
-            background-color: #fcfcfc;
+            background-color: var(--wp-menu-hover-color);
         }
         &.wp-menu-item__active {
-            color: #2080f0;
+            color: var(--wp-menu-active-color);
         }
     }
-    &__diabeld {
+    &__diabled {
         opacity: .6;
         cursor: not-allowed;
     }
 }
+.wp-menu-tootip {
+    font-size: var(--wp-menu-font-size);
+}
 .wp-menu-popover {
     > .wp-popover-content {
+        font-size: var(--wp-menu-font-size);
         padding: 0;
         overflow: hidden;
         > .wp-menu-item {
-            width: 200px;
+            min-width: var(--wp-menu-item-min-width);
         }
     }
 }

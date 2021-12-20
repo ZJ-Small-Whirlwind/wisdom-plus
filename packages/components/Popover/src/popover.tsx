@@ -1,4 +1,4 @@
-import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref, computed, createTextVNode } from 'vue'
+import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref, computed, createTextVNode, CSSProperties } from 'vue'
 import { VBinder, VTarget, VFollower } from 'vueuc'
 
 import { definePropType, buildProps } from '@wisdom-plus/utils/props'
@@ -54,6 +54,10 @@ export const popoverProps = buildProps({
     popoverClass: {
         type: [String, Object] as PropType<string | Record<string, boolean>>,
         default: ''
+    },
+    popoverStyle: {
+        type: definePropType<CSSProperties | string>([Object, String]),
+        default: '',
     },
     offset: {
         type: Array as PropType<number[]>
@@ -231,10 +235,10 @@ export default defineComponent({
                                                 if (props.trigger !== 'hover') return
                                                 handleMouseLeave()
                                             }}
-                                            style={{
+                                            {...mergeProps({
                                                 width: typeof props.width === 'number' ? `${props.width}px`: '',
-                                                transform: props.offset ? `translateX(${props.offset[0]}px) translateY(${props.offset[1]}px)` : ''
-                                            }}
+                                                transform: props.offset ? `translateX(${props.offset[0]}px) translateY(${props.offset[1]}px)` : '',
+                                            }, { style: props.popoverStyle })}
                                         >
                                             { props.arrow ? <div class="wp-popover-arrow" /> : null }
                                             <div class="wp-popover-content">

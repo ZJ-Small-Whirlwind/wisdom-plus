@@ -19,7 +19,7 @@
         :style="buttonStyle"
         @click="handleClick"
     >
-        <wp-icon></wp-icon>
+        <wp-icon v-if="icon || $slots.icon"></wp-icon>
         <span
             v-if="$slots.default"
             :class="{ 'wp-button__text--expand': shouldAddSpace }"

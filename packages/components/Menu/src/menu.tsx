@@ -1,9 +1,13 @@
-import { ref, computed, defineComponent, ExtractPropTypes, PropType, provide, watch } from "vue"
-import { buildProps } from '@wisdom-plus/utils/props'
+import { ref, computed, defineComponent, ExtractPropTypes, PropType, provide, watch } from 'vue'
 
-import { useVModel } from "@vueuse/core"
+import { useVModel } from '@vueuse/core'
 
 import { MenuList, MenuRecord } from './typings'
+
+import MenuItem from './menuItem'
+import Collapse, { CollapseSupport } from '../../Collapse'
+
+import { buildProps } from '@wisdom-plus/utils/props'
 
 export const menuProps = buildProps({
     vertical: {
@@ -11,14 +15,14 @@ export const menuProps = buildProps({
         default: false
     },
     modelValue: {
-        type: String
+        type: [String, Symbol, Number] as PropType<CollapseSupport>
     },
     list: {
         type: Array as PropType<MenuList>,
         default: () => []
     },
     unfold: {
-        type: Array as PropType<string[]>
+        type: Array as PropType<CollapseSupport[]>
     },
     collapse: {
         type: Boolean,
@@ -27,23 +31,29 @@ export const menuProps = buildProps({
     trigger: {
         type: String as PropType<'hover' | 'click'>,
         default: 'hover'
+    },
+    showArrow: {
+        type: Boolean,
+        default: true
+    },
+    width: {
+        type: String,
+        default: '400px'
     }
 })
 export type MenuProps = ExtractPropTypes<typeof menuProps>
 
 const menuEmits = {
-    'update:modelValue': (value: string) => typeof value === 'string',
-    'update:unfold': (value: string[]) => Array.isArray(value),
+    'update:modelValue': (value: CollapseSupport) => typeof value === 'string' || typeof value === 'number' || typeof value === 'symbol',
+    'update:unfold': (value: CollapseSupport[]) => Array.isArray(value),
     'click': (value: MenuRecord) => typeof value === 'object'
 }
 
-import MenuItem from './menuItem'
-import Collapse from '../../Collapse'
-
 export default defineComponent({
+    name: 'WpMenu',
     props: menuProps,
     emits: menuEmits,
-    setup(props, { emit, slots }) {
+    setup(props, { emit, slots, attrs }) {
         provide('click', (record: MenuRecord) => {
             emit('click', record)
         })
@@ -52,14 +62,13 @@ export default defineComponent({
         provide('active', active)
         const slotsRef = ref(slots)
         provide('slots', slotsRef)
-        const items = ref<string[]>([])
-        const unfoldItems = computed<string[]>({
+        const items = ref<CollapseSupport[]>([])
+        const unfoldItems = computed<CollapseSupport[]>({
             get() {
                 if (typeof props.unfold !== 'undefined') {
                     return props.unfold
-                } else {
-                    return items.value
-                }
+                } 
+                return items.value
             },
             set(value) {
                 if (typeof props.unfold !== 'undefined') {
@@ -70,7 +79,7 @@ export default defineComponent({
             }
         })
         provide('unfold', unfoldItems)
-        let collapseRecord: string[] = []
+        let collapseRecord: CollapseSupport[] = []
         provide('collapse', computed(() => props.collapse))
         watch(() => props.collapse, () => {
             if (props.collapse) {
@@ -86,13 +95,17 @@ export default defineComponent({
         })
         provide('trigger', computed(() => props.trigger))
         provide('vertical', computed(() => props.vertical))
+        provide('showArrow', computed(() => props.showArrow))
+        provide('menuStyle', computed(() => attrs.style))
         return () => {
             slotsRef.value = slots
             return (
                 <div class={{
-                    "wp-menu": true,
-                    "wp-menu__collapse" : props.collapse,
-                    "wp-menu__row": !props.vertical
+                    'wp-menu': true,
+                    'wp-menu__collapse' : props.collapse,
+                    'wp-menu__row': !props.vertical
+                }} style={{
+                    maxWidth: !props.collapse && props.vertical ? props.width : ''
                 }}>
                     {
                         props.vertical ? (

@@ -1,5 +1,5 @@
 import { withInstall } from '@wisdom-plus/utils/with-install'
-import Icon from './src/icon.vue'
+import Icon from './src/icon'
 
 export const WpIcon = withInstall(Icon)
 export default WpIcon

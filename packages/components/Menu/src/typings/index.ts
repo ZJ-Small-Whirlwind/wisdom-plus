@@ -1,10 +1,12 @@
 import type { Component } from 'vue'
+import type { CollapseSupport } from '../../../Collapse'
 
-export interface MenuRecord {
-    index: string,
+export type MenuRecord = {
+    index: CollapseSupport,
     title?: string,
-    icon?: Component,
+    icon?: Component | string,
     disabled?: boolean,
-    children?: MenuRecord[]
+    children?: MenuRecord[],
+    info?: Record<string, any>
 }
 export type MenuList = MenuRecord[]

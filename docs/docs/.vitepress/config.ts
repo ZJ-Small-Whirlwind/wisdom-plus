@@ -30,6 +30,14 @@ module.exports = {
                     text: '展示组件',
                     children: [
                         {
+                            text: 'Popover 气泡弹出框',
+                            link: '/components/popover'
+                        },
+                        {
+                            text: 'Menu 菜单',
+                            link: '/components/menu'
+                        },
+                        {
                             text: 'Scroll List 滚动列表',
                             link: '/components/scroll-list'
                         },

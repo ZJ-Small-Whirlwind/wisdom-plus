@@ -2,6 +2,7 @@ import { computed, defineComponent, PropType } from 'vue'
 
 import { buildProps } from '@wisdom-plus/utils/props'
 import type { ExtractPropTypes, CSSProperties } from 'vue'
+import { flatten } from '../../../utils/flatten'
 
 export const spaceProps = buildProps({
     vertical: {
@@ -82,7 +83,7 @@ export default defineComponent({
         const parentAlignItems = computed(() => getFlexOption(props.align))
         const parentJustifyContent = computed(() => getFlexOption(props.justify))
         return () => {
-            const slotElements = context.slots.default?.() || []
+            const slotElements = flatten(context.slots.default?.() || [])
             return (
                 <div class={{
                     'wp-space': true,
