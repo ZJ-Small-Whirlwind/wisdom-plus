@@ -1,4 +1,4 @@
-import { defineComponent, ExtractPropTypes, PropType, watch, ref, Teleport, RendererElement, Transition } from 'vue'
+import { defineComponent, ExtractPropTypes, PropType, watch, ref, Teleport, RendererElement, Transition, provide, inject } from 'vue'
 import { buildProps } from '@wisdom-plus/utils/props'
 
 export const overlayProps = buildProps({
@@ -61,9 +61,14 @@ export default defineComponent({
         const getZIndex = () => {
             if (props.modelValue && typeof props.zIndex === 'undefined') zIndex.value = getMaxZIndex()
         }
+        /**
+         * 处理 overlay 嵌套
+         */
+        provide('wp-overlay', true)
+        const isSubWpOverlay = inject<boolean>('wp-overlay')
         watch(() => props.modelValue, () => {
             getZIndex()
-            if (!props.preventScroll) return
+            if (!props.preventScroll || isSubWpOverlay) return
             if (props.modelValue) {
                 document.body.style.overflowY = 'hidden'
             } else {
