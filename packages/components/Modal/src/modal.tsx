@@ -2,10 +2,12 @@ import { defineComponent, ExtractPropTypes, PropType, computed, ref, Transition,
 import { buildProps } from '@wisdom-plus/utils/props'
 
 import Overlay, { OverlayProps } from '../../Overlay'
+import Icon from '../../Icon'
+import { CloseOutlined } from '@vicons/antd'
 
 export const modalProps = buildProps({
     overlay: {
-        type: Object as PropType<OverlayProps>,
+        type: Object as PropType<Partial<OverlayProps>>,
         default: () => ({})
     },
     modelValue: {
@@ -18,6 +20,10 @@ export const modalProps = buildProps({
     },
     width: {
         type: [String, Number] as PropType<string | number>
+    },
+    showClose: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -26,9 +32,7 @@ export type ModalProps = ExtractPropTypes<typeof modalProps>
 export default defineComponent({
     name: 'WpModal',
     inheritAttrs: false,
-    props: {
-        ...modalProps
-    },
+    props: modalProps,
     emits: {
         'update:modelValue': (value: boolean) => typeof value === 'boolean'
     },
@@ -59,7 +63,16 @@ export default defineComponent({
             immediate: true
         })
         return () => (
-            <Overlay {...props.overlay} vModel={show.value} class="wp-modal__overlay" transitionName='wp-modal-fade'>
+            <Overlay {...props.overlay} modelValue={show.value} onUpdate:modelValue={(value) => {
+                if (value) {
+                    show.value = value
+                } else {
+                    showBox.value = value
+                    nextTick(() => {
+                        show.value = value
+                    })
+                }
+            }} class="wp-modal__overlay">
                 <Transition name={props.transitionName}>
                     {
                         showBox.value ? (
@@ -67,7 +80,29 @@ export default defineComponent({
                                 display: !show.value ? 'none' : '',
                                 width: typeof props.width === 'string' ? props.width : `${props.width}px`
                             }} onClick={e => e.stopPropagation()} {...attrs}>
+                                {
+                                    slots.header || props.showClose ? (
+                                        <div class="wp-modal__header">
+                                            { slots.header?.() }
+                                            {
+                                                props.showClose ? <span class="wp-modal__icon" onClick={() => {
+                                                    showBox.value = false
+                                                    nextTick(() => {
+                                                        show.value = false
+                                                    })
+                                                }}><Icon><CloseOutlined/></Icon></span> : null
+                                            }
+                                        </div>
+                                    ) : null
+                                }
                                 { slots.default?.() }
+                                {
+                                    slots.footer ? (
+                                        <div class="wp-modal__footer">
+                                            { slots.footer?.() }
+                                        </div>
+                                    ) : null
+                                }
                             </div>
                         ) : null
                     }
