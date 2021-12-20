@@ -1,0 +1,25 @@
+.wp-modal {
+    max-height: 100%;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    overflow: auto;
+}
+
+.wp-modal__overlay {
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wp-modal-fade-enter-active,
+.wp-modal-fade-leave-active {
+    transition: 0.3s;
+}
+
+.wp-modal-fade-enter-from,
+.wp-modal-fade-leave-to {
+    transform: scale(0);
+    opacity: 0;
+}

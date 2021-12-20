@@ -82,15 +82,17 @@ export default defineComponent({
                 <Transition name={props.transitionName}>
                     {
                         !props.useVShow && !props.modelValue ? null : (
-                            <div class="wp-overlay" style={{
-                                position: props.position,
-                                zIndex: typeof props.zIndex === 'undefined' ? zIndex.value : props.zIndex,
-                                background: props.background,
-                                backdropFilter: props.blur ? `blur(${typeof props.blur === 'boolean' ? '10px' : props.blur})` : '',
-                                display: props.useVShow && !props.modelValue ? 'none' : ''
-                            }} onClick={() => props.clickToClose && emit('update:modelValue', false)} {...attrs}>
-                                { slots.default?.() }
-                            </div>
+                            <>
+                                <div class="wp-overlay" style={{
+                                    position: props.position,
+                                    zIndex: typeof props.zIndex === 'undefined' ? zIndex.value : props.zIndex,
+                                    background: props.background,
+                                    backdropFilter: props.blur ? `blur(${typeof props.blur === 'boolean' ? '10px' : props.blur})` : '',
+                                    display: props.useVShow && !props.modelValue ? 'none' : ''
+                                }} onClick={() => props.clickToClose && emit('update:modelValue', false)} {...attrs}>
+                                    { slots.default?.() }
+                                </div>
+                            </>
                         )
                     }
                 </Transition>

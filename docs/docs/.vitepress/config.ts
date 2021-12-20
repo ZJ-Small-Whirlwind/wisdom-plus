@@ -56,6 +56,10 @@ module.exports = {
                         {
                             text: 'Overlay 遮罩',
                             link: '/components/overlay'
+                        },
+                        {
+                            text: 'Modal 模态框',
+                            link: '/components/modal'
                         }
                     ]
                 }
