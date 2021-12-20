@@ -1,3 +1,7 @@
+<script lang="ts" setup>
+import { HomeFilled, NodeCollapseOutlined } from '@vicons/antd'
+</script>
+
 # Menu 菜单
 
 ### 介绍
@@ -30,10 +34,12 @@ const menuList = [
     {
         title: '菜单一',
         index: '1',
+        icon: HomeFilled,
         children: [
             {
                 title: '菜单一-1',
-                index: '3'
+                index: '3',
+                icon: NodeCollapseOutlined
             },
             {
                 title: '菜单一-2',
