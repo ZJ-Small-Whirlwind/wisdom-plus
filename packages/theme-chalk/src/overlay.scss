@@ -7,10 +7,10 @@
 
 .wp-overlay-fade-enter-active,
 .wp-overlay-fade-leave-active {
-  transition: opacity 0.3s;
+    transition: opacity 0.3s;
 }
 
 .wp-overlay-fade-enter-from,
 .wp-overlay-fade-leave-to {
-  opacity: 0;
+    opacity: 0;
 }

@@ -20,8 +20,18 @@ Vue.use(WpModal);
 :::demo
 ```vue
 <template>
-    <wp-modal v-model="show">
+    <wp-modal v-model="show" width="400px" title="对话框">
         这里是内容
+        <template #footer>
+            <wp-space justify="end">
+                <wp-button @click="show = !show" size="medium">
+                    取消
+                </wp-button>
+                <wp-button @click="show = !show" size="medium" type="primary">
+                    确认
+                </wp-button>
+            </wp-space>
+        </template>
     </wp-modal>
     <wp-button @click="show = !show">显示模态框</wp-button>
 </template>

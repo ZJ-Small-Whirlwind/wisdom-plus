@@ -65,7 +65,7 @@ export default defineComponent({
          * 处理 overlay 嵌套
          */
         provide('wp-overlay', true)
-        const isSubWpOverlay = inject<boolean>('wp-overlay')
+        const isSubWpOverlay = inject<boolean>('wp-overlay', false)
         watch(() => props.modelValue, () => {
             getZIndex()
             if (!props.preventScroll || isSubWpOverlay) return
