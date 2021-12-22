@@ -124,7 +124,7 @@ const openDialog = () => {
 | showClose      | 是否显示关闭图标       | _boolean_                                                           | true   |
 | title | 标题     | _string_                                                    | -     |
 | border | 是否显示 title 和 footer 的边框       | _boolean_                                                    | true     |
-| doNotCloseMe | 组件是否受全局 closeAll 方法影响 | _boolean_ | false |
+| doNotCloseMe | 组件是否不受全局 closeAll 方法影响 | _boolean_ | false |
 
 ### Methods
 
@@ -174,8 +174,8 @@ _(options?: DialogOptions, props?: ModalProps) => Promise\<void\>_
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | title      | 标题       | _VNode \| string_          | -     |
 | content     | 内容   | _VNode \| string_           | -      |
-| cancelText   | 取消文本 | _VNode \| string_      | - |
-| confirmText  | 确认文本       | _VNode \| string_                                                           | -  |
+| cancelText   | 取消文本 | _VNode \| string_      | '取消' |
+| confirmText  | 确认文本       | _VNode \| string_                                                           | '确认'  |
 | footer | 自定义底部 |  _(close?: () =\> void) =\> VNode \| string_ | - |
 | showFooter      | 是否显示底部       | _boolean_                                                           | true   |
 | showCancel      | 是否显示取消       | _boolean_                                                           | true   |
