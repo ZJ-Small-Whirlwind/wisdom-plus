@@ -8,9 +8,9 @@
 
 ```js
 import Vue from 'vue';
-import { WpPopConfrim } from 'wisdom-plus'
+import { WpPopConfirm } from 'wisdom-plus'
 
-Vue.use(WpPopConfrim)
+Vue.use(WpPopConfirm)
 ```
 
 ## 代码演示
