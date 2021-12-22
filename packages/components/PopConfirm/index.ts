@@ -4,5 +4,5 @@ import PopConfirm from './src/popConfirm'
 export const WpPopConfirm = withInstall(PopConfirm)
 export default WpPopConfirm
 
-export { popConfrimProps } from './src/popConfirm'
-export type { PopConfrimProps } from './src/popConfirm'
+export { popConfirmProps } from './src/popConfirm'
+export type { PopConfirmProps } from './src/popConfirm'
