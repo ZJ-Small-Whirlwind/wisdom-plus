@@ -176,6 +176,7 @@ _(options?: DialogOptions, props?: ModalProps) => Promise\<void\>_
 | content     | 内容   | _VNode \| string_           | -      |
 | cancelText   | 取消文本 | _VNode \| string_      | - |
 | confirmText  | 确认文本       | _VNode \| string_                                                           | -  |
+| footer | 自定义底部 |  _(close?: () =\> void) =\> VNode \| string_ | - |
 | showFooter      | 是否显示底部       | _boolean_                                                           | true   |
 | showCancel      | 是否显示取消       | _boolean_                                                           | true   |
 | showConfirm      | 是否显示确认       | _boolean_                                                           | true   |

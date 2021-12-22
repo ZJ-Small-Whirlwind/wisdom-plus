@@ -15,7 +15,8 @@ export interface DialogOptions {
     showConfirm?: boolean,
     spaceProps?: Partial<SpaceProps> & Record<string, any>,
     cancelProps?: Partial<ButtonProps> & Record<string, any>,
-    confirmProps?: Partial<ButtonProps> & Record<string, any>
+    confirmProps?: Partial<ButtonProps> & Record<string, any>,
+    footer?: (close?: () => void) => VNode | string
 }
 
 const openDialog = function Dialog(options?: DialogOptions, props?: Partial<ModalProps> & Record<string, any>) {
@@ -32,7 +33,9 @@ const openDialog = function Dialog(options?: DialogOptions, props?: Partial<Moda
                     <Modal width={300} { ...props } v-model={show.value} v-slots={{
                         title: () => options?.title || '提示',
                         default: () => options?.content,
-                        footer: () => options?.showFooter !== false ? (
+                        footer: () => options?.footer?.(() => {
+                            show.value = false
+                        }) || (options?.showFooter !== false ? (
                             <Space justify="end" { ...options?.spaceProps }>
                                 {
                                     options?.showCancel !== false ? (
@@ -55,7 +58,7 @@ const openDialog = function Dialog(options?: DialogOptions, props?: Partial<Moda
                                     ) : null
                                 }
                             </Space>
-                        ) : null
+                        ) : null)
                     }} onAfterClose={() => {
                         document.body.removeChild(newDiv)
                         app.unmount()
