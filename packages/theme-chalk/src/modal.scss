@@ -1,9 +1,40 @@
+:root {
+    --wp-modal-duration: .3s;
+}
 .wp-modal {
     max-height: 100%;
     background-color: #fff;
-    border-radius: 4px;
+    border-radius: var(--wp-modal-border-radius);
     overflow: auto;
     font-size: 15px;
+    transition: var(--wp-modal-duration);
+    &__drawer {
+        border-radius: 0;
+        &-left {
+            border-top-right-radius: var(--wp-modal-border-radius);
+            border-bottom-right-radius: var(--wp-modal-border-radius);
+        }
+        &-right {
+            border-top-left-radius: var(--wp-modal-border-radius);
+            border-bottom-left-radius: var(--wp-modal-border-radius);
+        }
+        &-left,
+        &-right {
+            height: 100% !important;
+        }
+        &-top {
+            border-bottom-left-radius: var(--wp-modal-border-radius);
+            border-bottom-right-radius: var(--wp-modal-border-radius);
+        }
+        &-bottom {
+            border-top-left-radius: var(--wp-modal-border-radius);
+            border-top-right-radius: var(--wp-modal-border-radius);
+        }
+        &-top,
+        &-bottom {
+            width: 100% !important;
+        }
+    }
     .wp-modal__header {
         display: flex;
         padding: 15px 20px;
@@ -41,15 +72,59 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    &-top {
+        align-items: flex-start;
+    }
+    &-bottom {
+        align-items: flex-end;
+    }
+    &-left {
+        justify-content: flex-start;
+    }
+    &-right {
+        justify-content: flex-end;
+    }
 }
 
 .wp-modal-fade-enter-active,
-.wp-modal-fade-leave-active {
-    transition: 0.3s;
+.wp-modal-fade-leave-active,
+.wp-modal-left-enter-active,
+.wp-modal-left-leave-active,
+.wp-modal-right-enter-active,
+.wp-modal-right-leave-active,
+.wp-modal-top-enter-active,
+.wp-modal-top-leave-active,
+.wp-modal-bottom-enter-active,
+.wp-modal-bottom-leave-active {
+    transition: var(--wp-modal-duration);
 }
 
 .wp-modal-fade-enter-from,
 .wp-modal-fade-leave-to {
     transform: scale(0);
+    opacity: 0;
+}
+
+.wp-modal-left-enter-from,
+.wp-modal-left-leave-to {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.wp-modal-right-enter-from,
+.wp-modal-right-leave-to {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.wp-modal-top-enter-from,
+.wp-modal-top-leave-to {
+    transform: translateY(-100%);
+    opacity: 0;
+}
+
+.wp-modal-bottom-enter-from,
+.wp-modal-bottom-leave-to {
+    transform: translateY(100%);
     opacity: 0;
 }

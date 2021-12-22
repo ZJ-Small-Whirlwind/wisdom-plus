@@ -1,4 +1,4 @@
-import { defineComponent, ExtractPropTypes, PropType, computed, ref, Transition, watch, nextTick } from 'vue'
+import { defineComponent, ExtractPropTypes, PropType, computed, ref, Transition, watch, nextTick, CSSProperties } from 'vue'
 import { buildProps } from '@wisdom-plus/utils/props'
 
 import Overlay, { OverlayProps } from '../../Overlay'
@@ -17,8 +17,7 @@ export const modalProps = buildProps({
         default: undefined
     },
     transitionName: {
-        type: String,
-        default: 'wp-modal-fade'
+        type: String
     },
     width: {
         type: [String, Number] as PropType<string | number>
@@ -37,6 +36,18 @@ export const modalProps = buildProps({
     doNotCloseMe: {
         type: Boolean,
         default: false
+    },
+    borderRadius: {
+        type: [Boolean, Number],
+        default: true
+    },
+    type: {
+        type: String as PropType<'dialog' | 'drawer'>,
+        default: 'dialog'
+    },
+    from: {
+        type: String as PropType<'top' | 'bottom' | 'left' | 'right'>,
+        default: 'bottom'
     }
 })
 
@@ -102,17 +113,23 @@ export default defineComponent({
             }
         })
         return () => (
-            <Overlay {...props.overlay} modelValue={showOverlay.value} onUpdate:modelValue={(value) => { show.value = value }} class="wp-modal__overlay">
-                <Transition name={props.transitionName}>
+            <Overlay {...props.overlay} modelValue={showOverlay.value} onUpdate:modelValue={(value) => { show.value = value }} class={{
+                'wp-modal__overlay': true,
+                [`wp-modal__overlay-${props.from}`]: props.type === 'drawer'
+            }}>
+                <Transition name={props.transitionName || (props.type === 'drawer' ? `wp-modal-${props.from}` : 'wp-modal-fade' )}>
                     {
                         showBox.value ? (
                             <div class={{
                                 'wp-modal': true,
-                                'wp-modal__no-border': !props.border
+                                'wp-modal__no-border': !props.border,
+                                'wp-modal__drawer': props.type === 'drawer',
+                                [`wp-modal__drawer-${props.from}`]: props.type === 'drawer'
                             }} style={{
                                 display: !showBox.value ? 'none' : '',
-                                width: typeof props.width === 'string' ? props.width : `${props.width}px`
-                            }} onClick={e => e.stopPropagation()} {...attrs}>
+                                width: typeof props.width === 'string' ? props.width : `${props.width}px`,
+                                '--wp-modal-border-radius': props.borderRadius === true ? '4px' : props.borderRadius === false ? 0 : props.borderRadius
+                            } as CSSProperties} onClick={e => e.stopPropagation()} {...attrs}>
                                 {
                                     slots.title || props.title || props.showClose ? (
                                         <div class="wp-modal__header">

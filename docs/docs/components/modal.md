@@ -47,6 +47,36 @@ const show = ref(false)
 ```
 :::
 
+### 抽屉
+
+:::demo
+```vue
+<template>
+    <wp-modal v-model="show" width="400px" title="对话框" :type="type" from="bottom">
+        类型是{{ type }} <wp-button @click="type = type === 'drawer' ? 'dialog' : 'drawer'">切换</wp-button>
+        <template #footer>
+            <wp-space justify="end">
+                <wp-button @click="show = !show" size="medium">
+                    取消
+                </wp-button>
+                <wp-button @click="show = !show" size="medium" type="primary">
+                    确认
+                </wp-button>
+            </wp-space>
+        </template>
+    </wp-modal>
+    <wp-button @click="show = !show">从下往上拉</wp-button>
+</template>
+
+<script lang="ts" setup>
+import { ref } from 'vue'
+
+const type = ref('drawer')
+const show = ref(false)
+</script>
+```
+:::
+
 ### 异步关闭
 
 :::demo
