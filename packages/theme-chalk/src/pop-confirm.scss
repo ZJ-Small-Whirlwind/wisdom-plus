@@ -1,0 +1,15 @@
+:root {
+    --wp-pop-confirm-font-size: 14px;
+}
+
+.wp-pop-confirm {
+    font-size: var(--wp-pop-confirm-font-size);
+    &__content {
+        padding: 10px 0;
+        color: #666;
+    }
+    &__title {
+        font-weight: bold;
+        color: #333;
+    }
+}

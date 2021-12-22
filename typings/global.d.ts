@@ -18,6 +18,7 @@ declare module 'vue' {
     WpEllipsis: typeof import('wisdom-plus')['WpEllipsis']
     WpStatistic: typeof import('wisdom-plus')['WpStatistic']
     WpOverlay: typeof import('wisdom-plus')['WpOverlay']
+    WpPopConfirm: typeof import('wisdom-plus')['WpPopConfirm']
   }
 }
 

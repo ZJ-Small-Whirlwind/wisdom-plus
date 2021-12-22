@@ -34,6 +34,10 @@ module.exports = {
                             link: '/components/popover'
                         },
                         {
+                            text: 'PopConfirm 气泡确认框',
+                            link: '/components/pop-confirm'
+                        },
+                        {
                             text: 'Tooltip 文本提示',
                             link: '/components/tooltip'
                         },
@@ -42,7 +46,7 @@ module.exports = {
                             link: '/components/menu'
                         },
                         {
-                            text: 'Scroll List 滚动列表',
+                            text: 'ScrollList 滚动列表',
                             link: '/components/scroll-list'
                         },
                         {

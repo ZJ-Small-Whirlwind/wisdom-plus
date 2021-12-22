@@ -236,8 +236,10 @@ export default defineComponent({
                                                 handleMouseLeave()
                                             }}
                                             {...mergeProps({
-                                                width: typeof props.width === 'number' ? `${props.width}px`: '',
-                                                transform: props.offset ? `translateX(${props.offset[0]}px) translateY(${props.offset[1]}px)` : '',
+                                                style: {
+                                                    width: typeof props.width === 'number' ? `${props.width}px`: '',
+                                                    transform: props.offset ? `translateX(${props.offset[0]}px) translateY(${props.offset[1]}px)` : '',
+                                                }
                                             }, { style: props.popoverStyle })}
                                         >
                                             { props.arrow ? <div class="wp-popover-arrow" /> : null }
