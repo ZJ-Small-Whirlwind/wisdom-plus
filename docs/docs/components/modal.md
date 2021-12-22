@@ -144,7 +144,7 @@ const openDialog = () => {
 | title | 标题（头部） |
 | footer | 尾部 |
 
-### closeAllModals
+### closeAllModals 函数
 
 在路由跳转时使用此方法，可直接关闭所有的模态框
 
@@ -152,6 +152,9 @@ const openDialog = () => {
 import { closeAllModals } from 'wisdom-plus'
 closeAllModals()
 ```
+
+#### 函数签名
+_() => void_
 
 ### Dialog 函数
 
