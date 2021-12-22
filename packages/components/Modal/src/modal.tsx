@@ -5,6 +5,8 @@ import Overlay, { OverlayProps } from '../../Overlay'
 import Icon from '../../Icon'
 import { CloseOutlined } from '@vicons/antd'
 
+import { closeAll } from './utils'
+
 export const modalProps = buildProps({
     overlay: {
         type: Object as PropType<Partial<OverlayProps>>,
@@ -31,6 +33,10 @@ export const modalProps = buildProps({
     border: {
         type: Boolean,
         default: true
+    },
+    doNotCloseMe: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -41,7 +47,11 @@ export default defineComponent({
     inheritAttrs: false,
     props: modalProps,
     emits: {
-        'update:modelValue': (value: boolean) => typeof value === 'boolean'
+        'update:modelValue': (value: boolean) => typeof value === 'boolean',
+        open: null,
+        close: null,
+        afterClose: null,
+        afterOpen: null
     },
     setup(props, { emit, attrs, slots }) {
         const showRef = ref(false)
@@ -63,20 +73,33 @@ export default defineComponent({
         })
         const showOverlay = ref(false)
         const showBox = ref(false)
+        let neverMeet = true
         watch(show, () => {
             if (show.value) {
                 showOverlay.value = show.value
                 nextTick(() => {
                     showBox.value = show.value
+                    emit('open')
+                    neverMeet = false
                 })
             } else {
                 showBox.value = show.value
                 nextTick(() => {
                     showOverlay.value = show.value
+                    if (!neverMeet) {
+                        emit('close')
+                    } else {
+                        neverMeet = false
+                    }
                 })
             }
         }, {
             immediate: true
+        })
+        watch(closeAll, () => {
+            if (closeAll.value && !props.doNotCloseMe) {
+                show.value = false
+            }
         })
         return () => (
             <Overlay {...props.overlay} modelValue={showOverlay.value} onUpdate:modelValue={(value) => { show.value = value }} class="wp-modal__overlay">
