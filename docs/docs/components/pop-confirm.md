@@ -1,6 +1,5 @@
 # PopConfirm 气泡确认框
 
-
 ### 介绍
 
 一般来说比较危险的操作都需要确认
@@ -23,7 +22,7 @@ Vue.use(WpPopConfrim)
 <template>
     <wp-pop-confirm title="提示" :confirm-props="{ type: 'danger' }">
         <template #reference>
-            <wp-button>显示遮罩</wp-button>
+            <wp-button type="danger">删除</wp-button>
         </template>
         真的要删除吗？
     </wp-pop-confirm>
