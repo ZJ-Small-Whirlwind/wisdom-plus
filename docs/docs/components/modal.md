@@ -52,7 +52,7 @@ const show = ref(false)
 :::demo
 ```vue
 <template>
-    <wp-modal v-model="show" width="400px" title="对话框" :type="type" from="bottom">
+    <wp-modal v-model="show" width="400px" title="对话框" :type="type" from="left">
         类型是{{ type }} <wp-button @click="type = type === 'drawer' ? 'dialog' : 'drawer'">切换</wp-button>
         <template #footer>
             <wp-space justify="end">
@@ -154,6 +154,7 @@ const openDialog = () => {
 | showClose      | 是否显示关闭图标       | _boolean_                                                           | true   |
 | title | 标题     | _string_                                                    | -     |
 | border | 是否显示 title 和 footer 的边框       | _boolean_                                                    | true     |
+| borderRadius | 是否圆角或设置圆角的大小 | _boolean \| string_ | true |
 | doNotCloseMe | 组件是否不受全局 closeAll 方法影响 | _boolean_ | false |
 | type | 类型，可选对话框或抽屉 | _'dialog' \| 'drawer'_ | `dialog` |
 | from | 如果类型为抽屉，从哪边呼出 | _'left' \| 'right' \| 'top' \| 'bottom'_ | `bottom` |

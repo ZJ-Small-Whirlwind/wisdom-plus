@@ -20,7 +20,7 @@
         }
         &-left,
         &-right {
-            height: 100% !important;
+            min-height: 100%;
         }
         &-top {
             border-bottom-left-radius: var(--wp-modal-border-radius);
@@ -32,7 +32,7 @@
         }
         &-top,
         &-bottom {
-            width: 100% !important;
+            min-width: 100%;
         }
     }
     .wp-modal__header {
