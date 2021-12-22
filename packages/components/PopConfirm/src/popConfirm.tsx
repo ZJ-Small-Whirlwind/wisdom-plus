@@ -7,7 +7,7 @@ import Space, { SpaceProps } from '../../Space'
 
 import { buildProps } from '@wisdom-plus/utils/props'
 
-export const popConfrimProps = buildProps({
+export const popConfirmProps = buildProps({
     modelValue: {
         type: Boolean,
         default: undefined
@@ -43,12 +43,12 @@ export const popConfrimProps = buildProps({
     }
 })
 
-export type PopConfrimProps = ExtractPropTypes<typeof popConfrimProps>
+export type PopConfirmProps = ExtractPropTypes<typeof popConfirmProps>
 
 export default defineComponent({
     name: 'WpPopConfirm',
     inheritAttrs: false,
-    props: popConfrimProps,
+    props: popConfirmProps,
     emits: {
         'update:modelValue': (value: boolean) => typeof value === 'boolean',
         'cancel': null,
