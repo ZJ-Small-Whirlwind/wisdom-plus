@@ -117,7 +117,7 @@ export default defineComponent({
                 'wp-modal__overlay': true,
                 [`wp-modal__overlay-${props.from}`]: props.type === 'drawer'
             }}>
-                <Transition name={props.transitionName || (props.type === 'drawer' ? `wp-modal-${props.from}` : 'wp-modal-fade' )}>
+                <Transition name={props.transitionName || (props.type === 'drawer' ? `wp-modal-${props.from}` : 'wp-modal-fade' )} onAfterLeave={() => emit('afterClose')} onAfterEnter={() => emit('afterOpen')}>
                     {
                         showBox.value ? (
                             <div class={{
