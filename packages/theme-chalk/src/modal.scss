@@ -2,6 +2,8 @@
     --wp-modal-duration: .3s;
 }
 .wp-modal {
+    min-width: 0;
+    min-height: 0;
     max-height: 100%;
     background-color: #fff;
     border-radius: var(--wp-modal-border-radius);

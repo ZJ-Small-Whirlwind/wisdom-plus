@@ -52,7 +52,7 @@ const show = ref(false)
 :::demo
 ```vue
 <template>
-    <wp-modal v-model="show" width="400px" title="对话框" :type="type" from="bottom">
+    <wp-modal v-model="show" width="400px" title="对话框" :type="type" from="left">
         类型是{{ type }} <wp-button @click="type = type === 'drawer' ? 'dialog' : 'drawer'">切换</wp-button>
         <template #footer>
             <wp-space justify="end">
