@@ -43,7 +43,7 @@ Vue.use(WpScrollList);
 :::demo
 ```vue
 <template>
-    <wp-scroll-list height="43.2px" :duration="2000" :animation-duration="2000" reverse base="last">
+    <wp-scroll-list height="43.2px" :duration="2000" :animation-duration="300" reverse base="last">
         <div>
             第一行
         </div>

@@ -1,0 +1,61 @@
+:root {
+    --wp-dropdown-color: #666;
+    --wp-dropdown-min-width: 200px;
+    --wp-dropdown-font-size: 15px;
+    --wp-dropdown-group-font-size: 15px;
+    --wp-dropdown-padding-top-bottom: 8px;
+    --wp-dropdown-padding-left-right: 15px;
+    --wp-dropdown-icon-right: 5px;
+    --wp-dropdown-arrow-size: 13px;
+    --wp-dropdown-arrow-color: #333;
+    --wp-dropdown-divided-color: #f5f5f5;
+    --wp-dropdown-hover-background: #f5f5f5;
+    --wp-dropdown-popover-content-padding: 4px;
+}
+
+.wp-dropdown-popover {
+    color: var(--wp-dropdown-color);
+    .wp-dropdown-group {
+        font-size: var(--wp-dropdown-group-font-size);
+        padding: var(--wp-dropdown-padding-top-bottom) var(--wp-dropdown-padding-left-right);
+        color: #999;
+    }
+    .wp-dropdown-item {
+        font-size: var(--wp-dropdown-font-size);
+        padding: var(--wp-dropdown-padding-top-bottom) var(--wp-dropdown-padding-left-right);
+        min-width: var(--wp-dropdown-min-width);
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        align-items: center;
+        &__icon {
+            margin-right: var(--wp-dropdown-icon-right);
+        }
+        &.wp-dropdown-item__with-arrow {
+            padding-right: calc(var(--wp-dropdown-arrow-size) + var(--wp-dropdown-padding-left-right) + 5px);
+        }
+        &__arrow {
+            position: absolute;
+            color: var(--wp-dropdown-arrow-color);
+            right: var(--wp-dropdown-padding-left-right);
+            top: 0;
+            font-size: var(--wp-dropdown-arrow-size);
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+        &__disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+        &__divided {
+            border-top: .5px solid var(--wp-dropdown-divided-color);
+        }
+        &:not(.wp-dropdown-item__disabled):hover {
+            background: var(--wp-dropdown-hover-background);
+        }
+    }
+    .wp-popover-content {
+        padding: var(--wp-dropdown-popover-content-padding) 0;
+    }
+}

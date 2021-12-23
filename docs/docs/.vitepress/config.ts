@@ -46,6 +46,10 @@ module.exports = {
                             link: '/components/menu'
                         },
                         {
+                            text: 'Dropdown 下拉菜单',
+                            link: '/components/dropdown'
+                        },
+                        {
                             text: 'ScrollList 滚动列表',
                             link: '/components/scroll-list'
                         },
