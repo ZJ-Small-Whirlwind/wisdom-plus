@@ -7,10 +7,11 @@
 ### 引入
 
 ```js
-import Vue from 'vue';
+import { createApp } from 'vue'
 import { WpPopConfirm } from 'wisdom-plus'
 
-Vue.use(WpPopConfirm)
+const app = createApp()
+app.use(WpPopConfirm)
 ```
 
 ## 代码演示

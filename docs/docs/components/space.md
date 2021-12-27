@@ -7,10 +7,11 @@
 ### 引入
 
 ```js
-import Vue from 'vue';
-import { WpSpace } from 'wisdom-plus';
+import { createApp } from 'vue'
+import { WpSpace } from 'wisdom-plus'
 
-Vue.use(WpSpace);
+const app = createApp()
+app.use(WpSpace)
 ```
 
 ## 代码演示

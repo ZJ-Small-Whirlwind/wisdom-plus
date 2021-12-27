@@ -23,6 +23,10 @@ module.exports = {
                         {
                             text: 'Collapse 折叠面板',
                             link: '/components/collapse'
+                        },
+                        {
+                            text: 'Toast 轻提示',
+                            link: '/components/toast'
                         }
                     ]
                 },
@@ -44,6 +48,10 @@ module.exports = {
                         {
                             text: 'Menu 菜单',
                             link: '/components/menu'
+                        },
+                        {
+                            text: 'ActionSheet 动作菜单',
+                            link: '/components/action-sheet'
                         },
                         {
                             text: 'Dropdown 下拉菜单',
@@ -68,6 +76,10 @@ module.exports = {
                         {
                             text: 'Modal 模态框',
                             link: '/components/modal'
+                        },
+                        {
+                            text: 'Badge 徽章',
+                            link: '/components/badge'
                         }
                     ]
                 }

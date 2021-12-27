@@ -113,7 +113,8 @@ export default defineComponent({
                         class={{
                             'wp-menu-item-title': true,
                             'wp-menu-item__active': isActive || active?.value === props.index,
-                            'wp-menu-item__diabled': props.disabled
+                            'wp-menu-item__diabled': props.disabled,
+                            'wp-menu-item__with-arrow': showArrow && arrow?.value
                         }}
                         onClick={() => {
                             if (props.disabled || !needClick) return

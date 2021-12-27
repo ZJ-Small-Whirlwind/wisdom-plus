@@ -7,10 +7,11 @@
 ### 引入
 
 ```js
-import Vue from 'vue';
-import { WpOverlay } from 'wisdom-plus';
+import { createApp } from 'vue'
+import { WpOverlay } from 'wisdom-plus'
 
-Vue.use(WpOverlay);
+const app = createApp()
+app.use(WpOverlay)
 ```
 
 ## 代码演示
@@ -56,7 +57,7 @@ const show = ref(false)
 | background   | 背景 | _string_ | _'#00000099'_      |
 | blur  | 背景高斯模糊，为字符串时代表背景高斯模糊程度       | _boolean \| string_                                                           | false  |
 | zIndex      | Z 轴高度       | _number_                                                           | -   |
-| to | Popover 元素存放在哪个位置，设为 `null` 则为父元素       | _string \| RendererElement \| null_                                                    | -     |
+| to | Overlay 元素存放在哪个位置，设为 `false` 则为父元素       | _string \| RendererElement \| false_                                                    | -     |
 | clickToClose | 是否可以通过点击关闭遮罩 | _boolean_ | true |
 | useVShow | 是否使用 v-show，为否时使用 v-if | _boolean_ | false |
 | transitionName | 过渡类名 | _string_ | _'wp-overlay-fade'_ |

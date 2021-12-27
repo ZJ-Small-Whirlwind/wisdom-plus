@@ -90,6 +90,11 @@
         font-size: 12px;
         color: var(--wp-menu-arrow-color);
     }
+    &-title {
+        &.wp-menu-item__with-arrow {
+            padding-right: calc(var(--wp-menu-padding-left-right) + 17px);
+        }
+    }
     &-title,
     .wp-collapse-item__title {
         position: relative;

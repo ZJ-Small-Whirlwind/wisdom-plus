@@ -7,10 +7,11 @@
 ### 引入
 
 ```js
-import Vue from 'vue';
-import { WpEllipsis } from 'wisdom-plus';
+import { createApp } from 'vue'
+import { WpEllipsis } from 'wisdom-plus'
 
-Vue.use(WpEllipsis);
+const app = createApp()
+app.use(WpEllipsis)
 ```
 
 ## 代码演示

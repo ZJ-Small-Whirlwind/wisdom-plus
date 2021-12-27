@@ -1,4 +1,4 @@
-import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref, computed, createTextVNode, CSSProperties } from 'vue'
+import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref, computed, createTextVNode, CSSProperties, watch } from 'vue'
 import { VBinder, VTarget, VFollower } from 'vueuc'
 
 import { definePropType, buildProps } from '@wisdom-plus/utils/props'
@@ -74,6 +74,12 @@ export type PopoverEmits = typeof popoverEmits
 
 const textVNodeType = createTextVNode('').type
 
+const getMaxZIndex = () => {
+    const elements = Array.from(document.querySelectorAll('*'))
+    const arr = elements.map(e => +window.getComputedStyle(e).zIndex || 0);
+    return arr.length ? Math.max(...arr) + 1 : 1
+}
+
 export default defineComponent({
     name: 'WpPopover',
     inheritAttrs: false,
@@ -83,6 +89,7 @@ export default defineComponent({
          * 非受控模式
          */
         const popoverShow = ref(false)
+        const zIndex = ref(0)
         const show = computed<boolean>({
             get() {
                 if (typeof props.modelValue === 'undefined') {
@@ -97,6 +104,11 @@ export default defineComponent({
                 } else {
                     emit('update:modelValue', value)
                 }
+            }
+        })
+        watch(show, () => {
+            if (show.value && !props.zIndex) {
+                zIndex.value = getMaxZIndex()
             }
         })
         /**
@@ -172,6 +184,7 @@ export default defineComponent({
             }
         })
         const leaving = ref(false)
+        const zIndexRef = computed(() => props.zIndex || zIndex.value)
         return () => (
             <VBinder>
                 <VTarget>
@@ -180,7 +193,7 @@ export default defineComponent({
                 <VFollower
                     show
                     placement={props.placement}
-                    zIndex={props.zIndex}
+                    zIndex={zIndexRef.value}
                     enabled={followerEnabled.value}
                     to={props.to === false ? undefined : props.to}
                     width={props.width === 'trigger' || props.width === 'target' ? 'target' : undefined}

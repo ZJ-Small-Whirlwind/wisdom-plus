@@ -10,6 +10,7 @@
     overflow: auto;
     font-size: 15px;
     transition: var(--wp-modal-duration);
+    outline: none;
     &__drawer {
         border-radius: 0;
         &-left {
@@ -72,7 +73,7 @@
 }
 
 .wp-modal__overlay {
-    overflow: auto;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
