@@ -76,6 +76,10 @@ module.exports = {
                         {
                             text: 'Modal 模态框',
                             link: '/components/modal'
+                        },
+                        {
+                            text: 'Badge 徽章',
+                            link: '/components/badge'
                         }
                     ]
                 }
