@@ -29,6 +29,7 @@ export default defineConfig(async () => {
     },
     server: {
       host: true,
+      port:3001
     },
     plugins: [
       vue(),

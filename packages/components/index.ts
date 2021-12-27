@@ -1,3 +1,16 @@
+import * as wisdomPlusComponents  from "./index";
+import {Plugin} from "vue"
+
+export default <Plugin>{
+    install:(app)=>{
+        for(const name in wisdomPlusComponents) {
+            if (name.toLowerCase() !== 'default' && wisdomPlusComponents[name].install) {
+                app.use(wisdomPlusComponents[name])
+            }
+        }
+    }
+}
+
 export * from './Button'
 export * from './Icon'
 export * from './Space'
