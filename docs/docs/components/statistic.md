@@ -6,10 +6,11 @@ UI 画的设计稿里喜欢用一大一小标注数据和单位，切图的时�
 ### 引入
 
 ```js
-import Vue from 'vue'
+import { createApp } from 'vue'
 import { WpStatistic } from 'wisdom-plus'
 
-Vue.use(WpStatistic)
+const app = createApp()
+app.use(WpStatistic)
 ```
 
 ## 代码演示

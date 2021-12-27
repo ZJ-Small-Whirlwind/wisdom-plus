@@ -11,10 +11,11 @@ import { HomeFilled, NodeCollapseOutlined } from '@vicons/antd'
 ### 引入
 
 ```js
-import Vue from 'vue';
-import { WpMenu } from 'wisdom-plus';
+import { createApp } from 'vue'
+import { WpMenu } from 'wisdom-plus'
 
-Vue.use(WpMenu);
+const app = createApp()
+app.use(WpMenu)
 ```
 
 ## 代码演示

@@ -11,10 +11,11 @@ import { Dialog } from '@wisdom-plus/components'
 ### 引入
 
 ```js
-import Vue from 'vue';
-import { WpModal } from 'wisdom-plus';
+import { createApp } from 'vue'
+import { WpModal } from 'wisdom-plus'
 
-Vue.use(WpModal);
+const app = createApp()
+app.use(WpModal)
 ```
 
 ## 代码演示

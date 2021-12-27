@@ -7,10 +7,11 @@
 ### 引入
 
 ```js
-import Vue from 'vue';
-import { WpOverlay } from 'wisdom-plus';
+import { createApp } from 'vue'
+import { WpOverlay } from 'wisdom-plus'
 
-Vue.use(WpOverlay);
+const app = createApp()
+app.use(WpOverlay)
 ```
 
 ## 代码演示

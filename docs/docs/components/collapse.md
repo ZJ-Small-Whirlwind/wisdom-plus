@@ -7,11 +7,12 @@
 ### 引入
 
 ```js
-import Vue from 'vue';
-import { WpCollapse, WpCollapseItem } from 'wisdom-plus';
+import { createApp } from 'vue'
+import { WpCollapse, WpCollapseItem } from 'wisdom-plus'
 
-Vue.use(WpCollapse);
-Vue.use(WpCollapseItem);
+const app = createApp()
+app.use(WpCollapse)
+app.use(WpCollapseItem)
 ```
 
 ## 代码演示

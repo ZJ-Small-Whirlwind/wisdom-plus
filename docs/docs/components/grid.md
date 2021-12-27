@@ -7,11 +7,12 @@
 ### 引入
 
 ```js
-import Vue from 'vue';
-import { WpGrid, WpGridItem } from 'wisdom-plus';
+import { createApp } from 'vue'
+import { WpGrid, WpGridItem } from 'wisdom-plus'
 
-Vue.use(WpGrid);
-Vue.use(WpGridItem);
+const app = createApp()
+app.use(WpGrid)
+app.use(WpGridItem)
 ```
 
 ## 代码演示

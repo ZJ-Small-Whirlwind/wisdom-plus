@@ -7,10 +7,11 @@
 ### 引入
 
 ```js
-import Vue from 'vue'
+import { createApp } from 'vue'
 import { WpTooltip } from 'wisdom-plus'
 
-Vue.use(WpTooltip)
+const app = createApp()
+app.use(WpTooltip)
 ```
 
 ## 代码演示
