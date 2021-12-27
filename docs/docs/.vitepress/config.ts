@@ -46,6 +46,10 @@ module.exports = {
                             link: '/components/menu'
                         },
                         {
+                            text: 'ActionSheet 动作菜单',
+                            link: '/components/action-sheet'
+                        },
+                        {
                             text: 'Dropdown 下拉菜单',
                             link: '/components/dropdown'
                         },

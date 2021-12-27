@@ -1,0 +1,74 @@
+.wp-action-sheet {
+    font-size: var(--wp-action-sheet-font-size, 16px);
+    .wp-action-sheet__cell {
+        &.wp-action-sheet--description {
+            padding: 15px var(--wp-action-sheet-padding-left-right, 20px);
+            color: #aaa;
+            font-size: 14px;
+            text-align: center;
+            line-height: 16px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        &.wp-action-sheet--cancel {
+            padding: var(--wp-action-sheet-padding-top-bottom, 10px) var(--wp-action-sheet-padding-left-right, 20px);
+            .wp-button {
+                width: 100%;
+            }
+        }
+        .wp-action-sheet--content {
+            padding: 0 var(--wp-action-sheet-padding-left-right, 20px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            .wp-action-sheet--icon {
+                font-size: var(--wp-action-sheet-icon-size, 20px);
+                color: #666;
+                margin-right: 10px;
+                display: flex;
+                align-items: center;
+            }
+            .wp-action-sheet--text {
+                padding: var(--wp-action-sheet-padding-top-bottom, 10px) 0;
+                flex: 1;
+                overflow: hidden;
+                border-bottom: 1px solid #f5f5f5;
+            }
+            .wp-action-sheet--title {
+                color: #000;
+            }
+            .wp-action-sheet--description {
+                color: #999;
+                font-size: 13px;
+            }
+        }
+        &.wp-action-sheet__cell--disabled {
+            opacity: .6;
+            .wp-action-sheet--content {
+                cursor: not-allowed;
+            }
+        }
+        &:not(.wp-action-sheet__cell--disabled) {
+            .wp-action-sheet--content:active {
+                background-color: #f5f5f5;
+            }
+        }
+    }
+    .wp-action-sheet--hander {
+        display: flex;
+        justify-content: center;
+        padding: 10px;
+        &::after {
+            content: '';
+            width: 40px;
+            height: 5px;
+            background-color: #ccc;
+            border-radius: 5px;
+        }
+    }
+}
+
+.wp-modal-action-sheet {
+    .wp-modal__content {
+        padding: 0;
+    }
+}
