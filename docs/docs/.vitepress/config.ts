@@ -23,6 +23,10 @@ module.exports = {
                         {
                             text: 'Collapse 折叠面板',
                             link: '/components/collapse'
+                        },
+                        {
+                            text: 'Toast 轻提示',
+                            link: '/components/toast'
                         }
                     ]
                 },
