@@ -130,3 +130,5 @@ Vue.use(WpStatistic)
 | prefix | 数值前缀 |
 | suffix | 数值后缀 |
 | label | 标签 |
+| top | 上置的额外内容 |
+| bottom | 下置的额外内容 |
