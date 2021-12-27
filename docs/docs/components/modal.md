@@ -66,7 +66,17 @@ const show = ref(false)
             </wp-space>
         </template>
     </wp-modal>
-    <wp-button @click="show = !show">从下往上拉</wp-button>
+    <wp-space vertical>
+        <wp-space>
+            <wp-button @click="show = !show">从下往上拉</wp-button>
+            <wp-button @click="show2 = !show2">相对于容器</wp-button>
+        </wp-space>
+        <div style="width: 100%; height: 300px; background-color: #eee; position: relative;">
+            <wp-modal v-model="show2" width="400px" title="对话框" from="bottom" type="drawer" :overlay="{ to: false, position: 'absolute' }">
+                你好
+            </wp-modal>
+        </div>
+    </wp-space>
 </template>
 
 <script lang="ts" setup>
@@ -74,6 +84,7 @@ import { ref } from 'vue'
 
 const type = ref('drawer')
 const show = ref(false)
+const show2 = ref(false)
 </script>
 ```
 :::

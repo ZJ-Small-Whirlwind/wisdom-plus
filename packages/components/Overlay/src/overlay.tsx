@@ -20,7 +20,7 @@ export const overlayProps = buildProps({
     },
     zIndex: Number,
     to: {
-        type: [String, Object] as PropType<string | RendererElement | null>,
+        type: [String, Object, Boolean] as PropType<string | RendererElement | false>,
         default: 'body'
     },
     clickToClose: {
@@ -68,7 +68,7 @@ export default defineComponent({
         const isSubWpOverlay = inject<boolean>('wp-overlay', false)
         watch(() => props.modelValue, () => {
             getZIndex()
-            if (!props.preventScroll || isSubWpOverlay) return
+            if (!props.preventScroll || isSubWpOverlay || !props.to) return
             if (props.modelValue) {
                 document.body.style.overflowY = 'hidden'
             } else {
@@ -78,7 +78,7 @@ export default defineComponent({
             immediate: true
         })
         return () => (
-            <Teleport to={props.to}>
+            <Teleport to={props.to || null} disabled={!props.to}>
                 <Transition name={props.transitionName}>
                     {
                         !props.useVShow && !props.modelValue ? null : (
