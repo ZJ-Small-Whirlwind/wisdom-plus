@@ -1,6 +1,6 @@
 // .vitepress/theme/index.js
 
-import * as components from '@wisdom-plus/components'
+import wisdomPlus from '@wisdom-plus/components'
 import DefaultTheme from 'vitepress/theme'
 import 'vitepress-theme-demoblock/theme/styles/index.css'
 
@@ -14,12 +14,7 @@ import DemoBlock from 'vitepress-theme-demoblock/components/DemoBlock.vue'
 export default {
   ...DefaultTheme,
   enhanceApp({ app, router, siteData }) {
-    for(const name in components) {
-      if (components[name].install) {
-        app.use(components[name])
-        // app.component(name, components[name])
-      }
-    }
+    app.use(wisdomPlus)
     app.component('Demo', Demo)
     app.component('DemoBlock', DemoBlock)
     // app is the Vue 3 app instance from `createApp()`. router is VitePress'
