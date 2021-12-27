@@ -30,6 +30,26 @@ app.use(WpBadge)
         <wp-badge>
             <wp-button>更多</wp-button>
         </wp-badge>
+        <wp-badge value="任意字符串" />
+    </wp-space>
+</template>
+```
+:::
+
+#### 定制
+
+:::demo
+```vue
+<template>
+    <wp-space align="center">
+        <wp-badge value="任意字符串" />
+        <wp-badge value="任意背景" color="#eee" style="--wp-badge-color: #333; --wp-badge-font-size: 12px;" />
+        <wp-badge style="--wp-badge-font-size: 14px;" color="#469">
+            <template #value>
+                插槽
+            </template>
+            <wp-button>更多</wp-button>
+        </wp-badge>
     </wp-space>
 </template>
 ```

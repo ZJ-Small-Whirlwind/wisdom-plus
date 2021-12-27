@@ -1,4 +1,4 @@
-import { defineComponent, ExtractPropTypes } from 'vue'
+import { computed, defineComponent, ExtractPropTypes } from 'vue'
 
 import { buildProps } from '@wisdom-plus/utils/props'
 
@@ -23,26 +23,25 @@ export default defineComponent({
     name: 'WpBadge',
     props: badgeProps,
     setup(props, { slots }) {
+        const valueToShow = computed(() => {
+            if (typeof props.value === 'number') {
+                if (typeof props.max === 'number') {
+                    return props.value > props.max ? `${props.max}+` : props.value
+                }
+                return props.value
+            }
+            return props.value
+        })
         return () => {
             const BadgeCount = (
                 !props.hidden ? (
                     <div class={{
                         'wp-badge-value': true,
-                        'wp-badge__dot': !slots.value && !props.value
+                        'wp-badge__dot': !slots.value && !props.value && props.value !== 0
                     }} style={{
                         backgroundColor: props.color
                     }}>
-                        { slots.value?.() ||
-                            (
-                                typeof props.max === 'number' && typeof props.value === 'number' ?
-                                (
-                                    props.value > props.max ?
-                                    `${props.max}+` :
-                                    props.value
-                                ) :
-                                props.value
-                            )
-                        }</div>
+                        { slots.value?.() || valueToShow.value }</div>
                 ) : null
             )
             return (
