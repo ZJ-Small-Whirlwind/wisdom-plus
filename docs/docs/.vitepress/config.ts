@@ -31,6 +31,15 @@ module.exports = {
                     ]
                 },
                 {
+                    text: '输入组件',
+                    children: [
+                        {
+                            text: 'TagInput 标签输入',
+                            link: '/components/tag-input'
+                        }
+                    ]
+                },
+                {
                     text: '展示组件',
                     children: [
                         {

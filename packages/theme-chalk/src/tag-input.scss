@@ -1,0 +1,85 @@
+:root {
+    --wp-taginput-font-size: 14px;
+    --wp-taginput-padding-left-right: 10px;
+    --wp-taginput-padding-top-bottom: 5px;
+    --wp-taginput-line-height: 2;
+}
+
+.wp-taginput {
+    padding: var(--wp-taginput-padding-top-bottom) var(--wp-taginput-padding-left-right);
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    transition: border .2s;
+    cursor: text;
+    font-size: var(--wp-taginput-font-size);
+    display: flex;
+    &.wp-taginput-disabled {
+        opacity: .6;
+        cursor: not-allowed;
+    }
+    &__content {
+        flex: 1;
+        overflow: hidden;
+    }
+    &__clear {
+        display: flex;
+        align-items: center;
+        &-icon {
+            margin-left: 4px;
+            font-size: 12px;
+            padding: 1px;
+            transition: .2s;
+            border-radius: 50%;
+            height: 16px;
+            width: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+            &:hover {
+                color: var(--wp-tag-bg-color);
+                background-color: var(--wp-tag-color);
+            }
+        }
+    }
+    .wp-tag {
+        cursor: default;
+    }
+    .wp-space-item:last-child {
+        display: flex;
+        align-items: center;
+    }
+    .wp-taginput__content-input {
+        display: inline-flex;
+        outline: none;
+        position: relative;
+        line-height: var(--wp-taginput-line-height);
+        &.blank::before {
+            content: var(--wp-taginput-placehoder, '请输入');
+            color: #ccc;
+        }
+    }
+    &:not(.wp-taginput-disabled):hover {
+        border-color: #ccc;
+    }
+    &:not(.wp-taginput-disabled).focus {
+        border-color: #409eff;
+    }
+    &-small {
+        --wp-taginput-font-size: 13px;
+        --wp-taginput-padding-top-bottom: 4px;
+        --wp-taginput-padding-left-right: 10px;
+        --wp-taginput-line-height: 1.8;
+    }
+    &-medium {
+        --wp-taginput-font-size: 15px;
+        --wp-taginput-padding-top-bottom: 5px;
+        --wp-taginput-padding-left-right: 10px;
+    }
+    &-large {
+        --wp-taginput-font-size: 16px;
+        --wp-taginput-padding-top-bottom: 6px;
+        --wp-taginput-padding-left-right: 10px;
+        --wp-taginput-line-height: 2.4;
+    }
+}

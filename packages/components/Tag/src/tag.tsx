@@ -26,7 +26,7 @@ export default defineComponent({
     name: 'WpTag',
     props: tagProps,
     emits: {
-        close: () => true
+        close: (e: Event) => typeof e === 'object'
     },
     setup(props, { slots, emit }) {
         return () => (
@@ -49,7 +49,7 @@ export default defineComponent({
                 <div class="wp-tag--text">{ slots.default?.() || props.label }</div>
                 {
                     props.closable ? (
-                        <div class="wp-tag--close" onClick={() => emit('close')}>
+                        <div class="wp-tag--close" onClick={e => emit('close', e)}>
                             <Icon>
                                 { slots.closeIcon?.() || <CloseOutlined /> }
                             </Icon>
