@@ -37,7 +37,10 @@ export const tagInputProps = buildProps({
     spaceProps: {
         type: Object as PropType<Partial<SpaceProps> & Record<string, any>>,
         default: () => ({})
-    }
+    },
+    max: Number,
+    trim: Boolean,
+    limit: Number
 })
 
 export type TagInputProps = ExtractPropTypes<typeof tagInputProps>
@@ -73,8 +76,11 @@ export default defineComponent({
         const regExp = computed(() => new RegExp(`[${props.delimiter.join('|')}]$`))
 
         const tagPush = (clear = true) => {
-            const text = inputingTag.value
-            if (props.allowRepeat || !value.value.includes(text)) {
+            let text = inputingTag.value
+            if (props.trim) {
+                text = text.trim()
+            }
+            if (text && (props.allowRepeat || !value.value.includes(text))) {
                 value.value.push(text)
             }
             if (clear) {
@@ -82,38 +88,63 @@ export default defineComponent({
                 inputingTag.value = ''
             }
         }
-        return () => (
-            <div class={{
-                'wp-taginput': true,
-                'wp-taginput-disabled': props.disabled,
-                [`wp-taginput-${props.size}`]: true,
-                'focus': focused.value
-            }} onClick={() => {
-                if (!focused.value && !props.disabled && !props.readonly) {
-                    inputRef.value?.focus()
+
+        const tagsMap = computed(() => {
+            let finalValue: string[] = []
+            if (props.max) {
+                finalValue = value.value.slice(0, props.max)
+            } else {
+                finalValue = value.value
+            }
+            const final = finalValue.map((tag, index) => {
+                return {
+                    tag,
+                    index,
+                    close: () => {
+                        value.value.splice(index, 1)
+                    }
                 }
-            }}>
+            })
+            if (props.max && props.max < value.value.length) final.push({
+                tag: `${value.value.length - props.max}+`,
+                index: -1,
+                close: () => {}
+            })
+            return final
+        })
+
+        const notLimited = computed(() => {
+            return !props.limit || value.value.length < props.limit
+        })
+        return () => (
+            <div
+                class={{
+                    'wp-taginput': true,
+                    'wp-taginput-disabled': props.disabled,
+                    [`wp-taginput-${props.size}`]: true,
+                    'focus': focused.value
+                }}
+                onClick={() => {
+                    if (!focused.value && !props.disabled && !props.readonly && notLimited.value) {
+                        inputRef.value?.focus()
+                    }
+                }}
+            >
                 <div class="wp-taginput__content">
                     <Space align="center" { ...props.spaceProps }>
                         {
-                            value.value.map((item, index) => {
-                                return slots.tag?.({
-                                    tag: item,
-                                    index,
-                                    close: () => {
-                                        value.value.splice(index, 1)
-                                    }
-                                }) || (
+                            tagsMap.value.map(tag => {
+                                return slots.tag?.(tag) || (
                                     <Tag
                                         size={props.size}
-                                        closable={!props.readonly && !props.disabled}
+                                        closable={!props.readonly && !props.disabled && tag.index !== -1}
                                         { ...props.tagProps }
                                         onClose={e => {
                                             e.stopPropagation()
-                                            value.value.splice(index, 1)
+                                            value.value.splice(tag.index, 1)
                                         }}
                                     >
-                                        { item }
+                                        { tag.tag }
                                     </Tag>
                                 )
                             })
@@ -144,9 +175,9 @@ export default defineComponent({
                                 if (!inputingTag.value) return
                                 tagPush()
                             }}
-                            contenteditable={!props.readonly && !props.disabled ? 'true' : 'false' as any}
+                            contenteditable={!props.readonly && !props.disabled && notLimited.value ? 'true' : 'false' as any}
                             onKeydown={e => {
-                                if (e.code === 'Enter') {
+                                if (e.code === 'Enter' || e.code === 'NumpadEnter') {
                                     e.preventDefault()
                                     if (!inputingTag.value) return
                                     tagPush()

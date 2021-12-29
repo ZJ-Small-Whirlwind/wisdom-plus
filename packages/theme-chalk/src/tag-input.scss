@@ -2,7 +2,7 @@
     --wp-taginput-font-size: 14px;
     --wp-taginput-padding-left-right: 10px;
     --wp-taginput-padding-top-bottom: 5px;
-    --wp-taginput-line-height: 26px;
+    --wp-taginput-line-height: 28px;
 }
 
 .wp-taginput {
@@ -13,6 +13,7 @@
     cursor: text;
     font-size: var(--wp-taginput-font-size);
     display: flex;
+    outline: none;
     &.wp-taginput-disabled {
         opacity: .6;
         cursor: not-allowed;
@@ -73,7 +74,7 @@
     }
     &-medium {
         --wp-taginput-font-size: 15px;
-        --wp-taginput-padding-top-bottom: 5px;
+        --wp-taginput-padding-top-bottom: 6px;
         --wp-taginput-padding-left-right: 10px;
         --wp-taginput-line-height: 30px;
     }
