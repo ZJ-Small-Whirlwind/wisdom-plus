@@ -241,7 +241,6 @@ export default defineComponent({
                                             class={{
                                                 'wp-popover': true,
                                                 'wp-popover__dark': props.dark,
-                                                [`wp-popover__${props.placement}`]: true,
                                                 ...popoverClassRef.value
                                             }}
                                             ref={popoverRef}
