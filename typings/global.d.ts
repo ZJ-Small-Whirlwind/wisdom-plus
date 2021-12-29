@@ -22,6 +22,7 @@ declare module 'vue' {
     WpDropdown: typeof import('wisdom-plus')['WpDropdown']
     WpActionSheet: typeof import('wisdom-plus')['WpActionSheet']
     WpTag: typeof import('wisdom-plus')['WpTag']
+    WpTagInput: typeof import('wisdom-plus')['WpTagInput']
   }
 }
 
