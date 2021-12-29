@@ -65,7 +65,6 @@ export default defineComponent({
         provide('wp-dropdown-show-arrow', computed(() => props.showArrow))
         return () => (
             <Popover
-                arrow={false}
                 placement="bottom"
                 trigger="hover"
                 { ...props.popover }

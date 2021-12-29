@@ -76,7 +76,6 @@ export default defineComponent({
                     {
                         props.children && props.children.length > 0 ? (
                             <PopoverMap
-                                arrow={false}
                                 popoverClass="wp-dropdown-popover"
                                 trigger="hover"
                                 { ...popoverProps?.value }
