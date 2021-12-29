@@ -2,7 +2,7 @@
     --wp-taginput-font-size: 14px;
     --wp-taginput-padding-left-right: 10px;
     --wp-taginput-padding-top-bottom: 5px;
-    --wp-taginput-line-height: 2;
+    --wp-taginput-line-height: 26px;
 }
 
 .wp-taginput {
@@ -69,17 +69,18 @@
         --wp-taginput-font-size: 13px;
         --wp-taginput-padding-top-bottom: 4px;
         --wp-taginput-padding-left-right: 10px;
-        --wp-taginput-line-height: 1.8;
+        --wp-taginput-line-height: 23px;
     }
     &-medium {
         --wp-taginput-font-size: 15px;
         --wp-taginput-padding-top-bottom: 5px;
         --wp-taginput-padding-left-right: 10px;
+        --wp-taginput-line-height: 30px;
     }
     &-large {
         --wp-taginput-font-size: 16px;
         --wp-taginput-padding-top-bottom: 6px;
         --wp-taginput-padding-left-right: 10px;
-        --wp-taginput-line-height: 2.4;
+        --wp-taginput-line-height: 38px;
     }
 }

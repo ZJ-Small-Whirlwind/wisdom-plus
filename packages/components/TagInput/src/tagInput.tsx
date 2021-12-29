@@ -19,7 +19,10 @@ export const tagInputProps = buildProps({
         type: Object as PropType<Partial<TagProps> & Record<string, any>>,
         default: () => ({})
     },
-    placeholder: String,
+    placeholder: {
+        type: String,
+        default: '请输入标签'
+    },
     allowRepeat: Boolean,
     delimiter: {
         type: Array as PropType<string[]>,
@@ -70,10 +73,14 @@ export default defineComponent({
         const regExp = computed(() => new RegExp(`[${props.delimiter.join('|')}]$`))
 
         const tagPush = (clear = true) => {
-            if (props.allowRepeat || !value.value.includes(inputingTag.value)) {
-                value.value.push(inputingTag.value)
+            const text = inputingTag.value
+            if (props.allowRepeat || !value.value.includes(text)) {
+                value.value.push(text)
             }
-            if (clear) inputingTag.value = ''
+            if (clear) {
+                if (inputRef.value?.innerText) inputRef.value.innerText = ''
+                inputingTag.value = ''
+            }
         }
         return () => (
             <div class={{
@@ -122,35 +129,37 @@ export default defineComponent({
                                 '--wp-taginput-placehoder': `'${props.placeholder || ' '}'`
                             } as CSSProperties}
                             onInput={(e) => {
-                                inputingTag.value = (e.target as HTMLDivElement).innerText
-                                if (regExp.value.test(inputingTag.value)) {
-                                    inputingTag.value = inputingTag.value.substring(0, inputingTag.value.length - 2)
+                                const text = (e.target as HTMLDivElement).innerText
+                                if (regExp.value.test(text)) {
+                                    inputingTag.value = text.substring(0, text.length - 1)
                                     tagPush()
                                     nextTick(() => {
                                         inputRef.value?.focus()
                                     })
+                                } else {
+                                    inputingTag.value = text
                                 }
                             }}
                             onBlur={() => {
                                 if (!inputingTag.value) return
                                 tagPush()
                             }}
-                            contenteditable={!props.readonly && !props.disabled ? 'plaintext-only' : 'false' as any}
+                            contenteditable={!props.readonly && !props.disabled ? 'true' : 'false' as any}
                             onKeydown={e => {
                                 if (e.code === 'Enter') {
                                     e.preventDefault()
+                                    if (!inputingTag.value) return
                                     tagPush()
                                     nextTick(() => {
                                         inputRef.value?.focus()
                                     })
                                 }
                             }}
-                            v-text={inputingTag.value}
                         />
                     </Space>
                 </div>
                 {
-                    props.clearable && value.value.length > 0 ? (
+                    props.clearable && value.value.length > 0 && !props.readonly && !props.disabled ? (
                         <div class="wp-taginput__clear">
                             <div class="wp-taginput__clear-icon" onClick={() => {
                                 value.value = []
