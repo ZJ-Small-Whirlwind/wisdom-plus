@@ -157,7 +157,7 @@ export default defineComponent({
                                     <div
                                         class={{
                                             'wp-taginput__tag': true,
-                                            'active': active.value === tag.tag,
+                                            'active': active.value === tag.tag || (tag.index === -1 && props.limit && props.limit <= value.value.length),
                                         }}
                                         onClick={() => {
                                             if (!props.keyboardDelete || props.disabled || props.readonly || tag.index === -1 || !notLimited.value) return
