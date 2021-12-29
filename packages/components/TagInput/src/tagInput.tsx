@@ -73,12 +73,23 @@ export default defineComponent({
         const inputingTag = ref('')
         const inputRef = ref<HTMLDivElement | null>(null)
 
+        /**
+         * Bind foucs of inputRef
+         */
         const { focused } = useFocus({
             target: inputRef
         })
 
+        /**
+         * A RegExp to find string to be delimiter.
+         */
         const regExp = computed(() => new RegExp(`[${props.delimiter.join('')}]$`))
 
+        /**
+         * @param clear 是否清除已经输入的内容
+         * 
+         * Add a tag
+         */
         const tagPush = (clear = true) => {
             let text = inputingTag.value
             if (props.trim) {
@@ -93,6 +104,9 @@ export default defineComponent({
             }
         }
 
+        /**
+         * Tag Map, used when max is vaild
+         */
         const tagsMap = computed(() => {
             let finalValue: string[] = []
             if (props.max) {
@@ -137,6 +151,26 @@ export default defineComponent({
                 }}
                 onKeydown={e => {
                     if (!props.keyboardDelete || props.disabled || props.readonly || !notLimited.value) return
+                    /**
+                     * press Enter to copy value to input
+                     */
+                    if ((e.code === 'Enter' || e.code === 'NumpadEnter') && active.value && inputRef.value) {
+                        inputRef.value.innerText = active.value
+                        inputingTag.value = active.value
+                        nextTick(() => {
+                            if (!inputRef.value) return
+                            inputRef.value.focus()
+                            const selection = window.getSelection()
+                            const range = document.createRange()
+                            range.selectNodeContents(inputRef.value)
+                            if (!selection) return
+                            selection.removeAllRanges()
+                            selection.addRange(range)
+                        })
+                    }
+                    /**
+                     * press Delete to delete choosed one
+                     */
                     if ((e.code === 'Delete' || e.code === 'Backspace') && active.value) {
                         const index = value.value.indexOf(active.value)
                         if (index > -1) {
@@ -169,6 +203,9 @@ export default defineComponent({
                                         }}
                                         onMousedown={e => {
                                             if (props.disabled || props.readonly || tag.index === -1) return
+                                            /**
+                                             * press Middle button to remove an item
+                                             */
                                             if (e.button === 1) {
                                                 e.preventDefault()
                                                 value.value.splice(tag.index, 1)
@@ -222,16 +259,23 @@ export default defineComponent({
                                 if (!inputingTag.value) return
                                 tagPush()
                             }}
-                            contenteditable={!props.readonly && !props.disabled && notLimited.value ? 'true' : 'false' as any}
+                            contenteditable={!props.readonly && !props.disabled && notLimited.value ? 'true' : 'false'}
                             onKeydown={e => {
+                                /**
+                                 * press Enter to push a value
+                                 */
                                 if (e.code === 'Enter' || e.code === 'NumpadEnter') {
                                     e.preventDefault()
                                     if (!inputingTag.value) return
+                                    e.stopPropagation()
                                     tagPush()
                                     nextTick(() => {
                                         inputRef.value?.focus()
                                     })
                                 }
+                                /**
+                                 * press Delete to make a tag active
+                                 */
                                 if (e.code === 'Backspace' || e.code === 'Delete') {
                                     if (!props.keyboardDelete || props.disabled || props.readonly || !notLimited.value) return
                                     if (active.value) return
