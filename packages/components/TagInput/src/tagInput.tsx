@@ -167,6 +167,13 @@ export default defineComponent({
                                                 active.value = ''
                                             }
                                         }}
+                                        onMousedown={e => {
+                                            if (props.disabled || props.readonly || tag.index === -1) return
+                                            if (e.button === 1) {
+                                                e.preventDefault()
+                                                value.value.splice(tag.index, 1)
+                                            }
+                                        }}
                                     >
                                         {
                                             slots.tag?.(tag) || (
