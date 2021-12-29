@@ -113,6 +113,7 @@ const tags = ref<string[]>(['标签1', '标签2', '标签3'])
 | size | 尺寸 | _'small' \| 'default' \| 'medium' \| 'large'_ | 'default' |
 | spaceProps | Space 组件的 Props，用于设置标签之间的距离 | _Partial\<SpaceProps\> & Record\<string, any\>_ | {} |
 | max | 最多显示的 tag 数量 | _number_ | - |
+| limit | 限制最多可输入的 tag 数量 | _number_ | - |
 | trim | 是否去除两边空格 | _boolean_ | false |
 
 ### Methods
