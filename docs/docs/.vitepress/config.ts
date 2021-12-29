@@ -80,6 +80,10 @@ module.exports = {
                         {
                             text: 'Badge 徽章',
                             link: '/components/badge'
+                        },
+                        {
+                            text: 'Tag 标签',
+                            link: '/components/tag'
                         }
                     ]
                 }
