@@ -104,6 +104,8 @@ export default defineComponent({
             }
         }
 
+        const active = ref('')
+
         /**
          * Tag Map, used when max is vaild
          */
@@ -120,13 +122,15 @@ export default defineComponent({
                     index,
                     close: () => {
                         value.value.splice(index, 1)
-                    }
+                    },
+                    active: active.value === tag
                 }
             })
             if (props.max && props.max < value.value.length) final.push({
                 tag: `${value.value.length - props.max}+`,
                 index: -1,
-                close: () => {}
+                close: () => {},
+                active: Boolean(props.limit && props.limit <= value.value.length)
             })
             return final
         })
@@ -134,8 +138,6 @@ export default defineComponent({
         const notLimited = computed(() => {
             return !props.limit || value.value.length < props.limit
         })
-
-        const active = ref('')
         return () => (
             <div
                 class={{
@@ -191,7 +193,7 @@ export default defineComponent({
                                     <div
                                         class={{
                                             'wp-taginput__tag': true,
-                                            'active': active.value === tag.tag || (tag.index === -1 && props.limit && props.limit <= value.value.length),
+                                            'active': tag.active,
                                         }}
                                         onClick={() => {
                                             if (!props.keyboardDelete || props.disabled || props.readonly || tag.index === -1 || !notLimited.value) return

@@ -127,5 +127,5 @@ const tags = ref<string[]>(['标签1', '标签2', '标签3'])
 
 | 名称    | 说明     | 参数 |
 | ------- | -------- | --- |
-| tag | 标签插槽 | _tag: string, index: number, close: () => void_ |
+| tag | 标签插槽 | _tag: string, index: number, active: boolean, close: () => void_ |
 | close-icon | 关闭图标插槽 | - |
