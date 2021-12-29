@@ -73,7 +73,6 @@ export default defineComponent({
             target: inputRef
         })
 
-        console.log(`[${props.delimiter.join('|')}]$`)
         const regExp = computed(() => new RegExp(`[${props.delimiter.join('')}]$`))
 
         const tagPush = (clear = true) => {
@@ -132,7 +131,7 @@ export default defineComponent({
                 }}
             >
                 <div class="wp-taginput__content">
-                    <Space align="center" { ...props.spaceProps }>
+                    <Space size={[10, 5]} align="center" { ...props.spaceProps }>
                         {
                             tagsMap.value.map(tag => {
                                 return slots.tag?.(tag) || (
