@@ -21,6 +21,12 @@
     &__content {
         flex: 1;
         overflow: hidden;
+        .wp-taginput__tag {
+            &.active .wp-tag {
+                color: var(--wp-tag-bg-color);
+                background-color: var(--wp-tag-color);
+            }
+        }
     }
     &__clear {
         display: flex;

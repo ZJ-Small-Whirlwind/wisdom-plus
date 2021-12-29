@@ -40,7 +40,11 @@ export const tagInputProps = buildProps({
     },
     max: Number,
     trim: Boolean,
-    limit: Number
+    limit: Number,
+    keyboardDelete: {
+        type: Boolean,
+        default: true
+    }
 })
 
 export type TagInputProps = ExtractPropTypes<typeof tagInputProps>
@@ -116,6 +120,8 @@ export default defineComponent({
         const notLimited = computed(() => {
             return !props.limit || value.value.length < props.limit
         })
+
+        const active = ref('')
         return () => (
             <div
                 class={{
@@ -129,23 +135,56 @@ export default defineComponent({
                         inputRef.value?.focus()
                     }
                 }}
+                onKeydown={e => {
+                    if (!props.keyboardDelete || props.disabled || props.readonly || !notLimited.value) return
+                    if ((e.code === 'Delete' || e.code === 'Backspace') && active.value) {
+                        const index = value.value.indexOf(active.value)
+                        if (index > -1) {
+                            value.value.splice(index, 1)
+                            active.value = ''
+                            nextTick(() => {
+                                inputRef.value?.focus()
+                            })
+                        }
+                    }
+                }}
             >
                 <div class="wp-taginput__content">
                     <Space size={[10, 5]} align="center" { ...props.spaceProps }>
                         {
                             tagsMap.value.map(tag => {
-                                return slots.tag?.(tag) || (
-                                    <Tag
-                                        size={props.size}
-                                        closable={!props.readonly && !props.disabled && tag.index !== -1}
-                                        { ...props.tagProps }
-                                        onClose={e => {
-                                            e.stopPropagation()
-                                            value.value.splice(tag.index, 1)
+                                return (
+                                    <div
+                                        class={{
+                                            'wp-taginput__tag': true,
+                                            'active': active.value === tag.tag,
+                                        }}
+                                        onClick={() => {
+                                            if (!props.keyboardDelete || props.disabled || props.readonly || tag.index === -1 || !notLimited.value) return
+                                            if (active.value !== tag.tag) {
+                                                active.value = tag.tag
+                                            } else {
+                                                active.value = ''
+                                            }
                                         }}
                                     >
-                                        { tag.tag }
-                                    </Tag>
+                                        {
+                                            slots.tag?.(tag) || (
+                                                <Tag
+                                                    
+                                                    size={props.size}
+                                                    closable={!props.readonly && !props.disabled && tag.index !== -1}
+                                                    { ...props.tagProps }
+                                                    onClose={(e: Event) => {
+                                                        e.stopPropagation()
+                                                        value.value.splice(tag.index, 1)
+                                                    }}
+                                                >
+                                                    { tag.tag }
+                                                </Tag>
+                                            )
+                                        }
+                                    </div>
                                 )
                             })
                         }
@@ -161,6 +200,7 @@ export default defineComponent({
                             } as CSSProperties}
                             onInput={(e) => {
                                 const text = (e.target as HTMLDivElement).innerText
+                                active.value = ''
                                 if (regExp.value.test(text)) {
                                     inputingTag.value = text.substring(0, text.length - 1)
                                     tagPush()
@@ -184,6 +224,14 @@ export default defineComponent({
                                     nextTick(() => {
                                         inputRef.value?.focus()
                                     })
+                                }
+                                if (e.code === 'Backspace' || e.code === 'Delete') {
+                                    if (!props.keyboardDelete || props.disabled || props.readonly || !notLimited.value) return
+                                    if (active.value) return
+                                    e.stopPropagation()
+                                    if (!inputingTag.value && value.value.length > 0) {
+                                        active.value = value.value[value.value.length - 1]
+                                    }
                                 }
                             }}
                         />

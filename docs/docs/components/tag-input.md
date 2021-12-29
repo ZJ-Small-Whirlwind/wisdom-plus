@@ -115,6 +115,7 @@ const tags = ref<string[]>(['标签1', '标签2', '标签3'])
 | max | 最多显示的 tag 数量 | _number_ | - |
 | limit | 限制最多可输入的 tag 数量 | _number_ | - |
 | trim | 是否去除两边空格 | _boolean_ | false |
+| keyboardDelete | 是否启用键盘删除 | _boolean_ | true |
 
 ### Methods
 
