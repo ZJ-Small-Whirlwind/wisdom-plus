@@ -73,7 +73,8 @@ export default defineComponent({
             target: inputRef
         })
 
-        const regExp = computed(() => new RegExp(`[${props.delimiter.join('|')}]$`))
+        console.log(`[${props.delimiter.join('|')}]$`)
+        const regExp = computed(() => new RegExp(`[${props.delimiter.join('')}]$`))
 
         const tagPush = (clear = true) => {
             let text = inputingTag.value
