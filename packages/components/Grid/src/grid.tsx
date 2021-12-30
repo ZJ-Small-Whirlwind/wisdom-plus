@@ -1,4 +1,4 @@
-import { computed, defineComponent, PropType, provide } from 'vue'
+import { computed, defineComponent, PropType, provide, defaultSpan } from 'vue'
 
 import { buildProps } from '@wisdom-plus/utils/props'
 import type { ExtractPropTypes } from 'vue'
@@ -45,7 +45,7 @@ export default defineComponent({
         /**
          * provide 给子 gridItem defaultSpan
          */
-        provide('defaultSpan', props.defaultSpan || 1)
+        provide('defaultSpan', toRef(props, 'defaultSpan'))
         return () => (
             <div class="wp-grid" style={{
                 gridGap: `${gapMap.value[1]} ${gapMap.value[0]}`,
