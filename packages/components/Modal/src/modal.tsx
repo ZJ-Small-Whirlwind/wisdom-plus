@@ -197,7 +197,7 @@ export default defineComponent({
                     nextTick(() => {
                         document.body.tabIndex = tabIndexBack
                     })
-                }}>
+                }} appear>
                     {
                         showBox.value ? (
                             <div
