@@ -62,7 +62,7 @@ const tags = ref<string[]>(['1', '2', '3', '4'])
 :::demo
 ```vue
 <template>
-    <wp-tag-input v-model="tags" clearable :delimiter="[',']" :space-props="{ size: 5 }">
+    <wp-tag-input clearable :delimiter="[',']" :space-props="{ size: 5 }">
         <template #tag="{ tag, close }">
             <span @click="close" :style="{ lineHeight: 'var(--wp-taginput-line-height)' }">{{ tag }},</span>
         </template>

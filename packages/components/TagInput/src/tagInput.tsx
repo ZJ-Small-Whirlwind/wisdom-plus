@@ -8,6 +8,7 @@ import Space, { SpaceProps } from '../../Space'
 import { CloseOutlined } from '@vicons/antd'
 
 import { useFocus } from '@vueuse/core'
+import { useAutoControl } from '../../../utils/use-control'
 
 export const tagInputProps = buildProps({
     modelValue: {
@@ -57,18 +58,9 @@ export default defineComponent({
     },
     setup(props, { slots, emit }) {
         const valueRef = ref<string[]>([])
-        const value = computed<string[]>({
-            get() {
-                if (typeof props.modelValue === 'undefined') return valueRef.value
-                return props.modelValue
-            },
-            set(value) {
-                if (typeof props.modelValue === 'undefined') {
-                    valueRef.value = value
-                } else {
-                    emit('update:modelValue', value)
-                }
-            }
+        const value = useAutoControl(valueRef, props, 'modelValue', emit, {
+            passive: true,
+            deep: true
         })
         const inputingTag = ref('')
         const inputRef = ref<HTMLDivElement | null>(null)
