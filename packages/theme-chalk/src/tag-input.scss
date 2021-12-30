@@ -14,6 +14,7 @@
     font-size: var(--wp-taginput-font-size);
     display: flex;
     outline: none;
+    list-style: 1;
     &.wp-taginput-disabled {
         opacity: .6;
         cursor: not-allowed;
@@ -57,7 +58,7 @@
         align-items: center;
     }
     .wp-taginput__content-input {
-        display: inline-flex;
+        display: block;
         outline: none;
         position: relative;
         line-height: var(--wp-taginput-line-height);

@@ -234,7 +234,8 @@ export default defineComponent({
                                 'blank': !inputingTag.value
                             }}
                             style={{
-                                '--wp-taginput-placehoder': `'${props.placeholder || ' '}'`
+                                '--wp-taginput-placehoder': `'${props.placeholder || ' '}'`,
+                                minWidth: `${props.placeholder.length || 1}em`
                             } as CSSProperties}
                             onInput={(e) => {
                                 const text = (e.target as HTMLDivElement).innerText
