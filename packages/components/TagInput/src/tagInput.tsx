@@ -88,7 +88,7 @@ export default defineComponent({
                 text = text.trim()
             }
             if (text && (props.allowRepeat || !value.value.includes(text))) {
-                value.value = [...value.value, text]
+                value.value.push(text)
             }
             if (clear) {
                 if (inputRef.value?.innerText) inputRef.value.innerText = ''
