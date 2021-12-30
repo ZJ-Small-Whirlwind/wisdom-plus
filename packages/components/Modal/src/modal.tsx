@@ -181,7 +181,7 @@ export default defineComponent({
                  case 'right':
                      return deltaX.value > 0 ? `translateX(${deltaX.value}px)` : ''
              }
-         })
+        })
         return () => (
             <Overlay {...props.overlay} modelValue={showOverlay.value} onUpdate:modelValue={(value) => { show.value = value }} class={{
                 'wp-modal__overlay': true,
@@ -190,6 +190,13 @@ export default defineComponent({
                 <Transition name={props.transitionName || (props.type === 'drawer' ? `wp-modal-${props.from}` : 'wp-modal-fade' )} onAfterLeave={() => emit('afterClose')} onAfterEnter={() => {
                     modalRef.value?.focus()
                     emit('afterOpen')
+                }} onEnter={() => {
+                    const tabIndexBack = document.body.tabIndex
+                    document.body.tabIndex = -1
+                    document.body.focus()
+                    nextTick(() => {
+                        document.body.tabIndex = tabIndexBack
+                    })
                 }}>
                     {
                         showBox.value ? (
