@@ -29,6 +29,7 @@ const openDialog = function Dialog(options?: DialogOptions, props?: Partial<Moda
                 onMounted(() => {
                     show.value = true
                 })
+                const confirmButtonRef = ref<InstanceType<typeof Button> | null>(null)
                 return () => (
                     <Modal width={300} { ...props } v-model={show.value} v-slots={{
                         title: () => options?.title || '提示',
@@ -49,7 +50,7 @@ const openDialog = function Dialog(options?: DialogOptions, props?: Partial<Moda
                                 }
                                 {
                                     options?.showConfirm !== false ? (
-                                        <Button type="primary" onClick={() => {
+                                        <Button ref={confirmButtonRef} tabindex="-1" type="primary" onClick={() => {
                                             show.value = false
                                             resolve()
                                         }} {...options?.cancelProps}>
@@ -62,6 +63,8 @@ const openDialog = function Dialog(options?: DialogOptions, props?: Partial<Moda
                     }} onAfterClose={() => {
                         document.body.removeChild(newDiv)
                         app.unmount()
+                    }} onAfterOpen={() => {
+                        confirmButtonRef.value?.$el?.focus?.()
                     }}></Modal>
                 )
             }
