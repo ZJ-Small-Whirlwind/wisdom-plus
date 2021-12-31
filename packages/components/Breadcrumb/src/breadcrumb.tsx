@@ -32,13 +32,21 @@ export type BreadcrumbProps = ExtractPropTypes<typeof breadcrumbProps>
 export default defineComponent({
     name: 'WpBreadcrumb',
     props: breadcrumbProps,
-    setup(props, { slots }) {
+    emits: {
+        click: (item: BreadcrumbList) => {
+            void item
+            return true
+        }
+    },
+    setup(props, { slots, emit }) {
         return () => (
             <Space class="wp-breadcrumb" align="center" { ...props.spaceProps }>
                 {
                     props.list.map((item, index) => (
                         <>
-                            <div class="wp-breadcrumb-item">
+                            <div class="wp-breadcrumb-item" onClick={() => {
+                                emit('click', item)
+                            }}>
                                 {
                                     slots.item?.(item) || (
                                         item.to ? (

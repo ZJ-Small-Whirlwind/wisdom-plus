@@ -47,6 +47,10 @@ module.exports = {
                     text: '展示组件',
                     children: [
                         {
+                            text: 'ActionSheet 动作菜单',
+                            link: '/components/action-sheet'
+                        },
+                        {
                             text: 'Avatar 头像',
                             link: '/components/avatar'
                         },
@@ -57,6 +61,14 @@ module.exports = {
                         {
                             text: 'Breadcrumb 面包屑导航',
                             link: '/components/breadcrumb'
+                        },
+                        {
+                            text: 'Dropdown 下拉菜单',
+                            link: '/components/dropdown'
+                        },
+                        {
+                            text: 'Ellipsis 文本省略',
+                            link: '/components/ellipsis'
                         },
                         {
                             text: 'Popover 气泡弹出框',
@@ -74,14 +86,7 @@ module.exports = {
                             text: 'Menu 菜单',
                             link: '/components/menu'
                         },
-                        {
-                            text: 'ActionSheet 动作菜单',
-                            link: '/components/action-sheet'
-                        },
-                        {
-                            text: 'Dropdown 下拉菜单',
-                            link: '/components/dropdown'
-                        },
+                        
                         {
                             text: 'ScrollList 滚动列表',
                             link: '/components/scroll-list'
@@ -89,10 +94,6 @@ module.exports = {
                         {
                             text: 'Statistic 数据统计',
                             link: '/components/statistic'
-                        },
-                        {
-                            text: 'Ellipsis 文本省略',
-                            link: '/components/ellipsis'
                         },
                         {
                             text: 'Overlay 遮罩',
