@@ -1,5 +1,5 @@
 import { defineComponent, ExtractPropTypes } from "vue"
-import { buildProps, definePropType } from "@wisdom-plus/utils/props"
+import { buildProps } from "@wisdom-plus/utils/props"
 
 export const layoutContentProps = buildProps({
     padding: String
