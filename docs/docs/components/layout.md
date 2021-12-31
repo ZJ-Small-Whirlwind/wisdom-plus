@@ -23,7 +23,7 @@ app.use(WpLayoutAside)
 :::demo
 ```vue
 <template>
-    <div style="height: 400px; width: 700px">
+    <div style="height: 400px">
         <wp-layout>
             <wp-layout-aside padding="10px 0" style="border-bottom: 1px solid #eee">
                 <wp-space align="center" :wrap="false">
@@ -130,7 +130,7 @@ const collapse = ref(false)
 :::demo
 ```vue
 <template>
-    <div style="height: 400px; width: 700px">
+    <div style="height: 400px">
         <wp-layout>
             <wp-layout row>
                 <wp-layout-aside style="border-right: 1px solid #eee" @mouseenter="collapse = false" @mouseleave="collapse = true">
@@ -241,7 +241,7 @@ const collapse = ref(true)
 :::demo
 ```vue
 <template>
-    <div style="height: 400px; width: 700px">
+    <div style="height: 400px">
         <wp-layout row>
             <wp-layout-aside style="border-right: 1px solid #eee">
                 <wp-menu :list="[
