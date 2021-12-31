@@ -1,4 +1,4 @@
-import { computed, defineComponent, PropType, provide, defaultSpan } from 'vue'
+import { computed, defineComponent, PropType, provide, toRef } from 'vue'
 
 import { buildProps } from '@wisdom-plus/utils/props'
 import type { ExtractPropTypes } from 'vue'
