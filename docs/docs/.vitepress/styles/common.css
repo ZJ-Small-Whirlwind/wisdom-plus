@@ -1,3 +1,25 @@
+:root {
+    --c-brand: #409eff;
+    --c-brand-light: #409effcc;
+}
+
 body {
     overflow: overlay;
+}
+
+table {
+    width: 100%;
+    display: table;
+}
+
+h3, h4 {
+    margin-bottom: 1rem;
+}
+
+.sidebar > .sidebar-links > .sidebar-link > .sidebar-link-item {
+    font-size: .95rem;
+}
+
+.sidebar > .sidebar-links > .sidebar-link > .sidebar-links > .sidebar-link > .sidebar-link-item {
+    font-size: .925rem;
 }
