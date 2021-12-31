@@ -27,6 +27,10 @@ module.exports = {
                         {
                             text: 'Toast 轻提示',
                             link: '/components/toast'
+                        },
+                        {
+                            text: 'Layout 布局',
+                            link: '/components/layout'
                         }
                     ]
                 },

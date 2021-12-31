@@ -12,7 +12,8 @@
 }
 .wp-menu {
     max-width: var(--wp-menu-max-width);
-    transition: max-width .2s;
+    min-width: var(--wp-menu-max-width);
+    transition: max-width .2s, min-width .2s;
     overflow: hidden;
     font-size: var(--wp-menu-font-size);
     line-height: 1em;
@@ -44,6 +45,7 @@
     }
     &.wp-menu__collapse {
         max-width: calc(1em + var(--wp-menu-padding-left-right) * 2);
+        min-width: calc(1em + var(--wp-menu-padding-left-right) * 2);
     }
     .wp-collapse-item {
         &.wp-menu-item__active > .wp-collapse-item__title {
@@ -108,6 +110,9 @@
         }
         &.wp-menu-item__active {
             color: var(--wp-menu-active-color);
+        }
+        &-text {
+            min-width: 1em;
         }
     }
     &__diabled {

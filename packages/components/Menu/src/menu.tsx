@@ -1,4 +1,4 @@
-import { ref, computed, defineComponent, ExtractPropTypes, PropType, provide, watch } from 'vue'
+import { ref, computed, defineComponent, ExtractPropTypes, PropType, provide, watch, Transition } from 'vue'
 
 import { useVModel } from '@vueuse/core'
 
@@ -105,7 +105,8 @@ export default defineComponent({
                     'wp-menu__collapse' : props.collapse,
                     'wp-menu__row': !props.vertical
                 }} style={{
-                    maxWidth: !props.collapse && props.vertical ? props.width : ''
+                    maxWidth: !props.collapse && props.vertical ? props.width : '',
+                    minWidth: !props.collapse && props.vertical ? props.width : ''
                 }}>
                     {
                         props.vertical ? (
