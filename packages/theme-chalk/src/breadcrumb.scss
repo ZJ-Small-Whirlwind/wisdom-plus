@@ -1,0 +1,22 @@
+:root {
+    --wp-breadcrumb-color: #666;
+    --wp-breadcrumb-font-size: 15px;
+    --wp-breadcrumb-a-color: #333;
+    --wp-breadcrumb-separator-color: #ccc;
+    --wp-breadcrumb-separator-font-size: 13px;
+}
+
+.wp-breadcrumb {
+    font-size: var(--wp-breadcrumb-font-size);
+    color: var(--wp-breadcrumb-color);
+    &-item {
+        a {
+            font-weight: bold;
+            color: var(--wp-breadcrumb-a-color);
+        }
+    }
+    &-separator {
+        color: var(--wp-breadcrumb-separator-color);
+        font-size: var(--wp-breadcrumb-separator-font-size);
+    }
+}

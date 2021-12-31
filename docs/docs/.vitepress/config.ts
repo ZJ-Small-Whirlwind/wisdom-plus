@@ -97,6 +97,10 @@ module.exports = {
                         {
                             text: 'Tag 标签',
                             link: '/components/tag'
+                        },
+                        {
+                            text: 'Breadcrumb 面包屑导航',
+                            link: '/components/breadcrumb'
                         }
                     ]
                 }
