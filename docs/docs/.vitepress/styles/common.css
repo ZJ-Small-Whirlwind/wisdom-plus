@@ -10,10 +10,38 @@ body {
 table {
     width: 100%;
     display: table;
+    font-size: .92rem;
 }
 
 h3, h4 {
     margin-bottom: 1rem;
+}
+
+th, td {
+    border: 0;
+}
+
+th {
+    text-align: left;
+}
+
+tr:nth-child(2n) {
+    background-color: #fcfcfc;
+}
+
+thead tr {
+    border-top: 0;
+}
+
+tr {
+    border-color: #eee;
+}
+
+td em {
+    color: #4fc08d;
+    font-style: normal;
+    letter-spacing: .5px;
+    font-size: .85rem;
 }
 
 .sidebar > .sidebar-links > .sidebar-link > .sidebar-link-item {
