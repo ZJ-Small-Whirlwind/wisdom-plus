@@ -59,6 +59,10 @@ export default defineComponent({
             }
             const img = new Image()
             img.src = props.src
+            img.onabort = () => {
+                error.value = true
+                loading.value = false
+            }
             img.onerror = () => {
                 error.value = true
                 loading.value = false
