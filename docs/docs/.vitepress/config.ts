@@ -47,6 +47,18 @@ module.exports = {
                     text: '展示组件',
                     children: [
                         {
+                            text: 'Avatar 头像',
+                            link: '/components/avatar'
+                        },
+                        {
+                            text: 'Badge 徽章',
+                            link: '/components/badge'
+                        },
+                        {
+                            text: 'Breadcrumb 面包屑导航',
+                            link: '/components/breadcrumb'
+                        },
+                        {
                             text: 'Popover 气泡弹出框',
                             link: '/components/popover'
                         },
@@ -91,16 +103,8 @@ module.exports = {
                             link: '/components/modal'
                         },
                         {
-                            text: 'Badge 徽章',
-                            link: '/components/badge'
-                        },
-                        {
                             text: 'Tag 标签',
                             link: '/components/tag'
-                        },
-                        {
-                            text: 'Breadcrumb 面包屑导航',
-                            link: '/components/breadcrumb'
                         }
                     ]
                 }

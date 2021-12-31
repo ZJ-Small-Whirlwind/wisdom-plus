@@ -27,6 +27,7 @@ declare module 'vue' {
     WpLayoutContent: typeof import('wisdom-plus')['WpLayoutContent']
     WpLayoutAside: typeof import('wisdom-plus')['WpLayoutAside']
     WpBreadcrumb: typeof import('wisdom-plus')['WpBreadcrumb']
+    WpAvatar: typeof import('wisdom-plus')['WpAvatar']
   }
 }
 
