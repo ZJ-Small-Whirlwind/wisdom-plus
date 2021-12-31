@@ -25,17 +25,29 @@ app.use(WpLayoutAside)
 <template>
     <div style="height: 400px; width: 700px">
         <wp-layout>
-            <wp-layout-aside padding="10px 0">
-                <wp-space>
+            <wp-layout-aside padding="10px 0" style="border-bottom: 1px solid #eee">
+                <wp-space align="center" :wrap="false">
                     <div class="block" :class="{ collapse }" />
                     <wp-button @click="collapse = !collapse">
                         {{ collapse ? '展开' : '收起' }}
                     </wp-button>
+                    <wp-breadcrumb :list="[
+                        {
+                            index: '1',
+                            title: h('a', {
+                                href: '/'
+                            }, '首页')
+                        },
+                        {
+                            index: '2',
+                            title: '关于我们'
+                        }
+                    ]" />
                 </wp-space>
             </wp-layout-aside>
             <wp-layout row>
-                <wp-layout-aside>
-                    <wp-menu :collapse="collapse" :list="[
+                <wp-layout-aside style="border-right: 1px solid #eee">
+                    <wp-menu modelValue="2" :collapse="collapse" :list="[
                         {
                             title: '首页',
                             index: '1'
@@ -84,22 +96,19 @@ app.use(WpLayoutAside)
                     <p>不带走一片云彩。</p>
                 </wp-layout-content>
             </wp-layout>
-            <wp-layout-aside class="footer" padding="10px">
-                Copyright©
-            </wp-layout-aside>
         </wp-layout>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 const collapse = ref(false)
 </script>
 
 <style scoped>
 .block {
     background-color: #f5f5f5;
-    height: 100%;
+    height: 40px;
     width: 200px;
     transition: .2s;
 }
@@ -111,11 +120,6 @@ const collapse = ref(false)
 }
 .content-block p {
     margin: 0;
-}
-.footer {
-    background-color: #f5f5f5;
-    font-size: 14px;
-    margin-top: 10px;
 }
 </style>
 ```
@@ -129,8 +133,8 @@ const collapse = ref(false)
     <div style="height: 400px; width: 700px">
         <wp-layout>
             <wp-layout row>
-                <wp-layout-aside>
-                    <div class="block" :class="{ collapse }" style="height: 40px; margin: 10px 0;" />
+                <wp-layout-aside style="border-right: 1px solid #eee" @mouseenter="collapse = false" @mouseleave="collapse = true">
+                    <div class="block" :class="{ collapse }" style="height: 42px;" />
                     <wp-menu :collapse="collapse" :list="[
                         {
                             title: '首页',
@@ -143,12 +147,19 @@ const collapse = ref(false)
                     ]" vertical width="200px"/>
                 </wp-layout-aside>
                 <wp-layout>
-                    <wp-layout-aside padding="10px 10px">
-                        <wp-space>
-                            <wp-button @click="collapse = !collapse">
-                                {{ collapse ? '展开' : '收起' }}
-                            </wp-button>
-                        </wp-space>
+                    <wp-layout-aside padding="10px 10px" style="border-bottom: 1px solid #eee">
+                        <wp-breadcrumb :list="[
+                            {
+                                index: '1',
+                                title: h('a', {
+                                    href: '/'
+                                }, '首页')
+                            },
+                            {
+                                index: '2',
+                                title: '关于我们'
+                            }
+                        ]" />
                     </wp-layout-aside>
                     <wp-layout-content class="content-block" padding="10px">
                         <p>轻轻的我走了，</p>
@@ -187,8 +198,8 @@ const collapse = ref(false)
                         <p>我挥一挥衣袖，</p>
                         <p>不带走一片云彩。</p>
                     </wp-layout-content>
-                    <wp-layout-aside class="footer" padding="10px">
-                        Copyright©
+                    <wp-layout-aside class="footer" padding="10px" style="border-top: 1px solid #eee">
+                        再别康桥（徐志摩诗作）
                     </wp-layout-aside>
                 </wp-layout>
             </wp-layout>
@@ -197,14 +208,14 @@ const collapse = ref(false)
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-const collapse = ref(false)
+import { h, ref } from 'vue'
+const collapse = ref(true)
 </script>
 
 <style scoped>
 .block {
     background-color: #f5f5f5;
-    height: 100%;
+    height: 40px;
     width: 200px;
     transition: .2s;
 }
@@ -220,7 +231,6 @@ const collapse = ref(false)
 .footer {
     background-color: #f5f5f5;
     font-size: 14px;
-    margin-top: 10px;
 }
 </style>
 ```
@@ -233,8 +243,7 @@ const collapse = ref(false)
 <template>
     <div style="height: 400px; width: 700px">
         <wp-layout row>
-            <wp-layout-aside>
-                <div class="block" :class="{ collapse }" style="height: 40px; margin-bottom: 10px;" />
+            <wp-layout-aside style="border-right: 1px solid #eee">
                 <wp-menu :list="[
                     {
                         title: '首页',
@@ -285,7 +294,7 @@ const collapse = ref(false)
                     <p>不带走一片云彩。</p>
                 </wp-layout-content>
             </wp-layout>
-            <wp-layout-aside padding="10px">
+            <wp-layout-aside padding="10px" style="border-left: 1px solid #eee">
                 Sth.
             </wp-layout-aside>
         </wp-layout>
@@ -297,15 +306,6 @@ import { ref } from 'vue'
 </script>
 
 <style scoped>
-.block {
-    background-color: #f5f5f5;
-    height: 100%;
-    width: 200px;
-    transition: .2s;
-}
-.block.collapse {
-    width: 45px;
-}
 .content-block {
     background-color: #f5f5f5;
 }
