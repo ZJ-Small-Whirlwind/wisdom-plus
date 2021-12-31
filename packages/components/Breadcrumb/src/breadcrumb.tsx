@@ -1,6 +1,6 @@
-import { defineComponent, ExtractPropTypes, PropType, VNode } from 'vue'
+import { defineComponent, ExtractPropTypes, Prop, PropType, VNode } from 'vue'
 
-import Space from '../../Space'
+import Space, { SpaceProps } from '../../Space'
 
 import { buildProps } from '@wisdom-plus/utils/props'
 import { RouteLocationRaw, RouterLink } from 'vue-router'
@@ -20,6 +20,10 @@ export const breadcrumbProps = buildProps({
     separator: {
         type: [String, Object] as PropType<string | VNode>,
         default: '/'
+    },
+    spaceProps: {
+        type: Object as PropType<Partial<SpaceProps> & Record<string, any>>,
+        default: () => ({})
     }
 })
 
@@ -30,7 +34,7 @@ export default defineComponent({
     props: breadcrumbProps,
     setup(props, { slots }) {
         return () => (
-            <Space class="wp-breadcrumb" align="center">
+            <Space class="wp-breadcrumb" align="center" { ...props.spaceProps }>
                 {
                     props.list.map((item, index) => (
                         <>

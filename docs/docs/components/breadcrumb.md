@@ -107,6 +107,7 @@ import { h } from 'vue'
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | list   | 面包屑列表       | _BreadcrumbList[]_          | []     |
 | separator     | 分隔符   | _string \| VNode_           | '/'      |
+| spaceProps | Space 组件的 Props，可以用来控制分隔符和面包屑列表之间的间距、对齐方式等属性 | _Partial\<SpaceProps\> & Record\<string, any\>_ | {} |
 
 ### Slots
 
