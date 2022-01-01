@@ -188,15 +188,9 @@ export default defineComponent({
                 [`wp-modal__overlay-${props.from}`]: props.type === 'drawer'
             }}>
                 <Transition name={props.transitionName || (props.type === 'drawer' ? `wp-modal-${props.from}` : 'wp-modal-fade' )} onAfterLeave={() => emit('afterClose')} onAfterEnter={() => {
-                    modalRef.value?.focus()
                     emit('afterOpen')
                 }} onEnter={() => {
-                    const tabIndexBack = document.body.tabIndex
-                    document.body.tabIndex = -1
-                    document.body.focus()
-                    nextTick(() => {
-                        document.body.tabIndex = tabIndexBack
-                    })
+                    modalRef.value?.focus({ preventScroll: true })
                 }} appear>
                     {
                         showBox.value ? (
