@@ -35,6 +35,15 @@ module.exports = {
                     ]
                 },
                 {
+                    text: '基础组件',
+                    children: [
+                        {
+                            text: 'VirtualList 虚拟列表',
+                            link: '/components/virtual-list'
+                        }
+                    ]
+                },
+                {
                     text: '输入组件',
                     children: [
                         {

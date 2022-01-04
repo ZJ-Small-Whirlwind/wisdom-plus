@@ -28,6 +28,7 @@ declare module 'vue' {
     WpLayoutAside: typeof import('wisdom-plus')['WpLayoutAside']
     WpBreadcrumb: typeof import('wisdom-plus')['WpBreadcrumb']
     WpAvatar: typeof import('wisdom-plus')['WpAvatar']
+    WpVirtualList: typeof import('wisdom-plus')['WpVirtualList']
   }
 }
 
