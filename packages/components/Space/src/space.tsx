@@ -101,7 +101,7 @@ export default defineComponent({
                                 ...props.itemClass.common,
                                 ...props.itemClass[index]
                             }} style={{
-                                marginRight: index !== slotElements.length - 1 ? size.value[0] : '',
+                                marginRight: index !== slotElements.length - 1 && !props.vertical ? size.value[0] : '',
                                 paddingBottom: size.value[1],
                                 ...props.itemStyle.common,
                                 ...props.itemStyle[index]
