@@ -63,8 +63,8 @@ const openDialog = function Dialog(options?: DialogOptions, props?: Partial<Moda
                     }} onAfterClose={() => {
                         document.body.removeChild(newDiv)
                         app.unmount()
-                    }} onAfterOpen={() => {
-                        confirmButtonRef.value?.$el?.focus?.()
+                    }} onOpen={() => {
+                        confirmButtonRef.value?.$el?.focus?.({ preventScroll: true })
                     }}></Modal>
                 )
             }

@@ -95,7 +95,6 @@ export default defineComponent({
                 showOverlay.value = show.value
                 nextTick(() => {
                     showBox.value = show.value
-                    emit('open')
                     neverMeet = false
                 })
             } else {
@@ -191,6 +190,7 @@ export default defineComponent({
                     emit('afterOpen')
                 }} onEnter={() => {
                     modalRef.value?.focus({ preventScroll: true })
+                    emit('open')
                 }} appear>
                     {
                         showBox.value ? (
