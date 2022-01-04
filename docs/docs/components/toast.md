@@ -2,7 +2,7 @@
 import { Toast } from '@wisdom-plus/components'
 </script>
 
-# Toast 吐司提示
+# Toast 轻提示
 
 ### 介绍
 
