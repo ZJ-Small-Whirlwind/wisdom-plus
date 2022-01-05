@@ -1,0 +1,124 @@
+:root {
+    --wp-progress-font-size: 14px;
+    --wp-progress-duration: .4s;
+    --wp-progress-default-height: 100px;
+    --wp-progress-default-color: #409eff;
+    --wp-progress-default-bg-color: #eee;
+}
+
+.wp-progress {
+    font-size: var(--wp-progress-font-size);
+    vertical-align: middle;
+    &-horizontal {
+        display: flex;
+        align-items: center;
+        .wp-progress__outer {
+            background-color: var(--wp-progress-default-bg-color);
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            justify-content: flex-start;
+        }
+        .wp-progress__inner {
+            background-color: var(--wp-progress-default-color);
+            height: 100%;
+            transition: var(--wp-progress-duration) width;
+            color: #fff;
+        }
+        .wp-progress__text {
+            margin-left: 10px;
+        }
+    }
+    &-grid {
+        display: flex;
+        align-items: center;
+        .wp-progress__outer {
+            background-color: var(--wp-progress-default-bg-color);
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            justify-content: flex-start;
+        }
+        .wp-progress__inner {
+            background-color: var(--wp-progress-default-color);
+            height: 100%;
+            transition: var(--wp-progress-duration) width;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            overflow: hidden;
+            max-width: 100%;
+            cursor: default;
+            user-select: none;
+            letter-spacing: 2px;
+            justify-content: space-between;
+            @media not all and (min-resolution:.001dpcm){
+                @supports (-webkit-appearance:none) {
+                    -webkit-background-clip: initial !important;
+                }
+            }
+        }
+        .wp-progress__text {
+            margin-left: 10px;
+        }
+    }
+    &-vertical {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        height: var(--wp-progress-default-height);
+        .wp-progress__outer {
+            background-color: var(--wp-progress-default-bg-color);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            flex: 1;
+        }
+        .wp-progress__inner {
+            background-color: var(--wp-progress-default-color);
+            width: 100%;
+            transition: var(--wp-progress-duration) height;
+            color: #fff;
+        }
+        .wp-progress__text {
+            margin-top: 5px;
+        }
+    }
+    &-circle {
+        position: relative;
+        display: inline-block;
+        width: var(--wp-progress-default-height);
+        height: var(--wp-progress-default-height);
+        text-align: center;
+
+            svg {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            &__layer {
+                stroke: #eee;
+            }
+
+            &__hover {
+                fill: none;
+                stroke: var(--wp-progress-default-color);
+                stroke-linecap: round;
+            }
+
+            &__text {
+                position: absolute;
+                top: 50%;
+                left: 0;
+                box-sizing: border-box;
+                width: 100%;
+                padding: 0 10px;
+                transform: translateY(-50%);
+            }
+    }
+}

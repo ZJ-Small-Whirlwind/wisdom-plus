@@ -88,6 +88,10 @@ module.exports = {
                             link: '/components/pop-confirm'
                         },
                         {
+                            text: 'Progress 进度条',
+                            link: '/components/progress'
+                        },
+                        {
                             text: 'Tooltip 文本提示',
                             link: '/components/tooltip'
                         },

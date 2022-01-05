@@ -29,7 +29,7 @@ app.use(WpVirtualList)
         </wp-space>
         <wp-virtual-list style="height: 300px" :item-size="50" :items="list" ref="listRef">
             <template #="{ item }">
-                <div class="item">
+                <div class="item" :key="item.key">
                     {{ item.key }}
                 </div>
             </template>
@@ -82,9 +82,9 @@ const toTop = () => {
 :::demo
 ```vue
 <template>
-    <wp-virtual-list style="height: 300px" :item-size="50" :items="list">
+    <wp-virtual-list style="height: 300px" :item-size="50" :items="list" item-resizable>
         <template #="{ item }">
-            <div class="auto-item" :style="{ height: item.height + 'px' }" item-resizable>
+            <div class="auto-item" :style="{ height: item.height + 'px' }" :key="item.key">
                 {{ item.key }}
             </div>
         </template>
