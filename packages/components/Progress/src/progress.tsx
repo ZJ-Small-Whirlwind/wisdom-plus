@@ -53,6 +53,8 @@ export const progressProps = buildProps({
     appear: Boolean
 })
 
+const autoString = new Array(100).fill('█').join('')
+
 export type ProgressProps = ExtractPropTypes<typeof progressProps>
 
 export default defineComponent({
@@ -146,9 +148,7 @@ export default defineComponent({
                         fontSize: size.value,
                         '-webkit-background-clip': 'text'
                     }}>
-                        {
-                            new Array(100).fill('█')
-                        }
+                        { autoString }
                     </div>
                 </div>
             )
