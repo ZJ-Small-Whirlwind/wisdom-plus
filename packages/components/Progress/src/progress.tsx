@@ -146,6 +146,7 @@ export default defineComponent({
                         borderRadius: props.borderRadius,
                         background: color.value,
                         fontSize: size.value,
+                        backgroundClip: 'text',
                         '-webkit-background-clip': 'text'
                     }}>
                         { autoString }
