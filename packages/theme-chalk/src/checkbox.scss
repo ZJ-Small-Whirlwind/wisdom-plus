@@ -1,0 +1,68 @@
+:root {
+    --wp-checkbox-color: #333;
+    --wp-checkbox-background: #fff;
+    --wp-checkbox-font-size: 14px;
+    --wp-checkbox-checked-font-color: #fff;
+    --wp-checkbox-checked-color: #2080f0;
+    --wp-checkbox-border-color: #ccc;
+    --wp-checkbox-disabled-color: #eee;
+    --wp-checkbox-size: 16px;
+    --wp-checkbox-box-icon-size: 12px;
+}
+
+.wp-checkbox {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--wp-checkbox-color);
+    font-size: var(--wp-checkbox-font-size);
+    vertical-align: middle;
+    line-height: var(--wp-checkbox-size);
+    &--box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: var(--wp-checkbox-size);
+        width: var(--wp-checkbox-size);
+        font-size: var(--wp-checkbox-box-icon-size);
+        background: var(--wp-checkbox-background);
+        border: 1px solid var(--wp-checkbox-border-color);
+        transition: background .2s, border .2s;
+    }
+    &--label {
+        padding-left: .4em;
+    }
+    &__small {
+        --wp-checkbox-size: 14px;
+        --wp-checkbox-font-size: 12px;
+    }
+    &__large {
+        --wp-checkbox-size: 20px;
+        --wp-checkbox-font-size: 16px;
+        .wp-checkbox--box {
+            --wp-checkbox-box-icon-size: 14px;
+        }
+    }
+    &:focus,
+    &:hover {
+        outline: none;
+        .wp-checkbox--box {
+            border-color: var(--wp-checkbox-checked-color);
+        }
+    }
+    &__checked {
+        .wp-checkbox--box {
+            color: var(--wp-checkbox-checked-font-color);
+            background: var(--wp-checkbox-checked-color);
+            border-color: var(--wp-checkbox-checked-color);
+        }
+    }
+    &__disabled {
+        opacity: .6;
+        .wp-checkbox--box {
+            color: var(--wp-checkbox-color);
+            background: var(--wp-checkbox-disabled-color);
+            border-color: var(--wp-checkbox-disabled-color);
+        }
+    }
+}

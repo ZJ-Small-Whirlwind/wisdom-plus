@@ -47,6 +47,10 @@ module.exports = {
                     text: '输入组件',
                     children: [
                         {
+                            text: 'Checkbox 复选框',
+                            link: '/components/checkbox'
+                        },
+                        {
                             text: 'TagInput 标签输入',
                             link: '/components/tag-input'
                         }
