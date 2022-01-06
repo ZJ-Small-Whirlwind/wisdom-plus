@@ -136,6 +136,7 @@ const checkedAll = computed<boolean>({
 | default | 复选框标签插槽 | - |
 | indeterminate | 部分选中图标插槽 | - |
 | checked | 选中图标插槽 | - |
+| unchecked | 未选中插槽 | - |
 
 ## Checkbox Group API
 

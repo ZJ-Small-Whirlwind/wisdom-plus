@@ -109,7 +109,7 @@ export default defineComponent({
                                     slots.checked?.() || <CheckOutlined />
                                 }
                             </Icon>
-                        ) : null
+                        ) : slots.unchecked?.()
                     }
                 </div>
                 {

@@ -51,7 +51,8 @@ app.use(WpRadioGroup)
 ```vue
 <template>
     <wp-space vertical>
-        <wp-radio-group v-model="checked" size="large">
+        <wp-button @click="disabled = !disabled">禁用</wp-button>
+        <wp-radio-group v-model="checked" :disabled="disabled" size="large">
             <wp-radio v-for="value in values" :key="value" :value="value" :label="value" />
         </wp-radio-group>
         选中值：{{ checked }}
@@ -63,6 +64,7 @@ import { ref, computed } from 'vue'
 
 const values = ref<string[]>(['1', '2', '3'])
 const checked = ref<string>('1')
+const disabled = ref(false)
 </script>
 ```
 :::
@@ -106,6 +108,7 @@ const checked = ref<string>('1')
 | ------- | -------- | --- |
 | default | 单选框标签插槽 | - |
 | checked | 选中图标插槽 | - |
+| unchecked | 未选中插槽 | - |
 
 ## Radio Group API
 

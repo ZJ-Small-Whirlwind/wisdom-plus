@@ -123,7 +123,7 @@ export default defineComponent({
                                         slots.indeterminate?.() || <MinusOutlined />
                                     }
                                 </Icon>
-                            ) : null
+                            ) : slots.unchecked?.()
                         )
                     }
                 </div>
