@@ -46,6 +46,20 @@ app.use(WpCheckboxGroup)
 ```
 :::
 
+#### 插槽
+
+:::demo
+```vue
+<template>
+    <wp-space>
+        <wp-checkbox>
+            勾选即代表您同意我们的<a href="#" @click.stop>《用户服务协议》</a>
+        </wp-checkbox>
+    </wp-space>
+</template>
+```
+:::
+
 #### 使用复选框组
 
 :::demo
