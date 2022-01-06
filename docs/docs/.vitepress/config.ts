@@ -51,6 +51,10 @@ module.exports = {
                             link: '/components/checkbox'
                         },
                         {
+                            text: 'Radio 单选框',
+                            link: '/components/radio'
+                        },
+                        {
                             text: 'TagInput 标签输入',
                             link: '/components/tag-input'
                         }

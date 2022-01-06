@@ -29,6 +29,11 @@ declare module 'vue' {
     WpBreadcrumb: typeof import('wisdom-plus')['WpBreadcrumb']
     WpAvatar: typeof import('wisdom-plus')['WpAvatar']
     WpVirtualList: typeof import('wisdom-plus')['WpVirtualList']
+    WpProgress: typeof import('wisdom-plus')['WpProgress']
+    WpRadio: typeof import('wisdom-plus')['WpRadio']
+    WpRadioGroup: typeof import('wisdom-plus')['WpRadioGroup']
+    WpCheckbox: typeof import('wisdom-plus')['WpCheckbox']
+    WpCheckboxGroup: typeof import('wisdom-plus')['WpCheckboxGroup']
   }
 }
 

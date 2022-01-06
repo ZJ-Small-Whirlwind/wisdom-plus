@@ -1,0 +1,71 @@
+:root {
+    --wp-radio-color: #333;
+    --wp-radio-background: #fff;
+    --wp-radio-font-size: 14px;
+    --wp-radio-checked-font-color: #fff;
+    --wp-radio-checked-color: #2080f0;
+    --wp-radio-border-color: #ccc;
+    --wp-radio-disabled-color: #eee;
+    --wp-radio-size: 16px;
+    --wp-radio-box-icon-size: 12px;
+}
+
+.wp-radio {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--wp-radio-color);
+    font-size: var(--wp-radio-font-size);
+    vertical-align: middle;
+    line-height: var(--wp-radio-size);
+    &--box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: var(--wp-radio-size);
+        width: var(--wp-radio-size);
+        font-size: var(--wp-radio-box-icon-size);
+        background: var(--wp-radio-background);
+        border: 1px solid var(--wp-radio-border-color);
+        transition: background .2s, border .2s;
+    }
+    &--label {
+        padding-left: .4em;
+    }
+    &__small {
+        --wp-radio-size: 14px;
+        --wp-radio-font-size: 12px;
+    }
+    &__large {
+        --wp-radio-size: 20px;
+        --wp-radio-font-size: 16px;
+        .wp-radio--box {
+            --wp-radio-box-icon-size: 14px;
+        }
+    }
+    &__checked {
+        .wp-radio--box {
+            color: var(--wp-radio-checked-font-color);
+            background: var(--wp-radio-checked-color);
+            border-color: var(--wp-radio-checked-color);
+        }
+    }
+    &__disabled {
+        opacity: .6;
+        cursor: not-allowed;
+        .wp-radio--box {
+            color: var(--wp-radio-color);
+            background: var(--wp-radio-disabled-color);
+            border-color: var(--wp-radio-disabled-color);
+        }
+    }
+    &:not(.wp-radio__disabled) {
+        &:focus,
+        &:hover {
+            outline: none;
+            .wp-radio--box {
+                border-color: var(--wp-radio-checked-color);
+            }
+        }
+    }
+}

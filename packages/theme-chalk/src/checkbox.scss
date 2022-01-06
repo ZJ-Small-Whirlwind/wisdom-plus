@@ -43,13 +43,6 @@
             --wp-checkbox-box-icon-size: 14px;
         }
     }
-    &:focus,
-    &:hover {
-        outline: none;
-        .wp-checkbox--box {
-            border-color: var(--wp-checkbox-checked-color);
-        }
-    }
     &__checked {
         .wp-checkbox--box {
             color: var(--wp-checkbox-checked-font-color);
@@ -59,10 +52,20 @@
     }
     &__disabled {
         opacity: .6;
+        cursor: not-allowed;
         .wp-checkbox--box {
             color: var(--wp-checkbox-color);
             background: var(--wp-checkbox-disabled-color);
             border-color: var(--wp-checkbox-disabled-color);
+        }
+    }
+    &:not(.wp-checkbox__disabled) {
+        &:focus,
+        &:hover {
+            outline: none;
+            .wp-checkbox--box {
+                border-color: var(--wp-checkbox-checked-color);
+            }
         }
     }
 }

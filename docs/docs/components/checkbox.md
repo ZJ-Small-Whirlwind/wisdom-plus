@@ -24,8 +24,9 @@ app.use(WpCheckboxGroup)
 <template>
     <wp-space>
         <wp-checkbox/>
-        <wp-checkbox label="test" />
-        <wp-checkbox label="test" indeterminate />
+        <wp-checkbox label="带文字的复选框" />
+        <wp-checkbox label="部分选中" indeterminate />
+        <wp-checkbox label="禁用" disabled />
     </wp-space>
 </template>
 ```
@@ -121,3 +122,19 @@ const checkedAll = computed<boolean>({
 | default | 复选框标签插槽 | - |
 | indeterminate | 部分选中图标插槽 | - |
 | checked | 选中图标插槽 | - |
+
+## Checkbox Group API
+
+### Props
+
+| 参数      | 说明           | 类型                                                                | 默认值 |
+| --------- | -------------- | ------------------------------------------------------------------- | ------ |
+| modelValue `v-model`   | 可控模式值       | _(string \| number \| symbol)[]_          | -     |
+| disabled     | 是否禁用   | _boolean_           | -      |
+| size | 复选框尺寸 | _'small' \| 'default' \| 'large'_ | 'default' |
+
+### Methods
+
+| 参数      | 说明           | 类型                                                                | 默认值 |
+| --------- | -------------- | ------------------------------------------------------------------- | ------ |
+| update:modelValue      | 复选框值更改的回调       | _(value: (string \| number \| symbol)[]) => void_          | -     |
