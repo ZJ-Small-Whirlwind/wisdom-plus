@@ -72,6 +72,10 @@ module.exports = {
                             link: '/components/avatar'
                         },
                         {
+                            text: 'Image 图片',
+                            link: '/components/image'
+                        },
+                        {
                             text: 'Badge 徽章',
                             link: '/components/badge'
                         },
