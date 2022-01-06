@@ -109,6 +109,8 @@ const checked = ref<string>('1')
 
 ## Radio Group API
 
+Radio Group 组件可以使用所有 Space 组件的 Props
+
 ### Props
 
 | 参数      | 说明           | 类型                                                                | 默认值 |
