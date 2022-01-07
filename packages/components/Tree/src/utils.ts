@@ -68,9 +68,8 @@ export const getStatus = (
     return 0
 }
 
-export const getChecked = (list: TreeListItemCustom, props: TreeProps, checked: (string | number | symbol)[]) => {
+export const getChecked = (list: TreeListItemCustom, props: TreeProps, checkedSet: Set<string | number | symbol>) => {
     const key = props.getKey?.(list) || list[props.props.key]
-    const checkedSet = new Set(checked)
     if (!list.children) return checkedSet.has(key) ? 1 : -1
     if (list.children.length === 0) return -2
     const counter = {
