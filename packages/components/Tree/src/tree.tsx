@@ -70,6 +70,7 @@ export default defineComponent({
             passive: true,
             deep: true
         })
+        const checkedSet = computed(() => new Set(checked.value))
         const setChecked = (value: boolean, list: TreeListItem[], checkedSet: Set<string | number | symbol>) => {
             for (let i = 0; i < list.length; i++) {
                 const item = list[i]
@@ -88,9 +89,8 @@ export default defineComponent({
             }
         }
         const setingChecked = (value: boolean, list: TreeListItem[]) => {
-            const checkedSet = new Set(checked.value)
-            setChecked(value, list, checkedSet)
-            checked.value = Array.from(checkedSet)
+            setChecked(value, list, checkedSet.value)
+            checked.value = Array.from(checkedSet.value)
         }
         /**
          * 过滤
@@ -147,7 +147,7 @@ export default defineComponent({
                         <TreeNode
                             { ...item }
                             expends={expends.value}
-                            getChecked={(list: TreeListItemCustom) => getChecked(list, props, checked.value)}
+                            getChecked={(list: TreeListItemCustom) => getChecked(list, props, checkedSet.value)}
                             checkedList={checked.value}
                             expendsList={expendsList.value}
                             onSetChecked={setingChecked}
@@ -175,7 +175,7 @@ export default defineComponent({
                                                 <TreeNode
                                                     { ...child }
                                                     expends={expends.value}
-                                                    getChecked={(list: TreeListItemCustom) => getChecked(list, props, checked.value)}
+                                                    getChecked={(list: TreeListItemCustom) => getChecked(list, props, checkedSet.value)}
                                                     checkedList={checked.value}
                                                     expendsList={expendsList.value}
                                                     onSetChecked={setingChecked}
