@@ -82,7 +82,7 @@ const levels = computed(() => {
 const icon = ref()
 
 const expending = computed(() => {
-    return props.expends.includes(props.keyIs)
+    return props.expends.includes(props.keyIs) || props.expendsList.find(item => !item.isDelete && item.keyIs === props.keyIs)
 })
 
 const checkedStatus = computed(() => {
