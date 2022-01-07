@@ -57,6 +57,10 @@ module.exports = {
                         {
                             text: 'TagInput 标签输入',
                             link: '/components/tag-input'
+                        },
+                        {
+                            text: 'Tree 树',
+                            link: '/components/tree'
                         }
                     ]
                 },
