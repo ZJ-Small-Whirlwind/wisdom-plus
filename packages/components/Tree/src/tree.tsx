@@ -47,6 +47,10 @@ export const treeProps = buildProps({
     itemHeight: {
         type: Number,
         default: 30
+    },
+    animationMax: {
+        type: Number,
+        default: 200
     }
 })
 
@@ -92,13 +96,11 @@ export default defineComponent({
             setChecked(value, list, checkedSet.value)
             checked.value = Array.from(checkedSet.value)
         }
-        /**
+                /**
          * 过滤
          */
         const filterText = ref('')
-        const filterItems = computed(() => {
-            return itemsFilter(props, filterText.value)
-        })
+        const filterItems = computed(() => itemsFilter(props, filterText.value))
         const treeListFlatten = computed(() => {
             const finalList: TreeListItemExtra[] = []
             filterItems.value.forEach(item => {
@@ -111,8 +113,12 @@ export default defineComponent({
             const index = expends.value.indexOf(key)
             if (isDelete) {
                 expends.value.splice(index, 1)
-            } else {
-                if (key) expends.value.push(key)
+            } else if (key) expends.value.push(key)
+        }
+        const leave = (key: string | number | symbol) => {
+            const expendIndex = expendsList.value.findIndex(expendsItem => expendsItem.keyIs === key)
+            if (expendIndex > -1) {
+                expendsList.value.splice(expendIndex, 1)
             }
         }
         const handleExpend = (isDelete: boolean, key: string | number | symbol, level: number) => {
@@ -122,10 +128,7 @@ export default defineComponent({
                     keyIs: key,
                     level,
                     leave: () => {
-                        const expendIndex = expendsList.value.findIndex(expendsItem => expendsItem.keyIs === key)
-                        if (expendIndex > -1) {
-                            expendsList.value.splice(expendIndex, 1)
-                        }
+                        leave(key)
                     },
                     done: () => {
                         done(isDelete, key)
@@ -136,26 +139,27 @@ export default defineComponent({
             }
         }
         expose({
-            getCheckedItems: () => {
-                return getCheckedItems(props.list, checked.value, props)
-            }
+            getCheckedItems: () => getCheckedItems(props.list, checked.value, props)
         })
         return () => {
+            const TreeNodeFactory = (item: TreeListItemExtra) => (
+                <TreeNode
+                    { ...item }
+                    expends={expends.value}
+                    getChecked={(list: TreeListItemCustom) => getChecked(list, props, checkedSet.value)}
+                    v-model={checked.value}
+                    expendsList={expendsList.value}
+                    onSetChecked={setingChecked}
+                    onExpend={handleExpend}
+                    v-slots={{
+                        default: (list: TreeListItemCustom) => slots.title?.(list)
+                    }}
+                />
+            )
             const treeNodeRender = (item: TreeListItemExtra) => {
                 const TreeNodeRender = (dom?: VNodeChild) => (
                     <>
-                        <TreeNode
-                            { ...item }
-                            expends={expends.value}
-                            getChecked={(list: TreeListItemCustom) => getChecked(list, props, checkedSet.value)}
-                            checkedList={checked.value}
-                            expendsList={expendsList.value}
-                            onSetChecked={setingChecked}
-                            onExpend={handleExpend}
-                            v-slots={{
-                                default: (list: TreeListItemCustom) => slots.title?.(list)
-                            }}
-                        />
+                        { TreeNodeFactory(item) }
                         { dom }
                     </>
                 )
@@ -165,35 +169,23 @@ export default defineComponent({
                     item.children.forEach(child => {
                         flattenList(child, finalList, expendsListFind.level + 1, null, expends, checked, props)
                     })
-                    return (
-                        TreeNodeRender(
-                            <TreeTransition key={item.key} {...expendsListFind} v-slots={{
-                                default: () => (
-                                    <div>
-                                        {
-                                            finalList.map(child => (
-                                                <TreeNode
-                                                    { ...child }
-                                                    expends={expends.value}
-                                                    getChecked={(list: TreeListItemCustom) => getChecked(list, props, checkedSet.value)}
-                                                    checkedList={checked.value}
-                                                    expendsList={expendsList.value}
-                                                    onSetChecked={setingChecked}
-                                                    onExpend={handleExpend}
-                                                    v-slots={{
-                                                        default: (list: TreeListItemCustom) => slots.title?.(list)
-                                                    }}
-                                                />
-                                            ))
-                                        }
-                                    </div>
-                                )
-                            }} />
+                    if (finalList.length <= props.animationMax) {
+                        return (
+                            TreeNodeRender(
+                                <TreeTransition key={item.key} {...expendsListFind} v-slots={{
+                                    default: () => (
+                                        <div>
+                                            { finalList.map(TreeNodeFactory) }
+                                        </div>
+                                    )
+                                }} />
+                            )
                         )
-                    )
-                } else {
-                    return TreeNodeRender()
+                    }
+                    leave(expendsListFind.keyIs)
+                    done(expendsListFind.isDelete, expendsListFind.keyIs)
                 }
+                return TreeNodeRender()
             }
             return (
                 <div class={'wp-tree'}>
