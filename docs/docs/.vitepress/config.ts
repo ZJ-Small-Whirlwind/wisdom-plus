@@ -129,8 +129,8 @@ module.exports = {
                             link: '/components/overlay'
                         },
                         {
-                            text: 'Modal 模态框',
-                            link: '/components/modal'
+                            text: 'Dialog 对话框',
+                            link: '/components/dialog'
                         },
                         {
                             text: 'Tag 标签',
