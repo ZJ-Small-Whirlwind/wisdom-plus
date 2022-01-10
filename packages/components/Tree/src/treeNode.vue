@@ -2,10 +2,18 @@
     <div
         :class="{
             'wp-tree-node': true,
-            'wp-tree-node__disabled': disabled
+            'wp-tree-node__disabled': disabled,
+            'wp-tree-node__selecting': selectable && selecting === keyIs
         }"
         @click="() => {
-            if (isNoChildren) return
+            if (isNoChildren) {
+                if (selectable && !disabled) emit('update:selecting', keyIs)
+                return
+            }
+            if (selectable && selecting !== keyIs && !disabled) {
+                emit('update:selecting', keyIs)
+                return
+            }
             const index = expends.indexOf(keyIs)
             emit('expend', index > -1, keyIs, level)
         }"
@@ -14,7 +22,10 @@
             <div class='wp-tree-node__indent-cell' v-for="level in levels" :keyIs="level" />
         </div>
         <div class='wp-tree-node__title'>
-            <div class="wp-tree-node__arrow">
+            <div class="wp-tree-node__arrow" @click.stop="() => {
+                const index = expends.indexOf(keyIs)
+                emit('expend', index > -1, keyIs, level)
+            }">
                 <Icon :class="{ 'expend': expending }" v-if="!isNoChildren" ref="icon">
                     <RightOutlined />
                 </Icon>
@@ -70,13 +81,16 @@ const props = defineProps<{
     getChecked: (list: TreeListItemCustom) => -1 | -2 | 0 | 1,
     children?: TreeListItemCustom[],
     expendsList: ExpendsList[],
-    checkable?: boolean
+    checkable?: boolean,
+    selecting?: string | number | symbol,
+    selectable: boolean
 }>()
 
 const emit = defineEmits<{
     (e: 'setChecked', value: boolean, children: TreeListItemCustom[]): void,
     (e: 'expend', isDelete: boolean, key: string | number | symbol, level: number): void,
-    (e: 'update:modelValue', checkedList: (string | number | symbol)[]): void
+    (e: 'update:modelValue', checkedList: (string | number | symbol)[]): void,
+    (e: 'update:selecting', selecting: string | number | symbol): void
 }>()
 
 const levels = computed(() => {

@@ -1,4 +1,4 @@
-import { buildProps } from "@wisdom-plus/utils/props"
+import { buildProps, definePropType } from "@wisdom-plus/utils/props"
 import { computed, defineComponent, ExtractPropTypes, PropType, ref, VNodeChild } from "vue"
 
 import type { TreeListItemCustom, TreeListItemExtra, TreeListItem, ExpendsList } from './interface'
@@ -51,7 +51,9 @@ export const treeProps = buildProps({
     animationMax: {
         type: Number,
         default: 200
-    }
+    },
+    selectable: Boolean,
+    selecting: definePropType<string | number | symbol>([String, Number, Symbol])
 })
 
 export type TreeProps = ExtractPropTypes<typeof treeProps>
@@ -61,7 +63,15 @@ export default defineComponent({
     props: treeProps,
     emits: {
         'update:expends': (expends: (string | number | symbol)[]) => Array.isArray(expends),
-        'update:checked': (checked: (string | number | symbol)[]) => Array.isArray(checked)
+        'update:checked': (checked: (string | number | symbol)[]) => Array.isArray(checked),
+        'update:selecting': (selecting: string | number | symbol) => {
+            void selecting
+            return true
+        },
+        'select': (selecting: string | number | symbol) => {
+            void selecting
+            return true
+        }
     },
     setup(props, { emit, expose, slots }) {
         const expendsRef = ref<(string | number | symbol)[]>([])
@@ -74,6 +84,8 @@ export default defineComponent({
             passive: true,
             deep: true
         })
+        const selectingRef = ref<string | number | symbol>()
+        const selecting = useAutoControl(selectingRef, props, 'selecting', emit)
         const checkedSet = computed(() => new Set(checked.value))
         const setChecked = (value: boolean, list: TreeListItem[], checkedSet: Set<string | number | symbol>) => {
             for (let i = 0; i < list.length; i++) {
@@ -122,6 +134,7 @@ export default defineComponent({
             }
         }
         const handleExpend = (isDelete: boolean, key: string | number | symbol, level: number) => {
+            if (expendsList.value.length > 0) return
             if (props.animation) {
                 expendsList.value.push({
                     isDelete,
@@ -148,10 +161,13 @@ export default defineComponent({
                     expends={expends.value}
                     getChecked={(list: TreeListItemCustom) => getChecked(list, props, checkedSet.value)}
                     v-model={checked.value}
+                    selecting={selecting.value}
                     expendsList={expendsList.value}
                     onSetChecked={setingChecked}
                     onExpend={handleExpend}
                     checkable={props.checkable}
+                    selectable={props.selectable}
+                    onUpdate:selecting={(value: string | number | symbol) => selecting.value = value}
                     v-slots={{
                         default: (list: TreeListItemCustom) => slots.title?.(list)
                     }}

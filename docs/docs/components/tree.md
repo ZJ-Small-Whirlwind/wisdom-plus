@@ -71,6 +71,43 @@ app.use(WpTree)
 ```
 :::
 
+#### 可选择
+
+:::demo
+```vue
+<template>
+    当前选择 {{ selecting }}
+    <wp-tree v-model:selecting="selecting" :list="[
+        {
+            key: '1',
+            title: '展开',
+            children: [{
+                key: '1-1',
+                title: '1-1'
+            }, {
+                key: '1-2',
+                title: '1-2',
+                children: [{
+                    key: '1-2-1',
+                    title: '1-2-1'
+                }, {
+                    key: '1-2-2',
+                    title: '1-2-2',
+                    disabled: true
+                }]
+            }]
+        }
+    ]" selectable/>
+</template>
+
+<script lang="ts" setup>
+import { ref } from 'vue'
+
+const selecting = ref('1')
+</script>
+```
+:::
+
 #### 关闭动画
 
 :::demo
@@ -184,6 +221,8 @@ const handleDelete = () => {
 | expends `v-model`   | 展开的项 | _(string \| number \| symbol)[]_ | -      |
 | checked `v-model` | 选中项       | _(string \| number \| symbol)[]_                                                           | -  |
 | checkable  | 是否可选中     | _boolean_                                                           | false   |
+| selecting `v-model` | 选择项 | _string \| number \| symbol_ | - |
+| selectable | 是否可选择 | _boolean_ | false |
 | virtual | 是否使用虚拟列表 | _boolean_ | false |
 | getKey | 函数式获得 key 值 | _(item: TreeListItemCustom) => string \| number \| symbol_ | - |
 | height | 元素高度，仅使用虚拟列表时有效 | _String_ | '300px' |
@@ -191,6 +230,11 @@ const handleDelete = () => {
 | animationMax | 最多多少项时不使用动画 | _number_ | 200 |
 | filterable | 是否可过滤 | _filterable_ | false |
 | itemHeight | 项目高度，仅供虚拟列表使用 | _number_ | 30 |
+
+### Methods
+| 参数      | 说明           | 类型                                                                | 默认值 |
+| --------- | -------------- | ------------------------------------------------------------------- | ------ |
+| select      | 选择后的回调       | _(key: string \| number \| symbol) => void_          | -     |
 
 ### Slots
 
