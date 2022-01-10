@@ -44,7 +44,7 @@ const openDialog = function Dialog(options?: DialogOptions) {
                                         <Button onClick={() => {
                                             show.value = false
                                             reject()
-                                        }}>
+                                        }} {...options?.cancelProps}>
                                             { options?.cancelText || '取消' }
                                         </Button>
                                     ) : null
