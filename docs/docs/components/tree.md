@@ -228,13 +228,14 @@ const handleDelete = () => {
 | height | 元素高度，仅使用虚拟列表时有效 | _String_ | '300px' |
 | animation | 是否使用动画 | _boolean_ | true |
 | animationMax | 最多多少项时不使用动画 | _number_ | 200 |
+| filter `v-model` | 过滤关键词 | _string_ | - |
 | filterable | 是否可过滤 | _filterable_ | false |
 | itemHeight | 项目高度，仅供虚拟列表使用 | _number_ | 30 |
 
 ### Methods
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
-| select      | 选择后的回调       | _(key: string \| number \| symbol) => void_          | -     |
+| select      | 选择后的回调       | _(key: string \| number \| symbol) => void_         | -     |
 
 ### Slots
 
@@ -242,6 +243,7 @@ const handleDelete = () => {
 | ------- | -------- | --- |
 | default | 默认插槽，会放置在最顶端 | - |
 | title | 标题内容 | _...TreeListItemCustom_ |
+| filter | 过滤输入框 | _Ref\<string\>_ |
 
 ## 类型
 

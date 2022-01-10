@@ -53,7 +53,11 @@ export const treeProps = buildProps({
         default: 200
     },
     selectable: Boolean,
-    selecting: definePropType<string | number | symbol>([String, Number, Symbol])
+    selecting: definePropType<string | number | symbol>([String, Number, Symbol]),
+    filter: {
+        type: String,
+        default: ''
+    }
 })
 
 export type TreeProps = ExtractPropTypes<typeof treeProps>
@@ -67,6 +71,9 @@ export default defineComponent({
         'update:selecting': (selecting: string | number | symbol) => {
             void selecting
             return true
+        },
+        'update:filter': (text: string) => {
+            return typeof text === 'string'
         },
         'select': (selecting: string | number | symbol) => {
             void selecting
@@ -108,11 +115,12 @@ export default defineComponent({
             setChecked(value, list, checkedSet.value)
             checked.value = Array.from(checkedSet.value)
         }
-                /**
+        /**
          * 过滤
          */
         const filterText = ref('')
-        const filterItems = computed(() => itemsFilter(props, filterText.value))
+        const filter = useAutoControl(filterText, props, 'filter', emit)
+        const filterItems = computed(() => itemsFilter(props, filter.value))
         const treeListFlatten = computed(() => {
             const finalList: TreeListItemExtra[] = []
             filterItems.value.forEach(item => {
@@ -209,7 +217,7 @@ export default defineComponent({
                     { slots.default?.() }
                     {
                         props.filterable ? (
-                            <input v-model={filterText.value} />
+                            slots.filter?.(filter) || <input v-model={filter.value} />
                         ) : null
                     }
                     {
