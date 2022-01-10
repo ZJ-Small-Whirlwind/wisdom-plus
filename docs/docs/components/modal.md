@@ -214,7 +214,7 @@ Dialog({
 ```
 
 #### 函数签名
-_(options?: DialogOptions, props?: ModalProps) => Promise\<void\>_
+_(options?: DialogOptions) => Promise\<void\>_
 
 #### DialogOptions 类型
 
@@ -231,3 +231,4 @@ _(options?: DialogOptions, props?: ModalProps) => Promise\<void\>_
 | spaceProps | Space 组件的 props     | _SpaceProps_                                                    | -     |
 | cancelProps | 取消按钮组件的 props     | _ButtonProps_                                                    | -     |
 | confirmProps | 确认按钮组件的 props     | _ButtonProps_                                                    | -     |
+| props | 模态框的 props | _ModalProps_ | - |

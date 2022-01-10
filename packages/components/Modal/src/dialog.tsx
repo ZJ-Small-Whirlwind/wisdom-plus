@@ -16,10 +16,11 @@ export interface DialogOptions {
     spaceProps?: Partial<SpaceProps> & Record<string, any>,
     cancelProps?: Partial<ButtonProps> & Record<string, any>,
     confirmProps?: Partial<ButtonProps> & Record<string, any>,
+    props?: Partial<ModalProps> & Record<string, any>,
     footer?: (close?: () => void) => VNode | string
 }
 
-const openDialog = function Dialog(options?: DialogOptions, props?: Partial<ModalProps> & Record<string, any>) {
+const openDialog = function Dialog(options?: DialogOptions) {
     return new Promise<void>((resolve, reject) => {
         const newDiv = document.createElement('div')
         document.body.appendChild(newDiv)
@@ -31,7 +32,7 @@ const openDialog = function Dialog(options?: DialogOptions, props?: Partial<Moda
                 })
                 const confirmButtonRef = ref<InstanceType<typeof Button> | null>(null)
                 return () => (
-                    <Modal width={300} { ...props } v-model={show.value} v-slots={{
+                    <Modal width={300} { ...options?.props } v-model={show.value} v-slots={{
                         title: () => options?.title || '提示',
                         default: () => options?.content,
                         footer: () => options?.footer?.(() => {
@@ -53,7 +54,7 @@ const openDialog = function Dialog(options?: DialogOptions, props?: Partial<Moda
                                         <Button ref={confirmButtonRef} tabindex="-1" type="primary" onClick={() => {
                                             show.value = false
                                             resolve()
-                                        }} {...options?.cancelProps}>
+                                        }} {...options?.confirmProps}>
                                             { options?.confirmText || '确定' }
                                         </Button>
                                     ) : null
