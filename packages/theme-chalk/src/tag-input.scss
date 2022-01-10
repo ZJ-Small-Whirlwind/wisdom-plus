@@ -63,7 +63,7 @@
         position: relative;
         line-height: var(--wp-taginput-line-height);
         &.blank::before {
-            content: var(--wp-taginput-placehoder, '请输入');
+            content: var(--wp-taginput-placehoder, ' ');
             color: #ccc;
         }
     }
