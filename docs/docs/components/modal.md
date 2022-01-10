@@ -144,9 +144,13 @@ const openDialog = () => {
             }
         }, 'vNode节点'),
         content: '内容',
-        confirmText: '自定义确认按钮'
-    }, {
-        width: 600
+        confirmText: '自定义确认按钮',
+        confirmProps: {
+            type: 'danger'
+        },
+        props: {
+            width: '600px'
+        }
     })
 }
 </script>
