@@ -21,9 +21,16 @@
         max-width: 100%;
         overflow: auto;
         > .wp-menu-item {
-            display: inline-block;
+            display: inline-flex;
             > .wp-menu-item-title {
                 position: relative;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                .wp-menu-item__text {
+                    width: auto;
+                }
                 &::after {
                     content: '';
                     position: absolute;

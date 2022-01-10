@@ -135,6 +135,10 @@ module.exports = {
                         {
                             text: 'Tag 标签',
                             link: '/components/tag'
+                        },
+                        {
+                            text: 'XScroll 横向滚动',
+                            link: '/components/xscroll'
                         }
                     ]
                 }
