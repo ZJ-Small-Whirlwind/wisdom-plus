@@ -28,7 +28,7 @@ app.use(WpTree)
     <wp-tree :list="[
         {
             key: '1',
-            title: '23232',
+            title: '展开',
             children: [{
                 key: '1-1',
                 title: '1-1'
@@ -46,6 +46,27 @@ app.use(WpTree)
             }]
         }
     ]"/>
+    <wp-tree :list="[
+        {
+            key: '1',
+            title: '展开',
+            children: [{
+                key: '1-1',
+                title: '1-1'
+            }, {
+                key: '1-2',
+                title: '1-2',
+                children: [{
+                    key: '1-2-1',
+                    title: '1-2-1'
+                }, {
+                    key: '1-2-2',
+                    title: '1-2-2',
+                    disabled: true
+                }]
+            }]
+        }
+    ]" checkable/>
 </template>
 ```
 :::
@@ -58,7 +79,7 @@ app.use(WpTree)
     <wp-tree :list="[
         {
             key: '1',
-            title: '23232',
+            title: '展开',
             children: [{
                 key: '1-1',
                 title: '1-1'
@@ -97,6 +118,7 @@ app.use(WpTree)
                 virtual
                 ref="treeRef"
                 filterable
+                checkable
             />
         </wp-grid-item>
         <wp-grid-item>
@@ -117,6 +139,7 @@ app.use(WpTree)
                 virtual
                 filterable
                 ref="treeRef2"
+                checkable
             />
         </wp-grid-item>
     </wp-space>
@@ -165,6 +188,7 @@ const handleDelete = () => {
 | getKey | 函数式获得 key 值 | _(item: TreeListItemCustom) => string \| number \| symbol_ | - |
 | height | 元素高度，仅使用虚拟列表时有效 | _String_ | '300px' |
 | animation | 是否使用动画 | _boolean_ | true |
+| animationMax | 最多多少项时不使用动画 | _number_ | 200 |
 | filterable | 是否可过滤 | _filterable_ | false |
 | itemHeight | 项目高度，仅供虚拟列表使用 | _number_ | 30 |
 

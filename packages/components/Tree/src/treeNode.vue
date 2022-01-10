@@ -7,7 +7,7 @@
         @click="() => {
             if (isNoChildren) return
             const index = expends.indexOf(keyIs)
-            emits('expend', index > -1, keyIs, level)
+            emit('expend', index > -1, keyIs, level)
         }"
     >
         <div class='wp-tree-node__indent'>
@@ -36,9 +36,10 @@
                                 checkedList.splice(index, 1)
                             }
                         } else {
-                            emits('setChecked', value, children)
+                            emit('setChecked', value, children)
                         }
                     }"
+                    v-if="checkable"
                 />
                 <slot v-bind="list">
                     {{ title || keyIs }}
@@ -56,23 +57,26 @@ import { RightOutlined } from '@vicons/antd'
 import Checkbox from '../../Checkbox'
 
 import type { TreeListItemCustom, ExpendsList } from './interface'
+import { useVModel } from '@vueuse/core'
 
 const props = defineProps<{
     keyIs: string | number | symbol,
     title: string,
     level: number,
     expends: (string | number | symbol)[],
-    checkedList: (string | number | symbol)[],
+    modelValue: (string | number | symbol)[],
     disabled: boolean,
     list: TreeListItemCustom,
     getChecked: (list: TreeListItemCustom) => -1 | -2 | 0 | 1,
     children?: TreeListItemCustom[],
-    expendsList: ExpendsList[]
+    expendsList: ExpendsList[],
+    checkable?: boolean
 }>()
 
-const emits = defineEmits<{
+const emit = defineEmits<{
     (e: 'setChecked', value: boolean, children: TreeListItemCustom[]): void,
-    (e: 'expend', isDelete: boolean, key: string | number | symbol, level: number): void
+    (e: 'expend', isDelete: boolean, key: string | number | symbol, level: number): void,
+    (e: 'update:modelValue', checkedList: (string | number | symbol)[]): void
 }>()
 
 const levels = computed(() => {
@@ -95,5 +99,10 @@ const disabled = computed(() => {
 
 const isNoChildren = computed(() => {
     return !props.children || props.children.length === 0
+})
+
+const checkedList = useVModel(props, 'modelValue', emit, {
+    passive: true,
+    deep: true
 })
 </script>
