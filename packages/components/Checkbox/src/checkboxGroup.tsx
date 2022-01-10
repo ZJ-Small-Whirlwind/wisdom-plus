@@ -13,7 +13,8 @@ const checkboxGroupSelf = buildProps({
     size: {
         type: String as PropType<'small' | 'default' | 'large'>,
         default: 'default'
-    }
+    },
+    spaceSize: spaceProps['size']
 })
 
 export const checkboxGroupProps = {
@@ -46,7 +47,7 @@ export default defineComponent({
             return spacePropsTemp
         })
         return () => (
-            <Space { ...spacePropsMap.value }>
+            <Space {...spacePropsMap.value} size={props.spaceSize}>
                 { slots.default?.() }
             </Space>
         )

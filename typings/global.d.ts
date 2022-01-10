@@ -9,7 +9,7 @@ declare module 'vue' {
     WpG: typeof import('wisdom-plus')['WpGrid']
     WpGrid: typeof import('wisdom-plus')['WpGrid']
     WpGridItem: typeof import('wisdom-plus')['WpGridItem']
-    WpGi: typeof import('wisdom-plus')['WpGi']
+    WpGi: typeof import('wisdom-plus')['WpGridItem']
     WpSpace: typeof import('wisdom-plus')['WpSpace']
     WpIcon: typeof import('wisdom-plus')['WpIcon']
     WpTooltip: typeof import('wisdom-plus')['WpTooltip']
@@ -33,6 +33,7 @@ declare module 'vue' {
     WpRadio: typeof import('wisdom-plus')['WpRadio']
     WpRadioGroup: typeof import('wisdom-plus')['WpRadioGroup']
     WpCheckbox: typeof import('wisdom-plus')['WpCheckbox']
+    WpXScroll: typeof import('wisdom-plus')['WpXScroll']
     WpCheckboxGroup: typeof import('wisdom-plus')['WpCheckboxGroup']
   }
 }

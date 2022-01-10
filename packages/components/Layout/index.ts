@@ -5,7 +5,7 @@ import layoutAside from './src/layoutAside'
 
 export const WpLayout = withInstall(Layout)
 export const WpLayoutContent = withInstall(layoutContent)
-export const WplayoutAside = withInstall(layoutAside)
+export const WpLayoutAside = withInstall(layoutAside)
 export default WpLayout
 
 export { layoutProps } from './src/layout'
