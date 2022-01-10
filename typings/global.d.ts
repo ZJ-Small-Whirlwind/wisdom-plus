@@ -36,6 +36,7 @@ declare module 'vue' {
     WpXScroll: typeof import('wisdom-plus')['WpXScroll']
     WpCheckboxGroup: typeof import('wisdom-plus')['WpCheckboxGroup']
     WpTree: typeof import('wisdom-plus')['WpTree']
+    WpModal: typeof import('wisdom-plus')['WpModal']
   }
 }
 
