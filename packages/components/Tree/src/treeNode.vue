@@ -30,7 +30,7 @@
                     <RightOutlined />
                 </Icon>
             </div>
-            <slot name="prefix" v-bind="list" />
+            <slot name="prefix" v-bind="{ ...list, expending }" />
             <div class="wp-tree-node__content">
                 <Checkbox
                     @click.stop
@@ -53,11 +53,11 @@
                     }"
                     v-if="checkable"
                 />
-                <slot v-bind="list">
+                <slot v-bind="{ ...list, expending }">
                     {{ title || keyIs }}
                 </slot>
             </div>
-            <slot name="suffix" v-bind="list" />
+            <slot name="suffix" v-bind="{ ...list, expending }" />
             <div class="wp-tree-node__arrow" @click.stop="() => {
                 const index = expends.indexOf(keyIs)
                 emit('expend', index > -1, keyIs, level)
