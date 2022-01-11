@@ -216,7 +216,7 @@ export default defineComponent({
                     { slots.default?.() }
                     {
                         props.filterable ? (
-                            slots.filter?.(filter) || <input v-model={filter.value} />
+                            slots.filter?.({ filter }) || <input v-model={filter.value} />
                         ) : null
                     }
                     {

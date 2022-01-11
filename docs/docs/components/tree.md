@@ -156,7 +156,11 @@ const selecting = ref('1')
                 ref="treeRef"
                 filterable
                 checkable
-            />
+            >
+                <template #filter="{ filter }">
+                    <input v-model="filter.value" />
+                </template>
+            </wp-tree>
         </wp-grid-item>
         <wp-grid-item>
             <wp-space vertical align="center" justify="center" style="height: 300px;">
