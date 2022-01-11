@@ -130,7 +130,15 @@ module.exports = {
                         },
                         {
                             text: 'Dialog 对话框',
+                            link: '/components/dialog'
+                        },
+                        {
+                            text: 'Modal 模态框',
                             link: '/components/modal'
+                        },
+                        {
+                            text: 'Drawer 抽屉',
+                            link: '/components/drawer'
                         },
                         {
                             text: 'Tag 标签',
