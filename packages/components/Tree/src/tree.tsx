@@ -56,7 +56,8 @@ export const treeProps = buildProps({
     selecting: definePropType<string | number | symbol>([String, Number, Symbol]),
     filter: {
         type: String
-    }
+    },
+    arrowRight: Boolean
 })
 
 export type TreeProps = ExtractPropTypes<typeof treeProps>
@@ -174,9 +175,12 @@ export default defineComponent({
                     onExpend={handleExpend}
                     checkable={props.checkable}
                     selectable={props.selectable}
+                    arrowRight={props.arrowRight}
                     onUpdate:selecting={(value: string | number | symbol) => selecting.value = value}
                     v-slots={{
-                        default: (list: TreeListItemCustom) => slots.title?.(list)
+                        default: slots.title,
+                        suffix: slots.suffix,
+                        prefix: slots.prefix
                     }}
                 />
             )

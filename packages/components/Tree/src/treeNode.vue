@@ -25,11 +25,12 @@
             <div class="wp-tree-node__arrow" @click.stop="() => {
                 const index = expends.indexOf(keyIs)
                 emit('expend', index > -1, keyIs, level)
-            }">
+            }" v-if="!arrowRight">
                 <Icon :class="{ 'expend': expending }" v-if="!isNoChildren" ref="icon">
                     <RightOutlined />
                 </Icon>
             </div>
+            <slot name="prefix" v-bind="list" />
             <div class="wp-tree-node__content">
                 <Checkbox
                     @click.stop
@@ -55,6 +56,15 @@
                 <slot v-bind="list">
                     {{ title || keyIs }}
                 </slot>
+            </div>
+            <slot name="suffix" v-bind="list" />
+            <div class="wp-tree-node__arrow" @click.stop="() => {
+                const index = expends.indexOf(keyIs)
+                emit('expend', index > -1, keyIs, level)
+            }" v-if="arrowRight">
+                <Icon :class="{ 'expend': expending }" v-if="!isNoChildren" ref="icon">
+                    <RightOutlined />
+                </Icon>
             </div>
         </div>
     </div>
@@ -83,7 +93,8 @@ const props = defineProps<{
     expendsList: ExpendsList[],
     checkable?: boolean,
     selecting?: string | number | symbol,
-    selectable: boolean
+    selectable: boolean,
+    arrowRight?: boolean
 }>()
 
 const emit = defineEmits<{
