@@ -219,23 +219,25 @@ export default defineComponent({
                             slots.filter?.({ filter }) || <input v-model={filter.value} />
                         ) : null
                     }
-                    {
-                        !props.virtual ? (
-                            treeListFlatten.value.map(treeNodeRender)
-                        ) : (
-                            <VirtualList
-                                keyField="key"
-                                style={{
-                                    height: props.height
-                                }}
-                                itemSize={props.itemHeight}
-                                items={treeListFlatten.value}
-                                v-slots={{
-                                    default: ({ item }) => treeNodeRender(item)
-                                }}
-                            />
-                        )
-                    }
+                    <div class={'wp-tree-nodes'}>
+                        {
+                            !props.virtual ? (
+                                treeListFlatten.value.map(treeNodeRender)
+                            ) : (
+                                <VirtualList
+                                    keyField="key"
+                                    style={{
+                                        height: props.height
+                                    }}
+                                    itemSize={props.itemHeight}
+                                    items={treeListFlatten.value}
+                                    v-slots={{
+                                        default: ({ item }) => treeNodeRender(item)
+                                    }}
+                                />
+                            )
+                        }
+                    </div>
                 </div>
             )
         }
