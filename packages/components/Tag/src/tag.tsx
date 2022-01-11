@@ -49,7 +49,10 @@ export default defineComponent({
                 <div class="wp-tag--text">{ slots.default?.() || props.label }</div>
                 {
                     props.closable ? (
-                        <div class="wp-tag--close" onClick={e => emit('close', e)}>
+                        <div class="wp-tag--close" onClick={e => {
+                            e.stopPropagation()
+                            emit('close', e)
+                        }}>
                             <Icon>
                                 { slots.closeIcon?.() || <CloseOutlined /> }
                             </Icon>
