@@ -55,8 +55,7 @@ export const treeProps = buildProps({
     selectable: Boolean,
     selecting: definePropType<string | number | symbol>([String, Number, Symbol]),
     filter: {
-        type: String,
-        default: ''
+        type: String
     }
 })
 
