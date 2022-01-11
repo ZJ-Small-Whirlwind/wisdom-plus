@@ -186,14 +186,18 @@ export default defineComponent({
                 'wp-modal__overlay': true,
                 [`wp-modal__overlay-${props.from}`]: props.type === 'drawer'
             }}>
-                <Transition name={props.transitionName || (props.type === 'drawer' ? `wp-modal-${props.from}` : 'wp-modal-fade' )} onAfterLeave={() => emit('afterClose')} onAfterEnter={() => {
-                    emit('afterOpen')
-                }} onEnter={() => {
-                    modalRef.value?.focus({ preventScroll: true })
-                    emit('open')
-                }} appear>
+                <Transition
+                    name={props.transitionName || (props.type === 'drawer' ? `wp-modal-${props.from}` : 'wp-modal-fade' )}
+                    onAfterLeave={() => emit('afterClose')}
+                    onAfterEnter={() => emit('afterOpen')}
+                    onEnter={() => {
+                        modalRef.value?.focus({ preventScroll: true })
+                        emit('open')
+                    }}
+                    appear
+                >
                     {
-                        showBox.value ? (
+                        props.overlay.useVShow || showBox.value ? (
                             <div
                                 class={{
                                     'wp-modal': true,
@@ -201,7 +205,6 @@ export default defineComponent({
                                     'wp-modal__drawer': props.type === 'drawer',
                                     [`wp-modal__drawer-${props.from}`]: props.type === 'drawer'
                                 }} style={{
-                                    display: !showBox.value ? 'none' : '',
                                     width: typeof props.width === 'string' ? props.width : `${props.width}px`,
                                     height: typeof props.height === 'string' ? props.height : `${props.height}px`,
                                     transform: modalTransform.value,

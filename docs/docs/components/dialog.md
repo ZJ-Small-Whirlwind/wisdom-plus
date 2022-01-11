@@ -44,6 +44,34 @@ const show = ref(false)
 ```
 :::
 
+### 使用 VShow 代替 VIf
+
+:::demo
+```vue
+<template>
+    <wp-dialog v-model="show" width="400px" title="对话框" :overlay="{ useVShow: true }">
+        这里是内容
+        <template #footer>
+            <wp-space justify="end">
+                <wp-button @click="show = !show" size="medium">
+                    取消
+                </wp-button>
+                <wp-button @click="show = !show" size="medium" type="primary">
+                    确认
+                </wp-button>
+            </wp-space>
+        </template>
+    </wp-dialog>
+    <wp-button @click="show = !show">显示对话框</wp-button>
+</template>
+
+<script lang="ts" setup>
+import { ref } from 'vue'
+const show = ref(false)
+</script>
+```
+:::
+
 ## API
 
 ### Props

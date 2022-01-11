@@ -88,8 +88,7 @@ export default defineComponent({
                                     zIndex: typeof props.zIndex === 'undefined' ? zIndex.value : props.zIndex,
                                     background: props.background,
                                     backdropFilter: props.blur ? `blur(${typeof props.blur === 'boolean' ? '10px' : props.blur})` : '',
-                                    display: props.useVShow && !props.modelValue ? 'none' : ''
-                                }} onClick={() => props.clickToClose && emit('update:modelValue', false)} {...attrs}>
+                                }} onClick={() => props.clickToClose && emit('update:modelValue', false)} v-show={!props.useVShow || props.modelValue} {...attrs}>
                                     { slots.default?.() }
                                 </div>
                             </>
