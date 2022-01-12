@@ -115,7 +115,10 @@ module.exports = {
                             text: 'Menu 菜单',
                             link: '/components/menu'
                         },
-                        
+                        {
+                            text: 'Table 表格',
+                            link: '/components/table'
+                        },
                         {
                             text: 'ScrollList 滚动列表',
                             link: '/components/scroll-list'

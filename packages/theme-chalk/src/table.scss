@@ -1,0 +1,49 @@
+:root {
+    --wp-table-font-size: 14px;
+    --wp-table-border: 1px solid #eee;
+    --wp-table-padding: 10px 15px;
+    --wp-table-stripe-background: #fcfcfc;
+    --wp-table-hover-background: #f8f8f8;
+}
+
+.wp-table {
+    &--body {
+        width: 100%;
+        display: table;
+        font-size: var(--wp-table-font-size);
+        border: var(--wp-table-border);
+        > tr {
+            border-top: var(--wp-table-border);
+            &:nth-child(2n) {
+                background-color: initial;
+            }
+            > th {
+                padding: var(--wp-table-padding);
+                font-weight: bold;
+            }
+            > td {
+                padding: var(--wp-table-padding);
+            }
+            &:hover {
+                > td {
+                    background-color: var(--wp-table-hover-background);
+                }
+            }
+        }
+    }
+    &--stripe {
+        > tr {
+            &:nth-child(2n) {
+                background: var(--wp-table-stripe-background);
+            }
+        }
+    }
+    &--border {
+        > tr {
+            > th,
+            > td {
+                border-right: var(--wp-table-border);
+            }
+        }
+    }
+}
