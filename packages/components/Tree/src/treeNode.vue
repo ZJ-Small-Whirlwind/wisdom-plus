@@ -27,7 +27,9 @@
                 emit('expend', index > -1, keyIs, level)
             }" v-if="!arrowRight">
                 <Icon :class="{ 'expend': expending }" v-if="!isNoChildren" ref="icon">
-                    <RightOutlined />
+                    <slot name="arrow" :expending="expending">
+                        <RightOutlined />
+                    </slot>
                 </Icon>
             </div>
             <slot name="prefix" v-bind="{ ...list, expending }" />
@@ -58,7 +60,7 @@
                         @click.stop
                         :disabled="disabled || Boolean(children)"
                         :model-value="checkedStatus === 1"
-                        @update:model-value="value => {
+                        @update:model-value="() => {
                             if (disabled) return
                             if (!children) {
                                 checkedList = [keyIs]
@@ -77,7 +79,9 @@
                 emit('expend', index > -1, keyIs, level)
             }" v-if="arrowRight">
                 <Icon :class="{ 'expend': expending }" v-if="!isNoChildren" ref="icon">
-                    <RightOutlined />
+                    <slot name="arrow" :expending="expending">
+                        <RightOutlined />
+                    </slot>
                 </Icon>
             </div>
         </div>

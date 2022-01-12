@@ -195,7 +195,8 @@ export default defineComponent({
                     v-slots={{
                         default: slots.title,
                         suffix: slots.suffix,
-                        prefix: slots.prefix
+                        prefix: slots.prefix,
+                        arrow: slots.arrow
                     }}
                 />
             )

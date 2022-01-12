@@ -294,7 +294,8 @@ const checkAll = () => {
 | title | 标题内容 | _...TreeListItemCustom, expending: boolean_ |
 | suffix | 标题内容后缀 | _...TreeListItemCustom, expending: boolean_ |
 | prefix | 标题内容前缀 | _...TreeListItemCustom, expending: boolean_ |
-| filter | 过滤输入框 | _Ref\<string\>_ |
+| filter | 过滤输入框 | _filter: Ref\<string\>_ |
+| arrow | 指示箭头插槽 | _expending: boolean_ |
 
 ### Expose
 
