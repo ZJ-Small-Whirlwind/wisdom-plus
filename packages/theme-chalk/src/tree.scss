@@ -45,7 +45,12 @@
             align-items: center;
         }
         &__arrow {
-            margin-right: 5px;
+            &.left {
+                margin-right: 5px;
+            }
+            &.right {
+                margin-left: 5px;
+            }
             font-size: 12px;
             color: #ccc;
             width: 18px;

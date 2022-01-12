@@ -22,7 +22,7 @@
             />
         </div>
         <div class='wp-tree-node__title'>
-            <div class="wp-tree-node__arrow" @click.stop="() => {
+            <div class="wp-tree-node__arrow left" @click.stop="() => {
                 const index = expends.indexOf(keyIs)
                 emit('expend', index > -1, keyIs, level)
             }" v-if="!arrowRight">
@@ -74,7 +74,7 @@
                 </slot>
             </div>
             <slot name="suffix" v-bind="{ ...list, expending }" />
-            <div class="wp-tree-node__arrow" @click.stop="() => {
+            <div class="wp-tree-node__arrow right" @click.stop="() => {
                 const index = expends.indexOf(keyIs)
                 emit('expend', index > -1, keyIs, level)
             }" v-if="arrowRight">
