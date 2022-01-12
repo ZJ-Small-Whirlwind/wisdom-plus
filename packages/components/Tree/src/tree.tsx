@@ -61,7 +61,8 @@ export const treeProps = buildProps({
         type: Boolean,
         default: true
     },
-    arrowRight: Boolean
+    arrowRight: Boolean,
+    exclude: Array as PropType<(string | number | symbol)[]>
 })
 
 export type TreeProps = ExtractPropTypes<typeof treeProps>
@@ -166,7 +167,7 @@ export default defineComponent({
         expose({
             getCheckedItems: () => getCheckedItems(props.list, checked.value, props),
             getFlattenList: (getSet = false) => getFlattenList(props.list, getSet),
-            getItemsCount: () => getItemsCount(props.list, props),
+            getItemsCount: (filter = false) => getItemsCount(filter ? filterItems.value : props.list, props),
             checkAll: () => {
                 setingChecked(true, props.list)
             }

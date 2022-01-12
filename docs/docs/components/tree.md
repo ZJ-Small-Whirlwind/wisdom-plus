@@ -138,7 +138,7 @@ const selecting = ref('1')
 ```
 :::
 
-#### 虚拟列表 / 可过滤
+#### 虚拟列表 / 可过滤 / 可排除
 
 :::demo
 ```vue
@@ -158,6 +158,7 @@ const selecting = ref('1')
                 filterable
                 checkable
                 arrow-right
+                :exclude="treeList2Keys"
             >
                 <template #filter="{ filter }">
                     <input v-model="filter.value" />
@@ -189,7 +190,7 @@ const selecting = ref('1')
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, nextTick } from 'vue'
 const checked = ref([])
 const checked2 = ref([])
 const treeList = ref(tree.groups)
@@ -201,6 +202,7 @@ const treeRef2 = ref()
 const handleAdd = () => {
     treeList2.value = Array.from(new Set([...treeList2.value, ...treeRef.value.getCheckedItems()]))
     checked.value = []
+    nextTick(() => count.value = treeRef.value.getItemsCount(true))
 }
 
 const handleDelete = () => {
@@ -210,12 +212,19 @@ const handleDelete = () => {
     })
     treeList2.value = Array.from(treeListSet)
     checked2.value = []
+    nextTick(() => count.value = treeRef.value.getItemsCount(true))
 }
+
+const treeList2Keys = computed(() => {
+    return treeList2.value.map(item => {
+        return item['union_node_id'] || item['node_id']
+    })
+})
 
 const count = ref<number>(0)
 
 onMounted(() => {
-    count.value = treeRef.value.getItemsCount()
+    count.value = treeRef.value.getItemsCount(true)
 })
 
 const checkAll = () => {
@@ -249,6 +258,7 @@ const checkAll = () => {
 | filterable | 是否可过滤 | _filterable_ | false |
 | itemHeight | 项目高度，仅供虚拟列表使用 | _number_ | 30 |
 | arrowRight | 箭头是否在右边 | _boolean_ | - |
+| exclude | 排除项 | _(string \| number \| symbol)[]_ | - |
 
 ### Methods
 | 参数      | 说明           | 类型                                                                | 默认值 |
@@ -271,7 +281,7 @@ const checkAll = () => {
 | -- | -- | -- |
 | getCheckedItems | 获得选中的元素 | _() => TreeListItemCustom[]_ |
 | getFlattenList | 获得扁平化的列表 | _(getSet: boolean) => TreeListItemCustom[] \| Set\<TreeListItemCustom\>_ |
-| getItemsCount | 获取叶子节点的数量 | _() => number_ |
+| getItemsCount | 获取叶子节点的数量 | _(filter: boolean) => number_ |
 | checkAll | 全选 | _() => void_ |
 
 ## 类型
