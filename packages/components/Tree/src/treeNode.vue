@@ -59,7 +59,7 @@
                     <Radio
                         @click.stop
                         :disabled="disabled || Boolean(children)"
-                        :model-value="checkedStatus === 1"
+                        :model-value="checkedStatus !== -1"
                         @update:model-value="() => {
                             if (disabled) return
                             if (!children) {
