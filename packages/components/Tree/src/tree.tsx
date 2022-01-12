@@ -10,7 +10,7 @@ import VirtualList from '../../VirtualList'
 import TreeNode from './treeNode.vue'
 import TreeTransition from './treeTransition.vue'
 
-import { flattenList, getChecked, getCheckedItems, itemsFilter } from './utils'
+import { flattenList, getChecked, getCheckedItems, itemsFilter, getFlattenList, getItemsCount } from './utils'
 
 export const treeProps = buildProps({
     list: {
@@ -50,12 +50,16 @@ export const treeProps = buildProps({
     },
     animationMax: {
         type: Number,
-        default: 200
+        default: 80
     },
     selectable: Boolean,
     selecting: definePropType<string | number | symbol>([String, Number, Symbol]),
     filter: {
         type: String
+    },
+    showFilter: {
+        type: Boolean,
+        default: true
     },
     arrowRight: Boolean
 })
@@ -97,15 +101,15 @@ export default defineComponent({
         const setChecked = (value: boolean, list: TreeListItem[], checkedSet: Set<string | number | symbol>) => {
             for (let i = 0; i < list.length; i++) {
                 const item = list[i]
-                const key = props.getKey?.(item) || item[props.props.key]
+                const key = props.getKey ? props.getKey(item) : item[props.props.key]
                 if (item.children && item.children.length > 0) {
                     setChecked(value, item.children, checkedSet)
                     continue
                 }
                 if (item.disabled) continue
+                if (item.children) continue
                 if (value) {
                     checkedSet.add(key)
-                    checked.value.push(key)
                 } else {
                     checkedSet.delete(key)
                 }
@@ -160,7 +164,12 @@ export default defineComponent({
             }
         }
         expose({
-            getCheckedItems: () => getCheckedItems(props.list, checked.value, props)
+            getCheckedItems: () => getCheckedItems(props.list, checked.value, props),
+            getFlattenList: (getSet = false) => getFlattenList(props.list, getSet),
+            getItemsCount: () => getItemsCount(props.list, props),
+            checkAll: () => {
+                setingChecked(true, props.list)
+            }
         })
         return () => {
             const TreeNodeFactory = (item: TreeListItemExtra) => (

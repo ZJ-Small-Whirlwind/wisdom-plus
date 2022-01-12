@@ -60,7 +60,7 @@ export const getStatus = (
         }
         if (counter.checkedCount !== 0 && counter.count !== counter.checkedCount) return 0
         if (checkedSet.has(key)) counter.checkedCount += 1
-        counter.count += 1
+        if (!item.children) counter.count += 1
     }
     if (counter.count === 0) return -2
     if (counter.checkedCount === 0) return -1
@@ -107,6 +107,12 @@ export const flattenList = (
     }
 }
 
+/**
+ * 
+ * Expose
+ * 
+ */
+
 export const getCheckedItems = (
     treeList: TreeListItemCustom[],
     checked: (string | number | symbol)[],
@@ -126,4 +132,28 @@ export const getCheckedItems = (
     }
     getItems(treeList)
     return Array.from(final)
+}
+
+export const getFlattenList = (fullList: TreeListItemCustom[], getSet = false) => {
+    const finalList = new Set<TreeListItemCustom>()
+    const getingFlattenList = (list: TreeListItemCustom) => {
+        finalList.add(list)
+        if (list.children && list.children.length > 0) {
+            list.children.forEach(item => getingFlattenList(item))
+        }
+    }
+    fullList.forEach(item => getingFlattenList(item))
+    return getSet ? finalList : Array.from(finalList)
+}
+
+export const getItemsCount = (fullList: TreeListItemCustom[], props: TreeProps) => {
+    const finalCounter = new Set<TreeListItemCustom>()
+    const flattenItems = getFlattenList(fullList, true) as Set<TreeListItemCustom>
+    for (const item of flattenItems) {
+        if (item.disabled) continue
+        if (item.children) continue
+        const key = props.getKey ? props.getKey(item) : item[props.props.key]
+        finalCounter.add(key)
+    }
+    return finalCounter.size
 }

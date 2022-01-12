@@ -145,6 +145,7 @@ const selecting = ref('1')
 <template>
     <wp-grid :default-span="8">
         <wp-grid-item>
+            <wp-button @click="checkAll">全选</wp-button> {{ checked.length }} / {{ count }}
             <wp-tree
                 v-model:checked="checked"
                 :list="treeList"
@@ -188,7 +189,7 @@ const selecting = ref('1')
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 const checked = ref([])
 const checked2 = ref([])
 const treeList = ref(tree.groups)
@@ -209,6 +210,16 @@ const handleDelete = () => {
     })
     treeList2.value = Array.from(treeListSet)
     checked2.value = []
+}
+
+const count = ref<number>(0)
+
+onMounted(() => {
+    count.value = treeRef.value.getItemsCount()
+})
+
+const checkAll = () => {
+    treeRef.value.checkAll()
 }
 </script>
 ```
@@ -232,7 +243,8 @@ const handleDelete = () => {
 | getKey | 函数式获得 key 值 | _(item: TreeListItemCustom) => string \| number \| symbol_ | - |
 | height | 元素高度，仅使用虚拟列表时有效 | _String_ | '300px' |
 | animation | 是否使用动画 | _boolean_ | true |
-| animationMax | 最多多少项时不使用动画 | _number_ | 200 |
+| animationMax | 最多多少项时不使用动画 | _number_ | 80 |
+| showFilter | 是否显示过滤输入框 | _boolean_ | true |
 | filter `v-model` | 过滤关键词 | _string_ | - |
 | filterable | 是否可过滤 | _filterable_ | false |
 | itemHeight | 项目高度，仅供虚拟列表使用 | _number_ | 30 |
@@ -248,10 +260,19 @@ const handleDelete = () => {
 | 名称    | 说明     | 参数 |
 | ------- | -------- | --- |
 | default | 默认插槽，会放置在最顶端 | - |
-| title | 标题内容 | _...TreeListItemCustom_ |
-| suffix | 标题内容后缀 | _...TreeListItemCustom_ |
-| prefix | 标题内容前缀 | _...TreeListItemCustom_ |
+| title | 标题内容 | _...TreeListItemCustom, expending: boolean_ |
+| suffix | 标题内容后缀 | _...TreeListItemCustom, expending: boolean_ |
+| prefix | 标题内容前缀 | _...TreeListItemCustom, expending: boolean_ |
 | filter | 过滤输入框 | _Ref\<string\>_ |
+
+### Expose
+
+| 方法名 | 说明 | 类型 |
+| -- | -- | -- |
+| getCheckedItems | 获得选中的元素 | _() => TreeListItemCustom[]_ |
+| getFlattenList | 获得扁平化的列表 | _(getSet: boolean) => TreeListItemCustom[] \| Set\<TreeListItemCustom\>_ |
+| getItemsCount | 获取叶子节点的数量 | _() => number_ |
+| checkAll | 全选 | _() => void_ |
 
 ## 类型
 
