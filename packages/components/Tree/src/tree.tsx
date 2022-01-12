@@ -62,7 +62,9 @@ export const treeProps = buildProps({
         default: true
     },
     arrowRight: Boolean,
-    exclude: Array as PropType<(string | number | symbol)[]>
+    exclude: Array as PropType<(string | number | symbol)[]>,
+    useRadio: Boolean
+
 })
 
 export type TreeProps = ExtractPropTypes<typeof treeProps>
@@ -186,6 +188,7 @@ export default defineComponent({
                     checkable={props.checkable}
                     selectable={props.selectable}
                     arrowRight={props.arrowRight}
+                    useRadio={props.useRadio}
                     onUpdate:selecting={(value: string | number | symbol) => selecting.value = value}
                     v-slots={{
                         default: slots.title,

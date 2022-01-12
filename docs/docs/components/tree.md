@@ -259,6 +259,7 @@ const checkAll = () => {
 | itemHeight | 项目高度，仅供虚拟列表使用 | _number_ | 30 |
 | arrowRight | 箭头是否在右边 | _boolean_ | - |
 | exclude | 排除项 | _(string \| number \| symbol)[]_ | - |
+| useRadio | 是否单选 | _boolean_ | - |
 
 ### Methods
 | 参数      | 说明           | 类型                                                                | 默认值 |

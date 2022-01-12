@@ -20,7 +20,8 @@
             flex: 1;
             overflow: hidden;
             white-space: nowrap;
-            .wp-checkbox {
+            .wp-checkbox,
+            .wp-radio {
                 margin-right: 5px;
             }
         }

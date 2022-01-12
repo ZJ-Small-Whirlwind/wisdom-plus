@@ -26,27 +26,41 @@
             </div>
             <slot name="prefix" v-bind="{ ...list, expending }" />
             <div class="wp-tree-node__content">
-                <Checkbox
-                    @click.stop
-                    :disabled="disabled"
-                    :model-value="checkedStatus === 1"
-                    :indeterminate="checkedStatus === 0"
-                    @update:model-value="value => {
-                        if (disabled) return
-                        if (!children) {
-                            const index = checkedList.indexOf(keyIs)
-                            if (value) {
-                                if (index > -1) return
-                                checkedList.push(keyIs)
+                <template v-if="checkable">
+                    <Checkbox
+                        @click.stop
+                        :disabled="disabled"
+                        :model-value="checkedStatus === 1"
+                        :indeterminate="checkedStatus === 0"
+                        @update:model-value="value => {
+                            if (disabled) return
+                            if (!children) {
+                                const index = checkedList.indexOf(keyIs)
+                                if (value) {
+                                    if (index > -1) return
+                                    checkedList.push(keyIs)
+                                } else {
+                                    checkedList.splice(index, 1)
+                                }
                             } else {
-                                checkedList.splice(index, 1)
+                                emit('setChecked', value, children)
                             }
-                        } else {
-                            emit('setChecked', value, children)
-                        }
-                    }"
-                    v-if="checkable"
-                />
+                        }"
+                        v-if="!useRadio"
+                    />
+                    <Radio
+                        @click.stop
+                        :disabled="disabled || Boolean(children)"
+                        :model-value="checkedStatus === 1"
+                        @update:model-value="value => {
+                            if (disabled) return
+                            if (!children) {
+                                checkedList = [keyIs]
+                            }
+                        }"
+                        v-else
+                    />
+                </template>
                 <slot v-bind="{ ...list, expending }">
                     {{ title || keyIs }}
                 </slot>
@@ -70,6 +84,7 @@ import { ref, computed } from 'vue'
 import Icon from '../../Icon'
 import { RightOutlined } from '@vicons/antd'
 import Checkbox from '../../Checkbox'
+import Radio from '../../Radio'
 
 import type { TreeListItemCustom, ExpendsList } from './interface'
 import { useVModel } from '@vueuse/core'
@@ -89,7 +104,8 @@ const props = defineProps<{
     selecting?: string | number | symbol,
     selectable: boolean,
     arrowRight?: boolean,
-    parent?: object
+    parent?: object,
+    useRadio?: boolean
 }>()
 
 const emit = defineEmits<{
