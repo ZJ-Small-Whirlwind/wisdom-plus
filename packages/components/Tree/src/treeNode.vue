@@ -6,14 +6,8 @@
             'wp-tree-node__selecting': selectable && selecting === keyIs
         }"
         @click="() => {
-            if (isNoChildren) {
-                if (selectable && !disabled) emit('update:selecting', keyIs)
-                return
-            }
-            if (selectable && selecting !== keyIs && !disabled) {
-                emit('update:selecting', keyIs)
-                return
-            }
+            if (selectable && !disabled) emit('update:selecting', keyIs)
+            if (isNoChildren) return
             const index = expends.indexOf(keyIs)
             emit('expend', index > -1, keyIs, level)
         }"
@@ -94,7 +88,8 @@ const props = defineProps<{
     checkable?: boolean,
     selecting?: string | number | symbol,
     selectable: boolean,
-    arrowRight?: boolean
+    arrowRight?: boolean,
+    parent?: object
 }>()
 
 const emit = defineEmits<{
