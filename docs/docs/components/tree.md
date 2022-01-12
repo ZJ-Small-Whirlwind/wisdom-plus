@@ -132,8 +132,27 @@ const selecting = ref('1')
                     disabled: true
                 }]
             }]
+        },
+        {
+            key: '1',
+            title: '展开',
+            children: [{
+                key: '1-1',
+                title: '1-1'
+            }, {
+                key: '1-2',
+                title: '1-2',
+                children: [{
+                    key: '1-2-1',
+                    title: '1-2-1'
+                }, {
+                    key: '1-2-2',
+                    title: '1-2-2',
+                    disabled: true
+                }]
+            }]
         }
-    ]" :animation="false"/>
+    ]" :animation="false" link/>
 </template>
 ```
 :::
@@ -260,6 +279,7 @@ const checkAll = () => {
 | arrowRight | 箭头是否在右边 | _boolean_ | - |
 | exclude | 排除项 | _(string \| number \| symbol)[]_ | - |
 | useRadio | 是否单选 | _boolean_ | - |
+| link | 是否显示连接线 | _boolean_ | false |
 
 ### Methods
 | 参数      | 说明           | 类型                                                                | 默认值 |

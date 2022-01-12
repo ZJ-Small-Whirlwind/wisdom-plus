@@ -13,7 +13,13 @@
         }"
     >
         <div class='wp-tree-node__indent'>
-            <div class='wp-tree-node__indent-cell' v-for="level in levels" :keyIs="level" />
+            <div
+                class='wp-tree-node__indent-cell'
+                :class="{
+                    'wp-tree-node__indent-cell--link': link
+                }"
+                v-for="level in levels" :keyIs="level"
+            />
         </div>
         <div class='wp-tree-node__title'>
             <div class="wp-tree-node__arrow" @click.stop="() => {
@@ -105,7 +111,8 @@ const props = defineProps<{
     selectable: boolean,
     arrowRight?: boolean,
     parent?: object,
-    useRadio?: boolean
+    useRadio?: boolean,
+    link?: boolean
 }>()
 
 const emit = defineEmits<{

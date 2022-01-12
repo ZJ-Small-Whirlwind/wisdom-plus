@@ -63,8 +63,8 @@ export const treeProps = buildProps({
     },
     arrowRight: Boolean,
     exclude: Array as PropType<(string | number | symbol)[]>,
-    useRadio: Boolean
-
+    useRadio: Boolean,
+    link: Boolean
 })
 
 export type TreeProps = ExtractPropTypes<typeof treeProps>
@@ -171,6 +171,7 @@ export default defineComponent({
             getFlattenList: (getSet = false) => getFlattenList(props.list, getSet),
             getItemsCount: (filter = false) => getItemsCount(filter ? filterItems.value : props.list, props),
             checkAll: () => {
+                if (props.useRadio) return
                 setingChecked(true, props.list)
             }
         })
@@ -190,6 +191,7 @@ export default defineComponent({
                     arrowRight={props.arrowRight}
                     useRadio={props.useRadio}
                     onUpdate:selecting={(value: string | number | symbol) => selecting.value = value}
+                    link={props.link}
                     v-slots={{
                         default: slots.title,
                         suffix: slots.suffix,

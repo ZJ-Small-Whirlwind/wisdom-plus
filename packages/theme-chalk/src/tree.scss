@@ -12,6 +12,19 @@
             &-cell {
                 display: inline-block;
                 width: 18px;
+                &--link {
+                    position: relative;
+                    height: 100%;
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        left: calc(50% - .5px);
+                        top: -5px;
+                        height: calc(100% + 10px);
+                        width: 1px;
+                        background-color: #ccc;
+                    }
+                }
             }
         }
         &__title {
