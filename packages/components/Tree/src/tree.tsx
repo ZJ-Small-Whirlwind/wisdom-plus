@@ -229,7 +229,7 @@ export default defineComponent({
                 <div class={'wp-tree'}>
                     { slots.default?.() }
                     {
-                        props.filterable ? (
+                        props.filterable && props.showFilter ? (
                             slots.filter?.({ filter }) || <input v-model={filter.value} />
                         ) : null
                     }
