@@ -7,7 +7,7 @@
         }"
         @click="() => {
             if (selectable && !disabled) emit('update:selecting', keyIs)
-            if (isNoChildren) return
+            if (isNoChildren && !remote) return
             expend()
         }"
     >
@@ -17,16 +17,16 @@
                 :class="{
                     'wp-tree-node__indent-cell--link': link
                 }"
-                v-for="level in levels" :keyIs="level"
+                v-for="level in levels"
+                :key="level"
             />
         </div>
         <div class='wp-tree-node__title'>
-            <div class="wp-tree-node__arrow left" @click.stop="() => {
-                expend()
-            }" v-if="!arrowRight">
-                <Icon :class="{ 'expend': expending }" v-if="!isNoChildren" ref="icon">
-                    <slot name="arrow" :expending="expending">
-                        <RightOutlined />
+            <div class="wp-tree-node__arrow left" @click.stop="expend" v-if="!arrowRight">
+                <Icon :class="{ 'expend': expending }" v-if="!isNoChildren || remote" ref="icon">
+                    <slot name="arrow" :expending="expending" :loading="loading">
+                        <RightOutlined v-if="!loading" />
+                        <Loading3QuartersOutlined :class="{ loading }" v-else />
                     </slot>
                 </Icon>
             </div>
@@ -35,7 +35,7 @@
                 <template v-if="checkable">
                     <Checkbox
                         @click.stop
-                        :disabled="disabled"
+                        :disabled="disabled || remote"
                         :model-value="checkedStatus === 1"
                         :indeterminate="checkedStatus === 0"
                         @update:model-value="value => {
@@ -56,7 +56,7 @@
                     />
                     <Radio
                         @click.stop
-                        :disabled="disabled || Boolean(children)"
+                        :disabled="disabled || Boolean(children) || remote"
                         :model-value="checkedStatus !== -1"
                         @update:model-value="() => {
                             if (disabled) return
@@ -72,13 +72,11 @@
                 </slot>
             </div>
             <slot name="suffix" v-bind="{ ...list, expending }" />
-            <div class="wp-tree-node__arrow right" @click.stop="() => {
-                const index = expends.indexOf(keyIs)
-                emit('expend', index > -1, keyIs, level)
-            }" v-if="arrowRight">
-                <Icon :class="{ 'expend': expending }" v-if="!isNoChildren" ref="icon">
-                    <slot name="arrow" :expending="expending">
-                        <RightOutlined />
+            <div class="wp-tree-node__arrow right" @click.stop="expend" v-if="arrowRight">
+                <Icon :class="{ 'expend': expending }" v-if="!isNoChildren || remote" ref="icon">
+                    <slot name="arrow" :expending="expending" :loading="loading">
+                        <RightOutlined v-if="!loading" />
+                        <Loading3QuartersOutlined :class="{ loading }" v-else />
                     </slot>
                 </Icon>
             </div>
@@ -90,7 +88,7 @@
 import { ref, computed } from 'vue'
 
 import Icon from '../../Icon'
-import { RightOutlined } from '@vicons/antd'
+import { RightOutlined, Loading3QuartersOutlined } from '@vicons/antd'
 import Checkbox from '../../Checkbox'
 import Radio from '../../Radio'
 
@@ -114,7 +112,10 @@ const props = defineProps<{
     arrowRight?: boolean,
     parent?: object,
     useRadio?: boolean,
-    link?: boolean
+    link?: boolean,
+    remote?: boolean,
+    onRemote?: (item: TreeListItemCustom) => Promise<TreeListItemCustom[]>,
+    onRemoteChange?: (list: TreeListItemCustom[]) => void
 }>()
 
 const emit = defineEmits<{
@@ -151,7 +152,20 @@ const checkedList = useVModel(props, 'modelValue', emit, {
     deep: true
 })
 
+const loading = ref(false)
+
 const expend = async () => {
-    emit('expend', props.expends.includes(props.keyIs), props.keyIs, props.level)
+    try {
+        if (props.remote && props.onRemote) {
+            loading.value = true
+            const list = await props.onRemote(props.list)
+            props.onRemoteChange?.(list)
+            emit('expend', props.expends.includes(props.keyIs), props.keyIs, props.level)
+        } else {
+            emit('expend', props.expends.includes(props.keyIs), props.keyIs, props.level)
+        }
+    } finally {
+        loading.value = false
+    }
 }
 </script>

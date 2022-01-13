@@ -2,7 +2,8 @@ export interface TreeListItem {
     key?: string | number | symbol,
     title?: string,
     disabled?: boolean,
-    children?: TreeListItem[]
+    children?: TreeListItem[],
+    remote?: boolean
 }
 
 export interface TreeListItemCustom extends TreeListItem {

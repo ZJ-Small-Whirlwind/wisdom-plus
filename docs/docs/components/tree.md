@@ -113,11 +113,12 @@ const selecting = ref('1')
 :::demo
 ```vue
 <template>
-    <wp-tree v-model:list="list" :on-remote="handleOnRemote"/>
+    <wp-tree :list="list" :on-remote="handleOnRemote"/>
 </template>
 
 <script lang="ts" setup>
-const list = [
+import { ref } from 'vue'
+const list = ref([
     {
         key: '1',
         title: '展开',
@@ -138,17 +139,19 @@ const list = [
             }]
         }]
     }
-]
+])
 const handleOnRemote = () => {
     return new Promise((reslove) => {
-        setTimeout(reslove([{
-            key: '1-1-1',
-            title: '1-1-1',
-            children: [{
-                key: '1-1-1-1',
-                title: '1-1-1-1'
-            }]
-        }]), 300)
+        setTimeout(() => {
+            reslove([{
+                key: '1-1-1',
+                title: '1-1-1',
+                children: [{
+                    key: '1-1-1-1',
+                    title: '1-1-1-1'
+                }]
+            }])
+        }, 500)
     })
 }
 </script>
@@ -333,6 +336,7 @@ const checkAll = () => {
 | useRadio | 是否单选 | _boolean_ | - |
 | link | 是否显示连接线 | _boolean_ | false |
 | indent | 缩进距离 | _string_ | '18px' |
+| onRemote | 远程加载回调 | _(list: TreeListItemCustom) => Promise\<TreeListItemCustom[]\>_ | - |
 
 ### Methods
 | 参数      | 说明           | 类型                                                                | 默认值 |
@@ -368,4 +372,5 @@ const checkAll = () => {
 | key | 唯一标识符 | _string \| number \| symbol_ | 是 |
 | title | 标题 | _string_ | 是 |
 | disabled | 是否禁用 | _boolean_ | 是 |
-| children | TreeListItemCustom[] | 是 |
+| remote | 是否使用远程加载 | _boolean_ | 是 |
+| children | 子节点 | _TreeListItemCustom[]_ | 是 |

@@ -66,6 +66,9 @@
                 margin-left: 5px;
                 width: auto;
             }
+            .loading {
+                animation: wp-tree-loading infinite 1s;
+            }
             > .xicon {
                 transition: transform .2s;
             }
@@ -80,5 +83,14 @@
         &__selecting {
             background-color: #f5f5f5 !important;
         }
+    }
+}
+
+@keyframes wp-tree-loading {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(360deg);
     }
 }

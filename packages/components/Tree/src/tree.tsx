@@ -59,7 +59,8 @@ export const treeProps = buildProps({
     arrowRight: Boolean,
     exclude: Array as PropType<(string | number | symbol)[]>,
     useRadio: Boolean,
-    link: Boolean
+    link: Boolean,
+    onRemote: Function as PropType<(item: TreeListItemCustom) => Promise<TreeListItemCustom[]>>
 })
 
 export type TreeProps = ExtractPropTypes<typeof treeProps>
@@ -101,7 +102,7 @@ export default defineComponent({
                     setChecked(value, item.children, checkedSet)
                     continue
                 }
-                if (item.disabled) continue
+                if (item.disabled || item.remote) continue
                 if (item.children) continue
                 if (value) {
                     checkedSet.add(key)
@@ -117,7 +118,9 @@ export default defineComponent({
         /**
          * 过滤
          */
-        const filterItems = computed(() => itemsFilter(props, props.filter))
+        const filterItems = computed(() => {
+            return itemsFilter(props, props.filter)
+        })
         const treeListFlatten = computed(() => {
             const finalList: TreeListItemExtra[] = []
             filterItems.value.forEach(item => {
@@ -194,6 +197,11 @@ export default defineComponent({
                 useRadio={this.useRadio}
                 onUpdate:selecting={(value: string | number | symbol) => this.selecting = value}
                 link={this.link}
+                onRemote={this.onRemote}
+                onRemoteChange={(list: TreeListItemCustom[]) => {
+                    item.list.remote = false
+                    item.list.children = list
+                }}
                 v-slots={{
                     default: this.$slots.title,
                     suffix: this.$slots.suffix,

@@ -1,3 +1,4 @@
+import { Ref } from 'vue'
 import { TreeListItemCustom, TreeListItemExtra } from './interface'
 import { TreeProps } from './tree'
 
@@ -79,7 +80,7 @@ export const getStatus = (
     for (let i = 0; i < children.length; i++) {
         const item = children[i]
         const key = props.getKey?.(item) || item[props.props.key]
-        if (item.disabled) continue
+        if (item.disabled || item.remote) continue
         if (item.children && item.children.length > 0) {
             getStatus(item.children, counter, checkedSet, props)
             continue
@@ -123,9 +124,10 @@ export const flattenList = (
         children: list.children,
         disabled: Boolean(list.disabled),
         list,
-        parent
+        parent,
+        remote: list.remote
     })
-    if (list.children && expends.includes(key)) {
+    if (!list.remote && list.children && expends.includes(key)) {
         for (const item of list.children) {
             flattenList(item, finalList, level + 1, list, expends, props)
         }
@@ -175,7 +177,7 @@ export const getItemsCount = (fullList: TreeListItemCustom[], props: TreeProps) 
     const finalCounter = new Set<TreeListItemCustom>()
     const flattenItems = getFlattenList(fullList, true) as Set<TreeListItemCustom>
     for (const item of flattenItems) {
-        if (item.disabled) continue
+        if (item.disabled || item.remote) continue
         if (item.children) continue
         const key = props.getKey ? props.getKey(item) : item[props.props.key]
         finalCounter.add(key)
