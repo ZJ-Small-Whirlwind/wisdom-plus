@@ -60,7 +60,8 @@ export const treeProps = buildProps({
     exclude: Array as PropType<(string | number | symbol)[]>,
     useRadio: Boolean,
     link: Boolean,
-    onRemote: Function as PropType<(item: TreeListItemCustom) => Promise<TreeListItemCustom[]>>
+    onRemote: Function as PropType<(item: TreeListItemCustom) => Promise<TreeListItemCustom[]>>,
+    draggable: Boolean
 })
 
 export type TreeProps = ExtractPropTypes<typeof treeProps>
@@ -159,8 +160,8 @@ export default defineComponent({
                 done(isDelete, key)
             }
         }
-        // const dragging = ref<TreeListItemExtra | null>(null)
-        // provide('wp-tree-dragging', dragging)
+        const dragging = ref<TreeListItemExtra | null>(null)
+        provide('wp-tree-dragging', dragging)
         return {
             expends,
             selecting,
@@ -199,6 +200,8 @@ export default defineComponent({
                 useRadio={this.useRadio}
                 onUpdate:selecting={(value: string | number | symbol) => this.selecting = value}
                 link={this.link}
+                draggable={this.draggable}
+                propList={this.list}
                 onRemote={this.onRemote}
                 onRemoteChange={(list: TreeListItemCustom[]) => {
                     item.list.remote = false

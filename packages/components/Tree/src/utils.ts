@@ -184,3 +184,23 @@ export const getItemsCount = (fullList: TreeListItemCustom[], props: TreeProps) 
     }
     return finalCounter.size
 }
+
+/**
+ * Draggable
+ * 判断是否是自身或者子元素，避免拖动时删除自身或者造成无限引用
+ */
+export const isChildrenOrSelf = (item: TreeListItemCustom, compareItem?: TreeListItemCustom) => {
+    // 1. 比较项不存在，否
+    if (!compareItem) return false
+    // 2. 是自身
+    if (item === compareItem) return true
+    // 3. 无子元素，不可是子元素
+    if (
+        !item.children ||
+        item.remote ||
+        item.children.length === 0
+    ) return false
+    // 4. 扁平化后判断是否存在子元素
+    const itemChildrenSet = getFlattenList(item.children, true) as Set<TreeListItemCustom>
+    return itemChildrenSet.has(compareItem)
+}
