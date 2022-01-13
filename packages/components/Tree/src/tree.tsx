@@ -140,7 +140,7 @@ export default defineComponent({
             }
         }
         const handleExpend = (isDelete: boolean, key: string | number | symbol, level: number) => {
-            if (expendsList.value.length > 0) return
+            if (expendsList.value.find(item => item.keyIs === key)) return
             if (props.animation) {
                 expendsList.value.push({
                     isDelete,

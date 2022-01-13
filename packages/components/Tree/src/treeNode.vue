@@ -49,7 +49,7 @@
                     </slot>
                 </Icon>
             </div>
-            <slot name="prefix" v-bind="{ ...list, expending }" />
+            <slot name="prefix" v-bind="slotBind" />
             <div class="wp-tree-node__content">
                 <template v-if="checkable">
                     <Checkbox
@@ -86,11 +86,11 @@
                         v-else
                     />
                 </template>
-                <slot v-bind="{ ...list, expending }">
+                <slot v-bind="slotBind">
                     {{ title || keyIs }}
                 </slot>
             </div>
-            <slot name="suffix" v-bind="{ ...list, expending }" />
+            <slot name="suffix" v-bind="slotBind" />
             <div class="wp-tree-node__arrow right" @click.stop="expend" v-if="arrowRight">
                 <Icon :class="{ 'expend': expending }" v-if="!isNoChildren || remote">
                     <slot name="arrow" :expending="expending" :loading="loading">
@@ -272,6 +272,7 @@ const checkedList = useVModel(props, 'modelValue', emit, {
  */
 const loading = ref(false)
 const expend = async () => {
+    if (isNoChildren.value && !props.remote) return
     try {
         if (props.remote && props.onRemote) {
             loading.value = true
@@ -285,4 +286,8 @@ const expend = async () => {
         loading.value = false
     }
 }
+
+const slotBind = computed(() => {
+    return { ...props.list, expending: expending.value }
+})
 </script>
