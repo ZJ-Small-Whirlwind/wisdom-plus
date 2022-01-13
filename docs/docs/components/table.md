@@ -21,10 +21,13 @@ app.use(WpTable)
 ```vue
 <template>
     <wp-table>
+      <thead>
         <tr>
           <th>月份</th>
           <th>存款</th>
         </tr>
+      </thead>
+      <tbody>
         <tr>
           <td>一月</td>
           <td>￥100</td>
@@ -37,6 +40,13 @@ app.use(WpTable)
           <td>三月</td>
           <td>￥300</td>
         </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>小计</td>
+          <td>￥180</td>
+        </tr>
+      </tfoot>
     </wp-table>
 </template>
 ```

@@ -12,7 +12,9 @@
         display: table;
         font-size: var(--wp-table-font-size);
         border: var(--wp-table-border);
-        > tr {
+        border-collapse: collapse;
+        overflow-x: auto;
+        tr {
             border-top: var(--wp-table-border);
             &:nth-child(2n) {
                 background-color: initial;
@@ -20,9 +22,12 @@
             > th {
                 padding: var(--wp-table-padding);
                 font-weight: bold;
+                text-align: left;
+                box-sizing: border-box;
             }
             > td {
                 padding: var(--wp-table-padding);
+                box-sizing: border-box;
             }
             &:hover {
                 > td {
@@ -32,14 +37,14 @@
         }
     }
     &--stripe {
-        > tr {
+        tr {
             &:nth-child(2n) {
                 background: var(--wp-table-stripe-background);
             }
         }
     }
     &--border {
-        > tr {
+        tr {
             > th,
             > td {
                 border-right: var(--wp-table-border);
