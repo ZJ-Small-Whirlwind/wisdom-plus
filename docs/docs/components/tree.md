@@ -374,7 +374,7 @@ const checkAll = () => {
 | link | 是否显示连接线 | _boolean_ | false |
 | indent | 缩进距离 | _string_ | '18px' |
 | onRemote `ref` | 远程加载回调 | _(list: TreeListItemCustom) => Promise\<TreeListItemCustom[]\>_ | - |
-| draggable `ref` | 是否可拖动 | _boolean_ | - |
+| <del>draggable `ref`</del> | <del>是否可拖动</del> | _boolean_ | - |
 
 ### Methods
 | 参数      | 说明           | 类型                                                                | 默认值 |
