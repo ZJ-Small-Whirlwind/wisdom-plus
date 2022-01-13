@@ -412,3 +412,23 @@ const checkAll = () => {
 | disabled | 是否禁用 | _boolean_ | 是 |
 | remote | 是否使用远程加载 | _boolean_ | 是 |
 | children | 子节点 | _TreeListItemCustom[]_ | 是 |
+
+## 定制
+
+### 全局 CSS 变量
+
+| 变量名 | 默认值 | 说明 |
+| ---- | ---- | ---- |
+| --wp-tree-indent | 18px | 缩进距离 |
+| --wp-tree-font-size | 14px | 字号大小 |
+| --wp-tree-node-hegiht | 30px | 节点高度 |
+| --wp-tree-hover-bg | #fafafa | hover 时的背景 |
+| --wp-tree-link-bg | #ccc | 连接线颜色 |
+| --wp-tree-link-size | 1px | 连接线宽度 |
+| --wp-tree-padding-top-bottom | 5px | 节点上下内边距 |
+| --wp-tree-padding-left-right | 5px | 节点左右内边距 |
+| --wp-tree-dropline-size | 5px | 拖动线高度 |
+| --wp-tree-drop-bg | #eee | 拖动线背景 |
+| --wp-tree-arrow-size | 12px | 箭头尺寸 |
+| --wp-tree-arrow-color | #ccc | 箭头颜色 |
+| --wp-tree-selecting-color | #f5f5f5 | 选中背景色 |

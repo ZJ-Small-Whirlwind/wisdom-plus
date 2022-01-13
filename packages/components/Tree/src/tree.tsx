@@ -36,10 +36,7 @@ export const treeProps = buildProps({
     virtual: Boolean,
     getKey: Function as PropType<(item: TreeListItemCustom) => string | number | symbol>,
     height: String,
-    indent: {
-        type: String,
-        default: '18px'
-    },
+    indent: String,
     animation: {
         type: Boolean,
         default: true
@@ -251,6 +248,7 @@ export default defineComponent({
                 class={'wp-tree'}
                 style={{
                     '--wp-tree-indent': this.indent,
+                    '--wp-tree-node-height': this.itemHeight + 'px'
                 } as CSSProperties}
             >
                 { this.$slots.default?.() }
