@@ -247,7 +247,7 @@ export default defineComponent({
             <div
                 class={'wp-tree'}
                 style={{
-                    '--wp-tree-indent': this.indent,
+                    '--wp-tree-indent': this.indent || '',
                     '--wp-tree-node-height': this.itemHeight + 'px'
                 } as CSSProperties}
             >
