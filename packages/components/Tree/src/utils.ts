@@ -1,5 +1,4 @@
 import { TreeListItemCustom, TreeListItemExtra } from './interface'
-import { Ref } from 'vue'
 import { TreeProps } from './tree'
 
 const getListByText = (text: string | undefined, props: TreeProps, list: TreeListItemCustom[], finalList: TreeListItemCustom[]) => {
@@ -112,8 +111,7 @@ export const flattenList = (
     finalList: TreeListItemExtra[],
     level = 0,
     parent: null | TreeListItemCustom = null,
-    expends: Ref<(string | number | symbol)[]>,
-    checked: Ref<(string | number | symbol)[]>,
+    expends: (string | number | symbol)[],
     props: TreeProps
 ) => {
     const key = props.getKey ? props.getKey(list) : list[props.props.key]
@@ -127,9 +125,9 @@ export const flattenList = (
         list,
         parent
     })
-    if (list.children && expends.value.includes(key)) {
+    if (list.children && expends.includes(key)) {
         for (const item of list.children) {
-            flattenList(item, finalList, level + 1, list, expends, checked, props)
+            flattenList(item, finalList, level + 1, list, expends, props)
         }
     }
 }

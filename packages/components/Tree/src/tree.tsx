@@ -1,5 +1,5 @@
 import { buildProps, definePropType } from "@wisdom-plus/utils/props"
-import { computed, defineComponent, ExtractPropTypes, PropType, ref, VNodeChild } from "vue"
+import { computed, CSSProperties, defineComponent, ExtractPropTypes, PropType, ref, VNodeChild } from "vue"
 
 import type { TreeListItemCustom, TreeListItemExtra, TreeListItem, ExpendsList } from './interface'
 
@@ -35,9 +35,10 @@ export const treeProps = buildProps({
     },
     virtual: Boolean,
     getKey: Function as PropType<(item: TreeListItemCustom) => string | number | symbol>,
-    height: {
+    height: String,
+    indent: {
         type: String,
-        default: '300px'
+        default: '18px'
     },
     animation: {
         type: Boolean,
@@ -54,13 +55,7 @@ export const treeProps = buildProps({
     },
     selectable: Boolean,
     selecting: definePropType<string | number | symbol>([String, Number, Symbol]),
-    filter: {
-        type: String
-    },
-    showFilter: {
-        type: Boolean,
-        default: true
-    },
+    filter: String,
     arrowRight: Boolean,
     exclude: Array as PropType<(string | number | symbol)[]>,
     useRadio: Boolean,
@@ -79,15 +74,12 @@ export default defineComponent({
             void selecting
             return true
         },
-        'update:filter': (text: string) => {
-            return typeof text === 'string'
-        },
         'select': (selecting: string | number | symbol) => {
             void selecting
             return true
         }
     },
-    setup(props, { emit, expose, slots }) {
+    setup(props, { emit }) {
         const expendsRef = ref<(string | number | symbol)[]>([])
         const expends = useAutoControl(expendsRef, props, 'expends', emit, {
             passive: true,
@@ -125,13 +117,11 @@ export default defineComponent({
         /**
          * 过滤
          */
-        const filterText = ref('')
-        const filter = useAutoControl(filterText, props, 'filter', emit)
-        const filterItems = computed(() => itemsFilter(props, filter.value))
+        const filterItems = computed(() => itemsFilter(props, props.filter))
         const treeListFlatten = computed(() => {
             const finalList: TreeListItemExtra[] = []
             filterItems.value.forEach(item => {
-                flattenList(item, finalList, 0, null, expends, checked, props)
+                flattenList(item, finalList, 0, null, expends.value, props)
             })
             return finalList
         })
@@ -166,7 +156,17 @@ export default defineComponent({
                 done(isDelete, key)
             }
         }
-        expose({
+        return {
+            expends,
+            selecting,
+            checked,
+            checkedSet,
+            expendsList,
+            setingChecked,
+            handleExpend,
+            leave,
+            done,
+            treeListFlatten,
             getCheckedItems: () => getCheckedItems(props.list, checked.value, props),
             getFlattenList: (getSet = false) => getFlattenList(props.list, getSet),
             getItemsCount: (filter = false) => getItemsCount(filter ? filterItems.value : props.list, props),
@@ -174,92 +174,96 @@ export default defineComponent({
                 if (props.useRadio) return
                 setingChecked(true, props.list)
             }
-        })
-        return () => {
-            const TreeNodeFactory = (item: TreeListItemExtra) => (
-                <TreeNode
-                    { ...item }
-                    expends={expends.value}
-                    getChecked={(list: TreeListItemCustom) => getChecked(list, props, checkedSet.value)}
-                    v-model={checked.value}
-                    selecting={selecting.value}
-                    expendsList={expendsList.value}
-                    onSetChecked={setingChecked}
-                    onExpend={handleExpend}
-                    checkable={props.checkable}
-                    selectable={props.selectable}
-                    arrowRight={props.arrowRight}
-                    useRadio={props.useRadio}
-                    onUpdate:selecting={(value: string | number | symbol) => selecting.value = value}
-                    link={props.link}
-                    v-slots={{
-                        default: slots.title,
-                        suffix: slots.suffix,
-                        prefix: slots.prefix,
-                        arrow: slots.arrow
-                    }}
-                />
-            )
-            const treeNodeRender = (item: TreeListItemExtra) => {
-                const TreeNodeRender = (dom?: VNodeChild) => (
-                    <>
-                        { TreeNodeFactory(item) }
-                        { dom }
-                    </>
-                )
-                const expendsListFind =  expendsList.value.find(expendsItem => expendsItem.keyIs === item.keyIs)
-                if (props.animation && expendsListFind && item.children) {
-                    const finalList: TreeListItemExtra[] = []
-                    item.children.forEach(child => {
-                        flattenList(child, finalList, expendsListFind.level + 1, null, expends, checked, props)
-                    })
-                    if (finalList.length <= props.animationMax) {
-                        return (
-                            TreeNodeRender(
-                                <TreeTransition key={item.key} {...expendsListFind} v-slots={{
-                                    default: () => (
-                                        <div>
-                                            { finalList.map(TreeNodeFactory) }
-                                        </div>
-                                    )
-                                }} />
-                            )
-                        )
-                    }
-                    leave(expendsListFind.keyIs)
-                    done(expendsListFind.isDelete, expendsListFind.keyIs)
-                }
-                return TreeNodeRender()
-            }
-            return (
-                <div class={'wp-tree'}>
-                    { slots.default?.() }
-                    {
-                        props.filterable && props.showFilter ? (
-                            slots.filter?.({ filter }) || <input v-model={filter.value} />
-                        ) : null
-                    }
-                    <div class={'wp-tree-nodes'}>
-                        {
-                            !props.virtual ? (
-                                treeListFlatten.value.map(treeNodeRender)
-                            ) : (
-                                <VirtualList
-                                    keyField="key"
-                                    style={{
-                                        height: props.height
-                                    }}
-                                    itemSize={props.itemHeight}
-                                    items={treeListFlatten.value}
-                                    v-slots={{
-                                        default: ({ item }) => treeNodeRender(item)
-                                    }}
-                                />
-                            )
-                        }
-                    </div>
-                </div>
-            )
         }
+    },
+    expose: ['getCheckedItems', 'getFlattenList', 'getItemsCount', 'checkAll'],
+    render() {
+        const TreeNodeFactory = (item: TreeListItemExtra) => (
+            <TreeNode
+                { ...item }
+                expends={this.expends}
+                getChecked={(list: TreeListItemCustom) => getChecked(list, this.$props, this.checkedSet)}
+                v-model={this.checked}
+                selecting={this.selecting}
+                expendsList={this.expendsList}
+                onSetChecked={this.setingChecked}
+                onExpend={this.handleExpend}
+                checkable={this.checkable}
+                selectable={this.selectable}
+                arrowRight={this.arrowRight}
+                useRadio={this.useRadio}
+                onUpdate:selecting={(value: string | number | symbol) => this.selecting = value}
+                link={this.link}
+                v-slots={{
+                    default: this.$slots.title,
+                    suffix: this.$slots.suffix,
+                    prefix: this.$slots.prefix,
+                    arrow: this.$slots.arrow
+                }}
+            />
+        )
+        const treeNodeRender = (item: TreeListItemExtra) => {
+            const TreeNodeRender = (dom?: VNodeChild) => (
+                <>
+                    { TreeNodeFactory(item) }
+                    { dom }
+                </>
+            )
+            const expendsListFind =  this.expendsList.find(expendsItem => expendsItem.keyIs === item.keyIs)
+            if (this.animation && expendsListFind && item.children) {
+                const finalList: TreeListItemExtra[] = []
+                item.children.forEach(child => {
+                    flattenList(child, finalList, expendsListFind.level + 1, null, this.expends, this.$props)
+                })
+                if (finalList.length <= this.animationMax) {
+                    return (
+                        TreeNodeRender(
+                            <TreeTransition key={item.key} {...expendsListFind} v-slots={{
+                                default: () => (
+                                    <div>
+                                        { finalList.map(TreeNodeFactory) }
+                                    </div>
+                                )
+                            }} />
+                        )
+                    )
+                }
+                this.leave(expendsListFind.keyIs)
+                this.done(expendsListFind.isDelete, expendsListFind.keyIs)
+            }
+            return TreeNodeRender()
+        }
+        return (
+            <div
+                class={'wp-tree'}
+                style={{
+                    '--wp-tree-indent': this.indent,
+                } as CSSProperties}
+            >
+                { this.$slots.default?.() }
+                {
+                    !this.virtual ? (
+                        <div class={'wp-tree-nodes'} style={{
+                            height: this.height
+                        }}>
+                            { this.treeListFlatten.map(treeNodeRender) }
+                        </div>
+                    ) : (
+                        <VirtualList
+                            keyField="key"
+                                class={'wp-tree-nodes'}
+                            style={{
+                                height: this.height
+                            }}
+                            itemSize={this.itemHeight}
+                                items={this.treeListFlatten}
+                            v-slots={{
+                                default: ({ item }) => treeNodeRender(item)
+                            }}
+                        />
+                    )
+                }
+            </div>
+        )
     }
 })

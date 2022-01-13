@@ -108,6 +108,53 @@ const selecting = ref('1')
 ```
 :::
 
+#### 远程加载
+
+:::demo
+```vue
+<template>
+    <wp-tree v-model:list="list" :on-remote="handleOnRemote"/>
+</template>
+
+<script lang="ts" setup>
+const list = [
+    {
+        key: '1',
+        title: '展开',
+        children: [{
+            key: '1-1',
+            title: '1-1',
+            remote: true
+        }, {
+            key: '1-2',
+            title: '1-2',
+            children: [{
+                key: '1-2-1',
+                title: '1-2-1'
+            }, {
+                key: '1-2-2',
+                title: '1-2-2',
+                disabled: true
+            }]
+        }]
+    }
+]
+const handleOnRemote = () => {
+    return new Promise((reslove) => {
+        setTimeout(reslove([{
+            key: '1-1-1',
+            title: '1-1-1',
+            children: [{
+                key: '1-1-1-1',
+                title: '1-1-1-1'
+            }]
+        }]), 300)
+    })
+}
+</script>
+```
+:::
+
 #### 关闭动画
 
 :::demo
@@ -165,6 +212,7 @@ const selecting = ref('1')
     <wp-grid :default-span="8">
         <wp-grid-item>
             <wp-button @click="checkAll">全选</wp-button> {{ checked.length }} / {{ count }}
+            <input v-model="filter" />
             <wp-tree
                 v-model:checked="checked"
                 :list="treeList"
@@ -172,11 +220,13 @@ const selecting = ref('1')
                 :get-key="(item) => {
                     return item['union_node_id'] || item['node_id']
                 }"
+                :filter="filter"
                 virtual
                 ref="treeRef"
                 filterable
                 checkable
                 arrow-right
+                height="300px"
                 :exclude="treeList2Keys"
             >
                 <template #filter="{ filter }">
@@ -201,6 +251,7 @@ const selecting = ref('1')
                 }"
                 virtual
                 filterable
+                height="300px"
                 ref="treeRef2"
                 checkable
             />
@@ -217,6 +268,8 @@ const treeList2 = ref([])
 
 const treeRef = ref()
 const treeRef2 = ref()
+
+const filter = ref('')
 
 const handleAdd = () => {
     treeList2.value = Array.from(new Set([...treeList2.value, ...treeRef.value.getCheckedItems()]))
@@ -269,17 +322,17 @@ const checkAll = () => {
 | selectable | 是否可选择 | _boolean_ | false |
 | virtual | 是否使用虚拟列表 | _boolean_ | false |
 | getKey | 函数式获得 key 值 | _(item: TreeListItemCustom) => string \| number \| symbol_ | - |
-| height | 元素高度，仅使用虚拟列表时有效 | _String_ | '300px' |
+| height | 元素高度，仅使用虚拟列表时有效 | _String_ | - |
 | animation | 是否使用动画 | _boolean_ | true |
 | animationMax | 最多多少项时不使用动画 | _number_ | 80 |
-| showFilter | 是否显示过滤输入框 | _boolean_ | true |
-| filter `v-model` | 过滤关键词 | _string_ | - |
+| filter | 过滤关键词 | _string_ | - |
 | filterable | 是否可过滤 | _filterable_ | false |
 | itemHeight | 项目高度，仅供虚拟列表使用 | _number_ | 30 |
 | arrowRight | 箭头是否在右边 | _boolean_ | - |
 | exclude | 排除项 | _(string \| number \| symbol)[]_ | - |
 | useRadio | 是否单选 | _boolean_ | - |
 | link | 是否显示连接线 | _boolean_ | false |
+| indent | 缩进距离 | _string_ | '18px' |
 
 ### Methods
 | 参数      | 说明           | 类型                                                                | 默认值 |

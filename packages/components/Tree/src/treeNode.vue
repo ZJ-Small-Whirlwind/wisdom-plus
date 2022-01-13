@@ -8,8 +8,7 @@
         @click="() => {
             if (selectable && !disabled) emit('update:selecting', keyIs)
             if (isNoChildren) return
-            const index = expends.indexOf(keyIs)
-            emit('expend', index > -1, keyIs, level)
+            expend()
         }"
     >
         <div class='wp-tree-node__indent'>
@@ -23,8 +22,7 @@
         </div>
         <div class='wp-tree-node__title'>
             <div class="wp-tree-node__arrow left" @click.stop="() => {
-                const index = expends.indexOf(keyIs)
-                emit('expend', index > -1, keyIs, level)
+                expend()
             }" v-if="!arrowRight">
                 <Icon :class="{ 'expend': expending }" v-if="!isNoChildren" ref="icon">
                     <slot name="arrow" :expending="expending">
@@ -152,4 +150,8 @@ const checkedList = useVModel(props, 'modelValue', emit, {
     passive: true,
     deep: true
 })
+
+const expend = async () => {
+    emit('expend', props.expends.includes(props.keyIs), props.keyIs, props.level)
+}
 </script>

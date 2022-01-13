@@ -1,6 +1,13 @@
+:root {
+    --wp-tree-indent: 18px;
+}
+
 .wp-tree {
     cursor: default;
     font-size: 14px;
+    &-nodes {
+        overflow: auto;
+    }
     &-node {
         display: flex;
         padding: 5px;
@@ -11,7 +18,7 @@
         &__indent {
             &-cell {
                 display: inline-block;
-                width: 18px;
+                width: var(--wp-tree-indent);
                 &--link {
                     position: relative;
                     height: 100%;
@@ -45,19 +52,20 @@
             align-items: center;
         }
         &__arrow {
+            font-size: 12px;
+            color: #ccc;
+            width: var(--wp-tree-indent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
             &.left {
                 margin-right: 5px;
             }
             &.right {
                 margin-left: 5px;
+                width: auto;
             }
-            font-size: 12px;
-            color: #ccc;
-            width: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
             > .xicon {
                 transition: transform .2s;
             }
