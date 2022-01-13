@@ -1,5 +1,5 @@
 import { buildProps, definePropType } from "@wisdom-plus/utils/props"
-import { computed, CSSProperties, defineComponent, ExtractPropTypes, PropType, ref, VNodeChild } from "vue"
+import { computed, CSSProperties, defineComponent, ExtractPropTypes, PropType, provide, ref, VNodeChild } from "vue"
 
 import type { TreeListItemCustom, TreeListItemExtra, TreeListItem, ExpendsList } from './interface'
 
@@ -159,6 +159,8 @@ export default defineComponent({
                 done(isDelete, key)
             }
         }
+        // const dragging = ref<TreeListItemExtra | null>(null)
+        // provide('wp-tree-dragging', dragging)
         return {
             expends,
             selecting,

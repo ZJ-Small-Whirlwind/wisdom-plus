@@ -21,7 +21,9 @@
                 :key="level"
             />
         </div>
-        <div class='wp-tree-node__title'>
+        <div
+            class='wp-tree-node__title'
+        >
             <div class="wp-tree-node__arrow left" @click.stop="expend" v-if="!arrowRight">
                 <Icon :class="{ 'expend': expending }" v-if="!isNoChildren || remote" ref="icon">
                     <slot name="arrow" :expending="expending" :loading="loading">
@@ -85,14 +87,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, computed, inject, type Ref } from 'vue'
 
 import Icon from '../../Icon'
 import { RightOutlined, Loading3QuartersOutlined } from '@vicons/antd'
 import Checkbox from '../../Checkbox'
 import Radio from '../../Radio'
 
-import type { TreeListItemCustom, ExpendsList } from './interface'
+import type { TreeListItemCustom, ExpendsList, TreeListItemExtra } from './interface'
 import { useVModel } from '@vueuse/core'
 
 const props = defineProps<{
@@ -110,10 +112,11 @@ const props = defineProps<{
     selecting?: string | number | symbol,
     selectable: boolean,
     arrowRight?: boolean,
-    parent?: object,
+    parent: TreeListItemCustom | null,
     useRadio?: boolean,
     link?: boolean,
     remote?: boolean,
+    // draggable?: boolean,
     onRemote?: (item: TreeListItemCustom) => Promise<TreeListItemCustom[]>,
     onRemoteChange?: (list: TreeListItemCustom[]) => void
 }>()
@@ -124,6 +127,36 @@ const emit = defineEmits<{
     (e: 'update:modelValue', checkedList: (string | number | symbol)[]): void,
     (e: 'update:selecting', selecting: string | number | symbol): void
 }>()
+
+/**
+ * 可拖拽
+ */
+// const onDragging = ref(false)
+// const dragging = inject<Ref<TreeListItemExtra | null>>('wp-tree-dragging', ref(null))
+// const handleDragStart = () => {
+//     dragging.value = props
+// }
+// const handleDragEnd = () => {
+//     dragging.value = null
+// }
+
+// const handleDragover = (e: Event) => {
+//     e.preventDefault()
+//     onDragging.value = true
+// }
+// const handleDrop = () => {
+//     onDragging.value = false
+//     if (dragging.value === props.list) return
+//     if (!dragging.value) return
+//     if (!props.list.children) props.list.children = []
+//     props.list.children.push(dragging.value.list)
+//     if (dragging.value.parent) {
+//         const index = dragging.value.parent.children?.findIndex(item => item === dragging.value?.list)
+//         if (typeof index === 'number') {
+//             dragging.value.parent.children?.splice(index, 1)
+//         }
+//     }
+// }
 
 const levels = computed(() => {
     return new Array(props.level)

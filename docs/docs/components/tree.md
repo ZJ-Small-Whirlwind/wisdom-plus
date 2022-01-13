@@ -158,6 +158,41 @@ const handleOnRemote = () => {
 ```
 :::
 
+<!-- #### 可拖动
+
+:::demo
+```vue
+<template>
+    <wp-tree :list="list" draggable/>
+</template>
+
+<script lang="ts" setup>
+import { ref } from 'vue'
+const list = ref([
+    {
+        key: '1',
+        title: '展开',
+        children: [{
+            key: '1-1',
+            title: '1-1'
+        }, {
+            key: '1-2',
+            title: '1-2',
+            children: [{
+                key: '1-2-1',
+                title: '1-2-1'
+            }, {
+                key: '1-2-2',
+                title: '1-2-2',
+                disabled: true
+            }]
+        }]
+    }
+])
+</script>
+```
+::: -->
+
 #### 关闭动画
 
 :::demo
@@ -314,6 +349,8 @@ const checkAll = () => {
 
 ### Props
 
+`ref` 标记代表必须使用 `ref` 或 `reactive` 元素传入 `list` 才可正常使用
+
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | list | 渲染列表       | _TreeListItemCustom[]_          | []     |
@@ -336,7 +373,8 @@ const checkAll = () => {
 | useRadio | 是否单选 | _boolean_ | - |
 | link | 是否显示连接线 | _boolean_ | false |
 | indent | 缩进距离 | _string_ | '18px' |
-| onRemote | 远程加载回调 | _(list: TreeListItemCustom) => Promise\<TreeListItemCustom[]\>_ | - |
+| onRemote `ref` | 远程加载回调 | _(list: TreeListItemCustom) => Promise\<TreeListItemCustom[]\>_ | - |
+| draggable `ref` | 是否可拖动 | _boolean_ | - |
 
 ### Methods
 | 参数      | 说明           | 类型                                                                | 默认值 |
@@ -352,7 +390,7 @@ const checkAll = () => {
 | suffix | 标题内容后缀 | _...TreeListItemCustom, expending: boolean_ |
 | prefix | 标题内容前缀 | _...TreeListItemCustom, expending: boolean_ |
 | filter | 过滤输入框 | _filter: Ref\<string\>_ |
-| arrow | 指示箭头插槽 | _expending: boolean_ |
+| arrow | 指示箭头插槽 | _expending: boolean, loading: boolean_ |
 
 ### Expose
 
