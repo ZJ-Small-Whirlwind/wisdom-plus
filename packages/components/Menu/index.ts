@@ -6,3 +6,4 @@ export default WpMenu
 
 export { menuProps } from './src/menu'
 export type { MenuProps } from './src/menu'
+export * from './src/typings'
