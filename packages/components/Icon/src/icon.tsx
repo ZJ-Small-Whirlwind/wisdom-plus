@@ -1,9 +1,9 @@
 import { defineComponent, ExtractPropTypes } from 'vue'
 import { Icon } from '@vicons/utils'
-import { buildProps } from '@wisdom-plus/utils/props'
+import { buildProps, definePropType } from '@wisdom-plus/utils/props'
 
 export const iconProps = buildProps({
-    size: [String, Number],
+    size: definePropType<string | number>([String, Number]),
     color: String,
     tag: {
         type: String,
