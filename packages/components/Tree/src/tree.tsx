@@ -159,6 +159,13 @@ export default defineComponent({
         }
         const dragging = ref<TreeListItemExtra | null>(null)
         provide('wp-tree-dragging', dragging)
+
+        function getFlattenListExpose(getSet: true): Set<TreeListItemCustom>;
+        function getFlattenListExpose(getSet: false): TreeListItemCustom[];
+        function getFlattenListExpose(getSet = false) {
+            return getSet ? getFlattenList(props.list, true) : getFlattenList(props.list, false)
+        }
+
         return {
             expends,
             selecting,
@@ -171,7 +178,7 @@ export default defineComponent({
             done,
             treeListFlatten,
             getCheckedItems: () => getCheckedItems(props.list, checked.value, props),
-            getFlattenList: (getSet = false) => getFlattenList(props.list, getSet),
+            getFlattenList: getFlattenListExpose,
             getItemsCount: (filter = false) => getItemsCount(filter ? filterItems.value : props.list, props),
             checkAll: () => {
                 if (props.useRadio) return

@@ -161,7 +161,9 @@ export const getCheckedItems = (
     return Array.from(final)
 }
 
-export const getFlattenList = (fullList: TreeListItemCustom[], getSet = false) => {
+function getFlattenList(fullList: TreeListItemCustom[], getSet: true): Set<TreeListItemCustom>;
+function getFlattenList(fullList: TreeListItemCustom[], getSet: false): TreeListItemCustom[];
+function getFlattenList (fullList: TreeListItemCustom[], getSet: boolean = false) {
     const finalList = new Set<TreeListItemCustom>()
     const getingFlattenList = (list: TreeListItemCustom) => {
         finalList.add(list)
@@ -170,8 +172,14 @@ export const getFlattenList = (fullList: TreeListItemCustom[], getSet = false) =
         }
     }
     fullList.forEach(item => getingFlattenList(item))
-    return getSet ? finalList : Array.from(finalList)
+    if (getSet) {
+        return finalList
+    } else {
+        return Array.from(finalList)
+    }
 }
+
+export { getFlattenList }
 
 export const getItemsCount = (fullList: TreeListItemCustom[], props: TreeProps) => {
     const finalCounter = new Set<TreeListItemCustom>()
