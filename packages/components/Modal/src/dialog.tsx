@@ -6,8 +6,8 @@ import type { ButtonProps } from '../../Button/src/button'
 import Space, { SpaceProps } from '../../Space'
 
 export interface DialogOptions {
-    title?: VNode | string,
-    content?: VNode | string,
+    title?: VNode | string | (() => VNode),
+    content?: VNode | string | (() => VNode),
     cancelText?: string | VNode,
     confirmText?: string | VNode,
     showFooter?: boolean,
@@ -33,8 +33,8 @@ const openDialog = function Dialog(options?: DialogOptions) {
                 const confirmButtonRef = ref<InstanceType<typeof Button> | null>(null)
                 return () => (
                     <Modal width={300} { ...options?.props } v-model={show.value} v-slots={{
-                        title: () => options?.title || '提示',
-                        default: () => options?.content,
+                        title: () => typeof options?.title === 'function' ? options.title() : (options?.title || '提示'),
+                        default: () => typeof options?.content === 'function' ? options.content() : options?.content,
                         footer: () => options?.footer?.(() => {
                             show.value = false
                         }) || (options?.showFooter !== false ? (

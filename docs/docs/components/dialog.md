@@ -139,8 +139,8 @@ _(options?: DialogOptions) => Promise\<void\>_
 
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
-| title      | 标题       | _VNode \| string_          | -     |
-| content     | 内容   | _VNode \| string_           | -      |
+| title      | 标题       | _VNode \| string\| (() => VNode)_          | -     |
+| content     | 内容   | _VNode \| string \| (() => VNode)_           | -      |
 | cancelText   | 取消文本 | _VNode \| string_      | '取消' |
 | confirmText  | 确认文本       | _VNode \| string_                                                           | '确认'  |
 | footer | 自定义底部 |  _(close?: () =\> void) =\> VNode \| string_ | - |
