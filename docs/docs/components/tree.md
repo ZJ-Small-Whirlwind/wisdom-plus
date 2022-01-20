@@ -375,6 +375,7 @@ const checkAll = () => {
 | indent | 缩进距离 | _string_ | '18px' |
 | onRemote `ref` | 远程加载回调 | _(list: TreeListItemCustom) => Promise\<TreeListItemCustom[]\>_ | - |
 | draggable `ref` | 是否可拖动 | _boolean_ | - |
+| filterCall | 自定义过滤方法，true 为符合条件 | _(list: TreeListItemCustom, text?: string) => boolean_ | - |
 
 ### Methods
 | 参数      | 说明           | 类型                                                                | 默认值 |

@@ -58,7 +58,8 @@ export const treeProps = buildProps({
     useRadio: Boolean,
     link: Boolean,
     onRemote: Function as PropType<(item: TreeListItemCustom) => Promise<TreeListItemCustom[]>>,
-    draggable: Boolean
+    draggable: Boolean,
+    filterCall: Function as PropType<(item: TreeListItemCustom, text?: string) => boolean>
 })
 
 export type TreeProps = ExtractPropTypes<typeof treeProps>

@@ -1,4 +1,3 @@
-import { Ref } from 'vue'
 import { TreeListItemCustom, TreeListItemExtra } from './interface'
 import { TreeProps } from './tree'
 
@@ -9,10 +8,10 @@ const getListByText = (text: string | undefined, props: TreeProps, list: TreeLis
         /**
          * 1. 标题内容符合条件
          */
-        if (
+        if (props.filterCall ? props.filterCall(item, text) : (
             item[props.props.title]?.includes(text) ||
             item[key]?.includes(text)
-        ) {
+        )) {
             return finalList.push(item)
         }
         /**
