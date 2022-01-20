@@ -6,7 +6,7 @@ import Space, { spaceProps } from '../../Space'
 
 const radioGroupSelf = buildProps({
     modelValue: {
-        type: [String, Number, Symbol] as PropType<string | number | symbol>,
+        type: [String, Number, Symbol, Boolean] as PropType<string | number | symbol | boolean>,
         default: undefined
     },
     disabled: Boolean,

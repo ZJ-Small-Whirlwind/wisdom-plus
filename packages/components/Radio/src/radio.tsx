@@ -18,7 +18,7 @@ export const radiopProps = buildProps({
         default: undefined
     },
     value: {
-        type: [String, Number, Symbol] as PropType<string | number | symbol>
+        type: [Boolean, String, Number, Symbol] as PropType<string | number | symbol | boolean>
     },
     label: {
         type: String
@@ -44,7 +44,7 @@ export default defineComponent({
     setup(props, { slots, emit }) {
         const checkedRef = ref(false)
         const checkedControl = useAutoControl(checkedRef, props, 'modelValue', emit)
-        const checkedValue = inject<Ref<string | number | symbol> | false>(
+        const checkedValue = inject<Ref<string | number | symbol | boolean> | false>(
             'wp-radio-value',
             false
         )
