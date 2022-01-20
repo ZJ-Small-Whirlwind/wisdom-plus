@@ -5,12 +5,13 @@ const getListByText = (text: string | undefined, props: TreeProps, list: TreeLis
     if (!text) return list
     return list.forEach(item => {
         const key = props.getKey?.(item) || item[props.props.key]
+        const keyValue = String(item[key]) || ''
         /**
          * 1. 标题内容符合条件
          */
         if (props.filterCall ? props.filterCall(item, text) : (
             item[props.props.title]?.includes(text) ||
-            item[key]?.includes(text)
+            keyValue?.includes(text)
         )) {
             return finalList.push(item)
         }
