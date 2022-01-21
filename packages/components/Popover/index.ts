@@ -5,4 +5,5 @@ export const WpPopover = withInstall(Popover)
 export default WpPopover
 
 export { popoverProps, popoverEmits } from './src/popover'
+export { closeAllPopovers } from './src/utils'
 export type { PopoverProps, PopoverEmits, PopoverPlacement, PopoverTrigger } from './src/popover'

@@ -125,6 +125,8 @@ const show = ref(false)
 
 ### Props
 
+可以调用全局的 closeAllPopovers 关闭所有的 popover
+
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | modelValue      | 是否展示 popover       | _boolean_          | -     |
@@ -143,6 +145,7 @@ const show = ref(false)
 | popoverClass | Popover 元素的 class | _string \| Record<string, boolean>_ | - |
 | popoverStyle | Popover 元素的 style | _string \| CSSProperties_ | - |
 | offset | 偏移，`[x, y]` | _number[]_ | - |
+| doNotCloseMe | 是否不受全局 closeAllPopovers 函数影响 | _boolean_ | - |
 
 ### Methods
 

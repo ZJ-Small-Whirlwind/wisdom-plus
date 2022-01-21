@@ -5,6 +5,7 @@ import { definePropType, buildProps } from '@wisdom-plus/utils/props'
 
 import type { ExtractPropTypes } from 'vue'
 import { onClickOutside } from '@vueuse/core'
+import { closeAll } from './utils'
 
 export type PopoverTrigger = 'click' | 'hover' | 'focus' | 'none'
 export type PopoverPlacement = 'top-start' | 'top' | 'top-end' | 'right-start' | 'right' | 'right-end' | 'bottom-start' | 'bottom' | 'bottom-end' | 'left-start' | 'left' | 'left-end'
@@ -61,7 +62,8 @@ export const popoverProps = buildProps({
     },
     offset: {
         type: Array as PropType<number[]>
-    }
+    },
+    doNotCloseMe: Boolean
 })
 
 export type PopoverProps = ExtractPropTypes<typeof popoverProps>
@@ -109,6 +111,11 @@ export default defineComponent({
         watch(show, () => {
             if (show.value && !props.zIndex) {
                 zIndex.value = getMaxZIndex()
+            }
+        })
+        watch(closeAll, () => {
+            if (closeAll.value && !props.doNotCloseMe) {
+                show.value = false
             }
         })
         /**
