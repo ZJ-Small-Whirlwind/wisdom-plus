@@ -89,6 +89,36 @@ const show = ref(false)
 ```
 :::
 
+### 手动设置 x y 值
+
+:::demo
+```vue
+<template>
+  <wp-space>
+    <wp-popover v-model="show" trigger="none" :x="x" :y="y">
+      你好
+    </wp-popover>
+    <div @click="showPopover" style="height: 200px; width: 200px; background: #eee;" />
+  </wp-space>
+</template>
+
+<script lang="ts" setup>
+import { ref } from 'vue'
+
+const show = ref(false)
+const x = ref(0)
+const y = ref(0)
+const showPopover = (e) => {
+  if (!show.value) {
+    show.value = true
+    x.value = e.x
+    y.value = e.y
+  }
+}
+</script>
+```
+:::
+
 ### 嵌套
 
 嵌套时请将子元素的 `to` 属性设为 `false`
