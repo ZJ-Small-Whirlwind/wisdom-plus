@@ -146,6 +146,8 @@ const show = ref(false)
 | popoverStyle | Popover 元素的 style | _string \| CSSProperties_ | - |
 | offset | 偏移，`[x, y]` | _number[]_ | - |
 | doNotCloseMe | 是否不受全局 closeAllPopovers 函数影响 | _boolean_ | - |
+| x | 主动设置 X 轴位置 | _number_ | - |
+| y | 主动设置 Y 轴位置 | _number_ | - |
 
 ### Methods
 

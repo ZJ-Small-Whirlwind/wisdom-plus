@@ -63,7 +63,9 @@ export const popoverProps = buildProps({
     offset: {
         type: Array as PropType<number[]>
     },
-    doNotCloseMe: Boolean
+    doNotCloseMe: Boolean,
+    x: Number,
+    y: Number
 })
 
 export type PopoverProps = ExtractPropTypes<typeof popoverProps>
@@ -206,6 +208,8 @@ export default defineComponent({
                     width={props.width === 'trigger' || props.width === 'target' ? 'target' : undefined}
                     flip={props.flip}
                     teleportDisabled={props.to === false}
+                    x={props.x}
+                    y={props.y}
                 >
                     <Transition
                         name={props.transition}
