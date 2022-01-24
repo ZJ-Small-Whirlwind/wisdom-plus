@@ -15,6 +15,10 @@ export const dropdownProps = buildProps({
         type: Object as PropType<Partial<PopoverProps> & Record<string, any>>,
         default: () => ({})
     },
+    rootPopover: {
+        type: Object as PropType<Partial<PopoverProps> & Record<string, any>>,
+        default: () => ({})
+    },
     list: {
         type: Array as PropType<DropdownRecord[]>,
         default: () => []
@@ -68,6 +72,7 @@ export default defineComponent({
                 placement="bottom"
                 trigger="hover"
                 { ...props.popover }
+                { ...props.rootPopover }
                 popoverClass="wp-dropdown-popover"
                 v-model={show.value}
                 v-slots={{

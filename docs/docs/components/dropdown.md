@@ -86,6 +86,7 @@ const index = ref('')
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | modelValue `v-model`   | 是否显示菜单       | _boolean_          | false     |
+| rootPopover | 根 Popover 组件的 Props | _Partial\<PopoverProps\> & Record\<string, any\>_           | {}      |
 | popover     | Popover 组件的 Props，会改变父菜单及菜单的外层 Popover 容器   | _Partial\<PopoverProps\> & Record\<string, any\>_           | {}      |
 | list   | 下拉菜单列表 | _DropdownRecord[]_ | []      |
 | subMenuPlacement  | 子菜单弹出位置       | _PopoverPlacement_                                                           | 'right' |
