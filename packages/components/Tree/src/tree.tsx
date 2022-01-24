@@ -59,7 +59,8 @@ export const treeProps = buildProps({
     link: Boolean,
     onRemote: Function as PropType<(item: TreeListItemCustom) => Promise<TreeListItemCustom[]>>,
     draggable: Boolean,
-    filterCall: Function as PropType<(item: TreeListItemCustom, text?: string) => boolean>
+    filterCall: Function as PropType<(item: TreeListItemCustom, text?: string) => boolean>,
+    checkStrictly: Boolean
 })
 
 export type TreeProps = ExtractPropTypes<typeof treeProps>
@@ -212,6 +213,7 @@ export default defineComponent({
                     item.list.remote = false
                     item.list.children = list
                 }}
+                checkStrictly={this.checkStrictly}
                 v-slots={{
                     default: this.$slots.title,
                     suffix: this.$slots.suffix,

@@ -59,7 +59,7 @@
                         :indeterminate="checkedStatus === 0"
                         @update:model-value="value => {
                             if (disabled) return
-                            if (!children) {
+                            if (!children || checkStrictly) {
                                 const index = checkedList.indexOf(keyIs)
                                 if (value) {
                                     if (index > -1) return
@@ -75,11 +75,11 @@
                     />
                     <Radio
                         @click.stop
-                        :disabled="disabled || Boolean(children) || remote"
+                        :disabled="disabled || (Boolean(children) && !checkStrictly) || remote"
                         :model-value="checkedStatus !== -1"
                         @update:model-value="() => {
                             if (disabled) return
-                            if (!children) {
+                            if (!children || checkStrictly) {
                                 checkedList = [keyIs]
                             }
                         }"
@@ -145,6 +145,7 @@ const props = defineProps<{
     link?: boolean,
     remote?: boolean,
     draggable?: boolean,
+    checkStrictly?: boolean,
     propList?: TreeListItemCustom[],
     onRemote?: (item: TreeListItemCustom) => Promise<TreeListItemCustom[]>,
     onRemoteChange?: (list: TreeListItemCustom[]) => void
@@ -259,7 +260,13 @@ const levels = computed(() => new Array(props.level))
 
 const expending = computed(() => props.expends.includes(props.keyIs) || props.expendsList.find(item => !item.isDelete && item.keyIs === props.keyIs))
 const checkedStatus = computed(() => props.getChecked(props.list))
-const disabled = computed(() => props.disabled || checkedStatus.value === -2)
+const disabled = computed(() => {
+    if (props.checkStrictly) {
+        return props.disabled
+    } else {
+        return checkedStatus.value === -2
+    }
+})
 const isNoChildren = computed(() => !props.children || props.children.length === 0)
 
 const checkedList = useVModel(props, 'modelValue', emit, {

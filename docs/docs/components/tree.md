@@ -108,6 +108,63 @@ const selecting = ref('1')
 ```
 :::
 
+#### 可选中任意项
+
+:::demo
+```vue
+<template>
+    <wp-tree :list="[
+        {
+            key: '1',
+            title: '展开',
+            children: [{
+                key: '1-1',
+                title: '1-1'
+            }, {
+                key: '1-2',
+                title: '1-2',
+                children: [{
+                    key: '1-2-1',
+                    title: '1-2-1'
+                }, {
+                    key: '1-2-2',
+                    title: '1-2-2',
+                    disabled: true
+                }]
+            }]
+        }
+    ]" checkable check-strictly/>
+    <wp-tree :list="[
+        {
+            key: '1',
+            title: '展开',
+            children: [{
+                key: '1-1',
+                title: '1-1'
+            }, {
+                key: '1-2',
+                title: '1-2',
+                children: [{
+                    key: '1-2-1',
+                    title: '1-2-1'
+                }, {
+                    key: '1-2-2',
+                    title: '1-2-2',
+                    disabled: true
+                }]
+            }]
+        }
+    ]" checkable check-strictly use-radio/>
+</template>
+
+<script lang="ts" setup>
+import { ref } from 'vue'
+
+const selecting = ref('1')
+</script>
+```
+:::
+
 #### 远程加载
 
 :::demo
@@ -376,6 +433,7 @@ const checkAll = () => {
 | onRemote `ref` | 远程加载回调 | _(list: TreeListItemCustom) => Promise\<TreeListItemCustom[]\>_ | - |
 | draggable `ref` | 是否可拖动 | _boolean_ | - |
 | filterCall | 自定义过滤方法，true 为符合条件 | _(list: TreeListItemCustom, text?: string) => boolean_ | - |
+| checkStrictly | 是否可选中任意项，如果为 false，则只能选中叶子节点 | _boolean_ | false |
 
 ### Methods
 | 参数      | 说明           | 类型                                                                | 默认值 |
