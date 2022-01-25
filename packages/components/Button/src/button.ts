@@ -1,7 +1,7 @@
 import { useFormItemProps } from '@wisdom-plus/hooks'
 import { buildProps, definePropType } from '@wisdom-plus/utils/props'
 import type { ExtractPropTypes, Component } from 'vue'
-import type button from './button.vue'
+import type button from './button.tsx'
 
 export const buttonType = [
   'default',

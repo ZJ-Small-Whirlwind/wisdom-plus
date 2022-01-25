@@ -1,35 +1,3 @@
-<template>
-    <button
-        ref="buttonRef"
-        :class="[
-      'wp-button',
-      buttonType ? 'wp-button--' + buttonType : '',
-      buttonSize ? 'wp-button--' + buttonSize : '',
-      {
-        'is-disabled': buttonDisabled,
-        'is-loading': loading,
-        'is-plain': plain,
-        'is-round': round,
-        'is-circle': circle,
-      },
-    ]"
-        :disabled="buttonDisabled || loading"
-        :autofocus="autofocus"
-        :type="nativeType"
-        :style="buttonStyle"
-        @click="handleClick"
-    >
-        <wp-icon v-if="icon || $slots.icon"></wp-icon>
-        <span
-            v-if="$slots.default"
-            :class="{ 'wp-button__text--expand': shouldAddSpace }"
-        >
-          <slot></slot>
-        </span>
-    </button>
-</template>
-
-<script lang="ts">
 import { computed, inject, defineComponent, Text, ref } from 'vue'
 import { useCssVar } from '@vueuse/core'
 import { useFormItem, useGlobalConfig } from '@wisdom-plus/hooks'
@@ -127,5 +95,43 @@ export default defineComponent({
             handleClick,
         }
     },
+    render() {
+        return (
+            <button
+                ref="buttonRef"
+                class={[
+                    'wp-button',
+                    this.buttonType ? 'wp-button--' + this.buttonType : '',
+                    this.buttonSize ? 'wp-button--' + this.buttonSize : '',
+                    {
+                        'is-disabled': this.buttonDisabled,
+                        'is-loading': this.loading,
+                        'is-plain': this.plain,
+                        'is-round': this.round,
+                        'is-circle': this.circle,
+                    }
+                ]}
+                disabled={this.buttonDisabled || this.loading}
+                autofocus={this.autofocus}
+                type={this.nativeType}
+                style={this.buttonStyle}
+                onClick={this.handleClick}
+            >
+                {
+                    ( this.icon || this.$slots.icon ) ?
+                        <wp-icon>{ this.icon || this.$slots.icon() }</wp-icon> :
+                        null
+                }
+                {
+                    this.$slots.default && (
+                        <span
+                            class={{ 'wp-button__text--expand': this.shouldAddSpace }}
+                        >
+                            { this.$slots.default() }
+                        </span>
+                    )
+                }
+            </button>
+        )
+    }
 })
-</script>
