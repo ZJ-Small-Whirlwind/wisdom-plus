@@ -1,4 +1,4 @@
-import { ref, createApp, VNode, App, defineComponent, onMounted } from 'vue'
+import { ref, createApp, VNode, App, defineComponent, onMounted, Component } from 'vue'
 
 import Modal, { ModalProps } from './modal'
 import Button from '../../Button'
@@ -17,13 +17,15 @@ export interface DialogOptions {
     cancelProps?: Partial<ButtonProps> & Record<string, any>,
     confirmProps?: Partial<ButtonProps> & Record<string, any>,
     props?: Partial<ModalProps> & Record<string, any>,
-    footer?: (close?: () => void) => VNode | string
+    footer?: (close?: () => void) => VNode | string,
+    buttonComponent?: Component
 }
 
 const openDialog = function Dialog(options?: DialogOptions) {
     return new Promise<void>((resolve, reject) => {
         const newDiv = document.createElement('div')
         document.body.appendChild(newDiv)
+        const ButtonElement = options?.buttonComponent || Button as any
         const app = createApp(defineComponent({
             setup() {
                 const show = ref(false)
@@ -41,22 +43,22 @@ const openDialog = function Dialog(options?: DialogOptions) {
                             <Space justify="end" { ...options?.spaceProps }>
                                 {
                                     options?.showCancel !== false ? (
-                                        <Button onClick={() => {
+                                        <ButtonElement onClick={() => {
                                             show.value = false
                                             reject()
                                         }} {...options?.cancelProps}>
                                             { options?.cancelText || '取消' }
-                                        </Button>
+                                        </ButtonElement>
                                     ) : null
                                 }
                                 {
                                     options?.showConfirm !== false ? (
-                                        <Button ref={confirmButtonRef} tabindex="-1" type="primary" onClick={() => {
+                                        <ButtonElement ref={confirmButtonRef} tabindex="-1" type="primary" onClick={() => {
                                             show.value = false
                                             resolve()
                                         }} {...options?.confirmProps}>
                                             { options?.confirmText || '确定' }
-                                        </Button>
+                                        </ButtonElement>
                                     ) : null
                                 }
                             </Space>
