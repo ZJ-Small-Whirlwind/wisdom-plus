@@ -6,7 +6,7 @@ import { StarOutlined, PullRequestOutlined } from '@vicons/antd'
 
 ### 介绍
 
-这是一个几乎只在手机端才会用到的组件，但我们支持了PC端
+这是一个几乎只在手机端才会用到的组件，但我们支持了PC端（吧）
 
 ### 引入
 
