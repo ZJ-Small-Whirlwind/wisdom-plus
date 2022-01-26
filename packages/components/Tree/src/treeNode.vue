@@ -2,12 +2,13 @@
     <div
         :class="{
             'wp-tree-node': true,
+            'wp-tree-node__selecting-disabled': props.disabled,
             'wp-tree-node__disabled': disabled,
             'wp-tree-node__selecting': selectable && selecting === keyIs,
             'wp-tree-node__ondrag': onDragging
         }"
         @click="() => {
-            if (selectable && !disabled) emit('update:selecting', keyIs)
+            if (selectable && !props.disabled) emit('update:selecting', keyIs)
             if (isNoChildren && !remote) return
             expend()
         }"
@@ -264,7 +265,7 @@ const disabled = computed(() => {
     if (props.checkStrictly) {
         return props.disabled
     } else {
-        return checkedStatus.value === -2
+        return props.disabled || checkedStatus.value === -2
     }
 })
 const isNoChildren = computed(() => !props.children || props.children.length === 0)
