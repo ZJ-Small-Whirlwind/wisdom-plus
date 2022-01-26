@@ -94,12 +94,13 @@ export default defineComponent({
         const selectingRef = ref<string | number | symbol>()
         const selecting = useAutoControl(selectingRef, props, 'selecting', emit)
         const checkedSet = computed(() => new Set(checked.value))
-        const setChecked = (value: boolean, list: TreeListItem[], checkedSet: Set<string | number | symbol>) => {
+        const setChecked = (value: boolean, list: TreeListItem[], checkedSet: Set<string | number | symbol>, excludeSet: Set<string | number | symbol>) => {
             for (let i = 0; i < list.length; i++) {
                 const item = list[i]
                 const key = props.getKey ? props.getKey(item) : item[props.props.key]
+                if (excludeSet.has(key) && value) continue
                 if (item.children && item.children.length > 0) {
-                    setChecked(value, item.children, checkedSet)
+                    setChecked(value, item.children, checkedSet, excludeSet)
                     continue
                 }
                 if (item.disabled || item.remote) continue
@@ -112,7 +113,8 @@ export default defineComponent({
             }
         }
         const setingChecked = (value: boolean, list: TreeListItem[]) => {
-            setChecked(value, list, checkedSet.value)
+            const excludeSet = new Set<string | number | symbol>(props.exclude)
+            setChecked(value, list, checkedSet.value, excludeSet)
             checked.value = Array.from(checkedSet.value)
         }
         /**
