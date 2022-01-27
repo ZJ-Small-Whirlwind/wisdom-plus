@@ -12,7 +12,7 @@ export const overlayProps = buildProps({
     },
     background: {
         type: String,
-        default: '#00000099'
+        default: 'rgba(0, 0, 0, 153)'
     },
     blur: {
         type: [Boolean, String] as PropType<boolean | string>,

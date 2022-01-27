@@ -54,7 +54,7 @@ const show = ref(false)
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | modelValue `v-model`      | 是否展示遮罩       | _boolean_          | -     |
 | position     | Css position 属性   | _'fixed' \| 'absolute'_           | _'fixed'_      |
-| background   | 背景 | _string_ | _'#00000099'_      |
+| background   | 背景 | _string_ | _'rgba(0, 0, 0, 153)'_      |
 | blur  | 背景高斯模糊，为字符串时代表背景高斯模糊程度       | _boolean \| string_                                                           | false  |
 | zIndex      | Z 轴高度       | _number_                                                           | -   |
 | to | Overlay 元素存放在哪个位置，设为 `false` 则为父元素       | _string \| RendererElement \| false_                                                    | -     |
