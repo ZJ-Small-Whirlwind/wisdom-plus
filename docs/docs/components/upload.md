@@ -145,6 +145,7 @@ const handleUpload = filterFiles => {
 | autoUpload | 是否在选择文件后自动上传 | _boolean_ | false |
 | limit | 文件数量限制 | _number_ | - |
 | showFileList | 是否显示文件列表 | _boolean_ | true |
+| showButton | 是否显示上传按钮 | _boolean_ | true |
 | disabled| 是否为禁用状态 | _boolean_ | false |
 
 ### Methods
