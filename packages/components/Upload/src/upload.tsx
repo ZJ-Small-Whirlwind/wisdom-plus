@@ -79,7 +79,8 @@ export default defineComponent({
         'update:modelValue': (value: UploadFile[]) => Array.isArray(value),
         itemClick: (e: Event, value: UploadFile) => {
             void e
-            return Array.isArray(value)
+            void value
+            return true
         }
     },
     expose: ['submit', 'addUpload'],
