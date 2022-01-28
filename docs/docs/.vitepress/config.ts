@@ -59,6 +59,10 @@ module.exports = {
                             link: '/components/tag-input'
                         },
                         {
+                            text: 'Upload 上传',
+                            link: '/components/upload'
+                        },
+                        {
                             text: 'Tree 树',
                             link: '/components/tree'
                         }

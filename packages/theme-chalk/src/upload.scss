@@ -1,0 +1,95 @@
+:root {
+    --wp-upload-success: green;
+    --wp-upload-waiting: rgb(66, 141, 252);
+    --wp-upload-fail: red;
+    --wp-upload-loading: #d9d9d9;
+    --wp-upload-drag-icon-color: #d9d9d9;
+    --wp-upload-drag-icon-size: 64px;
+    --wp-upload-font-size: 13px;
+    --wp-upload-icon-size: 15px;
+    --wp-upload-active-color: rgb(66, 141, 252);
+}
+
+.wp-upload {
+    font-size: var(--wp-upload-font-size);
+    &__file {
+        display: none;
+    }
+    &__cells {
+        margin-top: 10px;
+    }
+    &__cell {
+        display: flex;
+        font-size: var(--wp-upload-font-size);
+        align-items: center;
+        &-name {
+            flex: 1;
+            overflow: hidden;
+            margin: 0 5px;
+        }
+        &-status {
+            font-size: var(--wp-upload-icon-size);
+            &-0 {
+                color: var(--wp-upload-success);
+            }
+            &-1 {
+                color: var(--wp-upload-waiting);
+            }
+            &-2 {
+                color: var(--wp-upload-loading);
+                animation: wp-upload-loading infinite 1s;
+            }
+            &-3 {
+                color: var(--wp-upload-fail);
+            }
+        }
+        &-delete {
+            cursor: pointer;
+        }
+    }
+    &__drag-icon {
+        font-size: var(--wp-upload-drag-icon-size);
+        color: var(--wp-upload-drag-icon-color);
+        margin-bottom: 20px;
+    }
+    &__drag-button {
+        font-size: var(--wp-upload-font-size);
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        box-sizing: border-box;
+        height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        flex-direction: column;
+        transition: border .2s;
+        em {
+            color: var(--wp-upload-active-color);
+        }
+    }
+    &:not(.wp-upload__disabled) {
+        .wp-upload__drag-button {
+            &.wp-upload__upload__drag-button__dragover,
+            &:hover {
+                border-color: var(--wp-upload-active-color);
+            }
+        }
+    }
+    &.wp-upload__disabled {
+        .wp-upload__drag-button {
+            cursor: not-allowed;
+        }
+    }
+}
+
+@keyframes wp-upload-loading {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
