@@ -128,6 +128,10 @@ module.exports = {
                             link: '/components/scroll-list'
                         },
                         {
+                            text: 'CountTo 数值动画',
+                            link: '/components/count-to'
+                        },
+                        {
                             text: 'Statistic 数据统计',
                             link: '/components/statistic'
                         },
