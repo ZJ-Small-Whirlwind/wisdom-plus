@@ -42,7 +42,7 @@ const handleUpload = filterFiles => {
     return new Promise((resolve, reject) => {
         const timer = setInterval(() => {
             filterFiles.forEach(file => {
-                if (!file.progress && file.status !== 0) {
+                if (!file.progress && file.progress !== 0) {
                     file.progress = 0
                 }
                 file.progress += 1
