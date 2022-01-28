@@ -8,6 +8,8 @@
     --wp-upload-font-size: 13px;
     --wp-upload-icon-size: 15px;
     --wp-upload-active-color: rgb(66, 141, 252);
+    --wp-upload-item-padding: 5px;
+    --wp-upload-item-hover-bg: #fcfcfc;
 }
 
 .wp-upload {
@@ -15,17 +17,17 @@
     &__file {
         display: none;
     }
-    &__cells {
-        margin-top: 10px;
-    }
     &__cell {
         display: flex;
-        font-size: var(--wp-upload-font-size);
         align-items: center;
+        padding: var(--wp-upload-item-padding);
+        a {
+            color: var(--wp-upload-active-color);
+        }
         &-name {
             flex: 1;
             overflow: hidden;
-            margin: 0 5px;
+            margin: 0 var(--wp-upload-item-padding);
         }
         &-status {
             font-size: var(--wp-upload-icon-size);
@@ -46,6 +48,9 @@
         &-delete {
             cursor: pointer;
         }
+        &:hover {
+            background: var(--wp-upload-item-hover-bg);
+        }
     }
     &__drag-icon {
         font-size: var(--wp-upload-drag-icon-size);
@@ -53,7 +58,6 @@
         margin-bottom: 20px;
     }
     &__drag-button {
-        font-size: var(--wp-upload-font-size);
         border: 1px dashed #d9d9d9;
         border-radius: 6px;
         box-sizing: border-box;

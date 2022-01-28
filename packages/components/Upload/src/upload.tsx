@@ -26,7 +26,8 @@ export interface UploadFile {
     name: string,
     status?: UploadFileStatus,
     file?: File,
-    pin?: Boolean,
+    pin?: boolean,
+    url?: string,
     [x: string]: any
 }
 
@@ -53,6 +54,10 @@ export const uploadProps = buildProps({
         type: Boolean,
         default: true
     },
+    showButton: {
+        type: Boolean,
+        default: true
+    },
     disabled: Boolean
 })
 
@@ -71,6 +76,10 @@ export default defineComponent({
     props: uploadProps,
     emits: {
         'update:modelValue': (value: UploadFile[]) => Array.isArray(value),
+        itemClick: (e: Event, value: UploadFile) => {
+            void e
+            return Array.isArray(value)
+        }
     },
     expose: ['submit', 'addUpload'],
     setup(props, { emit }) {
@@ -212,62 +221,70 @@ export default defineComponent({
     },
     render() {
         return (
-            <div class={[
+            <Space class={[
                 'wp-upload',
                 {
                     'wp-upload__disabled': this.disabled
                 }
-            ]}>
-                <div
-                    class={[
-                        'wp-upload__button'
-                    ]}
-                    onDrop={this.handleDrop}
-                    onDragover={this.handleDragover}
-                    onDragleave={this.handleDragleave}
-                >
-                    {
-                        this.$slots.default?.({ start: this.startUpload, dragover: this.dragover, disabled: this.disabled }) || (
-                            this.drop ? (
-                                <div class={[
-                                    'wp-upload__drag-button',
-                                    {
-                                        'wp-upload__upload__drag-button__dragover': this.dragover
-                                    }
-                                 ]} onClick={this.startUpload}>
-                                    <Icon class="wp-upload__drag-icon">
-                                        <CloudUploadOutlined />
-                                    </Icon>
-                                    <span>拖拽文件到这里或者 <em>点击上传</em></span>
-                                </div>
-                            ) : (
-                                <Button type="primary" onClick={this.startUpload} disabled={this.disabled}>点击上传</Button>
-                            )
-                        )
-                    }
-                    <input
-                        ref="fileRef"
-                        type="file"
-                        class="wp-upload__file"
-                        multiple={this.multiple}
-                        accept={this.accept}
-                        onChange={this.handleChange}
-                    />
-                </div>
+            ]} vertical>
+                {
+                    this.showButton ? (
+                        <div
+                            class={[
+                                'wp-upload__button'
+                            ]}
+                            onDrop={this.handleDrop}
+                            onDragover={this.handleDragover}
+                            onDragleave={this.handleDragleave}
+                        >
+                            {
+                                this.$slots.default?.({ start: this.startUpload, dragover: this.dragover, disabled: this.disabled }) || (
+                                    this.drop ? (
+                                        <div class={[
+                                            'wp-upload__drag-button',
+                                            {
+                                                'wp-upload__upload__drag-button__dragover': this.dragover
+                                            }
+                                         ]} onClick={this.startUpload}>
+                                            <Icon class="wp-upload__drag-icon">
+                                                <CloudUploadOutlined />
+                                            </Icon>
+                                            <span>拖拽文件到这里或者 <em>点击上传</em></span>
+                                        </div>
+                                    ) : (
+                                        <Button type="primary" onClick={this.startUpload} disabled={this.disabled}>点击上传</Button>
+                                    )
+                                )
+                            }
+                            <input
+                                ref="fileRef"
+                                type="file"
+                                class="wp-upload__file"
+                                multiple={this.multiple}
+                                accept={this.accept}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    ) : null
+                }
                 {
                     this.$slots.description?.()
                 }
                 {
                     this.showFileList ? (
-                        <Space class="wp-upload__cells" vertical size={5}>
+                        <div class="wp-upload__cells">
                             {
                                 this.$slots.lists?.({ files: this.uploadFiles }) || (
                                     this.uploadFiles?.map((file, index) => (
                                         this.$slots.list?.({ file }) || (
-                                            <div class="wp-upload__cell">
+                                            <div class="wp-upload__cell" onClick={e => this.$emit('itemClick', e, file)}>
                                                 <WpIcon class={`wp-upload__cell-icon`} v-html={this.getFileTypeIcon(file.file?.name || file.name)} />
                                                 <div class="wp-upload__cell-name">
-                                                    { file.name }
+                                                    {
+                                                        file.url ? (
+                                                            <a href={file.url} target="_blank" onClick={e => e.stopPropagation()}>{file.name}</a>
+                                                        ): file.name
+                                                    }
                                                 </div>
                                                 <Space class="wp-upload__cell-status" size={5}>
                                                     <WpIcon class={`wp-upload__cell-status-${file.status || 0}`}>
@@ -276,7 +293,7 @@ export default defineComponent({
                                                         }
                                                     </WpIcon>
                                                     {
-                                                        !this.pin && !this.disabled ? (
+                                                        !this.disabled && ( 'pin' in file ? !file.pin : !this.pin ) ? (
                                                             <WpIcon class="wp-upload__cell-delete" onClick={() => this.handleDelete(file, index)}>
                                                                 <DeleteOutlined />
                                                             </WpIcon>
@@ -288,10 +305,10 @@ export default defineComponent({
                                     ))
                                 )
                             }
-                        </Space>
+                        </div>
                     ) : null
                 }
-            </div>
+            </Space>
         )
     }
 })

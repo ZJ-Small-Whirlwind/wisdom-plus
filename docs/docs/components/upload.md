@@ -2,7 +2,7 @@
 
 ### 介绍
 
-一个任意选择可控或不可控的上传组件
+总感觉有些 UI 框架的上传组件不自由，这是一个任意选择可控或不可控的上传组件
 
 ### 引入
 
@@ -21,7 +21,11 @@ app.use(WpUpload)
 :::demo
 ```vue
 <template>
-    <wp-upload auto-upload :delete="handleDelete" :upload="handleUpload" multiple :limit="1" accept=".jpg,.png,.webp" />
+    <wp-upload auto-upload :delete="handleDelete" :upload="handleUpload" multiple :limit="1" accept=".jpg,.png,.webp">
+        <template #description>
+            允许的文件格式 .jpg,.png,.webp
+        </template>
+    </wp-upload>
 </template>
 
 <script lang="ts" setup>
@@ -68,6 +72,32 @@ const handleUpload = filterFiles => {
 ```
 :::
 
+#### 仅使用文件列表
+
+:::demo
+```vue
+<template>
+    <wp-upload :model-value="list" :show-button="false" multiple drop disabled>
+        <template #description>
+            已上传文件：
+        </template>
+    </wp-upload>
+</template>
+
+<script lang="ts" setup>
+const list = [
+    {
+        name: 'a.jpg',
+        url: '#'
+    },
+    {
+        name: 'b.jpg'
+    }
+]
+</script>
+```
+:::
+
 #### 禁用
 
 :::demo
@@ -96,7 +126,7 @@ const handleUpload = filterFiles => {
 
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
-| modelValue `v-model` | 文件列表       | _UploadFile[]_          | -     |
+| modelValue `v-model` | 文件列表，如果该 Prop 为 `undefined`，则组件为非受控模式       | _UploadFile[]_          | -     |
 | multiple | 是否可多选 | _boolean_           | _false_      |
 | accept   | 接收的文件格式，如 ".jpg,.png,.gif" | _string_ | -      |
 | drop | 是否可拖拽上传       | _boolean_                                                           | -  |
@@ -113,6 +143,7 @@ const handleUpload = filterFiles => {
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | update:modelValue      | 文件列表更新，若 `modelValue` 的值为 `undefined`，则该值也无效      | _(files: UploadFile[]) => void_         | -     |
+| itemClick | 列表项点击事件 | _(e: Event, value: UploadFile) => void_ | - |
 
 ### Slots
 
@@ -140,6 +171,7 @@ const handleUpload = filterFiles => {
 | status | 文件状态，不填则为 Success | _UploadFileStatus_ | 是 |
 | file | 文件 | _File_ | 是 |
 | pin | 是否固定（禁止被删除） | _boolean_ | 是 |
+| url | 文件链接，设置后在列表会被渲染被 a 标签 | _string_ | 是 |
 | [x: string] | 任意内容 | _any_ | 是 |
 
 ### UploadFileStatus
@@ -166,3 +198,5 @@ const handleUpload = filterFiles => {
 | --wp-upload-font-size | 13px | 文本字体大小 |
 | --wp-upload-icon-size | 15px | 图标字体大小 |
 | --wp-upload-active-color | rgb(66, 141, 252) | 激活颜色 |
+| --wp-upload-item-padding | 5px | 列表项内边距 |
+| --wp-upload-item-hover-bg | #fcfcfc | 列表项 Hover 背景 |
