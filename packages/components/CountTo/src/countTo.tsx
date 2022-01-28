@@ -64,7 +64,8 @@ export default defineComponent({
             transition: TransitionPresets.easeInOutCubic
         })
         const countShowPrecision = computed(() => {
-            return props.format ? formatNumber(countShow.value.toFixed(props.precision), props.formatNumber, props.formatString) : countShow.value.toFixed(props.precision)
+            const count = countShow.value === props.to ? props.to : countShow.value.toFixed(props.precision)
+            return props.format ? formatNumber(count, props.formatNumber, props.formatString) : count
         })
         return {
             countShow,
