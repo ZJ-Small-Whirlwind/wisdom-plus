@@ -107,6 +107,36 @@ const list = [
 ```
 :::
 
+#### 使用卡片预设
+
+:::demo
+```vue
+<template>
+    <wp-upload :model-value="list" multiple drop preset="card" />
+</template>
+
+<script lang="ts" setup>
+const list = [
+    {
+        name: 'a.jpg',
+        url: 'https://avatars.githubusercontent.com/u/26594629?v=4'
+    },
+    {
+        name: 'b.jpg'
+    },
+    {
+        name: 'c.jpg',
+        status: 2
+    },
+    {
+        name: 'd.jpg',
+        status: 3
+    }
+]
+</script>
+```
+:::
+
 #### 禁用
 
 :::demo
@@ -146,7 +176,8 @@ const handleUpload = filterFiles => {
 | limit | 文件数量限制 | _number_ | - |
 | showFileList | 是否显示文件列表 | _boolean_ | true |
 | showButton | 是否显示上传按钮 | _boolean_ | true |
-| disabled| 是否为禁用状态 | _boolean_ | false |
+| disabled | 是否为禁用状态 | _boolean_ | false |
+| preset | 预设，可选值为 card | _boolean_ | 'list' |
 
 ### Methods
 
@@ -211,3 +242,7 @@ const handleUpload = filterFiles => {
 | --wp-upload-active-color | rgb(66, 141, 252) | 激活颜色 |
 | --wp-upload-item-padding | 5px | 列表项内边距 |
 | --wp-upload-item-hover-bg | #fcfcfc | 列表项 Hover 背景 |
+| --wp-upload-card-color | rgb(215, 217, 219) | Card 预设下的字体颜色 |
+| --wp-upload-card-bg | rgb(246, 247, 249) | Card 预设下的背景颜色 |
+| --wp-upload-card-active-bg | rgb(240, 241, 243) | Card 预设下的激活背景颜色 |
+| --wp-upload-card-overlay-bg | rgba(0, 0, 0, 153) | Card 预设下的遮罩背景颜色 |

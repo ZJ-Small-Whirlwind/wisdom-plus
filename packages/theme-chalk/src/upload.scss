@@ -10,6 +10,10 @@
     --wp-upload-active-color: rgb(66, 141, 252);
     --wp-upload-item-padding: 5px;
     --wp-upload-item-hover-bg: #fcfcfc;
+    --wp-upload-card-color: rgb(215, 217, 219);
+    --wp-upload-card-bg: rgb(246, 247, 249);
+    --wp-upload-card-active-bg: rgb(240, 241, 243);
+    --wp-upload-card-overlay-bg: rgba(0, 0, 0, 153);
 }
 
 .wp-upload {
@@ -89,6 +93,55 @@
     &.wp-upload__disabled {
         .wp-upload__drag-button {
             cursor: not-allowed;
+        }
+    }
+    &__card {
+        height: 100px;
+        width: 100px;
+        color: var(--wp-upload-card-color);
+        font-size: 24px;
+        border-radius: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background: var(--wp-upload-card-bg);
+        position: relative;
+        .wp-image {
+            height: 100%;
+            width: 100%;
+        }
+        &:active {
+            background-color: var(--wp-upload-card-active-bg);
+        }
+        &-close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            color: #fff;
+            background-color: var(--wp-upload-card-overlay-bg);
+            font-size: 12px;
+            padding: 2px;
+            display: flex;
+            z-index: 2;
+        }
+        &-overlay {
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: var(--wp-upload-card-overlay-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            color: #fff;
+            &.is-loading {
+                .wp-icon {
+                    animation: wp-upload-loading infinite 1s;
+                }
+            }
         }
     }
 }

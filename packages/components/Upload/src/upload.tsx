@@ -1,36 +1,11 @@
 import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
-import { ref, defineComponent, ExtractPropTypes, PropType, h } from "vue"
-import Button from '../../Button'
-import Space from '../../Space'
-import Icon from '../../Icon'
-import {
-    DeleteOutlined,
-    CheckCircleTwotone,
-    UploadOutlined,
-    Loading3QuartersOutlined,
-    CloseSquareTwotone,
-    CloudUploadOutlined
-} from '@vicons/antd'
+import { ref, defineComponent, ExtractPropTypes, PropType } from "vue"
 
-import svgs, { start } from './svgs'
+import UploadList from './uploadList'
+import UploadCard from './uploadCard'
 
-export enum UploadFileStatus {
-    Success,
-    Waiting,
-    Loading,
-    Fail
-}
-
-export interface UploadFile {
-    name: string,
-    status?: UploadFileStatus,
-    file?: File,
-    pin?: boolean,
-    url?: string,
-    progress?: number,
-    [x: string]: any
-}
+import { type UploadFile, UploadFileStatus } from './interface'
 
 export const uploadProps = buildProps({
     modelValue: {
@@ -59,16 +34,12 @@ export const uploadProps = buildProps({
         type: Boolean,
         default: true
     },
-    disabled: Boolean
+    disabled: Boolean,
+    preset: {
+        type: String,
+        default: 'list'
+    }
 })
-
-const WpIcon = Icon as any
-const Icons = {
-    [UploadFileStatus.Success]: CheckCircleTwotone,
-    [UploadFileStatus.Waiting]: UploadOutlined,
-    [UploadFileStatus.Loading]: Loading3QuartersOutlined,
-    [UploadFileStatus.Fail]: CloseSquareTwotone
-}
 
 export type UploadProps = ExtractPropTypes<typeof uploadProps>
 
@@ -145,14 +116,6 @@ export default defineComponent({
             uploadFiles.value.splice(index, 1)
         }
 
-        const getStatusIcon = (status?: UploadFileStatus) => {
-            if (status) {
-                return Icons[status] || Icons[UploadFileStatus.Success]
-            } else {
-                return Icons[UploadFileStatus.Success]
-            }
-        }
-
         const dragover = ref(false)
 
         const handleDragleave = (e: DragEvent) => {
@@ -200,12 +163,6 @@ export default defineComponent({
             handleAddUpload(files)
         }
 
-        const getFileTypeIcon = (filename: string) => {
-            const execFilename = /\.(.+)?$/.exec(filename)
-            if (!execFilename?.[1]) return `${start}${svgs.default}</svg>`
-            return `${start}${svgs[execFilename[1].toLowerCase()] || svgs.default}</svg>`
-        }
-
         return {
             fileRef,
             uploadFiles,
@@ -217,108 +174,71 @@ export default defineComponent({
             handleDelete,
             handleDrop,
             handleDragleave,
-            handleDragover,
-            getStatusIcon,
-            getFileTypeIcon
+            handleDragover
         }
     },
     render() {
-        return (
-            <Space class={[
-                'wp-upload',
-                {
-                    'wp-upload__disabled': this.disabled
-                }
-            ]} vertical>
-                {
-                    this.showButton ? (
-                        <div
-                            class={[
-                                'wp-upload__button'
-                            ]}
-                            onDrop={this.handleDrop}
-                            onDragover={this.handleDragover}
-                            onDragleave={this.handleDragleave}
-                        >
-                            {
-                                this.$slots.default?.({ start: this.startUpload, dragover: this.dragover, disabled: this.disabled }) || (
-                                    this.drop ? (
-                                        <div class={[
-                                            'wp-upload__drag-button',
-                                            {
-                                                'wp-upload__upload__drag-button__dragover': this.dragover
-                                            }
-                                         ]} onClick={this.startUpload}>
-                                            <Icon class="wp-upload__drag-icon">
-                                                <CloudUploadOutlined />
-                                            </Icon>
-                                            <span>拖拽文件到这里或者 <em>点击上传</em></span>
-                                        </div>
-                                    ) : (
-                                        <Button type="primary" onClick={this.startUpload} disabled={this.disabled}>点击上传</Button>
-                                    )
-                                )
-                            }
-                            <input
-                                ref="fileRef"
-                                type="file"
-                                class="wp-upload__file"
-                                multiple={this.multiple}
-                                accept={this.accept}
-                                onChange={this.handleChange}
-                            />
-                        </div>
-                    ) : null
-                }
-                {
-                    this.$slots.description?.()
-                }
-                {
-                    this.showFileList ? (
-                        <div class="wp-upload__cells">
-                            {
-                                this.$slots.lists?.({ files: this.uploadFiles }) || (
-                                    this.uploadFiles?.map((file, index) => (
-                                        this.$slots.list?.({ file }) || (
-                                            <div class="wp-upload__cell" onClick={e => this.$emit('itemClick', e, file)}>
-                                                <WpIcon class={`wp-upload__cell-icon`} v-html={this.getFileTypeIcon(file.file?.name || file.name)} />
-                                                <div class="wp-upload__cell-name">
-                                                    {
-                                                        file.url ? (
-                                                            <a href={file.url} target="_blank" onClick={e => e.stopPropagation()}>{file.name}</a>
-                                                        ): file.name
-                                                    }
-                                                    {
-                                                        (file.progress || file.progress === 0) && file.status === UploadFileStatus.Loading ? (
-                                                            <span class="wp-upload__cell-progress">
-                                                                { file.progress }%
-                                                            </span>
-                                                        ) : null
-                                                    }
-                                                </div>
-                                                <Space class="wp-upload__cell-status" size={5}>
-                                                    <WpIcon class={`wp-upload__cell-status-${file.status || 0}`}>
-                                                        {
-                                                            h(this.getStatusIcon(file.status))
-                                                        }
-                                                    </WpIcon>
-                                                    {
-                                                        !this.disabled && ( 'pin' in file ? !file.pin : !this.pin ) ? (
-                                                            <WpIcon class="wp-upload__cell-delete" onClick={() => this.handleDelete(file, index)}>
-                                                                <DeleteOutlined />
-                                                            </WpIcon>
-                                                        ) : null
-                                                    }
-                                                </Space>
-                                            </div>
-                                        )
-                                    ))
-                                )
-                            }
-                        </div>
-                    ) : null
-                }
-            </Space>
+        const renderInputRef = () => (
+            <input
+                ref="fileRef"
+                type="file"
+                class="wp-upload__file"
+                multiple={this.multiple}
+                accept={this.accept}
+                onChange={this.handleChange}
+            />
         )
+        switch (this.preset) {
+            case 'card':
+                return (
+                    <UploadCard
+                        pin={this.pin}
+                        drop={this.drop}
+                        dragover={this.dragover}
+                        disabled={this.disabled}
+                        multiple={this.multiple}
+                        accept={this.accept}
+                        uploadFiles={this.uploadFiles}
+                        showButton={this.showButton}
+                        showFileList={this.showFileList}
+                        handleDrop={this.handleDrop}
+                        handleDragover={this.handleDragover}
+                        handleDragleave={this.handleDragleave}
+                        startUpload={this.startUpload}
+                        handleChange={this.handleChange}
+                        handleDelete={this.handleDelete}
+                        onItemClick={(e, file) => this.$emit('itemClick', e, file)}
+                        v-slots={{
+                            ...this.$slots,
+                            input: renderInputRef
+                        }}
+                    />
+                )
+            default:
+                return (
+                    <UploadList
+                        pin={this.pin}
+                        drop={this.drop}
+                        dragover={this.dragover}
+                        disabled={this.disabled}
+                        multiple={this.multiple}
+                        accept={this.accept}
+                        uploadFiles={this.uploadFiles}
+                        showButton={this.showButton}
+                        showFileList={this.showFileList}
+                        handleDrop={this.handleDrop}
+                        handleDragover={this.handleDragover}
+                        handleDragleave={this.handleDragleave}
+                        startUpload={this.startUpload}
+                        handleChange={this.handleChange}
+                        handleDelete={this.handleDelete}
+                        onItemClick={(e, file) => this.$emit('itemClick', e, file)}
+                        v-slots={{
+                            ...this.$slots,
+                            input: renderInputRef
+                        }}
+                    />
+                )
+        }
     }
 })
