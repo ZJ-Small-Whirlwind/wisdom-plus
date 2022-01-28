@@ -29,6 +29,10 @@
             overflow: hidden;
             margin: 0 var(--wp-upload-item-padding);
         }
+        &-progress {
+            margin-left: var(--wp-upload-item-padding);
+            color: var(--wp-upload-loading);
+        }
         &-status {
             font-size: var(--wp-upload-icon-size);
             &-0 {

@@ -40,10 +40,19 @@ const handleDelete = file => {
 
 const handleUpload = filterFiles => {
     return new Promise((resolve, reject) => {
+        const timer = setInterval(() => {
+            filterFiles.forEach(file => {
+                if (!file.progress && file.status !== 0) {
+                    file.progress = 0
+                }
+                file.progress += 1
+            })
+        }, 15)
         setTimeout(() => {
             filterFiles.forEach(file => file.status = 0)
             resolve()
             console.log('上传了文件')
+            clearInterval(timer)
         }, 1500)
     })
 }
@@ -172,6 +181,7 @@ const handleUpload = filterFiles => {
 | file | 文件 | _File_ | 是 |
 | pin | 是否固定（禁止被删除） | _boolean_ | 是 |
 | url | 文件链接，设置后在列表会被渲染被 a 标签 | _string_ | 是 |
+| progress | 上传进度，仅在状态为 Loading 的时候被显示 | _number_ | 是 |
 | [x: string] | 任意内容 | _any_ | 是 |
 
 ### UploadFileStatus

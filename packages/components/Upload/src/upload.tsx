@@ -28,6 +28,7 @@ export interface UploadFile {
     file?: File,
     pin?: boolean,
     url?: string,
+    progress?: number,
     [x: string]: any
 }
 
@@ -111,6 +112,7 @@ export default defineComponent({
                 uploadFiles.value.push({
                     name: files[i].name,
                     file: files[i],
+                    progress: 0,
                     status: UploadFileStatus.Waiting
                 })
             }
@@ -284,6 +286,13 @@ export default defineComponent({
                                                         file.url ? (
                                                             <a href={file.url} target="_blank" onClick={e => e.stopPropagation()}>{file.name}</a>
                                                         ): file.name
+                                                    }
+                                                    {
+                                                        (file.progress || file.progress === 0) && file.status === UploadFileStatus.Loading ? (
+                                                            <span class="wp-upload__cell-progress">
+                                                                { file.progress }%
+                                                            </span>
+                                                        ) : null
                                                     }
                                                 </div>
                                                 <Space class="wp-upload__cell-status" size={5}>
