@@ -68,7 +68,7 @@ export default defineComponent({
                         this.$slots.lists?.({ files: this.uploadFiles }) || (
                             this.uploadFiles?.map((file, index) => (
                                 this.$slots.list?.({ file }) || (
-                                    <div class="wp-upload__card" onClick={e => this.$emit('itemClick', e, file)}>
+                                    <div class="wp-upload__card" onClick={e => this.$emit('itemClick', e, file)} key={index}>
                                         {
                                             file.status === UploadFileStatus.Loading || file.status === UploadFileStatus.Fail ? (
                                                 <div class={['wp-upload__card-overlay', {
