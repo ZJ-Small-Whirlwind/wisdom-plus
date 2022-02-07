@@ -1,0 +1,64 @@
+:root {
+    --wp-pagination-font-size: 13px;
+    --wp-pagination-button-height: 30px;
+    --wp-pagination-input-height: 30px;
+    --wp-pagination-active-color: var(--wp-color-primary);
+}
+.wp-pagination {
+    font-size: var(--wp-pagination-font-size);
+    &--pager {
+        height: var(--wp-pagination-button-height);
+    }
+    .wp-pagination--jump-right,
+    .wp-pagination--jump-left {
+        border: 0;
+    }
+    .wp-pagination--total,
+    .wp-pagination--jumper {
+        padding: 0 5px;
+    }
+    .wp-pagination--jumper-input {
+        height: var(--wp-pagination-input-height);
+        margin: 0 5px;
+        padding: 5px 10px;
+        border: var(--wp-border-base);
+        outline: none;
+        transition: border .2s;
+        border-radius: 3px;
+        width: 60px;
+        text-align: center;
+    }
+    &:not(.wp-pagination__disabled) {
+        .wp-pagination--jumper-input:focus {
+            border-color: var(--wp-pagination-active-color);
+        }
+    }
+    &.wp-pagination__disabled {
+        .wp-pagination--jumper-input {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+    }
+    .wp-pagination--pager {
+        background-color: inherit;
+    }
+    &:not(.wp-pagination__disabled) {
+        .wp-pagination--pager-active {
+            border-color: var(--wp-pagination-active-color);
+            color: var(--wp-pagination-active-color);
+        }
+    }
+}
+.wp-pagination-popover {
+    --wp-dropdown-font-size: var(--wp-pagination-font-size);
+    --wp-dropdown-min-width: 80px;
+    max-height: 200px;
+    overflow: auto;
+    .wp-dropdown-item {
+        justify-content: center;
+    }
+    .wp-dropdown-item__disabled {
+        color: var(--wp-pagination-active-color);
+        opacity: 1;
+    }
+}

@@ -1,4 +1,4 @@
-import { computed, inject, defineComponent, Text, ref } from 'vue'
+import { computed, inject, defineComponent, Text, ref, h } from 'vue'
 import { useCssVar } from '@vueuse/core'
 import { useFormItem, useGlobalConfig } from '@wisdom-plus/hooks'
 import { buttonGroupContextKey } from '@wisdom-plus/tokens'
@@ -119,7 +119,9 @@ export default defineComponent({
             >
                 {
                     ( this.icon || this.$slots.icon ) ?
-                        <wp-icon>{ this.icon || this.$slots.icon() }</wp-icon> :
+                        (
+                            <wp-icon>{h(this.icon) || this.$slots.icon()}</wp-icon>
+                        ) :
                         null
                 }
                 {

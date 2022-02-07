@@ -1,4 +1,4 @@
-import { ref, computed, defineComponent, PropType, Component, h, inject, ComputedRef, Ref } from 'vue'
+import { ref, computed, defineComponent, PropType, Component, h, inject, ComputedRef, Ref, VNode } from 'vue'
 
 import type { DropdownRecord } from './typings'
 import Icon from '../../Icon'
@@ -16,7 +16,7 @@ export default defineComponent({
         index: {
             type: [String, Symbol, Number] as PropType<string | symbol | number>
         },
-        title: String,
+        title: [String, Object] as PropType<string | VNode>,
         click: Function as PropType<(record?: DropdownRecord) => void>,
         groupName: String,
         disabled: Boolean,

@@ -1,8 +1,8 @@
-import { Component } from 'vue'
+import type { Component, VNode } from 'vue'
 
 export interface DropdownRecord {
     index?: string | symbol | number,
-    title?: string,
+    title?: string | VNode,
     click?: (record?: DropdownRecord) => void,
     children?: DropdownRecord[],
     groupName?: string,
