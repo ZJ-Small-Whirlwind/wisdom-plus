@@ -120,7 +120,7 @@ export default defineComponent({
                                 this.$slots.lists?.({ files: this.uploadFiles }) || (
                                     this.uploadFiles?.map((file, index) => (
                                         this.$slots.list?.({ file }) || (
-                                            <div class="wp-upload__cell" onClick={e => this.$emit('itemClick', e, file)} key={index}>
+                                            <div class="wp-upload__cell" onClick={e => this.$emit('itemClick', e, file)} key={file.name + index}>
                                                 <WpIcon class={`wp-upload__cell-icon`} v-html={this.getFileTypeIcon(file.file?.name || file.name)} />
                                                 <div class="wp-upload__cell-name">
                                                     {
@@ -144,7 +144,10 @@ export default defineComponent({
                                                     </WpIcon>
                                                     {
                                                         !this.disabled && ( 'pin' in file ? !file.pin : !this.pin ) ? (
-                                                            <WpIcon class="wp-upload__cell-delete" onClick={() => this.handleDelete?.(file, index)}>
+                                                            <WpIcon class="wp-upload__cell-delete" onClick={(e: Event) => {
+                                                                e.stopPropagation()
+                                                                this.handleDelete?.(file, index)
+                                                            }}>
                                                                 <DeleteOutlined />
                                                             </WpIcon>
                                                         ) : null

@@ -37,7 +37,7 @@ export default defineComponent({
         }
     },
     setup(props) {
-        watch(() => props.uploadFiles, () => {
+        watch(() => props.uploadFiles, (after, before) => {
             if (!props.uploadFiles) return
             props.uploadFiles.forEach(file => {
                 if (file.url) {
@@ -68,7 +68,7 @@ export default defineComponent({
                         this.$slots.lists?.({ files: this.uploadFiles }) || (
                             this.uploadFiles?.map((file, index) => (
                                 this.$slots.list?.({ file }) || (
-                                    <div class="wp-upload__card" onClick={e => this.$emit('itemClick', e, file)} key={index}>
+                                    <div class="wp-upload__card" onClick={e => this.$emit('itemClick', e, file)} key={file.name + file.index}>
                                         {
                                             file.status === UploadFileStatus.Loading || file.status === UploadFileStatus.Fail ? (
                                                 <div class={['wp-upload__card-overlay', {
@@ -84,7 +84,10 @@ export default defineComponent({
                                         }
                                         {
                                             !this.disabled && ('pin' in file ? !file.pin : !this.pin) ? (
-                                                <div class="wp-upload__card-close" onClick={() => this.handleDelete?.(file, index)}>
+                                                <div class="wp-upload__card-close" onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    this.handleDelete?.(file, index)
+                                                }}>
                                                     <Icon>
                                                         <CloseOutlined />
                                                     </Icon>
