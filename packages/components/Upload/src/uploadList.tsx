@@ -129,7 +129,7 @@ export default defineComponent({
                                                         ): file.name
                                                     }
                                                     {
-                                                        (file.progress || file.progress === 0) && file.status === UploadFileStatus.Loading ? (
+                                                        file.progress && file.status === UploadFileStatus.Loading ? (
                                                             <span class="wp-upload__cell-progress">
                                                                 { file.progress }%
                                                             </span>
