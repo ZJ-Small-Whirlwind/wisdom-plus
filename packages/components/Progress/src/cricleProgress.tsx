@@ -115,6 +115,7 @@ export default defineComponent({
                 const startTime = Date.now()
                 const startRate = props.currentRate
                 const endRate = format(rate)
+                const fixedEndRate = Number(endRate.toFixed(4))
                 const duration = Math.abs(
                     ((startRate - endRate) * 1000) / +props.speed
                 )
@@ -123,10 +124,11 @@ export default defineComponent({
                     const now = Date.now()
                     const progress = Math.min((now - startTime) / duration, 1)
                     const rate = progress * (endRate - startRate) + startRate
+                    const fixedRate = Number(rate.toFixed(4))
 
                     emit('update:currentRate', format(parseFloat(rate.toFixed(1))))
 
-                    if (endRate > startRate ? rate < endRate : rate > endRate) {
+                    if (endRate > startRate ? fixedRate < fixedEndRate : fixedRate > fixedEndRate) {
                         rafId = requestAnimationFrame(animate)
                     }
                 }
