@@ -158,6 +158,10 @@ module.exports = {
                         {
                             text: 'XScroll 横向滚动',
                             link: '/components/xscroll'
+                        },
+                        {
+                            text: 'Pagination 分页',
+                            link: '/components/pagination'
                         }
                     ]
                 }
