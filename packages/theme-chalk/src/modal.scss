@@ -81,6 +81,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    &-hidden {
+        background: transparent !important;
+        pointer-events: none;
+        > .wp-modal {
+            pointer-events: all;
+            position: fixed;
+        }
+    }
     &-top {
         align-items: flex-start;
     }

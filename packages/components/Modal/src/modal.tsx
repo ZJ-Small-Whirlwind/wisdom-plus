@@ -1,5 +1,6 @@
-import { defineComponent, ExtractPropTypes, PropType, computed, ref, Transition, watch, nextTick, CSSProperties } from 'vue'
+import { defineComponent, ExtractPropTypes, PropType, computed, ref, Transition, watch, nextTick, CSSProperties, watchEffect, onMounted } from 'vue'
 import { buildProps } from '@wisdom-plus/utils/props'
+import { onClickOutside } from '@vueuse/core'
 
 import Overlay, { OverlayProps } from '../../Overlay'
 import Icon from '../../Icon'
@@ -52,7 +53,8 @@ export const modalProps = buildProps({
         type: String as PropType<'top' | 'bottom' | 'left' | 'right'>,
         default: 'bottom'
     },
-    handler: Boolean
+    handler: Boolean,
+    noOverlay: Boolean
 })
 
 export type ModalProps = ExtractPropTypes<typeof modalProps>
@@ -114,6 +116,12 @@ export default defineComponent({
         watch(closeAll, () => {
             if (closeAll.value && !props.doNotCloseMe) {
                 show.value = false
+            }
+        })
+        onClickOutside(modalRef, () => {
+            if (props.noOverlay) {
+                show.value = false
+                console.log('2323')
             }
         })
         /**
@@ -184,7 +192,8 @@ export default defineComponent({
         return () => (
             <Overlay {...props.overlay} modelValue={showOverlay.value} onUpdate:modelValue={(value) => { show.value = value }} class={{
                 'wp-modal__overlay': true,
-                [`wp-modal__overlay-${props.from}`]: props.type === 'drawer'
+                [`wp-modal__overlay-${props.from}`]: props.type === 'drawer',
+                'wp-modal__overlay-hidden': props.noOverlay
             }}>
                 <Transition
                     name={props.transitionName || (props.type === 'drawer' ? `wp-modal-${props.from}` : 'wp-modal-fade' )}
