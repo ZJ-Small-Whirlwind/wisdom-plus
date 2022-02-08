@@ -2,7 +2,7 @@
     --wp-progress-font-size: 14px;
     --wp-progress-duration: .4s;
     --wp-progress-default-height: 100px;
-    --wp-progress-default-color: #409eff;
+    --wp-progress-default-color: var(--wp-color-primary);
     --wp-progress-default-bg-color: #eee;
 }
 

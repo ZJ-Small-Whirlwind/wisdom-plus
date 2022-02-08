@@ -71,7 +71,7 @@
         border-color: #ccc;
     }
     &:not(.wp-taginput-disabled).focus {
-        border-color: #409eff;
+        border-color: var(--wp-color-primary);
     }
     &-small {
         --wp-taginput-font-size: 13px;
