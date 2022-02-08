@@ -15,7 +15,7 @@ export const uploadProps = buildProps({
     multiple: Boolean,
     accept: String,
     drop: Boolean,
-    delete: Function as PropType<(file: UploadFile) => Promise<void>>,
+    delete: Function as PropType<(file: UploadFile, initiative: boolean) => Promise<void>>,
     upload: Function as PropType<(filterFiles: UploadFile[], file: UploadFile[]) => Promise<void>>,
     pin: Boolean,
     autoUpload: {
@@ -91,7 +91,7 @@ export default defineComponent({
             if (props.limit) {
                 while (uploadFiles.value.length > props.limit) {
                     const file = uploadFiles.value.shift()
-                    await props.delete?.(file)
+                    await props.delete?.(file, false)
                 }
             }
             if (props.autoUpload) {
@@ -113,7 +113,7 @@ export default defineComponent({
         const handleDelete = async (file: UploadFile, index: number) => {
             if (props.disabled) return
             try {
-                await props.delete?.(file)
+                await props.delete?.(file, true)
                 uploadFiles.value.splice(index, 1)
             } catch {
                 return
