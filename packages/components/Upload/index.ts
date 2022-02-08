@@ -5,3 +5,4 @@ export const WpUpload = withInstall(Upload)
 export default WpUpload
 
 export * from './src/upload'
+export * from './src/interface'

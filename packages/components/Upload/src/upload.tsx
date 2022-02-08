@@ -112,8 +112,12 @@ export default defineComponent({
 
         const handleDelete = async (file: UploadFile, index: number) => {
             if (props.disabled) return
-            await props.delete?.(file)
-            uploadFiles.value.splice(index, 1)
+            try {
+                await props.delete?.(file)
+                uploadFiles.value.splice(index, 1)
+            } catch {
+                return
+            }
         }
 
         const dragover = ref(false)
