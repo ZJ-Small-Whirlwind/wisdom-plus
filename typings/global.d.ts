@@ -39,6 +39,9 @@ declare module 'vue' {
     WpModal: typeof import('wisdom-plus')['WpModal']
     WpDialog: typeof import('wisdom-plus')['WpDialog']
     WpDrawer: typeof import('wisdom-plus')['WpDrawer']
+    WpUpload: typeof import('wisdom-plus')['WpUpload']
+    WpCountTo: typeof import('wisdom-plus')['WpCountTo']
+    WpPagination: typeof import('wisdom-plus')['WpPagination']
   }
 }
 
