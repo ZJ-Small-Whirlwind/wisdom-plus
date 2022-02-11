@@ -1,7 +1,6 @@
-import * as process from "process";
-
-const base = process.env.BASE || '/'
-module.exports = {
+import { BuildOptions } from 'vite'
+import { defineConfig } from 'vitepress'
+export default defineConfig({
     base:process.argv.includes("dev") ? '/':"/static",
     title: 'Wisdom Plus',
     themeConfig: {
@@ -174,8 +173,17 @@ module.exports = {
     },
     markdown: {
         config: (md) => {
-          const { demoBlockPlugin } = require('vitepress-theme-demoblock')
-          md.use(demoBlockPlugin)
+            const { demoBlockPlugin } = require('vitepress-theme-demoblock')
+            md.use(demoBlockPlugin)
+        }
+    },
+    vite:{
+        build:<BuildOptions>{
+            rollupOptions:{
+                onwarn(warning){
+                    // 拦截rollup警告
+                }
+            }
         }
     }
-}
+})
