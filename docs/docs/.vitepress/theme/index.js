@@ -1,5 +1,4 @@
 // .vitepress/theme/index.js
-
 import wisdomPlus from '@wisdom-plus/components'
 import DefaultTheme from 'vitepress/theme'
 import 'vitepress-theme-demoblock/theme/styles/index.css'
@@ -10,10 +9,13 @@ import '../styles/common.css'
 
 import Demo from 'vitepress-theme-demoblock/components/Demo.vue'
 import DemoBlock from 'vitepress-theme-demoblock/components/DemoBlock.vue'
-
 export default {
   ...DefaultTheme,
   enhanceApp({ app, router, siteData }) {
+    app.config.errorHandler = (err)=> {
+        console.log(err)
+    };
+    // app.config.warnHandler = ()=> null;
     app.use(wisdomPlus)
     app.component('Demo', Demo)
     app.component('DemoBlock', DemoBlock)
