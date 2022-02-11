@@ -13,7 +13,15 @@ export default {
   ...DefaultTheme,
   enhanceApp({ app, router, siteData }) {
     app.config.errorHandler = (err)=> {
-        console.log(err)
+        if(!new RegExp([
+            "document.*is.*not.*defined",
+            "reading.*isCE",
+            "Image is not defined",
+            "Cannot destructure property",
+            "window is not defined",
+        ].join("|")).test(err.message)){
+            console.log(err.message)
+        }
     };
     // app.config.warnHandler = ()=> null;
     app.use(wisdomPlus)
