@@ -1596,7 +1596,7 @@ packages:
   /@xicons/utils/0.1.4:
     resolution: {integrity: sha512-uXxKDLz9abr80yJC05XSTq6wlyFcdW+N/1IYJkeHjzzXVc4VQ0sEYMoMMTjAH7HQBOyOkzOB4pf5NGF72lwa8Q==}
     dependencies:
-      css-render: 0.13.9
+      css-render: 0.15.8
     dev: false
 
   /@zkochan/npm-conf/2.0.2:
