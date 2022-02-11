@@ -351,7 +351,7 @@ const list = ref([
                 checkable
             />
         </wp-grid-item>
-    </wp-space>
+    </wp-grid>
 </template>
 
 <script lang="ts" setup>

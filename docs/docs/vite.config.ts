@@ -4,4 +4,4 @@ export default defineConfig({
     plugins: [
         vueJsx()
     ]
-})
+});

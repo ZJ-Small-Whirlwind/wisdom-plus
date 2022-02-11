@@ -1,4 +1,8 @@
+import * as process from "process";
+
+const base = process.env.BASE || '/'
 module.exports = {
+    base:process.argv.includes("dev") ? '/':"/static",
     title: 'Wisdom Plus',
     themeConfig: {
         nav: [
