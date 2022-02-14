@@ -38,6 +38,10 @@ export const uploadProps = buildProps({
     preset: {
         type: String,
         default: 'list'
+    },
+    preview: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -202,6 +206,7 @@ export default defineComponent({
                         disabled={this.disabled}
                         multiple={this.multiple}
                         accept={this.accept}
+                        preview={this.preview}
                         uploadFiles={this.uploadFiles}
                         showButton={this.showButton}
                         showFileList={this.showFileList}

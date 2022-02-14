@@ -87,6 +87,10 @@ export default defineConfig({
                             link: '/components/image'
                         },
                         {
+                            text: 'Image Preview 图片预览',
+                            link: '/components/image-preview'
+                        },
+                        {
                             text: 'Badge 徽章',
                             link: '/components/badge'
                         },

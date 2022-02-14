@@ -4,6 +4,7 @@ import { type UploadFile, UploadFileStatus } from './interface'
 
 import Icon from '../../Icon'
 import Image from '../../Image'
+import { Preview } from '../../ImagePreview'
 
 import {
     PlusOutlined,
@@ -27,7 +28,8 @@ export default defineComponent({
         handleDelete: Function as PropType<(file: UploadFile, index: number) => void>,
         handleDrop: Function as PropType<(e: DragEvent) => void>,
         handleDragover: Function as PropType<(e: DragEvent) => void>,
-        handleDragleave: Function as PropType<(e: DragEvent) => void>
+        handleDragleave: Function as PropType<(e: DragEvent) => void>,
+        preview: Boolean
     },
     emits: {
         itemClick: (e: Event, value: UploadFile) => {
@@ -68,7 +70,17 @@ export default defineComponent({
                         this.$slots.lists?.({ files: this.uploadFiles }) || (
                             this.uploadFiles?.map((file, index) => (
                                 this.$slots.list?.({ file }) || (
-                                    <div class="wp-upload__card" onClick={e => this.$emit('itemClick', e, file)} key={file.name + file.index}>
+                                    <div class="wp-upload__card" onClick={e => {
+                                        if (this.preview && file.url) {
+                                            const filesMap = this.uploadFiles?.map(file => file.url) || []
+                                            const filesFilter = filesMap?.filter(file => file)
+                                            Preview(
+                                                filesFilter as string[],
+                                                file.url
+                                            )
+                                        }
+                                        this.$emit('itemClick', e, file)
+                                    }} key={file.name + file.index}>
                                         {
                                             file.status === UploadFileStatus.Loading || file.status === UploadFileStatus.Fail ? (
                                                 <div class={['wp-upload__card-overlay', {

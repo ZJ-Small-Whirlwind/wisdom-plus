@@ -29,6 +29,19 @@ app.use(WpImage)
 ```
 :::
 
+#### 预览
+
+:::demo
+```vue
+<template>
+    <wp-space align="end">
+        <wp-image src="https://avatars.githubusercontent.com/u/26594629?v=4" preview />
+        <wp-image src="https://avatars.githubusercontent.com/u/26594629?v=4" preview :preview-list="['https://avatars.githubusercontent.com/u/26594629?v=4', 'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg']" />
+    </wp-space>
+</template>
+```
+:::
+
 ## API
 
 ### Props

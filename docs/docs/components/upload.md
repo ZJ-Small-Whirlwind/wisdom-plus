@@ -178,6 +178,7 @@ const handleUpload = filterFiles => {
 | showButton | 是否显示上传按钮 | _boolean_ | true |
 | disabled | 是否为禁用状态 | _boolean_ | false |
 | preset | 预设，可选值为 card | _boolean_ | 'list' |
+| preview | 是否开启预览 | _boolean_ | true |
 
 ### Methods
 

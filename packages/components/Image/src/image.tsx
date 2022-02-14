@@ -1,6 +1,7 @@
 import { defineComponent, ExtractPropTypes, PropType, computed, ref, watch } from 'vue'
 
 import { buildProps } from '@wisdom-plus/utils/props'
+import { Preview, type PreviewImage } from '../../ImagePreview'
 
 export const imageProps = buildProps({
     size: {
@@ -21,7 +22,12 @@ export const imageProps = buildProps({
         type: String,
         default: ''
     },
-    alt: String
+    alt: String,
+    preview: Boolean,
+    previewList: {
+        type: Array as PropType<string[] | PreviewImage[]>,
+    },
+    previewIndex: Number
 })
 
 export type ImageProps = ExtractPropTypes<typeof imageProps>
@@ -90,6 +96,10 @@ export default defineComponent({
                     borderRadius: props.borderRadius,
                     background: props.background,
                     color: props.color
+                }} onClick={() => {
+                    if (props.preview && props.src) {
+                        Preview(props.previewList || [props.src], props.previewIndex ?? props.src)
+                    }
                 }}>
                     {
                         loading.value ? (

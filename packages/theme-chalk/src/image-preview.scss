@@ -1,0 +1,70 @@
+.wp-image-preview {
+    &__img,
+    &__wrapper {
+        width: 100%;
+        height: 100%;
+    }
+    &__img {
+        transition: .2s transform;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    &__img > img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+    &__close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: #e5e7eb;
+        font-size: 32px;
+        cursor: pointer;
+    }
+    &__next,
+    &__prev {
+        position: absolute;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        top: 0;
+        color: #e5e7eb;
+        font-size: 48px;
+        padding: 0 20px;
+        pointer-events: none;
+        .wp-icon {
+            cursor: pointer;
+            pointer-events: all;
+        }
+    }
+    &__next {
+        right: 0;
+    }
+    &__bar {
+        position: absolute;
+        bottom: 5%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    &__tools {
+        background-color: #fff;
+        color: rgb(51, 54, 57);
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 15px;
+        border-radius: 5px;
+        box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);;
+        .wp-icon {
+            cursor: pointer;
+            + .wp-icon {
+                margin-left: 15px;
+            }
+        }
+    }
+}
