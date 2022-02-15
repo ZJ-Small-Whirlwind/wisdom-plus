@@ -164,7 +164,7 @@ const handleUpload = filterFiles => {
 :::demo
 ```vue
 <template>
-    <wp-upload auto-upload :limit="2" :chunk-size="1024" :upload="handleUpload" multiple />
+    <wp-upload auto-upload chunk :chunk-size="1024" :upload="handleUpload" multiple />
     <wp-upload auto-upload chunk :limit="2" :chunk-size="1024" :upload="handleUpload" multiple />
 </template>
 
@@ -188,30 +188,34 @@ const handleIconClick = (...arg)=>{
 
 ### Props
 
-| 参数      | 说明           | 类型                                                                | 默认值 |
-| --------- | -------------- | ------------------------------------------------------------------- | ------ |
-| modelValue `v-model` | 文件列表，如果该 Prop 为 `undefined`，则组件为非受控模式       | _UploadFile[]_          | -     |
-| multiple | 是否可多选 | _boolean_           | _false_      |
-| accept   | 接收的文件格式，如 ".jpg,.png,.gif" | _string_ | -      |
-| drop | 是否可拖拽上传       | _boolean_                                                           | -  |
-| delete  | 删除前的回调函数     | _(file: UploadFile) => Promise\<void>_                                                           | -   |
-| upload | 上传前的回调函数，filterFiles 为仅 Waiting 状态的文件，file 为所有文件 | _(filterFiles: UploadFile[], file: UploadFile[]) => Promise\<void>_ | - |
-| pin | 列表是否固定（禁止删除） | _boolean_ | false |
-| autoUpload | 是否在选择文件后自动上传 | _boolean_ | false |
-| limit | 文件数量限制 | _number_ | - |
-| showFileList | 是否显示文件列表 | _boolean_ | true |
-| showButton | 是否显示上传按钮 | _boolean_ | true |
-| disabled | 是否为禁用状态 | _boolean_ | false |
-| preset | 预设，可选值为 card | _boolean_ | 'list' |
-| preview | 是否开启预览 | _boolean_ | true |
-| cover | 在达到文件数量限制，是否覆盖文件 | _boolean_ | true |
+| 参数      | 说明                                          | 类型                                                                  | 默认值                |
+| --------- |---------------------------------------------|---------------------------------------------------------------------|--------------------|
+| modelValue `v-model` | 文件列表，如果该 Prop 为 `undefined`，则组件为非受控模式       | _UploadFile[]_                                                      | -                  |
+| multiple | 是否可多选                                       | _boolean_                                                           | _false_            |
+| accept   | 接收的文件格式，如 ".jpg,.png,.gif"                  | _string_                                                            | -                  |
+| drop | 是否可拖拽上传                                     | _boolean_                                                           | -                  |
+| delete  | 删除前的回调函数                                    | _(file: UploadFile) => Promise\<void>_                              | -                  |
+| upload | 上传前的回调函数，filterFiles 为仅 Waiting 状态的文件，file 为所有文件 | _(filterFiles: UploadFile[], file: UploadFile[]) => Promise\<void>_ | -                  |
+| pin | 列表是否固定（禁止删除）                                | _boolean_                                                           | false              |
+| autoUpload | 是否在选择文件后自动上传                                | _boolean_                                                           | false              |
+| limit | 文件数量限制                                      | _number_                                                            | -                  |
+| showFileList | 是否显示文件列表                                    | _boolean_                                                           | true               |
+| showButton | 是否显示上传按钮                                    | _boolean_                                                           | true               |
+| disabled | 是否为禁用状态                                     | _boolean_                                                           | false              |
+| preset | 预设，可选值为 card                                | _boolean_                                                           | 'list'             |
+| preview | 是否开启预览                                      | _boolean_                                                           | true               |
+| cover | 在达到文件数量限制，是否覆盖文件                            | _boolean_                                                           | true               |
+| chunk | 是否开启大文件切片                                   | _boolean_                                                           | false              |
+| chunkSize | 切片单元大小                                      | _number_                                                            | 默认2M 即 `1024*1024*2` |
+| chunkFileFilter | 切片过滤                                        | _(file: UploadFile, ...args:any[]) => Promise\<UploadFile>_               | 默认2M 即 `1024*1024*2` |
 
 ### Methods
 
-| 参数      | 说明           | 类型                                                                | 默认值 |
-| --------- | -------------- | ------------------------------------------------------------------- | ------ |
-| update:modelValue      | 文件列表更新，若 `modelValue` 的值为 `undefined`，则该值也无效      | _(files: UploadFile[]) => void_         | -     |
-| itemClick | 列表项点击事件 | _(e: Event, value: UploadFile) => void_ | - |
+| 参数      | 说明                                        | 类型                                              | 默认值 |
+| --------- |-------------------------------------------|-------------------------------------------------| ------ |
+| update:modelValue      | 文件列表更新，若 `modelValue` 的值为 `undefined`，则该值也无效 | _(files: UploadFile[]) => void_                 | -     |
+| itemClick | 列表项点击事件                                   | _(e: Event, value: UploadFile) => void_         | - |
+| handleIconClick | 文件状态icon点击事件️️                           | _(file: UploadFile, index: number, status:number) => void_ | - |
 
 ### Slots
 
@@ -228,6 +232,7 @@ const handleIconClick = (...arg)=>{
 | -- | -- | -- |
 | submit | 手动上传函数 | _() => Promise\<void>_ |
 | addUpload | 手动添加上传文件 | _(files: FileList \| File[]) => Promise\<void>_ |
+| getFileHash | 获取文件唯一Hash， 用于大文件上传 | _(file: File) => Promise\<Hash>_ |
 
 ## 类型
 
