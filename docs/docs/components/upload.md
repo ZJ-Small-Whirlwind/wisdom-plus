@@ -164,7 +164,8 @@ const handleUpload = filterFiles => {
 :::demo
 ```vue
 <template>
-    <wp-upload auto-upload chunk :chunk-size="1024" :upload="handleUpload" multiple />
+    <wp-upload auto-upload :limit="2" :chunk-size="1024" :upload="handleUpload" multiple />
+    <wp-upload auto-upload chunk :limit="2" :chunk-size="1024" :upload="handleUpload" multiple />
 </template>
 
 <script lang="ts" setup>
@@ -173,8 +174,11 @@ const handleUpload = filterFiles => {
         setTimeout(() => {
             filterFiles.forEach(file => file.status = 0)
             resolve()
-        }, 300)
+        },300)
     })
+}
+const handleIconClick = (...arg)=>{
+    console.log(...arg)
 }
 </script>
 ```

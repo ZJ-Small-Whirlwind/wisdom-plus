@@ -37,4 +37,8 @@ export type ChunkItemChunksItem = {
     cancel:any;
     complete:boolean;
     error:boolean;
+    isChunk:boolean;
+    now:number;
 };
+
+export type handleUploadChunkBefore<T = FileList | File[]> = (uploadFiles: T)=>Promise<T>;

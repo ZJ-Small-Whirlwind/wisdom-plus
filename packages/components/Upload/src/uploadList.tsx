@@ -47,6 +47,12 @@ export default defineComponent({
             void e
             void value
             return true
+        },
+        handleIconClick: (file: UploadFile, index: number, status:number) => {
+            void file
+            void index
+            void status
+            return true
         }
     },
     setup() {
@@ -137,7 +143,10 @@ export default defineComponent({
                                                     }
                                                 </div>
                                                 <Space class="wp-upload__cell-status" size={5}>
-                                                    <WpIcon class={`wp-upload__cell-status-${file.status || 0}`}>
+                                                    <WpIcon class={`wp-upload__cell-status-${file.status || 0}`} onClick={(e:Event)=>{
+                                                        e.stopPropagation()
+                                                        this.$emit('handleIconClick', file, index, file.status || 0)
+                                                    }}>
                                                         {
                                                             h(this.getStatusIcon(file.status))
                                                         }
