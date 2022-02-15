@@ -61,6 +61,10 @@ export const uploadProps = buildProps({
         default: 1024*1024*2
     },
     chunkFileFilter: Function as PropType<(file: UploadFile) => Promise<void>>,
+    cover: {
+        type: Boolean,
+        default: true
+    }
 })
 
 export type UploadProps = ExtractPropTypes<typeof uploadProps>
@@ -242,10 +246,14 @@ export default defineComponent({
                     status: UploadFileStatus.Waiting
                 })
             }
-            if (limit) {
+            if (limit && limit > 0) {
                 while (uploadFiles.value.length > limit) {
-                    const file = uploadFiles.value.shift()
-                    await props.delete?.(file, false)
+                    if (props.cover) {
+                        const file = uploadFiles.value.shift()
+                        await props.delete?.(file, false)
+                    } else {
+                        uploadFiles.value.pop()
+                    }
                 }
             }
             if (props.autoUpload) {
