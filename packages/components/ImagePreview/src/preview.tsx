@@ -33,6 +33,10 @@ const openPreview = function Preview(list?: PreviewImage[] | string[], flag?: nu
                     list={list}
                     ref={ImagePreviewRef}
                     {...props}
+                    onLeave={() => {
+                        document.body.removeChild(newDiv)
+                        app.unmount()
+                    }}
                 />
             )
         }

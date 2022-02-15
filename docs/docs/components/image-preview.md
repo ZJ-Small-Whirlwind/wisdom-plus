@@ -65,6 +65,15 @@ const open = () => {
 | list | 图片列表 | _string[] \| PreviewImage[]_                                                   | -      |
 | overlayProps | 遮罩组件的 Props | _Partial\<OverlayProps> & Record\<string, any>_ | - |
 
+### Methods
+
+| 参数      | 说明           | 类型                                                                | 默认值 |
+| --------- | -------------- | ------------------------------------------------------------------- | ------ |
+| update:modelValue     | 是否显示图片预览   | _(value: boolean) => void_           | -      |
+| update:index     | 图片索引修改的回调   | _(index: number) => void_           | -      |
+| leave     | 离开的回调   | _() => void_           | -      |
+| enter     | 进入的回调   | _() => void_           | -      |
+
 ### PreviewImage
 
 | 参数         | 说明                                                          | 类型                                                       | 必填 |

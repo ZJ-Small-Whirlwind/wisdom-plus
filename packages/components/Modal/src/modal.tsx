@@ -121,7 +121,6 @@ export default defineComponent({
         onClickOutside(modalRef, () => {
             if (props.noOverlay) {
                 show.value = false
-                console.log('2323')
             }
         })
         /**

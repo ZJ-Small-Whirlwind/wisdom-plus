@@ -35,7 +35,9 @@ export default defineComponent({
     props: imagePreviewProps,
     emits: {
         'update:modelValue': (value: boolean) => typeof value === 'boolean',
-        'update:index': (index: number) => typeof index === 'number'
+        'update:index': (index: number) => typeof index === 'number',
+        leave: () => true,
+        enter: () => true
     },
     setup(props, { emit }) {
         const showRef = ref(false)
@@ -90,7 +92,7 @@ export default defineComponent({
     expose: ['open'],
     render() {
         return (
-            <WpOverlay class="wp-image-preview" v-model={this.show} {...this.overlayProps}>
+            <WpOverlay class="wp-image-preview" v-model={this.show} {...this.overlayProps} onEnter={() => this.$emit('enter')} onLeave={() => this.$emit('leave')}>
                 <div class="wp-image-preview__wrapper" onClick={e => e.stopPropagation()}>
                     <div class="wp-image-preview__img" style={{
                         transform: `scale(${this.transform.scale}) rotate(${this.transform.rotate}deg)`

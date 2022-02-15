@@ -54,7 +54,9 @@ export default defineComponent({
     inheritAttrs: false,
     props: overlayProps,
     emits: {
-        'update:modelValue': (value: boolean) => typeof value === 'boolean'
+        'update:modelValue': (value: boolean) => typeof value === 'boolean',
+        leave: () => true,
+        enter: () => true
     },
     setup(props, { slots, emit, attrs }) {
         const zIndex = ref(1)
@@ -79,7 +81,7 @@ export default defineComponent({
         })
         return () => (
             <Teleport to={props.to || null} disabled={!props.to}>
-                <Transition name={props.transitionName}>
+                <Transition name={props.transitionName} onEnter={() => emit('enter')} onLeave={() => emit('leave')}>
                     {
                         !props.useVShow && !props.modelValue ? null : (
                             <>
