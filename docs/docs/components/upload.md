@@ -159,6 +159,27 @@ const handleUpload = filterFiles => {
 ```
 :::
 
+####  大文件切片上传
+
+:::demo
+```vue
+<template>
+    <wp-upload auto-upload chunk :chunk-size="1024" :upload="handleUpload" multiple />
+</template>
+
+<script lang="ts" setup>
+const handleUpload = filterFiles => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            filterFiles.forEach(file => file.status = 0)
+            resolve()
+        }, 300)
+    })
+}
+</script>
+```
+:::
+
 ## API
 
 ### Props

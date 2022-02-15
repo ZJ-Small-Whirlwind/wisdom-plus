@@ -5,7 +5,7 @@ import { ref, defineComponent, ExtractPropTypes, PropType } from "vue"
 import UploadList from './uploadList'
 import UploadCard from './uploadCard'
 
-import { type UploadFile, UploadFileStatus } from './interface'
+import {ChunkItem, ChunkItemChunks, ChunkItemChunksItem, getChunk, type UploadFile, UploadFileStatus} from './interface'
 
 export const uploadProps = buildProps({
     modelValue: {
@@ -42,6 +42,14 @@ export const uploadProps = buildProps({
     preview: {
         type: Boolean,
         default: true
+    },
+    chunk: {
+        type: Boolean,
+        default: false
+    },
+    chunkSize: {
+        type: Number,
+        default: 1024*1024*2
     }
 })
 
@@ -71,14 +79,75 @@ export default defineComponent({
             if (props.disabled) return
             fileRef.value?.click()
         }
-
+        /**
+         * 获取切片
+         * @param file
+         */
+        const getChunk:getChunk = async (file:File)=>{
+            return new Promise<ChunkItem>(resolve => {
+                const filesize = file.size;
+                const filename = file.name;
+                //计算文件切片总数
+                const total = Math.ceil(filesize / props.chunkSize);
+                let chunk:ChunkItemChunks = [];
+                let start = 0;
+                let end = 0;
+                let index = 0;
+                while(start < filesize) {
+                    end = start + props.chunkSize;
+                    if(end > filesize) {
+                        end = filesize;
+                    }
+                    index++;
+                    chunk.push({
+                        filename:`${filename}-chunk-${index}`,
+                        progress:0,
+                        index,
+                        file:file.slice(start,end), //切割文件
+                        end:false,
+                        start:false,
+                        cancel:null,
+                        complete:false,
+                        error:false,
+                    } as ChunkItemChunksItem)
+                    start = end;
+                }
+                let resUlt:ChunkItem = {
+                    filename,
+                    progress:0,
+                    show:false,
+                    chunk,
+                    file,
+                    total,
+                }
+                resolve(resUlt);
+            })
+        }
+        /**
+         * 大文件切片上传
+         * @param uploadFiles
+         */
+        const handleUploadChunkBefore = async (uploadFiles: FileList | File[])=>{
+            if(props.chunk){
+                const chunks = (uploadFiles as Array<any>).map(async e=>(await getChunk(e.file)).chunk.map(({file,filename})=>({
+                    ...e,
+                    name:filename,
+                    file,
+                })))
+                const chunkFiles = (await Promise.all(chunks)).reduce((a,b)=>a.concat(b),[]);
+                console.log(chunkFiles, uploadFiles)
+                return Promise.resolve(chunkFiles);
+            }else {
+                return Promise.resolve(uploadFiles);
+            }
+        }
         const handleUpload = async() => {
             uploadFiles.value.forEach(file => {
                 if (file.status === UploadFileStatus.Waiting) {
                     file.status = UploadFileStatus.Loading
                 }
             })
-            await props.upload?.(uploadFiles.value.filter(file => file.status === UploadFileStatus.Loading), uploadFiles.value)
+            await props.upload?.(await handleUploadChunkBefore((uploadFiles.value.filter(file => file.status === UploadFileStatus.Loading) as any)), uploadFiles.value)
         }
 
         const handleAddUpload = async(files: FileList | File[]) => {
