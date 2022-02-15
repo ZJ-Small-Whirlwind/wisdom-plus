@@ -172,6 +172,8 @@ export default defineComponent({
                     chunk,
                     file,
                     total,
+                    name:filename,
+                    isChunk:true,
                 }
                 resolve(resUlt);
             })
@@ -200,16 +202,9 @@ export default defineComponent({
                     files = chunkFileFilterResUlts.filter(e=>e.status === "fulfilled").map((e:any)=>e.value);
                     notChunkFiles = chunkFileFilterResUlts.filter(e=>e.status === "rejected").map((e:any)=>e.reason);
                 }
-                const chunks = files.map(async originFile=>{
-                    const result = await getChunk(originFile);
-                    return result.chunk.map(chunkItem=>({
-                        ...result,
-                        ...chunkItem,
-                        name:chunkItem.filename,
-                        originFile,
-                    }))
-                })
-                const chunkFiles = (await Promise.all(chunks)).reduce((a,b)=>a.concat(b),[]).concat(notChunkFiles);
+                const chunks = files.map(async originFile=>await getChunk(originFile))
+                const chunkFiles = (await Promise.all(chunks))
+                    .concat(notChunkFiles);
                 return Promise.resolve<FileList | File[]>(chunkFiles as any);
             }else {
                 return Promise.resolve<FileList | File[]>(uploadFiles);
@@ -227,17 +222,7 @@ export default defineComponent({
         const handleAddUpload = async(files: FileList | File[]) => {
             if (files.length === 0) return
             let limit = props.limit;
-            if(props.chunk){
-                limit = [...files as any].reduce((a,b,k)=>{
-                    const last = a[a.length - 1]
-                    if(!( last && last.isChunk && b.isChunk && b.now === last.now)){
-                        a.push(b);
-                    }
-                    return a;
-                },[]).slice(0,limit).map(e=>e.total || 1).reduce((a,b)=>a+b,0)
-            }
             for (let i = 0; i < files.length; i++) {
-                if (limit && files.length - i > limit) continue
                 uploadFiles.value.push({
                     ...((files[i] as any).isChunk ? files[i] : {}),
                     name: files[i].name,

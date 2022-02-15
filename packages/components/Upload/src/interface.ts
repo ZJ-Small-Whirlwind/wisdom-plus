@@ -18,6 +18,8 @@ export interface UploadFile {
 export type getChunk = (file:File)=>Promise<ChunkItem>;
 
 export type ChunkItem = {
+    isChunk:boolean;
+    name:string;
     filename:string;
     progress:number;
     show:boolean;
