@@ -200,6 +200,7 @@ const handleUpload = filterFiles => {
 | disabled | 是否为禁用状态 | _boolean_ | false |
 | preset | 预设，可选值为 card | _boolean_ | 'list' |
 | preview | 是否开启预览 | _boolean_ | true |
+| cover | 在达到文件数量限制，是否覆盖文件 | _boolean_ | true |
 
 ### Methods
 

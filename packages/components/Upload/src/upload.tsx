@@ -50,6 +50,10 @@ export const uploadProps = buildProps({
     chunkSize: {
         type: Number,
         default: 1024*1024*2
+    },
+    cover: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -163,8 +167,10 @@ export default defineComponent({
             }
             if (props.limit) {
                 while (uploadFiles.value.length > props.limit) {
-                    const file = uploadFiles.value.shift()
-                    await props.delete?.(file, false)
+                    if (props.cover) {
+                        const file = uploadFiles.value.shift()
+                        await props.delete?.(file, false)
+                    }
                 }
             }
             if (props.autoUpload) {
