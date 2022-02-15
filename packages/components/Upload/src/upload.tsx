@@ -165,11 +165,13 @@ export default defineComponent({
                     status: UploadFileStatus.Waiting
                 })
             }
-            if (props.limit) {
+            if (props.limit && props.limit > 0) {
                 while (uploadFiles.value.length > props.limit) {
                     if (props.cover) {
                         const file = uploadFiles.value.shift()
                         await props.delete?.(file, false)
+                    } else {
+                        uploadFiles.value.pop()
                     }
                 }
             }
