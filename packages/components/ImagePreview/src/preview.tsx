@@ -1,4 +1,4 @@
-import { ref, createApp, App, defineComponent, onMounted } from 'vue'
+import { ref, createApp, App, defineComponent, onMounted, nextTick } from 'vue'
 
 import ImagePreview, { ImagePreviewProps, PreviewImage } from './imagePreview'
 
@@ -34,8 +34,10 @@ const openPreview = function Preview(list?: PreviewImage[] | string[], flag?: nu
                     ref={ImagePreviewRef}
                     {...props}
                     onLeave={() => {
-                        document.body.removeChild(newDiv)
-                        app.unmount()
+                        nextTick(() => {
+                            app.unmount()
+                            document.body.removeChild(newDiv)
+                        })
                     }}
                 />
             )
