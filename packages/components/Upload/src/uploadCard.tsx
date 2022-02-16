@@ -77,8 +77,8 @@ export default defineComponent({
                                             this.handleRetry?.(file)
                                             return
                                         }
-                                        if (this.preview && file.url) {
-                                            const filesMap = this.uploadFiles?.map(file => file.url) || []
+                                        if (this.preview && (file.url || file.__wp_src__ )) {
+                                            const filesMap = this.uploadFiles?.map(file => file.url || file.__wp_src__) || []
                                             const filesFilter = filesMap?.filter(file => file)
                                             Preview(
                                                 filesFilter as string[],
