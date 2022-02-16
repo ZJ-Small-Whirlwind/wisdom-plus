@@ -26,6 +26,7 @@ export default defineComponent({
         startUpload: Function as PropType<() => void>,
         handleChange: Function as PropType<(e: Event) => void>,
         handleDelete: Function as PropType<(file: UploadFile, index: number) => void>,
+        handleRetry: Function as PropType<(file: UploadFile) => void>,
         handleDrop: Function as PropType<(e: DragEvent) => void>,
         handleDragover: Function as PropType<(e: DragEvent) => void>,
         handleDragleave: Function as PropType<(e: DragEvent) => void>,
@@ -71,6 +72,10 @@ export default defineComponent({
                             this.uploadFiles?.map((file, index) => (
                                 this.$slots.list?.({ file }) || (
                                     <div class="wp-upload__card" onClick={e => {
+                                        if (file.status === UploadFileStatus.Fail) {
+                                            this.handleRetry?.(file)
+                                            return
+                                        }
                                         if (this.preview && file.url) {
                                             const filesMap = this.uploadFiles?.map(file => file.url) || []
                                             const filesFilter = filesMap?.filter(file => file)

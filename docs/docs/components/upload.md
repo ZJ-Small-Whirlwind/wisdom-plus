@@ -164,21 +164,24 @@ const handleUpload = filterFiles => {
 :::demo
 ```vue
 <template>
-    <wp-upload auto-upload chunk :chunk-size="1024" :upload="handleUpload" multiple />
-    <wp-upload auto-upload chunk :limit="2" :chunk-size="1024" :upload="handleUpload" multiple />
+    <wp-upload auto-upload chunk :chunk-size="100000" :limit="2" :upload="handleUpload" multiple />
 </template>
 
 <script lang="ts" setup>
 const handleUpload = filterFiles => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            filterFiles.forEach(file => file.status = 0)
-            resolve()
-        },300)
+    return new Promise(async(resolve, reject) => {
+        for (const file of filterFiles) {
+            if (file.chunks) {
+                for (const chunk of file.chunks) {
+                    if (!chunk.status) continue
+                    await new Promise(resolve => setTimeout(resolve, 20))
+                    chunk.status = 0
+                }
+            }
+            file.status = 0
+        }
+        resolve()
     })
-}
-const handleIconClick = (...arg)=>{
-    console.log(...arg)
 }
 </script>
 ```
@@ -207,7 +210,7 @@ const handleIconClick = (...arg)=>{
 | cover | 在达到文件数量限制，是否覆盖文件                            | _boolean_                                                           | true               |
 | chunk | 是否开启大文件切片                                   | _boolean_                                                           | false              |
 | chunkSize | 切片单元大小                                      | _number_                                                            | 默认2M 即 `1024*1024*2` |
-| chunkFileFilter | 切片过滤                                        | _(file: UploadFile, ...args:any[]) => Promise\<UploadFile>_               | 默认2M 即 `1024*1024*2` |
+| chunkFileFilter | 切片过滤                                        | _(file: UploadFile) => boolean_               | - |
 
 ### Methods
 
@@ -246,6 +249,8 @@ const handleIconClick = (...arg)=>{
 | pin | 是否固定（禁止被删除） | _boolean_ | 是 |
 | url | 文件链接，设置后在列表会被渲染被 a 标签 | _string_ | 是 |
 | progress | 上传进度，仅在状态为 Loading 的时候被显示 | _number_ | 是 |
+| isChunk | 是否是切片 | _boolean_ | 是 |
+| chunks | 切片 | _UploadFile[]_ | 是 |
 | [x: string] | 任意内容 | _any_ | 是 |
 
 ### UploadFileStatus

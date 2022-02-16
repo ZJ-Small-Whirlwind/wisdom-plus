@@ -1,17 +1,12 @@
 import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
 import { ref, defineComponent, ExtractPropTypes, PropType } from "vue"
-import SparkMD5 from "spark-md5"
+import { getChunk } from './chunk'
 
 import UploadList from './uploadList'
 import UploadCard from './uploadCard'
 
 import {
-    ChunkItem,
-    ChunkItemChunks,
-    ChunkItemChunksItem,
-    getChunk,
-    handleUploadChunkBefore,
     type UploadFile,
     UploadFileStatus
 } from './interface'
@@ -24,8 +19,12 @@ export const uploadProps = buildProps({
     multiple: Boolean,
     accept: String,
     drop: Boolean,
-    delete: Function as PropType<(file: UploadFile, initiative: boolean) => Promise<void>>,
-    upload: Function as PropType<(filterFiles: UploadFile[], file: UploadFile[]) => Promise<void>>,
+    delete: {
+        type: Function as PropType<(file: UploadFile, initiative?: boolean) => Promise<void>>
+    },
+    upload: {
+        type: Function as PropType<(filterFiles: UploadFile[], file: UploadFile[]) => Promise<void>>
+    },
     pin: Boolean,
     autoUpload: {
         type: Boolean,
@@ -52,15 +51,14 @@ export const uploadProps = buildProps({
         type: Boolean,
         default: true
     },
-    chunk: {
-        type: Boolean,
-        default: false
-    },
+    chunk: Boolean,
     chunkSize: {
         type: Number,
-        default: 1024*1024*2
+        default: 2097152
     },
-    chunkFileFilter: Function as PropType<(file: UploadFile) => Promise<void>>,
+    chunkFileFilter: {
+        type: Function as PropType<(file: UploadFile) => boolean>
+    },
     cover: {
         type: Boolean,
         default: true
@@ -99,146 +97,67 @@ export default defineComponent({
             if (props.disabled) return
             fileRef.value?.click()
         }
-        /**
-         * 获取文件 Hash
-         */
-        const getFileHash  = async (file)=>{
-            return new Promise(resolve => {
-                var blobSlice = File.prototype.slice || (File.prototype as any).mozSlice || (File.prototype as any).webkitSlice,
-                    chunkSize = props.chunkSize,                             // Read in chunks of 2MB
-                    chunks = Math.ceil(file.size / chunkSize),
-                    currentChunk = 0,
-                    spark = new SparkMD5.ArrayBuffer(),
-                    fileReader = new FileReader();
-                fileReader.onload = function (e:any) {
-                    spark.append(e.target.result);                   // Append array buffer
-                    currentChunk++;
-
-                    if (currentChunk < chunks) {
-                        loadNext();
-                    } else {
-                        resolve(spark.end())
-                    }
-                };
-                const loadNext = function () {
-                    var start = currentChunk * chunkSize,
-                        end = ((start + chunkSize) >= file.size) ? file.size : start + chunkSize;
-                    fileReader.readAsArrayBuffer(blobSlice.call(file, start, end));
-                }
-                loadNext();
-            })
-
-        }
-        /**
-         * 获取切片
-         * @param file
-         */
-        const getChunk:getChunk = async (file:File)=>{
-            return new Promise<ChunkItem>(resolve => {
-                const filesize = file.size;
-                const filename = file.name;
-                //计算文件切片总数
-                const total = Math.ceil(filesize / props.chunkSize);
-                let chunk:ChunkItemChunks = [];
-                let start = 0;
-                let end = 0;
-                let index = 0;
-                const now = Date.now();
-                while(start < filesize) {
-                    end = start + props.chunkSize;
-                    if(end > filesize) {
-                        end = filesize;
-                    }
-                    index++;
-                    chunk.push({
-                        filename:`${filename}-${now}-chunk-${index}`,
-                        progress:0,
-                        now,
-                        index,
-                        file:file.slice(start,end), //切割文件
-                        end:false,
-                        start:false,
-                        cancel:null,
-                        complete:false,
-                        error:false,
-                        isChunk:true,
-                    } as ChunkItemChunksItem)
-                    start = end;
-                }
-                let resUlt:ChunkItem = {
-                    filename,
-                    progress:0,
-                    show:false,
-                    chunk,
-                    file,
-                    total,
-                    name:filename,
-                    isChunk:true,
-                }
-                resolve(resUlt);
-            })
-        }
-        /**
-         * 大文件切片上传
-         * @param uploadFiles
-         */
-        const handleUploadChunkBefore:handleUploadChunkBefore = async (uploadFiles)=>{
-            if(props.chunk){
-                let files = [...(uploadFiles as Array<File>)];
-                let notChunkFiles:any = [];
-                if(props.chunkFileFilter){
-                    const chunkFileFilterResUlts:any = await (async ()=>{
-                        // 兼容 Promise.allSettled
-                        if(Promise.allSettled){
-                            return Promise.allSettled(files.map(props.chunkFileFilter))
-                        }else {
-                            const result:any = [];
-                            files.map(props.chunkFileFilter).forEach((e)=>{
-                                (e as Promise<File>).then(res=>result.push(res)).catch(err=>result.push(err))
-                            });
-                            return Promise.resolve(result)
-                        }
-                    })();
-                    files = chunkFileFilterResUlts.filter(e=>e.status === "fulfilled").map((e:any)=>e.value);
-                    notChunkFiles = chunkFileFilterResUlts.filter(e=>e.status === "rejected").map((e:any)=>e.reason);
-                }
-                const chunks = files.map(async originFile=>await getChunk(originFile))
-                const chunkFiles = (await Promise.all(chunks))
-                    .concat(notChunkFiles);
-                return Promise.resolve<FileList | File[]>(chunkFiles as any);
-            }else {
-                return Promise.resolve<FileList | File[]>(uploadFiles);
-            }
-        }
+        
         const handleUpload = async() => {
-            uploadFiles.value.forEach(file => {
+            const filesFilter = uploadFiles.value.filter(file => {
                 if (file.status === UploadFileStatus.Waiting) {
                     file.status = UploadFileStatus.Loading
+                    if (props.chunk && file.chunks) {
+                        file.chunks.forEach(chunk => {
+                            chunk.status = UploadFileStatus.Loading
+                        })
+                    }
+                    return true
                 }
+                return false
             })
-            await props.upload?.(uploadFiles.value.filter(file => file.status === UploadFileStatus.Loading), uploadFiles.value)
+            if (filesFilter.length === 0) return
+            await props.upload?.(filesFilter, uploadFiles.value)
+        }
+
+        const handleRetry = async (file: UploadFile) => {
+            file.status = UploadFileStatus.Loading
+            await props.upload?.([file], uploadFiles.value)
         }
 
         const handleAddUpload = async(files: FileList | File[]) => {
             if (files.length === 0) return
-            let limit = props.limit;
             for (let i = 0; i < files.length; i++) {
                 uploadFiles.value.push({
-                    ...((files[i] as any).isChunk ? files[i] : {}),
                     name: files[i].name,
-                    file: (files[i] as any).isChunk ? (files[i] as any).file : files[i],
+                    file: files[i],
                     progress: 0,
                     status: UploadFileStatus.Waiting
                 })
             }
-            if (limit && limit > 0) {
-                while (uploadFiles.value.length > limit) {
-                    if (props.cover) {
-                        const file = uploadFiles.value.shift()
-                        await props.delete?.(file, false)
-                    } else {
-                        uploadFiles.value.pop()
+            /**
+             * limit
+             */
+            const deleteList: UploadFile[] = []
+            if (props.limit && props.limit > 0) {
+                while (uploadFiles.value.length > props.limit) {
+                    const method = props.cover ? 'shift' : 'pop'
+                    const file = uploadFiles.value[method]()
+                    if (file && (!file?.status || file.status === UploadFileStatus.Loading)) {
+                        deleteList.push(file)
                     }
+                }
+            }
+            for (const file of deleteList) {
+                await props.delete?.(file)
+            }
+            /**
+             * chunk
+             */
+            if (props.chunk) {
+                for (const file of uploadFiles.value) {
+                    let needDo = true
+                    if (props.chunkFileFilter) {
+                        needDo = props.chunkFileFilter(file) as boolean
+                    }
+                    if (!needDo || !file.file || file.status !== UploadFileStatus.Waiting || file.chunks) continue
+                    const newFile = await getChunk(file.file, props.chunkSize)
+                    Object.assign(file, newFile)
                 }
             }
             if (props.autoUpload) {
@@ -251,7 +170,7 @@ export default defineComponent({
                 if (props.disabled) return
                 const files = (e.target as HTMLInputElement).files
                 if (!files) return
-                await handleAddUpload(await handleUploadChunkBefore(files));
+                await handleAddUpload(files)
             } finally {
                 (e.target as HTMLInputElement).value = ''
             }
@@ -318,7 +237,6 @@ export default defineComponent({
             fileRef,
             uploadFiles,
             dragover,
-            getFileHash,
             startUpload,
             submit: handleUpload,
             addUpload: handleAddUpload,
@@ -326,7 +244,8 @@ export default defineComponent({
             handleDelete,
             handleDrop,
             handleDragleave,
-            handleDragover
+            handleDragover,
+            handleRetry
         }
     },
     render() {
@@ -360,6 +279,7 @@ export default defineComponent({
                         startUpload={this.startUpload}
                         handleChange={this.handleChange}
                         handleDelete={this.handleDelete}
+                        handleRetry={this.handleRetry}
                         onItemClick={(e, file) => this.$emit('itemClick', e, file)}
                         v-slots={{
                             ...this.$slots,
@@ -385,6 +305,7 @@ export default defineComponent({
                         startUpload={this.startUpload}
                         handleChange={this.handleChange}
                         handleDelete={this.handleDelete}
+                        handleRetry={this.handleRetry}
                         onHandleIconClick={( file, index, status) => this.$emit('handleIconClick', file, index, status)}
                         onItemClick={(e, file) => this.$emit('itemClick', e, file)}
                         v-slots={{

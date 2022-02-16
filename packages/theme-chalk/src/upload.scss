@@ -35,9 +35,17 @@
             margin: 0 var(--wp-upload-item-padding);
             text-align: left;
         }
+        &__chunks {
+            max-height: 147.5px;
+            &__wrapper {
+                max-height: 147.5px;
+                overflow: hidden;
+            }
+        }
         &-progress {
             margin-left: var(--wp-upload-item-padding);
             color: var(--wp-upload-loading);
+            cursor: default;
         }
         &-status {
             font-size: var(--wp-upload-icon-size);
@@ -55,7 +63,8 @@
                 color: var(--wp-upload-fail);
             }
         }
-        &-delete {
+        &-delete,
+        &-retry {
             cursor: pointer;
         }
         &:hover {
