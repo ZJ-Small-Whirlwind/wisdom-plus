@@ -51,6 +51,7 @@ export default defineComponent({
         handleDragover: Function as PropType<(e: DragEvent) => void>,
         handleDragleave: Function as PropType<(e: DragEvent) => void>,
         handleRetry: Function as PropType<(file: UploadFile) => void>,
+        retry: Boolean
     },
     emits: {
         itemClick: (e: Event, value: UploadFile) => {
@@ -138,7 +139,7 @@ export default defineComponent({
                     </div>
                     <Space class="wp-upload__cell-status" size={5}>
                         {
-                            file.status === UploadFileStatus.Fail && (
+                            props.retry && file.status === UploadFileStatus.Fail && (
                                 <WpIcon class="wp-upload__cell-retry" onClick={(e: Event) => {
                                     e.stopPropagation()
                                     props.handleRetry?.(file)

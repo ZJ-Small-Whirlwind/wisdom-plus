@@ -26,7 +26,7 @@ export const getChunk = async (file: File | Blob, chunkSize: number)=>{
             index++;
             chunks.push({
                 name: `${filename}-${now}-chunk-${index}`,
-                progress:0,
+                progress: 0,
                 file: file.slice(start, end),
                 isChunk: true,
                 status: UploadFileStatus.Waiting,

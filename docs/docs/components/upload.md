@@ -209,8 +209,9 @@ const handleUpload = filterFiles => {
 | preview | 是否开启预览                                      | _boolean_                                                           | true               |
 | cover | 在达到文件数量限制，是否覆盖文件                            | _boolean_                                                           | true               |
 | chunk | 是否开启大文件切片                                   | _boolean_                                                           | false              |
-| chunkSize | 切片单元大小                                      | _number_                                                            | 默认2M 即 `1024*1024*2` |
+| chunkSize | 切片单元大小（字节）                                      | _number_                                                            | 默认2M 即 `1024*1024*2` |
 | chunkFileFilter | 切片过滤                                        | _(file: UploadFile) => boolean_               | - |
+| retry | 失败后是否允许重试 | _boolean_ | true |
 
 ### Methods
 

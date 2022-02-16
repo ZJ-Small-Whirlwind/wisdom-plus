@@ -62,6 +62,10 @@ export const uploadProps = buildProps({
     cover: {
         type: Boolean,
         default: true
+    },
+    retry: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -116,6 +120,7 @@ export default defineComponent({
         }
 
         const handleRetry = async (file: UploadFile) => {
+            if (!props.retry) return
             file.status = UploadFileStatus.Loading
             await props.upload?.([file], uploadFiles.value)
         }
@@ -280,6 +285,7 @@ export default defineComponent({
                         handleChange={this.handleChange}
                         handleDelete={this.handleDelete}
                         handleRetry={this.handleRetry}
+                        retry={this.retry}
                         onItemClick={(e, file) => this.$emit('itemClick', e, file)}
                         v-slots={{
                             ...this.$slots,
@@ -306,6 +312,7 @@ export default defineComponent({
                         handleChange={this.handleChange}
                         handleDelete={this.handleDelete}
                         handleRetry={this.handleRetry}
+                        retry={this.retry}
                         onHandleIconClick={( file, index, status) => this.$emit('handleIconClick', file, index, status)}
                         onItemClick={(e, file) => this.$emit('itemClick', e, file)}
                         v-slots={{

@@ -30,6 +30,7 @@ export default defineComponent({
         handleDrop: Function as PropType<(e: DragEvent) => void>,
         handleDragover: Function as PropType<(e: DragEvent) => void>,
         handleDragleave: Function as PropType<(e: DragEvent) => void>,
+        retry: Boolean,
         preview: Boolean
     },
     emits: {
@@ -72,7 +73,7 @@ export default defineComponent({
                             this.uploadFiles?.map((file, index) => (
                                 this.$slots.list?.({ file }) || (
                                     <div class="wp-upload__card" onClick={e => {
-                                        if (file.status === UploadFileStatus.Fail) {
+                                        if (this.retry && file.status === UploadFileStatus.Fail) {
                                             this.handleRetry?.(file)
                                             return
                                         }
