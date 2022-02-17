@@ -121,4 +121,46 @@
                 transform: translateY(-50%);
             }
     }
+    &__indeterminate {
+        &__vertical-start {
+            animation: wp-progress-indeterminate-vertical 1s infinite;
+            transform-origin: top;
+        }
+        &__horizontal-start {
+            animation: wp-progress-indeterminate-horizontal 1.5s infinite;
+            transform-origin: left;
+        }
+        &__vertical-end,
+        &__vertical-center {
+            animation: wp-progress-indeterminate-vertical 1s infinite;
+            animation-direction: alternate;
+            transform-origin: top;
+        }
+        &__horizontal-end,
+        &__vertical-center {
+            animation: wp-progress-indeterminate-horizontal 1.5s infinite;
+            animation-direction: alternate;
+            transform-origin: left;
+        }
+    }
+}
+
+@keyframes wp-progress-indeterminate-vertical {
+    0% {
+        transform: scaleY(0);
+    }
+
+    100% {
+        transform: scaleY(1) translateY(100%);
+    }
+}
+
+@keyframes wp-progress-indeterminate-horizontal {
+    0% {
+        transform: scaleX(0);
+    }
+
+    100% {
+        transform: scaleX(1) translateX(100%);
+    }
 }

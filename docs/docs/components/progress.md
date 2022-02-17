@@ -103,6 +103,28 @@ const percentage = ref(50)
 ```
 :::
 
+#### Indeterminate
+
+:::demo
+```vue
+<template>
+    <wp-space vertical>
+        <wp-progress :percentage="percentage" indeterminate />
+        <wp-progress :percentage="percentage" indeterminate align="end" />
+        <wp-space :size="20">
+            <wp-progress :percentage="percentage" :color="['orange', 'red']" type="vertical" indeterminate />
+            <wp-progress :percentage="percentage" :color="['orange', 'red']" type="vertical" indeterminate align="end" />
+        </wp-space>
+    </wp-space>
+</template>
+
+<script lang="ts" setup>
+import { ref } from 'vue'
+const percentage = ref(50)
+</script>
+```
+:::
+
 ### 进度条颜色
 
 进度条颜色可以接受以下类型
@@ -148,6 +170,7 @@ const color = {
 | clockwise | 进度条是否顺时针旋转，仅 type 为 `circle` 时有效 | _boolean_ | `true` |
 | startPosition | 进度条开始位置，仅 type 为 `circle` 时有效 | _'top' \| 'bottom' \| 'left' \| 'right'_ | 'top' |
 | appear | 挂载时是否有动画 | _boolean_ | false |
+| indeterminate | 加载进度不确定，通常用于 loading | _boolean_ | false |
 
 ### Slots
 

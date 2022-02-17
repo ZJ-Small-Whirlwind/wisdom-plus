@@ -50,7 +50,8 @@ export const progressProps = buildProps({
         type: String as PropType<'top' | 'bottom' | 'left' | 'right'>,
         default: 'top'
     },
-    appear: Boolean
+    appear: Boolean,
+    indeterminate: Boolean
 })
 
 const autoString = new Array(100).fill('█').join('')
@@ -115,9 +116,6 @@ export default defineComponent({
         })
         const currentRate = ref(props.appear ? 0 : progress.value)
         return () => {
-            /**
-             * HorizontalProgress
-             */
             const HorizontalProgress = (
                 <div class="wp-progress__outer" style={{
                     height: size.value,
@@ -125,8 +123,13 @@ export default defineComponent({
                     background: backgroundColor.value,
                     justifyContent: props.align === 'end' ? 'flex-end' : ( props.align === 'center' ? 'center' : undefined )
                 }}>
-                    <div class="wp-progress__inner" style={{
-                        width: `${progress.value}%`,
+                    <div class={[
+                        'wp-progress__inner',
+                        {
+                            [`wp-progress__indeterminate__horizontal-${props.align}`]: props.indeterminate
+                        }
+                    ]} style={{
+                        width: `${props.indeterminate ? 100 : progress.value}%`,
                         borderRadius: props.borderRadius,
                         background: color.value
                     }}>
@@ -141,8 +144,13 @@ export default defineComponent({
                     background: backgroundColor.value,
                     justifyContent: props.align === 'end' ? 'flex-end' : ( props.align === 'center' ? 'center' : undefined )
                 }}>
-                    <div class="wp-progress__inner" style={{
-                        width: `${progress.value}%`,
+                    <div class={[
+                        'wp-progress__inner',
+                        {
+                            [`wp-progress__indeterminate__horizontal-${props.align}`]: props.indeterminate
+                        }
+                    ]} style={{
+                        width: `${props.indeterminate ? 100 : progress.value}%`,
                         borderRadius: props.borderRadius,
                         background: color.value,
                         fontSize: size.value,
@@ -163,8 +171,13 @@ export default defineComponent({
                     background: backgroundColor.value,
                     justifyContent: props.align === 'end' ? 'flex-end' : ( props.align === 'center' ? 'center' : undefined )
                 }}>
-                    <div class="wp-progress__inner" style={{
-                        height: `${progress.value}%`,
+                    <div class={[
+                        'wp-progress__inner',
+                        {
+                            [`wp-progress__indeterminate__vertical-${props.align}`]: props.indeterminate
+                        }
+                    ]} style={{
+                        height: `${props.indeterminate ? 100 : progress.value}%`,
                         borderRadius: props.borderRadius,
                         background: color.value
                     }}>
