@@ -20,6 +20,7 @@
     }
     &__content {
       padding: 10px;
+      box-sizing: content-box;
     }
     &.wp-collapse-item--disabled {
       .wp-collapse-item__title {
