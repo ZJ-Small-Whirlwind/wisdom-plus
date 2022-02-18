@@ -27,6 +27,10 @@ export const tableProps = buildProps({
         type: [Boolean] as PropType<boolean>,
         default: false
     },
+    height: {
+        type: [String, Number] as PropType<string|number>,
+        default: null
+    },
 })
 
 export type TableProps = ExtractPropTypes<typeof tableProps>
@@ -184,17 +188,28 @@ export default defineComponent({
                 </tr>
             ))}
         </tbody>)
-        return (
-            <div class={{
-                'wp-table':true,
-                'wp-table-border':this.border
-            }}>
-                <table class={{
-                    'wp-table--body': true,
-                }} border={0} cellpadding={0} cellspacing={0}>
+        const tableRender = (isFixedHeader = false)=>(<div
+            class={{
+            'wp-table--body': true,
+            'wp-table--body--fixed-header': isFixedHeader,
+        }} style={{
+            height:isFixedHeader? null: typeof this.height === 'number' ? `${this.height}px` :this.height
+        }}>
+            <div class={'wp-table--body-content'}>
+                <table border={0} cellPadding={0} cellSpacing={0}>
                     {theadRender()}
                     {tbodyRender()}
                 </table>
+            </div>
+        </div>)
+        return (
+            <div class={{
+                'wp-table':true,
+                'wp-table--border':this.border,
+                'wp-table--fixed-header':this.height,
+            }}>
+                {this.height ? tableRender(true) : null}
+                {tableRender()}
             </div>
         )
     }

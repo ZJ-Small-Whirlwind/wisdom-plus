@@ -120,6 +120,85 @@ const data = ref([{
 ```
 :::
 
+#### 固定列和表头
+
+横纵内容过多时，可选择固定列和表头
+
+:::demo
+```vue
+<template>
+    <wp-table :columns="columns" :data="data" stripe border :height="250"></wp-table>
+</template>
+<script setup lang="ts">
+import { ref } from 'vue'
+const columns = ref([
+    {label:"日期", prop:"date"},
+    {label:"姓名", prop:"name"},
+    {label:"省份", prop:"province"},
+    {label:"市区", prop:"city"},
+    {label:"地址", prop:"address"},
+    {label:"邮编", prop:"zip"},
+    {label:"邮编", prop:"zip"},
+    {label:"邮编", prop:"zip"},
+    {label:"邮编", prop:"zip"},
+    {label:"邮编", prop:"zip"},
+    {label:"邮编", prop:"zip"},
+    {label:"邮编", prop:"zip"},
+])
+const data = ref([{
+    date: '2016-05-03',
+    name: '王小虎',
+    province: '上海',
+    city: '普陀区',
+    address: '上海市普陀区金沙江路 1518 弄',
+    zip: 200333
+}, {
+    date: '2016-05-02',
+    name: '王小虎',
+    province: '上海',
+    city: '普陀区',
+    address: '上海市普陀区金沙江路 1518 弄',
+    zip: 200333
+}, {
+    date: '2016-05-04',
+    name: '王小虎',
+    province: '上海',
+    city: '普陀区',
+    address: '上海市普陀区金沙江路 1518 弄',
+    zip: 200333
+}, {
+    date: '2016-05-01',
+    name: '王小虎',
+    province: '上海',
+    city: '普陀区',
+    address: '上海市普陀区金沙江路 1518 弄',
+    zip: 200333
+}, {
+    date: '2016-05-08',
+    name: '王小虎',
+    province: '上海',
+    city: '普陀区',
+    address: '上海市普陀区金沙江路 1518 弄',
+    zip: 200333
+}, {
+    date: '2016-05-06',
+    name: '王小虎',
+    province: '上海',
+    city: '普陀区',
+    address: '上海市普陀区金沙江路 1518 弄',
+    zip: 200333
+}, {
+    date: '2016-05-07',
+    name: '王小虎',
+    province: '上海',
+    city: '普陀区',
+    address: '上海市普陀区金沙江路 1518 弄',
+    zip: 200333
+}])
+</script>
+```
+:::
+
 #### 合并表头及单元格
 
 :::demo
@@ -220,13 +299,14 @@ const spanCell = ({rowIndex, columnIndex})=>{
 
 ### Props
 
-| 参数  | 说明    | 类型                                                | 默认值   |
-|-----|-------|---------------------------------------------------|-------|
-|   columns  | 表头栏目  | _object[]_                                        | []    |
-|   data  | 表格数据  | _object[]_                                        | []    |
-|   spanCell  | 合并单元格 | _({column,row,rowIndex,columnIndex}) => number[]_ | -     |
-|   stripe  | 是否为斑马纹 table | _boolean_                                         | false |
-|   border  | 是否带边框表格 | _boolean_                                         | false |
+| 参数  | 说明                                                                                                                       | 类型                                                | 默认值   |
+|-----|--------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|-------|
+|   columns  | 表头栏目                                                                                                                     | _object[]_                                        | []    |
+|   data  | 表格数据                                                                                                                     | _object[]_                                        | []    |
+|   spanCell  | 合并单元格                                                                                                                    | _({column,row,rowIndex,columnIndex}) => number[]_ | -     |
+|   stripe  | 是否为斑马纹 table                                                                                                             | _boolean_                                         | false |
+|   border  | 是否带边框表格                                                                                                                  | _boolean_                                         | false |
+|   height  | Table 的高度，默认为自动高度。如果 height 为 number 类型，单位 px；如果 height 为 string 类型，则这个高度会设置为 Table 的 style.height 的值，Table 的高度会受控于外部样式。 | _string/number_                                         | -     |
 
 ### Slots
 

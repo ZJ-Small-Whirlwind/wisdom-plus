@@ -6,26 +6,35 @@
 }
 
 .wp-table {
+  overflow: auto;
   .wp-table--body{
-    thead{
-      tr{
-        th{
-          border-bottom: 1px solid var(--wp-table-boder-color);
+    overflow-x: hidden;
+    //width: calc(100% - 100px);
+    &-content{
+      padding-right: 100px;
+    }
+    table{
+      margin: 0;
+      thead{
+        tr{
+          th{
+            border-bottom: 1px solid var(--wp-table-boder-color);
+          }
         }
       }
-    }
-    tbody{
-      tr{
-        td{
-          border-bottom: 1px solid var(--wp-table-boder-color);
-        }
-        &:hover{
-          background-color: var(--wp-table-tr-hover-color);
-        }
-        &.stripe{
-          &:nth-child(2n){
-            td{
-              background-color: var(--wp-table-stripe-color);
+      tbody{
+        tr{
+          td{
+            border-bottom: 1px solid var(--wp-table-boder-color);
+          }
+          &:hover{
+            background-color: var(--wp-table-tr-hover-color);
+          }
+          &.stripe{
+            &:nth-child(2n){
+              td{
+                background-color: var(--wp-table-stripe-color);
+              }
             }
           }
         }
@@ -35,7 +44,7 @@
       font-size: var(--wp-table-font-size);
     }
   }
-  &-border{
+  &--border{
     thead{
       tr{
         th{
@@ -47,6 +56,44 @@
       tr{
         td{
           border: 1px solid var(--wp-table-boder-color);
+        }
+      }
+    }
+  }
+  &--fixed-header{
+    .wp-table--body{
+      //overflow-x: hidden;
+      thead{
+        display: none;
+      }
+      &--fixed-header{
+        thead{
+          display: table-header-group;
+          tr{
+            th{
+              border-bottom: none !important;
+            }
+          }
+        }
+        tbody{
+          height: 0;
+          overflow: hidden;
+          *{
+            height: 0;
+            overflow: hidden;
+            padding-top: 0;
+            padding-bottom: 0;
+            border-color: transparent;
+          }
+          tr{
+            display: none;
+            &:first-child{
+              display: table-row;
+              td{
+                border-bottom: none;
+              }
+            }
+          }
         }
       }
     }
