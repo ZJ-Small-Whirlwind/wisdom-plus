@@ -25,6 +25,7 @@
         padding: var(--wp-tree-padding-top-bottom) var(--wp-tree-padding-left-right);
         height: var(--wp-tree-node-hegiht);
         position: relative;
+        box-sizing: border-box;
         &:hover {
             background: var(--wp-tree-hover-bg);
         }
