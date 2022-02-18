@@ -1,4 +1,4 @@
-import { h, defineComponent, type PropType, computed, ref } from "vue"
+import { h, defineComponent, type PropType, computed, ref, CSSProperties } from "vue"
 
 import Icon from '../../Icon'
 import Button from '../../Button'
