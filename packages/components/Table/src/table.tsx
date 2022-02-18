@@ -25,7 +25,7 @@ export default defineComponent({
         const getColumnsMergedCell = (columns)=>{
             let rowspanMax = 0;
             let colspanMax = 0;
-            let columns_col = [];
+            let columns_col:any = [];
             let columnsMap = {};
             /**
              * 平铺单元格栏目
