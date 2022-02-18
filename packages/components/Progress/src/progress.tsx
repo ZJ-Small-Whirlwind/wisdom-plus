@@ -190,9 +190,9 @@ export default defineComponent({
              */
             const CircleProgress = (
                 <CircleProgressElement
-                    currentRate={currentRate.value}
+                    currentRate={props.indeterminate ? 50 : currentRate.value}
                     onUpdate:currentRate={value => currentRate.value = value}
-                    rate={progress.value}
+                    rate={props.indeterminate ? 50 : progress.value}
                     speed={100}
                     color={typeof props.color === 'string' || !Array.isArray(props.color) ? props.color : undefined}
                     layerColor={typeof props.backgroundColor === 'string' ? props.backgroundColor : ''}
@@ -201,6 +201,7 @@ export default defineComponent({
                     strokeLinecap={props.strokeLinecap}
                     clockwise={props.clockwise}
                     startPosition={props.startPosition}
+                    indeterminate={props.indeterminate}
                 >
                     { props.showText ? (slots.default?.() || `${props.percentage}%`) : null }
                 </CircleProgressElement>
@@ -232,7 +233,7 @@ export default defineComponent({
                     {
                         props.showText && props.type !== 'circle' ? (
                             <span class="wp-progress__text">
-                                { slots.default?.() || `${props.percentage}%` }
+                                {slots.default?.() || (!props.indeterminate ? `${props.percentage}%` : '') }
                             </span>
                         ) : null
                     }

@@ -109,11 +109,12 @@ const percentage = ref(50)
 ```vue
 <template>
     <wp-space vertical>
-        <wp-progress :percentage="percentage" indeterminate />
-        <wp-progress :percentage="percentage" indeterminate align="end" />
+        <wp-progress indeterminate />
+        <wp-progress indeterminate align="end" />
         <wp-space :size="20">
             <wp-progress :percentage="percentage" :color="['orange', 'red']" type="vertical" indeterminate />
             <wp-progress :percentage="percentage" :color="['orange', 'red']" type="vertical" indeterminate align="end" />
+            <wp-progress :percentage="percentage" indeterminate type="circle" :color="{ '0%': 'skyblue', '100%': 'blue' }" :size="100" appear :clockwise="false" />
         </wp-space>
     </wp-space>
 </template>

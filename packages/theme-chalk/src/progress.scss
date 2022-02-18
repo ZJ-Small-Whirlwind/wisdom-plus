@@ -93,33 +93,42 @@
         height: var(--wp-progress-default-height);
         text-align: center;
 
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        &__layer {
+            stroke: #eee;
+        }
+
+        &__hover {
+            fill: none;
+            stroke: var(--wp-progress-default-color);
+            stroke-linecap: round;
+        }
+
+        &__text {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            box-sizing: border-box;
+            width: 100%;
+            padding: 0 10px;
+            transform: translateY(-50%);
+        }
+
+        &__circular {
             svg {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
+              animation: wp-rotate 1.5s ease-in-out infinite;
             }
-
-            &__layer {
-                stroke: #eee;
+            svg path:nth-child(3) {
+              animation: wp-circular 3s ease-in-out infinite;
             }
-
-            &__hover {
-                fill: none;
-                stroke: var(--wp-progress-default-color);
-                stroke-linecap: round;
-            }
-
-            &__text {
-                position: absolute;
-                top: 50%;
-                left: 0;
-                box-sizing: border-box;
-                width: 100%;
-                padding: 0 10px;
-                transform: translateY(-50%);
-            }
+        }
     }
     &__indeterminate {
         &__vertical-start {
@@ -162,5 +171,25 @@
 
     100% {
         transform: scaleX(1) translateX(100%);
+    }
+}
+
+@keyframes wp-rotate {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes wp-circular {
+    0% {
+        stroke-dashoffset: 0;
+    }
+
+    100% {
+        stroke-dashoffset: 4700;
     }
 }
