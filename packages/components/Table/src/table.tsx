@@ -10,6 +10,23 @@ export const tableProps = buildProps({
         type: [Array] as PropType<Array<any>>,
         default: ()=>[]
     },
+    spanCell: {
+        type: Function as PropType<(CellItem:{
+            column:object;
+            row:object;
+            rowIndex:number;
+            columnIndex:number;
+        }) => number[]>,
+        default: ()=>()=>void (0)
+    },
+    stripe: {
+        type: [Boolean] as PropType<boolean>,
+        default: false
+    },
+    border: {
+        type: [Boolean] as PropType<boolean>,
+        default: false
+    },
 })
 
 export type TableProps = ExtractPropTypes<typeof tableProps>
@@ -81,8 +98,50 @@ export default defineComponent({
                 columns_col,
             }
         }
+        /**
+         * 合并body单元格
+         */
+        const getTbodyMergedCells:any = ()=>{
+            const result:any = [];
+            const spanCellFilters:any = []
+            props.data.forEach((row,rowIndex)=>{
+                const item:any = [];
+                theadColumns.columns_col.forEach((column, columnIndex)=>{
+                    const it:any = {
+                        column,
+                        row,
+                        rowIndex,
+                        columnIndex,
+                    }
+                    const spanCell = props.spanCell(it) || []
+                    it.spanCell = [spanCell[0] || 1,spanCell[1] || 1];
+                    if(it.spanCell.reduce((a,b)=>a+b) > 2){
+                        for(let x = 0; x < it.spanCell[1]; x++){
+                            for(let y = 0; y < it.spanCell[0]; y++){
+                                const str = [rowIndex + y, columnIndex + x].join("-");
+                                const startStr = [rowIndex, columnIndex].join("-");
+                                if(str != startStr){
+                                    spanCellFilters.push(str)
+                                }
+                            }
+                        }
+                    }
+                    item.push(it);
+                });
+                result.push(item)
+            });
+            return result.map((it,rk)=>{
+                return it.filter((ee,ck)=>{
+                    return !spanCellFilters.includes([rk,ck].join("-"))
+                })
+            })
+        }
+
+        const theadColumns = getColumnsMergedCell(props.columns)
+        const tbodyCells = getTbodyMergedCells();
         return {
-            theadColumns:getColumnsMergedCell(props.columns)
+            theadColumns,
+            tbodyCells
         }
     },
     render() {
@@ -97,29 +156,39 @@ export default defineComponent({
                             rowspan={column.colspan === 1 ? this.theadColumns.rowspanMax-key:1}>
                             <div class={{
                                 "cell":true
-                            }}>{column.label}</div>
+                            }}>{ this.$slots.header?.(column) || column.label}</div>
                         </th>
                     ))}
                 </tr>
             ))}
         </thead>)
         const tbodyRender = ()=>(<tbody>
-            {this.data.map(row=>(
-                <tr>
-                    {this.theadColumns.columns_col.map((column:any)=>(
+            {this.tbodyCells.map(item=>(
+                <tr class={{
+                    "stripe":this.stripe,
+                }}>
+                    {item.map(({column, row, spanCell, rowIndex, columnIndex}:any)=>(
                         <td class={{
                                 "wp-table__cell":true,
-                            }}>
+                            }}
+                            rowspan={spanCell[0]}
+                            colspan={spanCell[1]}
+                        >
                             <div class={{
                                 "cell":true
-                            }}>{row[column.prop]}{column.prop}</div>
+                            }}>{this.$slots.default?.({
+                                column, row, spanCell, rowIndex, columnIndex
+                            }) || row[column.prop]}</div>
                         </td>
                     ))}
                 </tr>
             ))}
         </tbody>)
         return (
-            <div class={'wp-table'}>
+            <div class={{
+                'wp-table':true,
+                'wp-table-border':this.border
+            }}>
                 <table class={{
                     'wp-table--body': true,
                 }} border={0} cellpadding={0} cellspacing={0}>

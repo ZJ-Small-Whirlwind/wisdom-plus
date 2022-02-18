@@ -1,5 +1,8 @@
 :root {
     --wp-table-font-size: 14px;
+    --wp-table-boder-color: #ebeef5;
+    --wp-table-stripe-color: #fafafa;
+    --wp-table-tr-hover-color: var(--wp-table-stripe-color);
 }
 
 .wp-table {
@@ -7,12 +10,45 @@
     thead{
       tr{
         th{
-          border: 1px solid #d8d8d8;
+          border-bottom: 1px solid var(--wp-table-boder-color);
+        }
+      }
+    }
+    tbody{
+      tr{
+        td{
+          border-bottom: 1px solid var(--wp-table-boder-color);
+        }
+        &:hover{
+          background-color: var(--wp-table-tr-hover-color);
+        }
+        &.stripe{
+          &:nth-child(2n){
+            td{
+              background-color: var(--wp-table-stripe-color);
+            }
+          }
         }
       }
     }
     .cell{
       font-size: var(--wp-table-font-size);
+    }
+  }
+  &-border{
+    thead{
+      tr{
+        th{
+          border: 1px solid var(--wp-table-boder-color);
+        }
+      }
+    }
+    tbody{
+      tr{
+        td{
+          border: 1px solid var(--wp-table-boder-color);
+        }
+      }
     }
   }
 }

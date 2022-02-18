@@ -20,46 +20,198 @@ app.use(WpTable)
 :::demo
 ```vue
 <template>
-    <wp-table :columns="columns" :data="data">
-    </wp-table>
+    <wp-table :columns="columns" :data="data"></wp-table>
+</template>
+<script setup lang="ts">
+import { ref } from 'vue'
+const columns = ref([
+    {label:"日期", prop:"date"},
+    {label:"姓名", prop:"name"},
+    {label:"地址", prop:"address"},
+])
+const data = ref([{
+    date: '2016-05-02',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1518 弄'
+}, {
+    date: '2016-05-04',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1517 弄'
+}, {
+    date: '2016-05-01',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1519 弄'
+}, {
+    date: '2016-05-03',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1516 弄'
+}])
+</script>
+```
+:::
+
+#### 带斑马纹表格
+
+:::demo
+```vue
+<template>
+    <wp-table :columns="columns" :data="data" stripe></wp-table>
+</template>
+<script setup lang="ts">
+import { ref } from 'vue'
+const columns = ref([
+    {label:"日期", prop:"date"},
+    {label:"姓名", prop:"name"},
+    {label:"地址", prop:"address"},
+])
+const data = ref([{
+    date: '2016-05-02',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1518 弄'
+}, {
+    date: '2016-05-04',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1517 弄'
+}, {
+    date: '2016-05-01',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1519 弄'
+}, {
+    date: '2016-05-03',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1516 弄'
+}])
+</script>
+```
+:::
+
+#### 带边框表格
+
+:::demo
+```vue
+<template>
+    <wp-table :columns="columns" :data="data" stripe border></wp-table>
+</template>
+<script setup lang="ts">
+import { ref } from 'vue'
+const columns = ref([
+    {label:"日期", prop:"date"},
+    {label:"姓名", prop:"name"},
+    {label:"地址", prop:"address"},
+])
+const data = ref([{
+    date: '2016-05-02',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1518 弄'
+}, {
+    date: '2016-05-04',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1517 弄'
+}, {
+    date: '2016-05-01',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1519 弄'
+}, {
+    date: '2016-05-03',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1516 弄'
+}])
+</script>
+```
+:::
+
+#### 合并表头及单元格
+
+:::demo
+```vue
+<template>
+    <wp-table :columns="columns" :data="data" :spanCell="spanCell" border></wp-table>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
 const columns = ref([
     {label:"a", prop:"name",columns:[
-        {label:"a-1", prop:"name"},
-        {label:"a-2", prop:"age"},
-        {label:"a-3", prop:"age",btns:[
+        {label:"a-1", prop:"a-1"},
+        {label:"a-2", prop:"a-2"},
+        {label:"a-3", prop:"a-3",btns:[
             {name:'编辑'},
         ]},
     ]},
-    {label:"b", prop:"age"},
-    {label:"c", prop:"age", btns:[
+    {label:"b", prop:"b"},
+    {label:"c", prop:"c", btns:[
         {name:'编辑'},    
     ]},
     {label:"d", prop:"age", btns:[
         {name:'编辑'},    
     ],columns:[
-        {label:"d-1", prop:"name"},
-        {label:"d-2", prop:"age"},
+        {label:"d-1", prop:"d-1"},
+        {label:"d-2", prop:"d-2"},
         {label:"d-3", prop:"age" , btns:[
             {name:'编辑'},
         ],columns:[
             {label:"d-3-1", prop:"name",columns:[
-                {label:"asda", prop:"age"},
-                {label:"asda", prop:"age"},
+                {label:"d-3-1-1", prop:"d-3-1-1"},
+                {label:"d-3-1-2", prop:"d-3-1-2"},
             ]},
-            {label:"d-3-2", prop:"age"},
-            {label:"d-3-3", prop:"age", btns:[
+            {label:"d-3-2", prop:"d-3-2"},
+            {label:"d-3-3", prop:"d-3-3", btns:[
                 {name:'编辑'},
             ]},
         ]},
     ]},
 ])
 const data = ref([
-    {name:'张三', age:21},
-    {name:'小明', age:18},
+    {
+        "a-1":'a-1',
+        "a-2":'a-2',
+        "a-3":'a-3',
+        "b":'bbb',
+        "c":'c',
+        "d-1":'d-1',
+        "d-2":'d-2',
+        "d-3-1-1":"d-3-1-1",
+        "d-3-1-2":"d-3-1-2",
+        "d-3-2":"d-3-2",
+        "d-3-3":"d-3-3",
+    },
+    {
+        "a-1":'a-1',
+        "a-2":'a-2',
+        "a-3":'a-3',
+        "b":'b',
+        "c":'c',
+        "d-1":'d-1',
+        "d-2":'d-2',
+        "d-3-1-1":"d-3-1-1",
+        "d-3-1-2":"d-3-1-2",
+        "d-3-2":"d-3-2",
+        "d-3-3":"d-3-3",
+    },
+    {
+        "a-1":'a-1',
+        "a-2":'a-2',
+        "a-3":'a-3',
+        "b":'b',
+        "c":'c',
+        "d-1":'d-1',
+        "d-2":'d-2',
+        "d-3-1-1":"d-3-1-1",
+        "d-3-1-2":"d-3-1-2",
+        "d-3-2":"d-3-2",
+        "d-3-3":"d-3-3",
+    },
 ])
+const spanCell = ({rowIndex, columnIndex})=>{
+    if(rowIndex === 0 && columnIndex === 2){
+        return [2,3]
+    }
+    if(rowIndex === 0 && columnIndex === 5){
+        return [1,2]
+    }
+    if(rowIndex === 1 && columnIndex === 5){
+        return [2,3]
+    }
+}
 </script>
 ```
 :::
@@ -68,9 +220,20 @@ const data = ref([
 
 ### Props
 
-| 参数  | 说明  | 类型  | 默认值 |
-|-----|-----|-----| ------ |
-| -   | -   | _-_ | -     |
+| 参数  | 说明    | 类型                                                | 默认值   |
+|-----|-------|---------------------------------------------------|-------|
+|   columns  | 表头栏目  | _object[]_                                        | []    |
+|   data  | 表格数据  | _object[]_                                        | []    |
+|   spanCell  | 合并单元格 | _({column,row,rowIndex,columnIndex}) => number[]_ | -     |
+|   stripe  | 是否为斑马纹 table | _boolean_                                         | false |
+|   border  | 是否带边框表格 | _boolean_                                         | false |
+
+### Slots
+
+| 参数  | 说明  | 参数                                                 |
+|-----|-----|----------------------------------------------------|
+|  -  | 默认卡槽  | _column_                                           |
+|  header  | 表头插槽   | _{ column, row, spanCell, rowIndex, columnIndex }_ |
 
 ## 定制
 
