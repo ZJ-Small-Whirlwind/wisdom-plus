@@ -92,14 +92,35 @@ export default defineComponent({
     expose: ['open'],
     render() {
         return (
-            <WpOverlay class="wp-image-preview" v-model={this.show} {...this.overlayProps} onEnter={() => this.$emit('enter')} onLeave={() => this.$emit('leave')}>
-                <div class="wp-image-preview__wrapper" onClick={e => e.stopPropagation()}>
+            <WpOverlay
+                class="wp-image-preview"
+                v-model={this.show} {...this.overlayProps}
+                onEnter={() => this.$emit('enter')}
+                onLeave={() => this.$emit('leave')}
+            >
+                <div
+                    class="wp-image-preview__wrapper"
+                    onClick={e => e.stopPropagation()} 
+                    onWheel={e => {
+                        if (e.deltaY > 0 || e.deltaX > 0) {
+                            this.gotoIndex((this.indexIs || 0) + 1)
+                        } else {
+                            this.gotoIndex((this.indexIs || 0) - 1)
+                        }
+                    }}
+                >
                     <div class="wp-image-preview__img" style={{
                         transform: `scale(${this.transform.scale}) rotate(${this.transform.rotate}deg)`
                     }}>
                         {
                             this.currentImage && (
-                                <img src={this.currentImage.src} />
+                                <img src={this.currentImage.src} onDblclick={() => {
+                                    if (this.transform.scale !== 1) {
+                                        this.transform.scale = 1
+                                    } else {
+                                        this.transform.scale = 2
+                                    }
+                                }} />
                             )
                         }
                     </div>
