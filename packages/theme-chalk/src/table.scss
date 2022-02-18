@@ -3,5 +3,16 @@
 }
 
 .wp-table {
-
+  .wp-table--body{
+    thead{
+      tr{
+        th{
+          border: 1px solid #d8d8d8;
+        }
+      }
+    }
+    .cell{
+      font-size: var(--wp-table-font-size);
+    }
+  }
 }

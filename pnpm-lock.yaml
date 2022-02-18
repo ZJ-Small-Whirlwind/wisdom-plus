@@ -13,6 +13,7 @@ importers:
       '@rollup/plugin-commonjs': ^21.0.1
       '@rollup/plugin-node-resolve': ^13.0.6
       '@rollup/plugin-replace': ^3.0.0
+      '@types/lodash': ^4.14.178
       '@types/sass': ^1.43.1
       '@types/spark-md5': ^3.0.2
       '@vicons/antd': ^0.11.0
@@ -61,6 +62,7 @@ importers:
       '@css-render/vue3-ssr': 0.15.6_vue@3.2.23
       '@element-plus/icons': 0.0.11
       '@popperjs/core': 2.11.0
+      '@types/lodash': 4.14.178
       '@types/spark-md5': 3.0.2
       '@vicons/antd': 0.11.0
       '@vicons/utils': 0.1.4_vue@3.2.23
@@ -1193,6 +1195,10 @@ packages:
   /@types/linkify-it/3.0.2:
     resolution: {integrity: sha512-HZQYqbiFVWufzCwexrvh694SOim8z2d+xJl5UNamcvQFejLY/2YUtzXHYi3cHdI7PMlS8ejH2slRAOJQ32aNbA==}
     dev: true
+
+  /@types/lodash/4.14.178:
+    resolution: {integrity: sha512-0d5Wd09ItQWH1qFbEyQ7oTQ3GZrMfth5JkbN3EvTKLXcHLRDSXeLnlvlOn0wvxVIwK5o2M8JzP/OWz7T3NRsbw==}
+    dev: false
 
   /@types/markdown-it/12.2.3:
     resolution: {integrity: sha512-GKMHFfv3458yYy+v/N8gjufHO6MSZKCOXpZc5GXIWWy8uldwfmPn98vp81gZ5f9SVw8YYBctgfJ22a2d7AOMeQ==}
