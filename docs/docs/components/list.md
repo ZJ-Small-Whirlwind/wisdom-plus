@@ -134,6 +134,7 @@ const handleLoad = () => {
 | itemSize `virtual` | 虚拟列表渲染项高度，仅虚拟列表可用 | _number_ | 10 |
 | virtualListProps `virtual` | 虚拟列表的 Props，仅虚拟列表可用 | _Partial\<VirtualListProps> & Record\<string, any>_ | - |
 | load | 加载函数 | _() => Promise\<void>_ | - |
+| pullRefresh | 是否开启下拉刷新 | _boolean_ | false |
 
 ### Slots
 
