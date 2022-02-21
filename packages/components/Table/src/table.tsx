@@ -178,6 +178,7 @@ export default defineComponent({
                                 "wp-table__cell":true,
                                 [getNameIndex(column.index)]:true,
                             }}
+                            align={column.align}
                             colspan={column.colspan}
                             rowspan={column.colspan === 1 ? this.theadColumns.rowspanMax-key:1}>
                             <div class={{
@@ -198,6 +199,7 @@ export default defineComponent({
                                 "wp-table__cell":true,
                                 [getNameIndex(column.index)]:true,
                             }}
+                            align={column.align}
                             rowspan={spanCell[0]}
                             colspan={spanCell[1]}
                             style={{
