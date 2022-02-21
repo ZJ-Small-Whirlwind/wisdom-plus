@@ -1,9 +1,11 @@
 import { useIntersectionObserver } from "@vueuse/core"
 import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
-import { computed, defineComponent, ExtractPropTypes, PropType, ref } from "vue"
+import { computed, defineComponent, ExtractPropTypes, onMounted, PropType, ref } from "vue"
 import VirtualList, { VirtualListProps } from '../../VirtualList'
 import ListTip from './listTip'
+import PullRefresh from "../../PullRefresh"
+import { useScrollParent } from '../../../utils/use-scroll-parent'
 
 export const listProps = buildProps({
     virtual: Boolean,
@@ -18,7 +20,7 @@ export const listProps = buildProps({
     },
     loadingText: {
         type: String,
-        default: '加载中'
+        default: '加载中…'
     },
     finishedText: {
         type: String,
@@ -31,7 +33,7 @@ export const listProps = buildProps({
     rootMargin: String,
     threshold: Number,
     load: {
-        type: Function as PropType<() => Promise<void>>
+        type: Function as PropType<(isPullRefresh: boolean) => Promise<void>>
     },
     direction: {
         type: String as PropType<'up' | 'down'>,
@@ -47,7 +49,8 @@ export const listProps = buildProps({
     },
     virtualListProps: {
         type: Object as PropType<Partial<VirtualListProps> & Record<string, any>>
-    }
+    },
+    pullRefresh: Boolean
 })
 
 export type ListProps = ExtractPropTypes<typeof listProps>
@@ -67,14 +70,15 @@ export default defineComponent({
         const errorSync = useAutoControl(errorRef, props, 'error', emit)
 
         const tipRef = ref<HTMLDivElement | null>(null)
-        const listRef = ref<HTMLDivElement | null>(null)
+        const listRef = ref<InstanceType<typeof PullRefresh> | null>(null)
+        const virtualListRef = ref<InstanceType<typeof VirtualList> | null>(null)
 
         const intersecting = ref(false)
-        const doLoad = async() => {
-            if (errorSync.value || loadingSync.value || props.finished) return
+        const doLoad = async(isPullRefresh = false) => {
+            if (!isPullRefresh && (errorSync.value || loadingSync.value || props.finished)) return
             loadingSync.value = true
             try {
-                await props.load?.()
+                await props.load?.(isPullRefresh)
             } catch {
                 errorSync.value = true
             } finally {
@@ -85,18 +89,22 @@ export default defineComponent({
             }
         }
 
+        const scrollParent = useScrollParent(computed(() => listRef.value?.root))
+
         if (!props.virtual) {
-            useIntersectionObserver(tipRef, ([{ isIntersecting }]) => {
-                if (isIntersecting) {
-                    intersecting.value = true
-                    doLoad()
-                } else {
-                    intersecting.value = false
-                }
-            }, {
-                root: listRef,
-                rootMargin: props.rootMargin,
-                threshold: props.threshold
+            onMounted(() => {
+                useIntersectionObserver(tipRef, ([{ isIntersecting }]) => {
+                    if (isIntersecting) {
+                        intersecting.value = true
+                        doLoad()
+                    } else {
+                        intersecting.value = false
+                    }
+                }, {
+                    root: scrollParent,
+                    rootMargin: props.rootMargin,
+                    threshold: props.threshold
+                })
             })
         }
 
@@ -115,18 +123,33 @@ export default defineComponent({
             return items
         })
 
+        const rootElement = computed(() => {
+            if (props.virtual) {
+                return virtualListRef.value?.listElRef
+            } else {
+                return scrollParent.value
+            }
+        })
+
         return {
             loadingSync,
             errorSync,
             tipRef,
             listRef,
             itemsMap,
-            doLoad
+            doLoad,
+            virtualListRef,
+            rootElement
         }
     },
     render() {
         const tip = (
-            <div class="wp-list--tip" ref="tipRef">
+            <div class={[
+                'wp-list--tip',
+                {
+                    [`wp-list--tip__${this.loadingSync ? 'loading' : this.errorSync ? 'error' : 'finished'}`]: true
+                }
+            ]} ref="tipRef">
                 <ListTip
                     loading={this.loadingSync}
                     loadingText={this.loadingText}
@@ -148,20 +171,32 @@ export default defineComponent({
             </>
         ) : null
         return (
-            this.virtual ? (
-                <VirtualList
-                    itemSize={this.itemSize}
-                    class="wp-list"
-                    itemResizable={true}
-                    items={this.itemsMap}
-                    {...this.virtualListProps}
-                    v-slots={{
-                        default: ({ item, index }) => (
-                            item?.wp__istip ? tip : this.$slots.default?.({ item, index })
-                        )
-                    }}
-                />
-            ) : <div class="wp-list" ref="listRef">{insetWrapper}</div>
+            <PullRefresh
+                ref="listRef"
+                class="wp-list"
+                disabled={!this.pullRefresh}
+                refresh={() => {
+                    return this.doLoad(true)
+                }}
+                rootElement={this.rootElement}
+            >
+                {
+                    this.virtual ? (
+                        <VirtualList
+                            ref="virtualListRef"
+                            itemSize={this.itemSize}
+                            itemResizable={true}
+                            items={this.itemsMap}
+                            {...this.virtualListProps}
+                            v-slots={{
+                                default: ({ item, index }) => (
+                                    item?.wp__istip ? tip : this.$slots.default?.({ item, index })
+                                )
+                            }}
+                        />
+                    ) : insetWrapper
+                }
+            </PullRefresh>
         )
     }
 })

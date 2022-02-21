@@ -47,6 +47,10 @@ export default defineConfig({
                         {
                             text: 'VirtualList 虚拟列表',
                             link: '/components/virtual-list'
+                        },
+                        {
+                            text: 'PullRefresh 下拉刷新',
+                            link: '/components/pull-refresh'
                         }
                     ]
                 },

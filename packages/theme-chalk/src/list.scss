@@ -1,7 +1,16 @@
 .wp-list {
     &--tip {
         text-align: center;
-        font-size: 13px;
+        font-size: 12px;
         padding: 10px;
+        &__loading {
+            color: var(--wp-color-primary);
+        }
+        &__error {
+            color: var(--wp-color-danger);
+        }
+        &__finished {
+            color: #ccc;
+        }
     }
 }

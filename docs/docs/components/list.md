@@ -46,12 +46,12 @@ const handleLoad = () => {
 ```
 :::
 
-#### 错误提示
+#### 错误提示和下拉刷新
 
 :::demo
 ```vue
 <template>
-    <wp-list style="max-height: 150px; overflow: auto;" :load="handleLoad" :finished="finished">
+    <wp-list style="max-height: 150px; overflow: auto;" :load="handleLoad" :finished="finished" pull-refresh>
         <div style="height: 30px; display: flex; align-items: center; justify-content: center;" v-for="i in number">
             {{ i }}
         </div>
