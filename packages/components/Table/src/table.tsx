@@ -1,6 +1,6 @@
 import { buildProps } from "@wisdom-plus/utils/props"
 import {defineComponent, ExtractPropTypes, PropType} from "vue"
-
+import  simpleScroll from "./simpleScroll.js"
 export const tableProps = buildProps({
     columns: {
         type: [Array] as PropType<Array<any>>,
@@ -148,6 +148,16 @@ export default defineComponent({
             tbodyCells
         }
     },
+    mounted() {
+        this.$nextTick(()=>{
+            const el = this.$el.querySelector('.wp-table--fixed-header--wrapper')
+            if(el){
+                simpleScroll(el).init()
+            }
+
+        })
+        //
+    },
     render() {
         const theadRender = ()=>(<thead>
             {Object.values(this.theadColumns.columnsMap).map((item:any,key:number)=>(
@@ -192,10 +202,8 @@ export default defineComponent({
             class={{
             'wp-table--body': true,
             'wp-table--body--fixed-header': isFixedHeader,
-        }} style={{
-            height:isFixedHeader? null: typeof this.height === 'number' ? `${this.height}px` :this.height
         }}>
-            <div class={'wp-table--body-content'}>
+            <div class={'wp-table--body--content'}>
                 <table border={0} cellPadding={0} cellSpacing={0}>
                     {theadRender()}
                     {tbodyRender()}
@@ -209,7 +217,13 @@ export default defineComponent({
                 'wp-table--fixed-header':this.height,
             }}>
                 {this.height ? tableRender(true) : null}
-                {tableRender()}
+                <div class={{
+                    'wp-table--fixed-header--wrapper': this.height,
+                }} style={{
+                    height:typeof this.height === 'number' ? `${this.height}px` :this.height
+                }}>
+                    {tableRender()}
+                </div>
             </div>
         )
     }

@@ -137,13 +137,13 @@ const columns = ref([
     {label:"省份", prop:"province"},
     {label:"市区", prop:"city"},
     {label:"地址", prop:"address"},
-    {label:"邮编", prop:"zip"},
-    {label:"邮编", prop:"zip"},
-    {label:"邮编", prop:"zip"},
-    {label:"邮编", prop:"zip"},
-    {label:"邮编", prop:"zip"},
-    {label:"邮编", prop:"zip"},
-    {label:"邮编", prop:"zip"},
+    {label:"邮编1", prop:"zip"},
+    {label:"邮编2", prop:"zip"},
+    {label:"邮编3", prop:"zip"},
+    {label:"邮编4", prop:"zip"},
+    {label:"邮编5", prop:"zip"},
+    {label:"邮编6", prop:"zip"},
+    {label:"邮编7", prop:"zip"},
 ])
 const data = ref([{
     date: '2016-05-03',
@@ -193,7 +193,7 @@ const data = ref([{
     province: '上海',
     city: '普陀区',
     address: '上海市普陀区金沙江路 1518 弄',
-    zip: 200333
+    zip: "阿撒撒打算打算大撒打算大"
 }])
 </script>
 ```

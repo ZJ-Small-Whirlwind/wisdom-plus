@@ -6,15 +6,12 @@
 }
 
 .wp-table {
-  overflow: auto;
   .wp-table--body{
-    overflow-x: hidden;
-    //width: calc(100% - 100px);
     &-content{
-      padding-right: 100px;
     }
     table{
       margin: 0;
+      width: 100%;
       thead{
         tr{
           th{
@@ -61,8 +58,46 @@
     }
   }
   &--fixed-header{
-    .wp-table--body{
+    overflow-y: hidden;
+    &--wrapper{
       //overflow-x: hidden;
+      position: relative;
+      .scroll-barCon {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        width: 13px;
+        height: 100%;
+        overflow: hidden;
+      }
+      .scroll-bar {
+        width: 10px;
+        height: 0px;
+        position: relative;
+        left: 1px;
+        top: 0px;
+        cursor: pointer;
+        overflow: hidden;
+      }
+      .scroll-bar span {
+        display: block;
+        width: 100%;
+        position: absolute;
+        margin: auto;
+        background: #222;
+        border-radius: 50px;
+        opacity: 0.8;
+        filter: alpha(opacity=80);
+        left: 0px;
+        right: 0px;
+        top: 3px;
+        bottom: 3px;
+      }
+      .wp-table--body{
+        position: relative;
+      }
+    }
+    .wp-table--body{
       thead{
         display: none;
       }
