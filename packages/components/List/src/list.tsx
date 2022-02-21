@@ -142,6 +142,7 @@ export default defineComponent({
             rootElement
         }
     },
+    expose: ['virtualListRef'],
     render() {
         const tip = (
             <div class={[
