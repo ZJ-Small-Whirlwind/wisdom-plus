@@ -1,7 +1,6 @@
 import { buildProps } from "@wisdom-plus/utils/props"
 import {defineComponent, ExtractPropTypes, PropType, computed} from "vue"
 import  simpleScroll from "./simpleScroll.js"
-import tr from "@wisdom-plus/locale/lang/tr";
 export const tableProps = buildProps({
     columns: {
         type: [Array] as PropType<Array<any>>,
@@ -159,6 +158,15 @@ export default defineComponent({
             colgroupArr,
             tableWidth,
         }
+    },
+    mounted() {
+        this.$nextTick(()=>{
+            const el = this.$el.querySelector('.wp-table--fixed-header--wrapper')
+            if(el){
+                simpleScroll(el, this.$el).init()
+            }
+        })
+        //
     },
     render() {
         const getNameIndex =  (index)=>`wp-table_${this._.uid}_column_${index || 0}`
