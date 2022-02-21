@@ -96,6 +96,7 @@ export default defineComponent({
                 pullingTransform.translateY = 0
                 pullingTransform.rotate = 0
             }
+            return true
         }
 
         const onWheel = (event: WheelEvent) => {
