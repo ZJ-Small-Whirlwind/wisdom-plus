@@ -77,11 +77,11 @@ export default defineComponent({
                     columnsMap[levelIndex] = columnsMap[levelIndex] || [];
                     const itemColumns = getItemColumns(it.columns || [],levelIndex);
                     let colspanArr = flatDry(itemColumns);
-                    let fixedConfig = {};
+                    let fixedConfig:any = {};
                     if(it.fixed){
                         // 固定列配置
                         fixedConfig.position =  "sticky";
-                        fixedConfig[it.fixed === true ? 'left' : (it.fixed || 'left')] = `${it.width || 0}px`;
+                        fixedConfig[it.fixed === true ? 'left' : (it.fixed || 'left')] = `${it.offset || 0}px`;
                         console.log(fixedConfig)
                     }
                     const item = {
@@ -174,7 +174,6 @@ export default defineComponent({
                 simpleScroll(el, this.$el).init()
             }
         })
-        //
     },
     render() {
         const getNameIndex =  (index)=>`wp-table_${this._.uid}_column_${index || 0}`

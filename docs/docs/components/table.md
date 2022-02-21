@@ -133,10 +133,10 @@ const data = ref([{
 import { ref } from 'vue'
 const columns = ref([
     {label:"日期A",prop:'date', width: 100,},
-    {label:"姓名", prop:"name", width:120, fixed:true},
-    {label:"省份", prop:"province", width:120, fixed:true},
+    {label:"姓名", prop:"name", width:120, fixed:true,offset:0,},
+    {label:"省份", prop:"province", width:120, fixed:true,offset:120,},
     {label:"市区", prop:"city", width:120},
-    {label:"地址", prop:"address", width:120},
+    {label:"地址", prop:"address", width:120,fixed:'right', offset: 0},
     {label:"邮编1", prop:"zip", width:120},
     {label:"邮编2", prop:"zip", width:100},
 ])
