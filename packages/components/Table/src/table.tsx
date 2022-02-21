@@ -77,6 +77,13 @@ export default defineComponent({
                     columnsMap[levelIndex] = columnsMap[levelIndex] || [];
                     const itemColumns = getItemColumns(it.columns || [],levelIndex);
                     let colspanArr = flatDry(itemColumns);
+                    let fixedConfig = {};
+                    if(it.fixed){
+                        // 固定列配置
+                        fixedConfig.position =  "sticky";
+                        fixedConfig[it.fixed === true ? 'left' : (it.fixed || 'left')] = `${it.width || 0}px`;
+                        console.log(fixedConfig)
+                    }
                     const item = {
                         ...it,
                         level:levelIndex,
@@ -84,6 +91,7 @@ export default defineComponent({
                         colspanArr,
                         colspan:colspanArr.length || 1,
                         index:it.columns ? -1:columnsIndex += 1,
+                        fixedConfig
                     }
                     if(!it.columns){
                         columns_col.push(item);
@@ -178,6 +186,9 @@ export default defineComponent({
                                 "wp-table__cell":true,
                                 [getNameIndex(column.index)]:true,
                             }}
+                            style={{
+                                ...column.fixedConfig
+                            }}
                             align={column.align}
                             colspan={column.colspan}
                             rowspan={column.colspan === 1 ? this.theadColumns.rowspanMax-key:1}>
@@ -205,6 +216,7 @@ export default defineComponent({
                             style={{
                                 minWidth:column.minWidth,
                                 maxWidth:column.maxWidth,
+                                ...column.fixedConfig
                             }}
                         >
                             <div class={{
