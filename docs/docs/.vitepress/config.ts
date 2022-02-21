@@ -41,6 +41,10 @@ export default defineConfig({
                     text: '基础组件',
                     children: [
                         {
+                            text: 'List 列表',
+                            link: '/components/list'
+                        },
+                        {
                             text: 'VirtualList 虚拟列表',
                             link: '/components/virtual-list'
                         }
