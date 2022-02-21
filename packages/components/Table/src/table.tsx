@@ -233,6 +233,9 @@ export default defineComponent({
                         isFixedHeader ? [colgroupRender(),theadRender()] : [colgroupRender(),tbodyRender()]
                     ] : [this.colgroupArr.length === 0 ? null: colgroupRender(),theadRender(),tbodyRender()]}
                 </table>
+                {this.tbodyCells.length === 0 ? (<div class={{
+                    'wp-table--empty':true,
+                }}>暂无数据！</div>) : null}
             </div>
         </div>)
         return (

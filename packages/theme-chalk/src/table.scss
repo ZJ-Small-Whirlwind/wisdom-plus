@@ -8,6 +8,16 @@
 
 .wp-table {
   .wp-table--body{
+    .wp-table--empty{
+      text-align: center;
+      width: 100%;
+      min-height: 100px;
+      font-size: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #999999;
+    }
     &-content{
     }
     table{
