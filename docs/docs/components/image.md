@@ -55,6 +55,9 @@ app.use(WpImage)
 | background | 图片背景 | _string_                                                   | '#f5f5f5'      |
 | color | 图标和文字的颜色 | _string_                                                   | -      |
 | alt | 图片的 alt 属性 | _string_                                                   | -      |
+| preview | 是否开启图片预览 | _boolean_                                                   | false      |
+| previewList | 需要预览的图片列表 | _PreviewList_ | - |
+| previewIndex | 开启预览时的 index | _number_ | - |
 
 ### Slots
 
