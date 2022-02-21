@@ -82,7 +82,6 @@ export default defineComponent({
                         // 固定列配置
                         fixedConfig.position =  "sticky";
                         fixedConfig[it.fixed === true ? 'left' : (it.fixed || 'left')] = `${it.offset || 0}px`;
-                        console.log(fixedConfig)
                     }
                     const item = {
                         ...it,
