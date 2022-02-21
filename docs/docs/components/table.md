@@ -122,7 +122,7 @@ const data = ref([{
 
 #### 固定列和表头
 
-横纵内容过多时，可选择固定列和表头
+横纵内容过多时，可选择固定列和表头, 固定表头建议设置栏目width
 
 :::demo
 ```vue
@@ -132,21 +132,16 @@ const data = ref([{
 <script setup lang="ts">
 import { ref } from 'vue'
 const columns = ref([
-    {label:"日期", prop:"date"},
-    {label:"姓名", prop:"name"},
-    {label:"省份", prop:"province"},
-    {label:"市区", prop:"city"},
-    {label:"地址", prop:"address"},
-    {label:"邮编1", prop:"zip"},
-    {label:"邮编2", prop:"zip"},
-    {label:"邮编3", prop:"zip"},
-    {label:"邮编4", prop:"zip"},
-    {label:"邮编5", prop:"zip"},
-    {label:"邮编6", prop:"zip"},
-    {label:"邮编7", prop:"zip"},
+    {label:"日期A",prop:'name', width: 100,},
+    {label:"姓名", prop:"name", width:120, fixed:true},
+    {label:"省份", prop:"province", width:120},
+    {label:"市区", prop:"city", width:120},
+    {label:"地址", prop:"address", width:120},
+    {label:"邮编1", prop:"zip", width:120},
+    {label:"邮编2", prop:"zip", width:100},
 ])
 const data = ref([{
-    date: '2016-05-03',
+    date: '2016-05-03----start',
     name: '王小虎',
     province: '上海',
     city: '普陀区',
@@ -188,7 +183,7 @@ const data = ref([{
     address: '上海市普陀区金沙江路 1518 弄',
     zip: 200333
 }, {
-    date: '2016-05-07',
+    date: '2016-05-07--end',
     name: '王小虎',
     province: '上海',
     city: '普陀区',

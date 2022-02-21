@@ -1,6 +1,7 @@
 import { buildProps } from "@wisdom-plus/utils/props"
-import {defineComponent, ExtractPropTypes, PropType} from "vue"
+import {defineComponent, ExtractPropTypes, PropType, computed} from "vue"
 import  simpleScroll from "./simpleScroll.js"
+import tr from "@wisdom-plus/locale/lang/tr";
 export const tableProps = buildProps({
     columns: {
         type: [Array] as PropType<Array<any>>,
@@ -48,6 +49,7 @@ export default defineComponent({
             let colspanMax = 0;
             let columns_col:any = [];
             let columnsMap = {};
+            let columnsIndex = 0;
             /**
              * 平铺单元格栏目
              * @param itemColumns 单元格栏目集合
@@ -82,6 +84,7 @@ export default defineComponent({
                         columns:itemColumns,
                         colspanArr,
                         colspan:colspanArr.length || 1,
+                        index:it.columns ? -1:columnsIndex += 1,
                     }
                     if(!it.columns){
                         columns_col.push(item);
@@ -143,28 +146,29 @@ export default defineComponent({
 
         const theadColumns = getColumnsMergedCell(props.columns)
         const tbodyCells = getTbodyMergedCells();
+        const colgroupArr = computed(()=>{
+            return theadColumns.columns_col.filter((e)=>props.height || !!e.width);
+        })
+        const tableWidth = computed(()=>{
+            const sum = colgroupArr.value.reduce((a,b)=>a+(b.width),0)
+            return sum ? ((sum+50) + 'px') : null;
+        })
         return {
             theadColumns,
-            tbodyCells
+            tbodyCells,
+            colgroupArr,
+            tableWidth,
         }
     },
-    mounted() {
-        this.$nextTick(()=>{
-            const el = this.$el.querySelector('.wp-table--fixed-header--wrapper')
-            if(el){
-                simpleScroll(el).init()
-            }
-
-        })
-        //
-    },
     render() {
+        const getNameIndex =  (index)=>`wp-table_${this._.uid}_column_${index || 0}`
         const theadRender = ()=>(<thead>
             {Object.values(this.theadColumns.columnsMap).map((item:any,key:number)=>(
                 <tr>
                     {item.map((column)=>(
                         <th class={{
                                 "wp-table__cell":true,
+                                [getNameIndex(column.index)]:true,
                             }}
                             colspan={column.colspan}
                             rowspan={column.colspan === 1 ? this.theadColumns.rowspanMax-key:1}>
@@ -184,6 +188,7 @@ export default defineComponent({
                     {item.map(({column, row, spanCell, rowIndex, columnIndex}:any)=>(
                         <td class={{
                                 "wp-table__cell":true,
+                                [getNameIndex(column.index)]:true,
                             }}
                             rowspan={spanCell[0]}
                             colspan={spanCell[1]}
@@ -198,15 +203,24 @@ export default defineComponent({
                 </tr>
             ))}
         </tbody>)
+        const colgroupRender = ()=>this.colgroupArr ? (
+            <colgroup>
+                {this.colgroupArr.map((it)=>(
+                    <col name={getNameIndex(it.index)} width={it.width}></col>
+                ))}
+            </colgroup>
+        ) : null;
         const tableRender = (isFixedHeader = false)=>(<div
             class={{
             'wp-table--body': true,
             'wp-table--body--fixed-header': isFixedHeader,
         }}>
             <div class={'wp-table--body--content'}>
-                <table border={0} cellPadding={0} cellSpacing={0}>
-                    {theadRender()}
-                    {tbodyRender()}
+                <table border={0} cellPadding={0} cellSpacing={0} style={{width:this.tableWidth}}>
+                    { this.height ? [
+                        isFixedHeader ? [colgroupRender(),theadRender()] : [colgroupRender(),tbodyRender()]
+                    ] : [theadRender(),tbodyRender()]}
+                    {/*{isFixedHeader ? : null}*/}
                 </table>
             </div>
         </div>)
@@ -216,13 +230,17 @@ export default defineComponent({
                 'wp-table--border':this.border,
                 'wp-table--fixed-header':this.height,
             }}>
-                {this.height ? tableRender(true) : null}
                 <div class={{
-                    'wp-table--fixed-header--wrapper': this.height,
-                }} style={{
-                    height:typeof this.height === 'number' ? `${this.height}px` :this.height
+                    'wp-table--fixed-header--wrapper--box':true
                 }}>
-                    {tableRender()}
+                    {this.height ? tableRender(true) : null}
+                    <div class={{
+                        'wp-table--fixed-header--wrapper': this.height,
+                    }} style={{
+                        height:typeof this.height === 'number' ? `${this.height}px` :this.height
+                    }}>
+                        {tableRender()}
+                    </div>
                 </div>
             </div>
         )

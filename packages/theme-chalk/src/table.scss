@@ -3,9 +3,11 @@
     --wp-table-boder-color: #ebeef5;
     --wp-table-stripe-color: #fafafa;
     --wp-table-tr-hover-color: var(--wp-table-stripe-color);
+    --wp-table-tr-cell-background-color: #ffffff;
 }
 
 .wp-table {
+  overflow: auto;
   .wp-table--body{
     &-content{
     }
@@ -16,6 +18,7 @@
         tr{
           th{
             border-bottom: 1px solid var(--wp-table-boder-color);
+            background-color:var(--wp-table-tr-cell-background-color);
           }
         }
       }
@@ -23,6 +26,7 @@
         tr{
           td{
             border-bottom: 1px solid var(--wp-table-boder-color);
+            background-color:var(--wp-table-tr-cell-background-color);
           }
           &:hover{
             background-color: var(--wp-table-tr-hover-color);
@@ -58,41 +62,45 @@
     }
   }
   &--fixed-header{
-    overflow-y: hidden;
-    &--wrapper{
-      //overflow-x: hidden;
+    position: relative;
+    .scroll-barCon {
+      position: absolute;
+      right: 0px;
+      bottom: 0px;
+      width: 13px;
+      height: 100%;
+      overflow: hidden;
+      z-index: 20;
+    }
+    .scroll-bar {
+      width: 10px;
+      height: 0px;
       position: relative;
-      .scroll-barCon {
-        position: absolute;
-        right: 0px;
-        top: 0px;
-        width: 13px;
-        height: 100%;
-        overflow: hidden;
-      }
-      .scroll-bar {
-        width: 10px;
-        height: 0px;
-        position: relative;
-        left: 1px;
-        top: 0px;
-        cursor: pointer;
-        overflow: hidden;
-      }
-      .scroll-bar span {
-        display: block;
-        width: 100%;
-        position: absolute;
-        margin: auto;
-        background: #222;
-        border-radius: 50px;
-        opacity: 0.8;
-        filter: alpha(opacity=80);
-        left: 0px;
-        right: 0px;
-        top: 3px;
-        bottom: 3px;
-      }
+      left: 1px;
+      top: 0px;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .scroll-bar span {
+      display: block;
+      width: 100%;
+      position: absolute;
+      margin: auto;
+      background: #7d7d7d;
+      border-radius: 50px;
+      opacity: 0.8;
+      filter: alpha(opacity=80);
+      left: 0px;
+      right: 0px;
+      top: 3px;
+      bottom: 3px;
+    }
+    &--wrapper--box{
+      overflow-y: hidden;
+    }
+    &--wrapper{
+      position: relative;
+      overflow-x: hidden;
       .wp-table--body{
         position: relative;
       }
@@ -102,6 +110,8 @@
         display: none;
       }
       &--fixed-header{
+        z-index: 1;
+        position: relative;
         thead{
           display: table-header-group;
           tr{
@@ -113,21 +123,12 @@
         tbody{
           height: 0;
           overflow: hidden;
+          transform: scale(0);
           *{
-            height: 0;
+            height: 0px;
             overflow: hidden;
             padding-top: 0;
             padding-bottom: 0;
-            border-color: transparent;
-          }
-          tr{
-            display: none;
-            &:first-child{
-              display: table-row;
-              td{
-                border-bottom: none;
-              }
-            }
           }
         }
       }
