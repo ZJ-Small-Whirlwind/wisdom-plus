@@ -148,6 +148,7 @@ export default defineComponent({
         const colgroupArr = computed(()=>{
             return theadColumns.columns_col.filter((e)=>props.height || !!e.width);
         })
+        console.log(colgroupArr.value)
         const tableWidth = computed(()=>{
             const sum = colgroupArr.value.reduce((a,b)=>a+(b.width),0)
             return sum ? ((sum+50) + 'px') : null;
@@ -200,6 +201,10 @@ export default defineComponent({
                             }}
                             rowspan={spanCell[0]}
                             colspan={spanCell[1]}
+                            style={{
+                                minWidth:column.minWidth,
+                                maxWidth:column.maxWidth,
+                            }}
                         >
                             <div class={{
                                 "cell":true
@@ -224,11 +229,10 @@ export default defineComponent({
             'wp-table--body--fixed-header': isFixedHeader,
         }}>
             <div class={'wp-table--body--content'}>
-                <table border={0} cellPadding={0} cellSpacing={0} style={{width:this.tableWidth}}>
+                <table border={0} cellPadding={0} cellSpacing={0} style={{width:this.height ? this.tableWidth : '100%'}}>
                     { this.height ? [
                         isFixedHeader ? [colgroupRender(),theadRender()] : [colgroupRender(),tbodyRender()]
-                    ] : [theadRender(),tbodyRender()]}
-                    {/*{isFixedHeader ? : null}*/}
+                    ] : [this.colgroupArr.length === 0 ? null: colgroupRender(),theadRender(),tbodyRender()]}
                 </table>
             </div>
         </div>)
