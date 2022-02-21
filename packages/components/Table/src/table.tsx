@@ -148,7 +148,6 @@ export default defineComponent({
         const colgroupArr = computed(()=>{
             return theadColumns.columns_col.filter((e)=>props.height || !!e.width);
         })
-        console.log(colgroupArr.value)
         const tableWidth = computed(()=>{
             const sum = colgroupArr.value.reduce((a,b)=>a+(b.width),0)
             return sum ? ((sum+50) + 'px') : null;
