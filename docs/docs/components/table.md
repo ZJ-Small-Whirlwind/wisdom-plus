@@ -20,98 +20,273 @@ app.use(WpTable)
 :::demo
 ```vue
 <template>
-    <wp-table>
-      <thead>
-        <tr>
-          <th>月份</th>
-          <th>存款</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>一月</td>
-          <td>￥100</td>
-        </tr>
-        <tr>
-          <td>二月</td>
-          <td>￥200</td>
-        </tr>
-        <tr>
-          <td>三月</td>
-          <td>￥300</td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td>小计</td>
-          <td>￥180</td>
-        </tr>
-      </tfoot>
-    </wp-table>
+    <wp-table :columns="columns" :data="data"></wp-table>
 </template>
+<script setup lang="ts">
+import { ref } from 'vue'
+const columns = ref([
+    {label:"日期", prop:"date", width:120},
+    {label:"姓名", prop:"name", align:'center'},
+    {label:"地址", prop:"address"},
+])
+const data = ref([{
+    date: '2016-05-02',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1518 弄'
+}, {
+    date: '2016-05-04',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1517 弄'
+}, {
+    date: '2016-05-01',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1519 弄'
+}, {
+    date: '2016-05-03',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1516 弄'
+}])
+</script>
 ```
 :::
 
-#### 斑马纹和纵向边框
+#### 带斑马纹表格
 
 :::demo
 ```vue
 <template>
-    <wp-table stripe border>
-        <tr>
-          <th>月份</th>
-          <th>存款</th>
-        </tr>
-        <tr>
-          <td>一月</td>
-          <td>￥100</td>
-        </tr>
-        <tr>
-          <td>二月</td>
-          <td>￥200</td>
-        </tr>
-        <tr>
-          <td>三月</td>
-          <td>￥300</td>
-        </tr>
-    </wp-table>
+    <wp-table :columns="columns" :data="data" stripe></wp-table>
 </template>
+<script setup lang="ts">
+import { ref } from 'vue'
+const columns = ref([
+    {label:"日期", prop:"date"},
+    {label:"姓名", prop:"name"},
+    {label:"地址", prop:"address"},
+])
+const data = ref([{
+    date: '2016-05-02',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1518 弄'
+}, {
+    date: '2016-05-04',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1517 弄'
+}, {
+    date: '2016-05-01',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1519 弄'
+}, {
+    date: '2016-05-03',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1516 弄'
+}])
+</script>
 ```
 :::
 
-#### 合并单元格
+#### 带边框表格
 
 :::demo
 ```vue
 <template>
-    <wp-table border>
-        <tr>
-          <th>月份</th>
-          <th colspan="2">存款</th>
-        </tr>
-        <tr>
-          <td rowspan="2">一月</td>
-          <td>￥100</td>
-          <td>￥300</td>
-        </tr>
-        <tr>
-          <td>￥200</td>
-          <td>￥300</td>
-        </tr>
-        <tr>
-          <td rowspan="2">三月</td>
-          <td>￥300</td>
-          <td>￥300</td>
-        </tr>
-        <tr>
-          <td>￥300</td>
-          <td>￥300</td>
-        </tr>
-        <tr>
-          <td colspan="3">小计：￥300</td>
-        </tr>
-    </wp-table>
+    <wp-table :columns="columns" :data="data" stripe border></wp-table>
 </template>
+<script setup lang="ts">
+import { ref } from 'vue'
+const columns = ref([
+    {label:"日期", prop:"date"},
+    {label:"姓名", prop:"name"},
+    {label:"地址", prop:"address"},
+])
+const data = ref([{
+    date: '2016-05-02',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1518 弄'
+}, {
+    date: '2016-05-04',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1517 弄'
+}, {
+    date: '2016-05-01',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1519 弄'
+}, {
+    date: '2016-05-03',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1516 弄'
+}])
+</script>
+```
+:::
+
+#### 固定列和表头
+
+横纵内容过多时，可选择固定列和表头, 固定表头建议设置栏目width
+
+:::demo
+```vue
+<template>
+    <wp-table :columns="columns" :data="data" stripe border :height="250"></wp-table>
+</template>
+<script setup lang="ts">
+import { ref } from 'vue'
+const columns = ref([
+    {label:"日期A",prop:'date', width: 100,},
+    {label:"姓名", prop:"name", width:120, fixed:true},
+    {label:"省份", prop:"province", width:120},
+    {label:"市区", prop:"city", width:120},
+    {label:"地址", prop:"address", width:120},
+    {label:"邮编1", prop:"zip", width:120},
+    {label:"邮编2", prop:"zip", width:100},
+])
+const data = ref([{
+    date: '2016-05-03----start',
+    name: '王小虎',
+    province: '上海',
+    city: '普陀区',
+    address: '上海市普陀区金沙江路 1518 弄',
+    zip: 200333
+}, {
+    date: '2016-05-02',
+    name: '王小虎',
+    province: '上海',
+    city: '普陀区',
+    address: '上海市普陀区金沙江路 1518 弄',
+    zip: 200333
+}, {
+    date: '2016-05-04',
+    name: '王小虎',
+    province: '上海',
+    city: '普陀区',
+    address: '上海市普陀区金沙江路 1518 弄',
+    zip: 200333
+}, {
+    date: '2016-05-01',
+    name: '王小虎',
+    province: '上海',
+    city: '普陀区',
+    address: '上海市普陀区金沙江路 1518 弄',
+    zip: 200333
+}, {
+    date: '2016-05-08',
+    name: '王小虎',
+    province: '上海',
+    city: '普陀区',
+    address: '上海市普陀区金沙江路 1518 弄',
+    zip: 200333
+}, {
+    date: '2016-05-06',
+    name: '王小虎',
+    province: '上海',
+    city: '普陀区',
+    address: '上海市普陀区金沙江路 1518 弄',
+    zip: 200333
+}, {
+    date: '2016-05-07--end',
+    name: '王小虎',
+    province: '上海',
+    city: '普陀区',
+    address: '上海市普陀区金沙江路 1518 弄',
+    zip: "阿撒撒打算打算大撒打算大"
+}])
+</script>
+```
+:::
+
+#### 合并表头及单元格
+
+:::demo
+```vue
+<template>
+    <wp-table :columns="columns" :data="data" :spanCell="spanCell" border></wp-table>
+</template>
+<script setup lang="ts">
+import { ref } from 'vue'
+const columns = ref([
+    {label:"a", prop:"name",columns:[
+        {label:"a-1", prop:"a-1"},
+        {label:"a-2", prop:"a-2"},
+        {label:"a-3", prop:"a-3",btns:[
+            {name:'编辑'},
+        ]},
+    ]},
+    {label:"b", prop:"b"},
+    {label:"c", prop:"c", btns:[
+        {name:'编辑'},    
+    ]},
+    {label:"d", prop:"age", btns:[
+        {name:'编辑'},    
+    ],columns:[
+        {label:"d-1", prop:"d-1"},
+        {label:"d-2", prop:"d-2"},
+        {label:"d-3", prop:"age" , btns:[
+            {name:'编辑'},
+        ],columns:[
+            {label:"d-3-1", prop:"name",columns:[
+                {label:"d-3-1-1", prop:"d-3-1-1"},
+                {label:"d-3-1-2", prop:"d-3-1-2"},
+            ]},
+            {label:"d-3-2", prop:"d-3-2"},
+            {label:"d-3-3", prop:"d-3-3", btns:[
+                {name:'编辑'},
+            ]},
+        ]},
+    ]},
+])
+const data = ref([
+    {
+        "a-1":'a-1',
+        "a-2":'a-2',
+        "a-3":'a-3',
+        "b":'bbb',
+        "c":'c',
+        "d-1":'d-1',
+        "d-2":'d-2',
+        "d-3-1-1":"d-3-1-1",
+        "d-3-1-2":"d-3-1-2",
+        "d-3-2":"d-3-2",
+        "d-3-3":"d-3-3",
+    },
+    {
+        "a-1":'a-1',
+        "a-2":'a-2',
+        "a-3":'a-3',
+        "b":'b',
+        "c":'c',
+        "d-1":'d-1',
+        "d-2":'d-2',
+        "d-3-1-1":"d-3-1-1",
+        "d-3-1-2":"d-3-1-2",
+        "d-3-2":"d-3-2",
+        "d-3-3":"d-3-3",
+    },
+    {
+        "a-1":'a-1',
+        "a-2":'a-2',
+        "a-3":'a-3',
+        "b":'b',
+        "c":'c',
+        "d-1":'d-1',
+        "d-2":'d-2',
+        "d-3-1-1":"d-3-1-1",
+        "d-3-1-2":"d-3-1-2",
+        "d-3-2":"d-3-2",
+        "d-3-3":"d-3-3",
+    },
+])
+const spanCell = ({rowIndex, columnIndex})=>{
+    if(rowIndex === 0 && columnIndex === 2){
+        return [2,3]
+    }
+    if(rowIndex === 0 && columnIndex === 5){
+        return [1,2]
+    }
+    if(rowIndex === 1 && columnIndex === 5){
+        return [2,3]
+    }
+}
+</script>
 ```
 :::
 
@@ -119,19 +294,40 @@ app.use(WpTable)
 
 ### Props
 
-| 参数      | 说明           | 类型                                                                | 默认值 |
-| --------- | -------------- | ------------------------------------------------------------------- | ------ |
-| stripe      | 是否使用斑马纹       | _boolean_          | -     |
-| border      | 是否有纵向边框       | _boolean_          | -     |
+| 参数  | 说明                                                                                                                       | 类型                                                | 默认值   |
+|-----|--------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|-------|
+|   columns  | 表头栏目                                                                                                                     | _ColumnAttributes[]_                                        | []    |
+|   data  | 表格数据                                                                                                                     | _object[]_                                        | []    |
+|   spanCell  | 合并单元格                                                                                                                    | _({column,row,rowIndex,columnIndex}) => number[]_ | -     |
+|   stripe  | 是否为斑马纹 table                                                                                                             | _boolean_                                         | false |
+|   border  | 是否带边框表格                                                                                                                  | _boolean_                                         | false |
+|   height  | Table 的高度，默认为自动高度。如果 height 为 number 类型，单位 px；如果 height 为 string 类型，则这个高度会设置为 Table 的 style.height 的值，Table 的高度会受控于外部样式。 | _string/number_                                        | -     |
+
+
+### ColumnAttributes
+
+| 参数        | 说明                                                                      | 类型                 | 默认值                     |
+|-----------|-------------------------------------------------------------------------|--------------------|-------------------------|
+| label     | 显示的标题                                                                   | _string_           | -                       |
+| prop      | 对应列内容的字段名，也可以使用 property 属性                                             | _string_           | -                       |
+| width     | 对应列的宽度                                                                  | _string_           | -                       |
+| min-width | 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 | _string_            | -                       |
+| max-width | 对应列的最大                                                                  | _string_            | -                       |
+| columns   | 多级表头                                                                    | _ColumnAttributes[]_ | _[]_                    |
+| fixed     | 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 | _string, boolean_  | 可选（true, left, right）   |
+| align     | 文本对齐方式                                                                  | _string_    | 可选（ left,center, right） |
+
+### Slots
+
+| 参数  | 说明  | 参数                                                 |
+|-----|-----|----------------------------------------------------|
+|  -  | 默认卡槽  | _column_                                           |
+|  header  | 表头插槽   | _{ column, row, spanCell, rowIndex, columnIndex }_ |
 
 ## 定制
 
 ### 全局 CSS 变量
 
-| 变量名 | 默认值 | 说明 |
-| ---- | ---- | ---- |
-| --wp-table-font-size | 14px | 字体大小 |
-| --wp-table-border | 1px solid #eee | 表格边框 |
-| --wp-table-padding | 10px 15px | 表格项的内边距 |
-| --wp-table-stripe-background | #fcfcfc | 斑马纹表格背景 |
-| --wp-table-hover-background | #f8f8f8 | hover 时的表格背景 |
+| 变量名 | 默认值 | 说明  |
+|-----|-----|-----|
+| -   | -   | -   |

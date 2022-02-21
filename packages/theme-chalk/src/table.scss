@@ -1,54 +1,145 @@
 :root {
     --wp-table-font-size: 14px;
-    --wp-table-border: 1px solid #eee;
-    --wp-table-padding: 10px 15px;
-    --wp-table-stripe-background: #fcfcfc;
-    --wp-table-hover-background: #f8f8f8;
+    --wp-table-boder-color: #ebeef5;
+    --wp-table-stripe-color: #fafafa;
+    --wp-table-tr-hover-color: var(--wp-table-stripe-color);
+    --wp-table-tr-cell-background-color: #ffffff;
 }
 
 .wp-table {
-    &--body {
-        width: 100%;
-        display: table;
-        font-size: var(--wp-table-font-size);
-        border: var(--wp-table-border);
-        border-collapse: collapse;
-        overflow-x: auto;
-        tr {
-            border-top: var(--wp-table-border);
-            &:nth-child(2n) {
-                background-color: initial;
-            }
-            > th {
-                padding: var(--wp-table-padding);
-                font-weight: bold;
-                text-align: left;
-                box-sizing: border-box;
-            }
-            > td {
-                padding: var(--wp-table-padding);
-                box-sizing: border-box;
-            }
-            &:hover {
-                > td {
-                    background-color: var(--wp-table-hover-background);
-                }
-            }
-        }
+  .wp-table--body{
+    .wp-table--empty{
+      text-align: center;
+      width: 100%;
+      min-height: 100px;
+      font-size: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #999999;
     }
-    &--stripe {
-        tr {
-            &:nth-child(2n) {
-                background: var(--wp-table-stripe-background);
-            }
-        }
+    &-content{
     }
-    &--border {
-        tr {
-            > th,
-            > td {
-                border-right: var(--wp-table-border);
-            }
+    table{
+      margin: 0;
+      width: 100%;
+      thead{
+        tr{
+          th{
+            border-bottom: 1px solid var(--wp-table-boder-color);
+            background-color:var(--wp-table-tr-cell-background-color);
+          }
         }
+      }
+      tbody{
+        tr{
+          td{
+            border-bottom: 1px solid var(--wp-table-boder-color);
+            background-color:var(--wp-table-tr-cell-background-color);
+          }
+          &:hover{
+            background-color: var(--wp-table-tr-hover-color);
+          }
+          &.stripe{
+            &:nth-child(2n){
+              td{
+                background-color: var(--wp-table-stripe-color);
+              }
+            }
+          }
+        }
+      }
     }
+    .cell{
+      font-size: var(--wp-table-font-size);
+    }
+  }
+  &--border{
+    thead{
+      tr{
+        th{
+          border: 1px solid var(--wp-table-boder-color);
+        }
+      }
+    }
+    tbody{
+      tr{
+        td{
+          border: 1px solid var(--wp-table-boder-color);
+        }
+      }
+    }
+  }
+  &--fixed-header{
+    position: relative;
+    .scroll-barCon {
+      position: absolute;
+      right: 0px;
+      bottom: 0px;
+      width: 13px;
+      height: 100%;
+      overflow: hidden;
+      z-index: 20;
+    }
+    .scroll-bar {
+      width: 10px;
+      height: 0px;
+      position: relative;
+      left: 1px;
+      top: 0px;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .scroll-bar span {
+      display: block;
+      width: 100%;
+      position: absolute;
+      margin: auto;
+      background: #7d7d7d;
+      border-radius: 50px;
+      opacity: 0.8;
+      filter: alpha(opacity=80);
+      left: 0px;
+      right: 0px;
+      top: 3px;
+      bottom: 3px;
+    }
+    &--wrapper--box{
+      overflow-y: hidden;
+    }
+    &--wrapper{
+      position: relative;
+      .wp-table--body{
+        position: relative;
+      }
+    }
+    .wp-table--body{
+      thead{
+        display: none;
+      }
+      &--fixed-header{
+        z-index: 1;
+        position: relative;
+        thead{
+          display: table-header-group;
+          tr{
+            th{
+              border-bottom: none !important;
+            }
+          }
+        }
+        tbody{
+          height: 0;
+          overflow: hidden;
+          transform: scale(0);
+          *{
+            height: 0px;
+            overflow: hidden;
+            padding-top: 0;
+            padding-bottom: 0;
+          }
+        }
+      }
+    }
+  }
 }
