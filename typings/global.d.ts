@@ -43,6 +43,9 @@ declare module 'vue' {
     WpCountTo: typeof import('wisdom-plus')['WpCountTo']
     WpPagination: typeof import('wisdom-plus')['WpPagination']
     WpImagePreview: typeof import('wisdom-plus')['WpImagePreview']
+    WpPullRefresh: typeof import('wisdom-plus')['WpPullRefresh']
+    WpList: typeof import('wisdom-plus')['WpList']
+    WpSpin: typeof import('wisdom-plus')['WpSpin']
   }
 }
 
