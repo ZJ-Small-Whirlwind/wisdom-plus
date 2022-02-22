@@ -360,17 +360,18 @@ const data = ref([{
 
 ### Props
 
-| 参数  | 说明                                                                                                                      | 类型                                                | 默认值   |
-|-----|-------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|-------|
-|   columns  | 表头栏目                                                                                                                    | _ColumnAttributes[]_                              | []    |
-|   data  | 表格数据                                                                                                                    | _object[]_                                        | []    |
-|   spanCell  | 合并单元格                                                                                                                   | _({column,row,rowIndex,columnIndex}) => number[]_ | -     |
-|   stripe  | 是否为斑马纹 table                                                                                                            | _boolean_                                         | false |
-|   border  | 是否带边框表格                                                                                                                 | _boolean_                                         | false |
-|   height  | Table 的高度，默认为自动高度。如果 height 为 number 类型，单位 px；如果 height 为 string 类型，则这个高度会设置为 Table 的 style.height 的值，Table 的高度会受控于外部样式。 | _[string,number]_                                 | -     |
-|   tree  | 是否开启树形表格，并可选执行放置的栏目位置，具体以栏目对应的prop值为准                                                                                   | _[string,boolean]_                                | false |
-|   treeLevelDeep  | 树形箭头缩紧深度                                                                                                                | _number_                                   | 15    |
-|   treeChildrenFieldName  | 自定义树形children字段名称                                                                                                       | _string_                                   | children |
+| 参数  | 说明                                                                                                                       | 类型                                                | 默认值      |
+|-----|--------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|----------|
+|   columns  | 表头栏目                                                                                                                     | _ColumnAttributes[]_                              | []       |
+|   data  | 表格数据                                                                                                                     | _object[]_                                        | []       |
+|   spanCell  | 合并单元格                                                                                                                    | _({column,row,rowIndex,columnIndex}) => number[]_ | -        |
+|   stripe  | 是否为斑马纹 table                                                                                                             | _boolean_                                         | false    |
+|   border  | 是否带边框表格                                                                                                                  | _boolean_                                         | false    |
+|   height  | Table 的高度，默认为自动高度。如果 height 为 number 类型，单位 px；如果 height 为 string 类型，则这个高度会设置为 Table 的 style.height 的值，Table 的高度会受控于外部样式。 | _[string,number]_                                 | -        |
+|   tree  | 是否开启树形表格，并可选执行放置的栏目位置，具体以栏目对应的prop值为准                                                                                    | _[string,boolean]_                                | false    |
+|   treeLevelDeep  | 树形箭头缩紧深度                                                                                                                 | _number_                                   | 15       |
+|   treeChildrenFieldName  | 自定义树形children字段名称                                                                                                        | _string_                                   | children |
+|   draggable  | 是否开启拖拽                                                                                                                   | _boolean_                                   | false    |
 
 
 ### ColumnAttributes
