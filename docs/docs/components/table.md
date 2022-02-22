@@ -290,6 +290,72 @@ const spanCell = ({rowIndex, columnIndex})=>{
 ```
 :::
 
+#### 树形型表格
+
+:::demo
+
+```vue
+<template>
+    <wp-table :columns="columns" :data="data" tree></wp-table>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+const columns = ref([
+    {label:"日期", prop:"date"},
+    {label:"姓名", prop:"name"},
+    {label:"地址", prop:"address"},
+])
+const data = ref([{
+    date: '2016-05-02',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1518 弄'
+}, {
+    date: '2016-05-04',
+    name: '王小虎children',
+    address: '上海市普陀区金沙江路 1517 弄',
+    children:[{
+        date: '2016-05-02',
+        name: '王小虎1',
+        address: '上海市普陀区金沙江路 1518 弄'
+    }, {
+        date: '2016-05-04',
+        name: '王小虎2',
+        address: '上海市普陀区金沙江路 1517 弄',
+        children:[
+            {name:"asdas"},
+            {name:"545",children:[
+                {name:"asdas"},
+                {name:"545"},
+            ]},
+        ]
+    }, {
+        date: '2016-05-01',
+        name: '王小虎3',
+        address: '上海市普陀区金沙江路 1519 弄',
+        children:[
+            {name:"asdas"},
+            {name:"545"},
+        ]
+    }, {
+        date: '2016-05-03',
+        name: '王小虎4',
+        address: '上海市普陀区金沙江路 1516 弄'
+    }]
+}, {
+    date: '2016-05-01',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1519 弄'
+}, {
+    date: '2016-05-03',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1516 弄'
+}])
+</script>
+```
+
+:::
+
 ## API
 
 ### Props

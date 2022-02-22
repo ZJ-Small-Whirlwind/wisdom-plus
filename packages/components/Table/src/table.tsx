@@ -1,6 +1,7 @@
 import { buildProps } from "@wisdom-plus/utils/props"
-import {defineComponent, ExtractPropTypes, PropType, computed} from "vue"
+import {defineComponent, ExtractPropTypes, PropType, computed, ref} from "vue"
 import  simpleScroll from "./simpleScroll.js"
+import {result} from "lodash";
 export const tableProps = buildProps({
     columns: {
         type: [Array] as PropType<Array<any>>,
@@ -30,6 +31,14 @@ export const tableProps = buildProps({
     height: {
         type: [String, Number] as PropType<string|number>,
         default: null
+    },
+    tree: {
+        type: [Boolean, String] as PropType<boolean|string>,
+        default: false
+    },
+    treeLevelDeep: {
+        type: [Number] as PropType<number>,
+        default: 15
     },
 })
 
@@ -111,13 +120,32 @@ export default defineComponent({
                 columns_col,
             }
         }
+        const flattenDeep = (bodyCellData,callback:any = ()=>{}, result:any = [], parent:any = null,level:number = 0)=>{
+            bodyCellData.forEach(it=>{
+                const item = ref(it);
+                callback({item, parent,level, bodyCellData, result});
+                result.push(item.value);
+                if(Object.prototype.toString.call(item.value.children) === '[object Array]'){
+                    flattenDeep(item.value.children, callback, result, item.value,level+1);
+                }
+            })
+            return result;
+        }
         /**
          * 合并body单元格
          */
         const getTbodyMergedCells:any = ()=>{
+            let bodyCellData = props.data
+            if(props.tree){
+                bodyCellData = flattenDeep(bodyCellData,({item, parent,level})=>{
+                    item.value.$$treeShow = false;
+                    item.value.$$parent = parent;
+                    item.value.$$level = level;
+                })
+            }
             const result:any = [];
             const spanCellFilters:any = []
-            props.data.forEach((row,rowIndex)=>{
+            bodyCellData.forEach((row,rowIndex)=>{
                 const item:any = [];
                 theadColumns.columns_col.forEach((column, columnIndex)=>{
                     const it:any = {
@@ -164,6 +192,7 @@ export default defineComponent({
             tbodyCells,
             colgroupArr,
             tableWidth,
+            flattenDeep,
         }
     },
     mounted() {
@@ -198,13 +227,28 @@ export default defineComponent({
                 </tr>
             ))}
         </thead>)
+        const cellClick = ({row})=>{
+            if(this.tree && Object.prototype.toString.call(row.children) === '[object Array]'){
+                this.flattenDeep(row.children || []).forEach(_row=>_row.$$treeShow = false);
+                row.$$treeShow = !row.$$treeShow;
+            }
+        }
+        const treeArrowRender = (bool, row)=>(
+            <i class={{
+                "cell-tree-item-arrow":true,
+                "cell-tree-item-arrow-parent":bool,
+                "cell-tree-item-arrow-parent-open":row.$$treeShow,
+            }} style={{
+                marginLeft:`${this.treeLevelDeep*row.$$level}px`
+            }}></i>
+        )
         const tbodyRender = ()=>(<tbody>
-            {this.tbodyCells.map(item=>(
+            {this.tbodyCells.map(item=>!item[0].row.$$parent || item[0].row.$$parent.$$treeShow  ?(
                 <tr class={{
                     "stripe":this.stripe,
                 }}>
                     {item.map(({column, row, spanCell, rowIndex, columnIndex}:any)=>(
-                        <td class={{
+                        <td onClick={(ev)=>cellClick({column, row, spanCell, rowIndex, columnIndex, ev})} class={{
                                 "wp-table__cell":true,
                                 [getNameIndex(column.index)]:true,
                             }}
@@ -218,14 +262,22 @@ export default defineComponent({
                             }}
                         >
                             <div class={{
-                                "cell":true
-                            }}>{this.$slots.default?.({
+                                "cell":true,
+                                "cell-tree-item":this.tree && (this.tree === column.prop || column.index === 1)
+                            }}>
+                                {this.tree && (this.tree === column.prop || column.index === 1) ?
+                                    ((row.children || []).length > 0 ? (
+                                        treeArrowRender(true,row)
+                                    ) : treeArrowRender(false,row))
+                                    : null}
+                                {this.$slots.default?.({
                                 column, row, spanCell, rowIndex, columnIndex
-                            }) || row[column.prop]}</div>
+                            }) || row[column.prop]}
+                            </div>
                         </td>
                     ))}
                 </tr>
-            ))}
+            ) : null)}
         </tbody>)
         const colgroupRender = ()=>this.colgroupArr ? (
             <colgroup>

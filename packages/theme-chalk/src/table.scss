@@ -52,6 +52,33 @@
     }
     .cell{
       font-size: var(--wp-table-font-size);
+      &.cell-tree-item{
+        display: flex;
+        align-items: center;
+        i{
+          $index:5px;
+          &.cell-tree-item-arrow{
+            display: inline-block;
+            width: $index;
+            height: $index;
+            margin-right: 14px;
+            transition: all ease-in-out 0.3s;
+            transform: rotate(45deg);
+            &.cell-tree-item-arrow-parent{
+              border: 1px solid #d8d8d8;
+              border-left: none;
+              border-bottom: none;
+              cursor: pointer;
+              &:hover{
+                border-color: #3a8ee6;
+              }
+              &.cell-tree-item-arrow-parent-open{
+                transform: rotate(135deg);
+              }
+            }
+          }
+        }
+      }
     }
   }
   &--border{
