@@ -141,8 +141,7 @@ export default defineComponent({
         /**
          * 合并body单元格
          */
-        const getTbodyMergedCells:any = ()=>{
-            let bodyCellData = props.data
+        const getTbodyMergedCells:any = (bodyCellData = props.data)=>{
             if(props.tree){
                 bodyCellData = flattenDeep(bodyCellData, props.treeChildrenFieldName, ({item, parent,level})=>{
                     item.value.$$treeShow = false;
@@ -186,7 +185,7 @@ export default defineComponent({
         }
 
         const theadColumns = getColumnsMergedCell(props.columns)
-        const tbodyCells = getTbodyMergedCells();
+        let tbodyCells = ref(getTbodyMergedCells());
         const colgroupArr = computed(()=>{
             return theadColumns.columns_col.filter((e)=>props.height || !!e.width);
         })
@@ -197,27 +196,54 @@ export default defineComponent({
         let isDragstart = false;
         let draggableObjData = ref(null);
         let draggableObjDataIndex:any = ref(-1);
-        const onDragstart = ()=>{
+        let draggableObjDataIndexstart:any = ref(-1);
+        const onDragstart = (ev)=>{
             isDragstart = true;
             draggableObjData.value = null;
             draggableObjDataIndex.value = -1;
+            draggableObjDataIndexstart.value = ev.target.attributes.getNamedItem("index").value;
         }
         const onDragend = ()=>{
+            if(draggableObjDataIndexstart.value !==  draggableObjDataIndex.value){
+                const start = Number(draggableObjDataIndexstart.value);
+                const end = Number(draggableObjDataIndex.value);
+                const newData = tbodyCells.value.reduce((a,b, k,d)=>{
+                    const s_row = d[start][0].row;
+                    const e_row = b[0].row;
+                    if(k !== start){
+                        if(k === end){
+                            const children = flattenDeep(s_row[props.treeChildrenFieldName] || [], props.treeChildrenFieldName);
+                            const index = children.indexOf(e_row);
+                            if(index > -1){
+                                children.forEach(child=>{
+                                    child.$$level -= 1;
+                                })
+                            }
+                            s_row.$$level = e_row.$$level;
+                            s_row.$$parent = e_row.$$parent;
+                            a.push(b);
+                            a.push(d[start]);
+                        }else {
+                            a.push(b);
+                        }
+                    }
+                    return a;
+                },[])
+                console.log(newData)
+                tbodyCells.value = newData;
+            }
             isDragstart = false;
             draggableObjData.value = null;
             draggableObjDataIndex.value = -1;
+            draggableObjDataIndexstart.value = -1;
         }
         const onDragover = (ev)=>{
             try {
                 if(isDragstart){
                     let el = ev.path.find(e=>(e.tagName || "").toLowerCase().indexOf("tr") > -1);
                     if(el){
-                        // 子视口接收
                         draggableObjDataIndex.value = el.attributes.getNamedItem("index").value;
-                        // this.formObj = this.formList[this.formObjIndex];
                         draggableObjData.value = tbodyCells[draggableObjDataIndex.value];
-                    }else {
-                        // 主视口接收
                     }
                 }
             }catch (e){}

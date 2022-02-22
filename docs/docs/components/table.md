@@ -302,6 +302,7 @@ const spanCell = ({rowIndex, columnIndex})=>{
 <script setup lang="ts">
 import { ref } from 'vue'
 const columns = ref([
+    {label:"index", prop:"index"},
     {label:"日期", prop:"date"},
     {label:"姓名", prop:"name"},
     {label:"地址", prop:"address"},
@@ -309,46 +310,58 @@ const columns = ref([
 const data = ref([{
     date: '2016-05-02',
     name: '王小虎',
-    address: '上海市普陀区金沙江路 1518 弄'
+    address: '上海市普陀区金沙江路 1518 弄',
+    index:1,
 }, {
     date: '2016-05-04',
     name: '王小虎children',
     address: '上海市普陀区金沙江路 1517 弄',
+    index:2,
     children:[{
         date: '2016-05-02',
         name: '王小虎1',
+        index:3,
         address: '上海市普陀区金沙江路 1518 弄'
     }, {
         date: '2016-05-04',
         name: '王小虎2',
+        index:4,
         address: '上海市普陀区金沙江路 1517 弄',
         children:[
-            {name:"asdas"},
+            {name:"asdas",index:5,},
             {name:"545",children:[
-                {name:"asdas"},
-                {name:"545"},
-            ]},
+                {name:"asdas",
+                    index:7,},
+                {name:"545",
+                    index:8,},
+            ],index:6,},
         ]
     }, {
         date: '2016-05-01',
         name: '王小虎3',
         address: '上海市普陀区金沙江路 1519 弄',
+        index:9,
         children:[
-            {name:"asdas"},
-            {name:"545"},
+            {name:"asdas",
+                index:10,},
+            {name:"545",
+                index:11,},
         ]
     }, {
         date: '2016-05-03',
         name: '王小虎4',
+        index:12,
         address: '上海市普陀区金沙江路 1516 弄'
     }]
 }, {
     date: '2016-05-01',
     name: '王小虎',
+    index:13,
     address: '上海市普陀区金沙江路 1519 弄'
 }, {
     date: '2016-05-03',
     name: '王小虎',
+    index:14,
     address: '上海市普陀区金沙江路 1516 弄'
 }])
 </script>
