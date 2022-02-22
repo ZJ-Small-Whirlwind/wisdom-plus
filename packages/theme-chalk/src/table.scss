@@ -47,6 +47,11 @@
               }
             }
           }
+          &.draggable-is-active{
+            td{
+              border-bottom: 1px solid #3a8ee6 !important;
+            }
+          }
         }
       }
     }

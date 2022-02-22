@@ -43,6 +43,10 @@ export const tableProps = buildProps({
         type: [String] as PropType<string>,
         default: "children"
     },
+    draggable: {
+        type: [Boolean] as PropType<boolean>,
+        default: false
+    },
 })
 
 export type TableProps = ExtractPropTypes<typeof tableProps>
@@ -190,7 +194,40 @@ export default defineComponent({
             const sum = colgroupArr.value.reduce((a,b)=>a+(b.width),0)
             return sum ? ((sum+50) + 'px') : null;
         })
+        let isDragstart = false;
+        let draggableObjData = ref(null);
+        let draggableObjDataIndex:any = ref(-1);
+        const onDragstart = ()=>{
+            isDragstart = true;
+            draggableObjData.value = null;
+            draggableObjDataIndex.value = -1;
+        }
+        const onDragend = ()=>{
+            isDragstart = false;
+            draggableObjData.value = null;
+            draggableObjDataIndex.value = -1;
+        }
+        const onDragover = (ev)=>{
+            try {
+                if(isDragstart){
+                    let el = ev.path.find(e=>(e.tagName || "").toLowerCase().indexOf("tr") > -1);
+                    if(el){
+                        // 子视口接收
+                        draggableObjDataIndex.value = el.attributes.getNamedItem("index").value;
+                        // this.formObj = this.formList[this.formObjIndex];
+                        draggableObjData.value = tbodyCells[draggableObjDataIndex.value];
+                    }else {
+                        // 主视口接收
+                    }
+                }
+            }catch (e){}
+        }
         return {
+            onDragstart,
+            onDragend,
+            onDragover,
+            draggableObjData,
+            draggableObjDataIndex,
             theadColumns,
             tbodyCells,
             colgroupArr,
@@ -245,10 +282,17 @@ export default defineComponent({
                 marginLeft:`${this.treeLevelDeep*row.$$level}px`
             }}></i>
         )
-        const tbodyRender = ()=>(<tbody>
-            {this.tbodyCells.map(item=>!item[0].row.$$parent || item[0].row.$$parent.$$treeShow  ?(
-                <tr class={{
+
+        const tbodyRender = ()=>(<tbody onDragover={this.onDragover}>
+            {this.tbodyCells.map((item,key)=>!item[0].row.$$parent || item[0].row.$$parent.$$treeShow  ?(
+                <tr
+                    draggable={this.draggable}
+                    onDragstart={this.onDragstart}
+                    onDragend={this.onDragend}
+                    index={key}
+                    class={{
                     "stripe":this.stripe,
+                    "draggable-is-active":key === Number(this.draggableObjDataIndex),
                 }}>
                     {item.map(({column, row, spanCell, rowIndex, columnIndex}:any)=>(
                         <td onClick={(ev)=>cellClick({column, row, spanCell, rowIndex, columnIndex, ev})} class={{

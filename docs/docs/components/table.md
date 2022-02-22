@@ -290,13 +290,13 @@ const spanCell = ({rowIndex, columnIndex})=>{
 ```
 :::
 
-#### 树形型表格
+#### 树形型表格及表格拖拽
 
 :::demo
 
 ```vue
 <template>
-    <wp-table :columns="columns" :data="data" tree></wp-table>
+    <wp-table :columns="columns" :data="data" tree draggable></wp-table>
 </template>
 
 <script setup lang="ts">
