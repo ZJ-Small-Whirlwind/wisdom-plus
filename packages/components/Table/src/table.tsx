@@ -1,7 +1,6 @@
 import { buildProps } from "@wisdom-plus/utils/props"
 import {defineComponent, ExtractPropTypes, PropType, computed, ref} from "vue"
 import  simpleScroll from "./simpleScroll.js"
-import {result} from "lodash";
 export const tableProps = buildProps({
     columns: {
         type: [Array] as PropType<Array<any>>,
@@ -39,6 +38,10 @@ export const tableProps = buildProps({
     treeLevelDeep: {
         type: [Number] as PropType<number>,
         default: 15
+    },
+    treeChildrenFieldName: {
+        type: [String] as PropType<string>,
+        default: "children"
     },
 })
 
@@ -120,13 +123,13 @@ export default defineComponent({
                 columns_col,
             }
         }
-        const flattenDeep = (bodyCellData,callback:any = ()=>{}, result:any = [], parent:any = null,level:number = 0)=>{
+        const flattenDeep = (bodyCellData,treeChildrenFieldName:string,callback:any = ()=>{}, result:any = [], parent:any = null,level:number = 0)=>{
             bodyCellData.forEach(it=>{
                 const item = ref(it);
                 callback({item, parent,level, bodyCellData, result});
                 result.push(item.value);
-                if(Object.prototype.toString.call(item.value.children) === '[object Array]'){
-                    flattenDeep(item.value.children, callback, result, item.value,level+1);
+                if(Object.prototype.toString.call(item.value[treeChildrenFieldName]) === '[object Array]'){
+                    flattenDeep(item.value[treeChildrenFieldName], treeChildrenFieldName, callback,  result, item.value,level+1);
                 }
             })
             return result;
@@ -137,7 +140,7 @@ export default defineComponent({
         const getTbodyMergedCells:any = ()=>{
             let bodyCellData = props.data
             if(props.tree){
-                bodyCellData = flattenDeep(bodyCellData,({item, parent,level})=>{
+                bodyCellData = flattenDeep(bodyCellData, props.treeChildrenFieldName, ({item, parent,level})=>{
                     item.value.$$treeShow = false;
                     item.value.$$parent = parent;
                     item.value.$$level = level;
@@ -228,8 +231,8 @@ export default defineComponent({
             ))}
         </thead>)
         const cellClick = ({row})=>{
-            if(this.tree && Object.prototype.toString.call(row.children) === '[object Array]'){
-                this.flattenDeep(row.children || []).forEach(_row=>_row.$$treeShow = false);
+            if(this.tree && Object.prototype.toString.call(row[this.treeChildrenFieldName]) === '[object Array]'){
+                this.flattenDeep(row[this.treeChildrenFieldName] || [],this.treeChildrenFieldName).forEach(_row=>_row.$$treeShow = false);
                 row.$$treeShow = !row.$$treeShow;
             }
         }
@@ -266,7 +269,7 @@ export default defineComponent({
                                 "cell-tree-item":this.tree && (this.tree === column.prop || column.index === 1)
                             }}>
                                 {this.tree && (this.tree === column.prop || column.index === 1) ?
-                                    ((row.children || []).length > 0 ? (
+                                    ((row[this.treeChildrenFieldName] || []).length > 0 ? (
                                         treeArrowRender(true,row)
                                     ) : treeArrowRender(false,row))
                                     : null}
