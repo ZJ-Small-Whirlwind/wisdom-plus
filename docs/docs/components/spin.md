@@ -77,6 +77,8 @@ const onLoading = () => {
 | textColor     | 文本颜色   | _string_           | -      |
 | text   | 文本内容 | _string_ | -      |
 | loading  | 是否加载中，仅默认插槽中存在内容使用       | _boolean_                                                           | true  |
+| fullscreen | 是否全屏 | _boolean_ | true |
+| background | 自定义背景 | _stirng_ | - |
 
 ### Slots
 

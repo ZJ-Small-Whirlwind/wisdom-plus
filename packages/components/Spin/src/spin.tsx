@@ -36,7 +36,8 @@ export const spinProps = {
         type: Boolean,
         default: true
     },
-    fullscreen: Boolean
+    fullscreen: Boolean,
+    background: String
 }
 
 export type SpinProps = ExtractPropTypes<typeof spinProps>;
@@ -91,31 +92,33 @@ export default defineComponent({
             )
             return (
                 slots.default || props.fullscreen ? (
-                    (!props.fullscreen || props.loading) ? (
-                        <Teleport to='body' disabled={!props.fullscreen}>
-                            <div class='wp-spin-wrapper' style={props.fullscreen ? {
-                                position: 'fixed',
-                                top: 0,
-                                left: 0,
-                                height: '100%',
-                                width: '100%',
-                                zIndex: zIndex.value
-                            } : undefined}>
-                                {slots.default?.()}
-                                <Transition
-                                    name='wp-spin-transition'
-                                >
-                                    {
-                                        props.loading && (
-                                            <div class='wp-spin-wrapper--icon'>
-                                                {Spin}
-                                            </div>
-                                        )
-                                    }
-                                </Transition>
-                            </div>
-                        </Teleport>
-                    ) : null
+                    <Teleport to='body' disabled={!props.fullscreen}>
+                        <Transition name='wp-spin-transition'>
+                            {
+                                (!props.fullscreen || props.loading) ? (
+                                    <div class='wp-spin-wrapper' style={props.fullscreen ? {
+                                        position: 'fixed',
+                                        top: 0,
+                                        left: 0,
+                                        height: '100%',
+                                        width: '100%',
+                                        zIndex: zIndex.value
+                                    } : undefined}>
+                                        {slots.default?.()}
+                                        <Transition name='wp-spin-transition'>
+                                            {
+                                                props.loading && (
+                                                    <div class='wp-spin-wrapper--icon' style={{ background: props.background }}>
+                                                        {Spin}
+                                                    </div>
+                                                )
+                                            }
+                                        </Transition>
+                                    </div>
+                                ) : null
+                            }        
+                        </Transition>                
+                    </Teleport>
                 ) : Spin
             )
         }
