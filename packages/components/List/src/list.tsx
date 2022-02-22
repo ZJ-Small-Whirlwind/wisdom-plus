@@ -101,7 +101,7 @@ export default defineComponent({
                         intersecting.value = false
                     }
                 }, {
-                    root: scrollParent,
+                    root: scrollParent.value === document.body ? undefined : scrollParent,
                     rootMargin: props.rootMargin,
                     threshold: props.threshold
                 })
