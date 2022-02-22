@@ -229,7 +229,6 @@ export default defineComponent({
                     }
                     return a;
                 },[])
-                console.log(newData)
                 tbodyCells.value = newData;
             }
             isDragstart = false;
