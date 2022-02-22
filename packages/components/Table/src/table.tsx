@@ -160,6 +160,7 @@ export default defineComponent({
                         rowIndex,
                         columnIndex,
                     }
+                    row.$$rowIndex = rowIndex;
                     const spanCell = props.spanCell(it) || []
                     it.spanCell = [spanCell[0] || 1,spanCell[1] || 1];
                     if(it.spanCell.reduce((a,b)=>a+b) > 2){
@@ -207,11 +208,22 @@ export default defineComponent({
             if(draggableObjDataIndexstart.value !==  draggableObjDataIndex.value){
                 const start = Number(draggableObjDataIndexstart.value);
                 const end = Number(draggableObjDataIndex.value);
+                let rowChild_end:any = [];
+                let rowChild_start:any = [];
+                let rowStart:any = null;
                 const newData = tbodyCells.value.reduce((a,b, k,d)=>{
                     const s_row = d[start][0].row;
                     const e_row = b[0].row;
+                    if(rowChild_end.includes(b)){
+                        a.push(b);
+                        if(rowChild_end.indexOf(b) === rowChild_end.length - 1){
+                            a.push(rowStart)
+                        }
+                        return a;
+                    }
                     if(k !== start){
                         if(k === end){
+                            const children_e = flattenDeep(e_row[props.treeChildrenFieldName] || [], props.treeChildrenFieldName);
                             const children = flattenDeep(s_row[props.treeChildrenFieldName] || [], props.treeChildrenFieldName);
                             const index = children.indexOf(e_row);
                             if(index > -1){
@@ -219,10 +231,13 @@ export default defineComponent({
                                     child.$$level -= 1;
                                 })
                             }
+                            rowChild_start = d.filter(dd=>children.map(e=>e.$$rowIndex).includes(dd[0].rowIndex))
+                            rowChild_end = d.filter(dd=>children_e.map(e=>e.$$rowIndex).includes(dd[0].rowIndex))
+                            console.log(rowChild_start)
                             s_row.$$level = e_row.$$level;
                             s_row.$$parent = e_row.$$parent;
                             a.push(b);
-                            a.push(d[start]);
+                            rowStart = d[start];
                         }else {
                             a.push(b);
                         }
