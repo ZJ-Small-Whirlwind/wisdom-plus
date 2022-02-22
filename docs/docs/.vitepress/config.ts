@@ -41,6 +41,10 @@ export default defineConfig({
                     text: '基础组件',
                     children: [
                         {
+                            text: 'Spin 加载中',
+                            link: '/components/spin'
+                        },
+                        {
                             text: 'List 列表',
                             link: '/components/list'
                         },
