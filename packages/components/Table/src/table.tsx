@@ -205,8 +205,9 @@ export default defineComponent({
         let tableWidth:any = ref(null);// 表格宽度
         // 重置表渲染
         const resetTbale = (newdata, bool)=>{
+            tableDatas.value = newdata;
             theadColumns.value = getColumnsMergedCell(props.columns)
-            tbodyCells.value = getTbodyMergedCells(newdata, bool);
+            tbodyCells.value = getTbodyMergedCells(tableDatas.value, bool);
             colgroupArr = computed(()=>{
                 return theadColumns.value.columns_col.filter((e)=>props.height || !!e.width);
             })
@@ -220,8 +221,7 @@ export default defineComponent({
             computed(()=>props.columns),
             computed(()=>props.data)
         ],()=>{
-            tableDatas.value = props.data;
-            resetTbale(tableDatas.value, false);
+            resetTbale(props.data, false);
         },{ immediate:true})
 
         let isDragstart = false;// 是否拖拽
@@ -291,8 +291,7 @@ export default defineComponent({
                     }
                     return data
                 }
-                const newdata = addStart(deleteStart(tableDatas.value));
-                resetTbale(newdata, true);
+                resetTbale(addStart(deleteStart(tableDatas.value)), true);
             }
             isDragstart = false;
             draggableObjData.value = null;
@@ -341,6 +340,7 @@ export default defineComponent({
             colgroupArr,
             tableWidth,
             flattenDeep,
+            tableDatas,
         }
     },
     mounted() {

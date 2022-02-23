@@ -296,6 +296,7 @@ const spanCell = ({rowIndex, columnIndex})=>{
 
 ```vue
 <template>
+    <wp-button @click="updateData">点击动态更新数据</wp-button>
     <wp-table :columns="columns" :data="data" tree draggable></wp-table>
 </template>
 
@@ -364,24 +365,23 @@ const data = ref([{
     index:14,
     address: '上海市普陀区金沙江路 14 弄'
 }])
-// setTimeout(()=>{
-//     data.value = [
-//         {
-//             date: '454544445454',
-//             name: '544',
-//             index:45,
-//             address: '4545'
-//         }
-//     ]
-//     console.log(111)
-// },2000)
-// setTimeout(()=>{
-//     columns.value = [
-//         {label:"index", prop:"index"},
-//         {label:"地址", prop:"address"},
-//     ]
-//     console.log(2222)
-// },3000)
+const updateData = ()=>{
+    data.value = [
+        {
+            date: '454544445454',
+            name: '544',
+            index:45,
+            address: '4545'
+        }
+    ]
+    setTimeout(()=>{
+        columns.value = [
+            {label:"index", prop:"index"},
+            {label:"地址", prop:"address"},
+        ]
+    },2000)
+}
+
 </script>
 ```
 
