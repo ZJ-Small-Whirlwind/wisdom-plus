@@ -1,0 +1,129 @@
+:root {
+    --wp-input-font-size: 14px;
+    --wp-input-padding-top-bottom: 10px;
+    --wp-input-padding-left-right: 10px;
+    --wp-input-line-height: 18px;
+}
+
+.wp-input {
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    transition: border .2s;
+    cursor: text;
+    display: flex;
+    outline: none;
+    font-size: var(--wp-input-font-size);
+    overflow: hidden;
+    align-items: center;
+    &--disabled {
+        opacity: .6;
+        .wp-input--field,
+        .wp-input--textarea {
+            cursor: not-allowed;
+        }
+    }
+    &--element {
+        width: 100%;
+        position: relative;
+    }
+    &--field,
+    &--textarea {
+        color: #333;
+        box-sizing: border-box;
+        line-height: var(--wp-input-line-height);
+        font-size: var(--wp-input-font-size);
+        border: 0;
+        outline: none;
+        width: 100%;
+        padding: var(--wp-input-padding-top-bottom) var(--wp-input-padding-left-right);
+        vertical-align: middle;
+        &::placeholder {
+            color: #ccc;
+        }
+    }
+    &--textarea {
+        min-height: calc(1em + var(--wp-input-padding-top-bottom) * 2.4);
+        line-height: calc(var(--wp-input-line-height) * 1.2);
+    }
+    &--size {
+        position: absolute;
+        font-size: 12px;
+        background-color: #fff;
+        right: var(--wp-input-padding-left-right);
+        bottom: calc(var(--wp-input-padding-top-bottom) / 2);
+        vertical-align: middle;
+        color: #ccc;
+    }
+    &--suffix {
+        padding-right: var(--wp-input-padding-left-right);
+    }
+    &--prefix {
+        padding-left: var(--wp-input-padding-left-right);
+    }
+    &--suffix,
+    &--prefix {
+        display: flex;
+        align-items: center;
+        color: #ccc;
+        font-size: 16px;
+    }
+    .wp-icon + .wp-input__clear,
+    .wp-icon + .wp-input__password,
+    .wp-input__password + .wp-input__clear {
+        margin-left: 4px;
+    }
+    &__clear,
+    &__password {
+        display: flex;
+        align-items: center;
+        &-icon {
+            font-size: 12px;
+            padding: 1px;
+            transition: .2s;
+            border-radius: 50%;
+            height: 14px;
+            width: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+        }
+    }
+    &__password {
+        &-icon {
+            font-size: 16px;
+        }
+    }
+    &__clear {
+        &-icon {
+            &:hover {
+                color: var(--wp-tag-bg-color);
+                background-color: var(--wp-tag-color);
+            }
+        }
+    }
+    &:not(.wp-input--disabled).wp-input--focused {
+        border-color: var(--wp-color-primary);
+    }
+    &:not(.wp-input--disabled):not(.wp-input--focused):hover {
+        border-color: #ccc;
+    }
+    &-small {
+        --wp-input-font-size: 13px;
+        --wp-input-padding-top-bottom: 4px;
+        --wp-input-padding-left-right: 10px;
+        --wp-input-line-height: 23px;
+    }
+    &-medium {
+        --wp-input-font-size: 15px;
+        --wp-input-padding-top-bottom: 6px;
+        --wp-input-padding-left-right: 10px;
+        --wp-input-line-height: 30px;
+    }
+    &-large {
+        --wp-input-font-size: 16px;
+        --wp-input-padding-top-bottom: 6px;
+        --wp-input-padding-left-right: 10px;
+        --wp-input-line-height: 38px;
+    }
+}
