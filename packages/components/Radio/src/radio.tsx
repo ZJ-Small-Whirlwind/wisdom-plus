@@ -18,7 +18,8 @@ export const radiopProps = buildProps({
         default: undefined
     },
     value: {
-        type: [Boolean, String, Number, Symbol] as PropType<string | number | symbol | boolean>
+        type: [Boolean, String, Number, Symbol] as PropType<string | number | symbol | boolean>,
+        default: undefined
     },
     label: {
         type: String
