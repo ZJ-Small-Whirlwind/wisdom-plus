@@ -273,6 +273,7 @@ export default defineComponent({
                                         dataIt[props.treeChildrenFieldName] = dataIt[props.treeChildrenFieldName] || [];
                                         dataIt[props.treeChildrenFieldName].push(child_start)
                                     }
+                                    dataIt.$$treeShow =  flattenDeep([child_start],props.treeChildrenFieldName).filter(fit=>fit.$$treeShow).length > 0;
                                     result.push(dataIt);
                                 });
                             }else {
