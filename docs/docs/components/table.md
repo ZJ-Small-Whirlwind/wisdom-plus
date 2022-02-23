@@ -310,23 +310,23 @@ const columns = ref([
 const data = ref([{
     date: '2016-05-02',
     name: '王小虎',
-    address: '上海市普陀区金沙江路 1518 弄',
+    address: '上海市普陀区金沙江路 1 弄',
     index:1,
 }, {
     date: '2016-05-04',
     name: '王小虎children',
-    address: '上海市普陀区金沙江路 1517 弄',
+    address: '上海市普陀区金沙江路 2 弄',
     index:2,
     children:[{
         date: '2016-05-02',
         name: '王小虎1',
         index:3,
-        address: '上海市普陀区金沙江路 1518 弄'
+        address: '上海市普陀区金沙江路 3 弄'
     }, {
         date: '2016-05-04',
         name: '王小虎2',
         index:4,
-        address: '上海市普陀区金沙江路 1517 弄',
+        address: '上海市普陀区金沙江路 4 弄',
         children:[
             {name:"asdas",index:5,},
             {name:"545",children:[
@@ -339,7 +339,7 @@ const data = ref([{
     }, {
         date: '2016-05-01',
         name: '王小虎3',
-        address: '上海市普陀区金沙江路 1519 弄',
+        address: '上海市普陀区金沙江路 9 弄',
         index:9,
         children:[
             {name:"asdas",
@@ -351,19 +351,37 @@ const data = ref([{
         date: '2016-05-03',
         name: '王小虎4',
         index:12,
-        address: '上海市普陀区金沙江路 1516 弄'
+        address: '上海市普陀区金沙江路 12 弄'
     }]
 }, {
     date: '2016-05-01',
     name: '王小虎',
     index:13,
-    address: '上海市普陀区金沙江路 1519 弄'
+    address: '上海市普陀区金沙江路 13 弄'
 }, {
     date: '2016-05-03',
     name: '王小虎',
     index:14,
-    address: '上海市普陀区金沙江路 1516 弄'
+    address: '上海市普陀区金沙江路 14 弄'
 }])
+// setTimeout(()=>{
+//     data.value = [
+//         {
+//             date: '454544445454',
+//             name: '544',
+//             index:45,
+//             address: '4545'
+//         }
+//     ]
+//     console.log(111)
+// },2000)
+// setTimeout(()=>{
+//     columns.value = [
+//         {label:"index", prop:"index"},
+//         {label:"地址", prop:"address"},
+//     ]
+//     console.log(2222)
+// },3000)
 </script>
 ```
 

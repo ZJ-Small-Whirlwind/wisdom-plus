@@ -1,5 +1,5 @@
 import { buildProps } from "@wisdom-plus/utils/props"
-import {defineComponent, ExtractPropTypes, PropType, computed, ref} from "vue"
+import {defineComponent, ExtractPropTypes, PropType, computed, ref, watch} from "vue"
 import  simpleScroll from "./simpleScroll.js"
 export const tableProps = buildProps({
     columns: {
@@ -55,6 +55,8 @@ export default defineComponent({
     name: 'WpTable',
     props: tableProps,
     setup(props) {
+        // 当前表格数据
+        const tableDatas:any = ref([]);
         /**
          * 获取合并单元格栏目数据
          * @param columns
@@ -127,6 +129,15 @@ export default defineComponent({
                 columns_col,
             }
         }
+        /**
+         * 扁平化数据
+         * @param bodyCellData
+         * @param treeChildrenFieldName
+         * @param callback
+         * @param result
+         * @param parent
+         * @param level
+         */
         const flattenDeep = (bodyCellData,treeChildrenFieldName:string,callback:any = ()=>{}, result:any = [], parent:any = null,level:number = 0)=>{
             bodyCellData.forEach(it=>{
                 const item = ref(it);
@@ -141,10 +152,12 @@ export default defineComponent({
         /**
          * 合并body单元格
          */
-        const getTbodyMergedCells:any = (bodyCellData = props.data)=>{
+        const getTbodyMergedCells:any = (bodyCellData, notResetShow = false)=>{
             if(props.tree){
                 bodyCellData = flattenDeep(bodyCellData, props.treeChildrenFieldName, ({item, parent,level})=>{
-                    item.value.$$treeShow = false;
+                    if(!notResetShow){
+                        item.value.$$treeShow = false;
+                    }
                     item.value.$$parent = parent;
                     item.value.$$parentDeep = parent ? parent.$$parentDeep.concat([parent]) : [];
                     item.value.$$level = level;
@@ -154,7 +167,7 @@ export default defineComponent({
             const spanCellFilters:any = []
             bodyCellData.forEach((row,rowIndex)=>{
                 const item:any = [];
-                theadColumns.columns_col.forEach((column, columnIndex)=>{
+                theadColumns.value.columns_col.forEach((column, columnIndex)=>{
                     const it:any = {
                         column,
                         row,
@@ -186,22 +199,39 @@ export default defineComponent({
             })
         }
 
-        const theadColumns = getColumnsMergedCell(props.columns)
-        let tbodyCells = ref(getTbodyMergedCells());
-        const colgroupArr = computed(()=>{
-            return theadColumns.columns_col.filter((e)=>props.height || !!e.width);
-        })
-        const tableWidth = computed(()=>{
-            const sum = colgroupArr.value.reduce((a,b)=>a+(b.width),0)
-            return sum ? ((sum+50) + 'px') : null;
-        })
-        let isDragstart = false;
-        let draggableObjData = ref(null);
-        let draggableObjDataIndex:any = ref(-1);
-        let draggableObjDataIndexstart:any = ref(-1);
-        let draggableInset:any = ref(false);
-        let draggableForbid:any = ref(false);
-        let draggableForbidIndex:any = ref(-1);
+        let theadColumns:any = ref({});// 表头数据
+        let tbodyCells:any = ref([]);// 表单元格数据
+        let colgroupArr:any = ref([]);// 表限制关联数据
+        let tableWidth:any = ref(null);// 表格宽度
+        // 重置表渲染
+        const resetTbale = (newdata, bool)=>{
+            theadColumns.value = getColumnsMergedCell(props.columns)
+            tbodyCells.value = getTbodyMergedCells(newdata, bool);
+            colgroupArr = computed(()=>{
+                return theadColumns.value.columns_col.filter((e)=>props.height || !!e.width);
+            })
+            tableWidth = computed(()=>{
+                const sum = colgroupArr.value.reduce((a,b)=>a+(b.width),0)
+                return sum ? ((sum+50) + 'px') : null;
+            })
+        }
+        // 数据监听，响应式
+        watch([
+            computed(()=>props.columns),
+            computed(()=>props.data)
+        ],()=>{
+            tableDatas.value = props.data;
+            resetTbale(tableDatas.value, false);
+        },{ immediate:true})
+
+        let isDragstart = false;// 是否拖拽
+        let draggableObjData = ref(null);// 拖拽目标对象数据
+        let draggableObjDataIndex:any = ref(-1);// 拖拽目标对象索引
+        let draggableObjDataIndexstart:any = ref(-1);// 拖拽对象开始索引
+        let draggableInset:any = ref(false);// 是否同级拖拽，代表内部追加
+        let draggableForbid:any = ref(false);// 是否禁止存放
+        let draggableForbidIndex:any = ref(-1);// 是否禁止存放索引
+        // 开始拖拽
         const onDragstart = (ev)=>{
             isDragstart = true;
             draggableObjData.value = null;
@@ -211,41 +241,58 @@ export default defineComponent({
             draggableForbid.value = false;
             draggableForbidIndex.value = -1;
         }
+        // 结束拖拽
         const onDragend = ()=>{
             if(!draggableForbid.value && draggableObjDataIndexstart.value !==  draggableObjDataIndex.value){
                 const start = Number(draggableObjDataIndexstart.value);
                 const end = Number(draggableObjDataIndex.value);
-                let rowChild_end:any = [];
-                let rowChild_start:any = [];
-                let child_start:any = null;
-                let child_end:any = null;
-                tbodyCells.value.forEach((b, k,d)=>{
-                    child_start = d[start][0];
-                    child_end = b[0];
-                    const s_row = child_start.row;
-                    const e_row = child_end.row;
-                    if(k !== start && k === end){
-                        const children_e = flattenDeep(e_row[props.treeChildrenFieldName] || [], props.treeChildrenFieldName);
-                        const children = flattenDeep(s_row[props.treeChildrenFieldName] || [], props.treeChildrenFieldName);
-                        rowChild_start = d.filter(dd=>children.map(e=>e.$$rowIndex).includes(dd[0].rowIndex))
-                        rowChild_end = d.filter(dd=>children_e.map(e=>e.$$rowIndex).includes(dd[0].rowIndex))
-                    }
-                });
-                const startObj = [child_start].concat(rowChild_start);
-                const endObj = [child_end].concat(rowChild_end);
-
-                console.log(startObj, endObj,draggableInset.value)
-                const test = (data,callback)=>{
+                const child_start = tbodyCells.value[start][0].row;
+                const child_end = tbodyCells.value[end][0].row;
+                const deleteStart = (data)=>{
                     return data.filter(it=>{
                         if(Object.prototype.toString.call(it[props.treeChildrenFieldName]) === '[object Array]'){
-                            it[props.treeChildrenFieldName] = test(it[props.treeChildrenFieldName], callback)
+                            it[props.treeChildrenFieldName] = deleteStart(it[props.treeChildrenFieldName])
                         }
-                        return callback(it)
+                        delete it.$$level;
+                        delete it.$$parent;
+                        delete it.$$parentDeep;
+                        return it.$$rowIndex !== child_start.$$rowIndex
                     })
                 }
-                console.log(test(props.data, it=>{
-                    return true;
-                }))
+                const addStart = (data)=>{
+                    let result:any = [];
+                    data.forEach((it,k)=>{
+                        if(Object.prototype.toString.call(it[props.treeChildrenFieldName]) === '[object Array]'){
+                            it[props.treeChildrenFieldName] = addStart(it[props.treeChildrenFieldName])
+                        }
+                        if(it.$$rowIndex === child_end.$$rowIndex){
+                            if(draggableInset.value){
+                                // 内部追加
+                                data.forEach((dataIt,kk)=>{
+                                    if(k === kk){
+                                        dataIt[props.treeChildrenFieldName] = dataIt[props.treeChildrenFieldName] || [];
+                                        dataIt[props.treeChildrenFieldName].push(child_start)
+                                    }
+                                    result.push(dataIt);
+                                });
+                            }else {
+                                // 同级追加
+                                data.forEach((dataIt,kk)=>{
+                                    result.push(dataIt);
+                                    if(k === kk){
+                                        result.push(child_start)
+                                    }
+                                });
+                            }
+                        }
+                    })
+                    if(result.length > 0){
+                        return  result;
+                    }
+                    return data
+                }
+                const newdata = addStart(deleteStart(tableDatas.value));
+                resetTbale(newdata, true);
             }
             isDragstart = false;
             draggableObjData.value = null;
@@ -255,6 +302,7 @@ export default defineComponent({
             draggableForbid.value = false;
             draggableForbidIndex.value = -1;
         }
+        // 拖拽过程
         const onDragover = (ev)=>{
             draggableForbid.value = false;
             try {
@@ -407,7 +455,7 @@ export default defineComponent({
                         isFixedHeader ? [colgroupRender(),theadRender()] : [colgroupRender(),tbodyRender()]
                     ] : [this.colgroupArr.length === 0 ? null: colgroupRender(),theadRender(),tbodyRender()]}
                 </table>
-                {this.tbodyCells.length === 0 ? (<div class={{
+                {!isFixedHeader && this.tbodyCells.length === 0 ? (<div class={{
                     'wp-table--empty':true,
                 }}>暂无数据！</div>) : null}
             </div>
