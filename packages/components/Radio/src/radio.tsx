@@ -56,7 +56,7 @@ export default defineComponent({
                 if (checkedValue) {
                     return checkedValue.value === props.value
                 } else {
-                    if (props.value) {
+                    if (props.value !== undefined) {
                         return checkedControl.value === props.value
                     } else {
                         return Boolean(checkedControl.value)
@@ -68,7 +68,7 @@ export default defineComponent({
                     if (!props.value) return
                     checkedValue.value = props.value
                 } else {
-                    if (props.value) {
+                    if (props.value !== undefined) {
                         checkedControl.value = props.value
                     } else {
                         checkedControl.value = value
