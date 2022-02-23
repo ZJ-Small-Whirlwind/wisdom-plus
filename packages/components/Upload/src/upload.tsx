@@ -128,6 +128,9 @@ export default defineComponent({
 
         const handleAddUpload = async(files: FileList | File[]) => {
             if (files.length === 0) return
+            if (!props.modelValue) {
+                uploadFiles.value = []
+            }
             for (let i = 0; i < files.length; i++) {
                 uploadFiles.value.push({
                     name: files[i].name,

@@ -21,12 +21,11 @@ app.use(WpUpload)
 :::demo
 ```vue
 <template>
-    <wp-upload :model-value="files" auto-upload :delete="handleDelete" :upload="handleUpload" multiple :limit="1" accept=".jpg,.png,.webp">
+    <wp-upload v-model="files" auto-upload :delete="handleDelete" :upload="handleUpload" multiple :limit="1" accept=".jpg,.png,.webp">
         <template #description>
             允许的文件格式 .jpg,.png,.webp
         </template>
     </wp-upload>
-    {{ files }}
 </template>
 
 <script lang="ts" setup>

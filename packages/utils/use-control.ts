@@ -21,13 +21,7 @@ export function useAutoControl<
         set(value) {
             if (typeof vModal.value === 'undefined') {
                 if (key && emit) emit?.(`update:${key}` as Name, value)
-                nextTick(() => {
-                    if (typeof vModal.value === 'undefined' || typeof value === 'undefined') {
-                        ref.value = value
-                    } else {
-                        vModal.value = value
-                    }
-                })
+                ref.value = value
             } else {
                 vModal.value = value
             }
