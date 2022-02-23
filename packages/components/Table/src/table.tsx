@@ -1,6 +1,9 @@
 import { buildProps } from "@wisdom-plus/utils/props"
 import {defineComponent, ExtractPropTypes, PropType, computed, ref, watch} from "vue"
+import  WpRadio from "../../Radio"
+import  Checkbox from "../../Checkbox"
 import  simpleScroll from "./simpleScroll.js"
+import fa from "@wisdom-plus/locale/lang/fa";
 export const tableProps = buildProps({
     columns: {
         type: [Array] as PropType<Array<any>>,
@@ -108,7 +111,8 @@ export default defineComponent({
                         colspanArr,
                         colspan:colspanArr.length || 1,
                         index:it.columns ? -1:columnsIndex += 1,
-                        fixedConfig
+                        fixedConfig,
+                        $$checkboxValue:false,
                     }
                     if(!it.columns){
                         columns_col.push(item);
@@ -161,6 +165,7 @@ export default defineComponent({
                     item.value.$$parent = parent;
                     item.value.$$parentDeep = parent ? parent.$$parentDeep.concat([parent]) : [];
                     item.value.$$level = level;
+                    item.value.$$checkboxValue = false;
                 })
             }
             const result:any = [];
@@ -203,6 +208,7 @@ export default defineComponent({
         let tbodyCells:any = ref([]);// 表单元格数据
         let colgroupArr:any = ref([]);// 表限制关联数据
         let tableWidth:any = ref(null);// 表格宽度
+        let radioValue:any = ref(null);// 单选数据
         // 重置表渲染
         const resetTbale = (newdata, bool)=>{
             tableDatas.value = newdata;
@@ -215,6 +221,7 @@ export default defineComponent({
                 const sum = colgroupArr.value.reduce((a,b)=>a+(b.width),0)
                 return sum ? ((sum+50) + 'px') : null;
             })
+            radioValue.value = null;
         }
         // 数据监听，响应式
         watch([
@@ -342,6 +349,7 @@ export default defineComponent({
             tableWidth,
             flattenDeep,
             tableDatas,
+            radioValue,
         }
     },
     mounted() {
@@ -353,7 +361,33 @@ export default defineComponent({
         })
     },
     render() {
-        const getNameIndex =  (index)=>`wp-table_${this._.uid}_column_${index || 0}`
+        const CheckboxAll = (v,column)=>{
+            console.log(v)
+        }
+        const CheckboxRow = (v,rowIndex)=>{
+            const row = this.tbodyCells[rowIndex][0].row;
+            // 检查孩子
+            this.flattenDeep(
+                row[this.treeChildrenFieldName] || [],
+                this.treeChildrenFieldName
+            ).forEach(row=>{
+                row.$$checkboxValue = v;
+            });
+            // 检查父级
+            row.$$parentDeep.reverse().forEach(parent=>{
+                let isCheck = true;
+                this.flattenDeep(
+                    parent[this.treeChildrenFieldName] || [],
+                    this.treeChildrenFieldName
+                ).forEach(row=>{
+                     if(!row.$$checkboxValue){
+                         isCheck = false;
+                     }
+                });
+                parent.$$checkboxValue = isCheck;
+            })
+        }
+        const getNameIndex =  (index)=>`wp-table_${this._.uid}_column_${index || 0}`;
         const theadRender = ()=>(<thead>
             {Object.values(this.theadColumns.columnsMap).map((item:any,key:number)=>(
                 <tr>
@@ -370,7 +404,11 @@ export default defineComponent({
                             rowspan={column.colspan === 1 ? this.theadColumns.rowspanMax-key:1}>
                             <div class={{
                                 "cell":true
-                            }}>{ this.$slots.header?.(column) || column.label}</div>
+                            }}>{ this.$slots.header?.(column) ||
+                                column.label ||
+                                (column.radio ? '-' :null) ||
+                                (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>CheckboxAll(v, column)}></Checkbox>) : null)
+                            }</div>
                         </th>
                     ))}
                 </tr>
@@ -424,14 +462,18 @@ export default defineComponent({
                                 "cell":true,
                                 "cell-tree-item":this.tree && (this.tree === column.prop || column.index === 1)
                             }}>
-                                {this.tree && (this.tree === column.prop || column.index === 1) ?
+                                {this.tree && (this.tree === column.prop || (column.index === 1 && typeof this.tree === 'boolean')) ?
                                     ((row[this.treeChildrenFieldName] || []).length > 0 ? (
                                         treeArrowRender(true,row)
                                     ) : treeArrowRender(false,row))
                                     : null}
                                 {this.$slots.default?.({
                                 column, row, spanCell, rowIndex, columnIndex
-                            }) || row[column.prop]}
+                                }) ||
+                                    row[column.prop] ||
+                                    (column.radio ? (<WpRadio onClick={ev=>ev.stopPropagation()} v-model={this.radioValue} border-radius="0" value={rowIndex.toString()}></WpRadio>) : null) ||
+                                    (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={row.$$checkboxValue} onUpdate:modelValue={v=>CheckboxRow(v, rowIndex)}></Checkbox>) : null)
+                                }
                             </div>
                         </td>
                     ))}

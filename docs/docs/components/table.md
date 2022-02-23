@@ -290,19 +290,21 @@ const spanCell = ({rowIndex, columnIndex})=>{
 ```
 :::
 
-#### 树形型表格及表格拖拽
+#### 树形型表格、表格拖拽、单选、复选
 
 :::demo
 
 ```vue
 <template>
     <wp-button @click="updateData">点击动态更新数据</wp-button>
-    <wp-table :columns="columns" :data="data" tree draggable></wp-table>
+    <wp-table :columns="columns" :data="data" tree="checkbox" draggable></wp-table>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 const columns = ref([
+    {radio:true},
+    {checkbox:true, prop:'checkbox'},
     {label:"index", prop:"index"},
     {label:"日期", prop:"date"},
     {label:"姓名", prop:"name"},
