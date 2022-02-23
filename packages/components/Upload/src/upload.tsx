@@ -1,6 +1,6 @@
 import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
-import { ref, defineComponent, ExtractPropTypes, PropType } from "vue"
+import { ref, defineComponent, ExtractPropTypes, PropType, nextTick } from "vue"
 import { getChunk } from './chunk'
 
 import UploadList from './uploadList'
@@ -89,7 +89,7 @@ export default defineComponent({
         }
     },
     expose: ['submit', 'addUpload'],
-    setup(props, { emit }) {
+    setup(props, { emit, attrs }) {
         const uploadFilesRef = ref<UploadFile[]>([])
         const uploadFiles = useAutoControl(uploadFilesRef, props, 'modelValue', emit, {
             passive: true,
@@ -103,6 +103,7 @@ export default defineComponent({
         }
         
         const handleUpload = async() => {
+            if (!uploadFiles.value) return
             const filesFilter = uploadFiles.value.filter(file => {
                 if (file.status === UploadFileStatus.Waiting) {
                     file.status = UploadFileStatus.Loading
