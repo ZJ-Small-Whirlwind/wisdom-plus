@@ -14,7 +14,7 @@ import { CheckOutlined } from '@vicons/antd'
 
 export const radiopProps = buildProps({
     modelValue: {
-        type: Boolean,
+        type: [Boolean, String, Number, Symbol] as PropType<string | number | symbol | boolean>,
         default: undefined
     },
     value: {
@@ -53,7 +53,11 @@ export default defineComponent({
                 if (checkedValue) {
                     return checkedValue.value === props.value
                 } else {
-                    return Boolean(checkedControl.value)
+                    if (props.value) {
+                        return checkedControl.value === props.value
+                    } else {
+                        return Boolean(checkedControl.value)
+                    }
                 }
             },
             set(value) {
@@ -61,7 +65,11 @@ export default defineComponent({
                     if (!props.value) return
                     checkedValue.value = props.value
                 } else {
-                    checkedControl.value = value
+                    if (props.value) {
+                        checkedControl.value = props.value
+                    } else {
+                        checkedControl.value = value
+                    }
                 }
             }
         })
