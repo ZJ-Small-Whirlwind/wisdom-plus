@@ -1,5 +1,5 @@
 import { useVModel, VModelOptions } from '@vueuse/core'
-import { Ref, computed } from 'vue'
+import { Ref, computed, nextTick } from 'vue'
 /**
  * 自动使用受控非受控模式
  */
@@ -19,9 +19,20 @@ export function useAutoControl<
             }
         },
         set(value) {
-            if (key && emit) emit?.(`update:${key}` as Name, value)
             if (typeof vModal.value === 'undefined') {
-                ref.value = value
+                if (key && emit) emit?.(`update:${key}` as Name, value)
+                nextTick(() => {
+                    if (typeof value === 'undefined') {
+                        ref.value = value
+                        vModal.value = value
+                        return
+                    }
+                    if (typeof vModal.value === 'undefined') {
+                        ref.value = value
+                    } else {
+                        vModal.value = value
+                    }
+                })
             } else {
                 vModal.value = value
             }
