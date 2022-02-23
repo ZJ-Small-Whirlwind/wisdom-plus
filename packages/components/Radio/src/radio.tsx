@@ -39,7 +39,10 @@ export default defineComponent({
     name: 'WpRadio',
     props: radiopProps,
     emits: {
-        'update:modelValue': (value: boolean) => typeof value === 'boolean'
+        'update:modelValue': (value: string | number | symbol | boolean) => {
+            void value
+            return true
+        }
     },
     setup(props, { slots, emit }) {
         const checkedRef = ref(false)
