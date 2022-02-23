@@ -90,7 +90,7 @@ export default defineComponent({
                 ref='inputElementRef'
                 class="wp-input--textarea"
                 style={{
-                    resize: this.resize
+                    resize: this.resize || 'vertical'
                 }}
                 rows={this.rows}
                 readonly={this.readonly || this.disabled}
