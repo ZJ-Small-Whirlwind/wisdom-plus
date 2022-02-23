@@ -62,6 +62,10 @@ export default defineConfig({
                     text: '输入组件',
                     children: [
                         {
+                            text: 'Input 输入框',
+                            link: '/components/input'
+                        },
+                        {
                             text: 'Checkbox 复选框',
                             link: '/components/checkbox'
                         },
