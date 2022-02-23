@@ -146,6 +146,7 @@ export default defineComponent({
                 bodyCellData = flattenDeep(bodyCellData, props.treeChildrenFieldName, ({item, parent,level})=>{
                     item.value.$$treeShow = false;
                     item.value.$$parent = parent;
+                    item.value.$$parentDeep = parent ? parent.$$parentDeep.concat([parent]) : [];
                     item.value.$$level = level;
                 })
             }
@@ -198,66 +199,81 @@ export default defineComponent({
         let draggableObjData = ref(null);
         let draggableObjDataIndex:any = ref(-1);
         let draggableObjDataIndexstart:any = ref(-1);
+        let draggableInset:any = ref(false);
+        let draggableForbid:any = ref(false);
+        let draggableForbidIndex:any = ref(-1);
         const onDragstart = (ev)=>{
             isDragstart = true;
             draggableObjData.value = null;
             draggableObjDataIndex.value = -1;
             draggableObjDataIndexstart.value = ev.target.attributes.getNamedItem("index").value;
+            draggableInset.value = false;
+            draggableForbid.value = false;
+            draggableForbidIndex.value = -1;
         }
         const onDragend = ()=>{
-            if(draggableObjDataIndexstart.value !==  draggableObjDataIndex.value){
+            if(!draggableForbid.value && draggableObjDataIndexstart.value !==  draggableObjDataIndex.value){
                 const start = Number(draggableObjDataIndexstart.value);
                 const end = Number(draggableObjDataIndex.value);
                 let rowChild_end:any = [];
                 let rowChild_start:any = [];
-                let rowStart:any = null;
-                const newData = tbodyCells.value.reduce((a,b, k,d)=>{
-                    const s_row = d[start][0].row;
-                    const e_row = b[0].row;
-                    if(rowChild_end.includes(b)){
-                        a.push(b);
-                        if(rowChild_end.indexOf(b) === rowChild_end.length - 1){
-                            a.push(rowStart)
-                        }
-                        return a;
+                let child_start:any = null;
+                let child_end:any = null;
+                tbodyCells.value.forEach((b, k,d)=>{
+                    child_start = d[start][0];
+                    child_end = b[0];
+                    const s_row = child_start.row;
+                    const e_row = child_end.row;
+                    if(k !== start && k === end){
+                        const children_e = flattenDeep(e_row[props.treeChildrenFieldName] || [], props.treeChildrenFieldName);
+                        const children = flattenDeep(s_row[props.treeChildrenFieldName] || [], props.treeChildrenFieldName);
+                        rowChild_start = d.filter(dd=>children.map(e=>e.$$rowIndex).includes(dd[0].rowIndex))
+                        rowChild_end = d.filter(dd=>children_e.map(e=>e.$$rowIndex).includes(dd[0].rowIndex))
                     }
-                    if(k !== start){
-                        if(k === end){
-                            const children_e = flattenDeep(e_row[props.treeChildrenFieldName] || [], props.treeChildrenFieldName);
-                            const children = flattenDeep(s_row[props.treeChildrenFieldName] || [], props.treeChildrenFieldName);
-                            const index = children.indexOf(e_row);
-                            if(index > -1){
-                                children.forEach(child=>{
-                                    child.$$level -= 1;
-                                })
-                            }
-                            rowChild_start = d.filter(dd=>children.map(e=>e.$$rowIndex).includes(dd[0].rowIndex))
-                            rowChild_end = d.filter(dd=>children_e.map(e=>e.$$rowIndex).includes(dd[0].rowIndex))
-                            console.log(rowChild_start)
-                            s_row.$$level = e_row.$$level;
-                            s_row.$$parent = e_row.$$parent;
-                            a.push(b);
-                            rowStart = d[start];
-                        }else {
-                            a.push(b);
+                });
+                const startObj = [child_start].concat(rowChild_start);
+                const endObj = [child_end].concat(rowChild_end);
+
+                console.log(startObj, endObj,draggableInset.value)
+                const test = (data,callback)=>{
+                    return data.filter(it=>{
+                        if(Object.prototype.toString.call(it[props.treeChildrenFieldName]) === '[object Array]'){
+                            it[props.treeChildrenFieldName] = test(it[props.treeChildrenFieldName], callback)
                         }
-                    }
-                    return a;
-                },[])
-                tbodyCells.value = newData;
+                        return callback(it)
+                    })
+                }
+                console.log(test(props.data, it=>{
+                    return true;
+                }))
             }
             isDragstart = false;
             draggableObjData.value = null;
             draggableObjDataIndex.value = -1;
             draggableObjDataIndexstart.value = -1;
+            draggableInset.value = false;
+            draggableForbid.value = false;
+            draggableForbidIndex.value = -1;
         }
         const onDragover = (ev)=>{
+            draggableForbid.value = false;
             try {
                 if(isDragstart){
                     let el = ev.path.find(e=>(e.tagName || "").toLowerCase().indexOf("tr") > -1);
                     if(el){
-                        draggableObjDataIndex.value = el.attributes.getNamedItem("index").value;
-                        draggableObjData.value = tbodyCells[draggableObjDataIndex.value];
+                        draggableForbidIndex.value = Number(el.attributes.getNamedItem("index").value);
+                        const srart_row = tbodyCells.value[draggableObjDataIndexstart.value][0].row
+                        const end_row = tbodyCells.value[draggableForbidIndex.value][0].row
+                        if(srart_row.index !== end_row.index && end_row.$$parentDeep.map(e=>e.index).indexOf(srart_row.index) === -1){
+                            draggableInset.value = ev.offsetY < el.clientHeight*0.5;
+                            draggableObjDataIndex.value = draggableForbidIndex.value;
+                            draggableObjData.value = tbodyCells.value[draggableObjDataIndex.value];
+                        }else {
+                            draggableObjData.value = null;
+                            draggableObjDataIndex.value = -1;
+                            draggableInset.value = false;
+                            draggableForbid.value = true;
+                        }
                     }
                 }
             }catch (e){}
@@ -268,6 +284,10 @@ export default defineComponent({
             onDragover,
             draggableObjData,
             draggableObjDataIndex,
+            draggableForbidIndex,
+            draggableObjDataIndexstart,
+            draggableInset,
+            draggableForbid,
             theadColumns,
             tbodyCells,
             colgroupArr,
@@ -332,7 +352,10 @@ export default defineComponent({
                     index={key}
                     class={{
                     "stripe":this.stripe,
-                    "draggable-is-active":key === Number(this.draggableObjDataIndex),
+                    "draggable-is-active":key === Number(this.draggableForbidIndex),
+                    "draggable-is-active-inset":key === Number(this.draggableObjDataIndex) && this.draggableInset,
+                    "draggable-is-active-forbid":key === Number(this.draggableForbidIndex) && this.draggableForbid,
+                    "draggable-is-active-start":key === Number(this.draggableObjDataIndexstart),
                 }}>
                     {item.map(({column, row, spanCell, rowIndex, columnIndex}:any)=>(
                         <td onClick={(ev)=>cellClick({column, row, spanCell, rowIndex, columnIndex, ev})} class={{
