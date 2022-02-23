@@ -89,7 +89,7 @@ const disabled = ref(false)
 
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
-| modelValue `v-model`   | 可控模式值       | _boolean_          | -     |
+| modelValue `v-model`   | 可控模式值，若没有 value，则判断值是否为真，若存在 value，则判断值是否与 value 相等       | _string \| number \| symbol \| boolean_          | -     |
 | value     | 单选框值   | _string \| number \| symbol_           | -      |
 | label | 单选框文本内容 | _string_ | - |
 | disabled | 是否禁用 | _boolean_ | false |
@@ -100,7 +100,7 @@ const disabled = ref(false)
 
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
-| update:modelValue      | 单选框值更改的回调       | _(value: boolean) => void_          | -     |
+| update:modelValue      | 单选框值更改的回调       | _(value: string \| number \| symbol \| boolean) => void_          | -     |
 
 ### Slots
 

@@ -39,10 +39,13 @@ export default defineComponent({
     name: 'WpRadio',
     props: radiopProps,
     emits: {
-        'update:modelValue': (value: boolean) => typeof value === 'boolean'
+        'update:modelValue': (value: string | number | symbol | boolean) => {
+            void value
+            return true
+        }
     },
     setup(props, { slots, emit }) {
-        const checkedRef = ref(false)
+        const checkedRef = ref<string | number | symbol | boolean>(false)
         const checkedControl = useAutoControl(checkedRef, props, 'modelValue', emit)
         const checkedValue = inject<Ref<string | number | symbol | boolean> | false>(
             'wp-radio-value',
