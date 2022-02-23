@@ -19,7 +19,7 @@ export function useAutoControl<
             }
         },
         set(value) {
-            if (typeof vModal.value === 'undefined') {
+            if (typeof vModal.value === 'undefined' || value === undefined) {
                 if (key && emit) emit?.(`update:${key}` as Name, value)
                 ref.value = value
             } else {
