@@ -295,96 +295,148 @@ const spanCell = ({rowIndex, columnIndex})=>{
 :::demo
 
 ```vue
+
 <template>
+    <div>数据效果查看控制台</div>
     <wp-button @click="updateData">点击动态更新数据</wp-button>
-    <wp-table :columns="columns" :data="data" tree="checkbox" draggable></wp-table>
+    <wp-button @click="getRadio">获取单选数据</wp-button>
+    <wp-button @click="setRadio">设置单选数据</wp-button>
+    <wp-button @click="getCheckbox">获取复选数据</wp-button>
+    <wp-button @click="setCheckbox">设置复选数据</wp-button>
+    <wp-button @click="setCheckboxAll">设置全选数据</wp-button>
+    <wp-button @click="clearRadio">清除单选数据</wp-button>
+    <wp-button @click="clearCheckbox">清除复选数据</wp-button>
+    <wp-table ref="table" :columns="columns" :data="data" tree="checkbox" draggable></wp-table>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import {ref} from 'vue'
+
 const columns = ref([
-    {radio:true, label: "单选"},
-    {checkbox:true, prop:'checkbox'},
-    {label:"index", prop:"index"},
-    {label:"日期", prop:"date"},
-    {label:"姓名", prop:"name"},
-    {label:"地址", prop:"address"},
+    {radio: true, label: "单选"},
+    {checkbox: true, prop: 'checkbox'},
+    {label: "index", prop: "index"},
+    {label: "日期", prop: "date"},
+    {label: "姓名", prop: "name"},
+    {label: "地址", prop: "address"},
 ])
-const data = ref([{
+const data = ref([
+{
     date: '2016-05-02',
     name: '王小虎',
     address: '上海市普陀区金沙江路 1 弄',
-    index:1,
+    index: 1,
 }, {
     date: '2016-05-04',
     name: '王小虎children',
     address: '上海市普陀区金沙江路 2 弄',
-    index:2,
-    children:[{
+    index: 2,
+    children: [{
         date: '2016-05-02',
         name: '王小虎1',
-        index:3,
+        index: 3,
         address: '上海市普陀区金沙江路 3 弄'
     }, {
         date: '2016-05-04',
         name: '王小虎2',
-        index:4,
+        index: 4,
         address: '上海市普陀区金沙江路 4 弄',
-        children:[
-            {name:"asdas",index:5,},
-            {name:"545",children:[
-                {name:"asdas",
-                    index:7,},
-                {name:"545",
-                    index:8,},
-            ],index:6,},
+        children: [
+            {name: "asdas", index: 5,},
+            {
+                name: "545", children: [
+                    {
+                        name: "asdas",
+                        index: 7,
+                    },
+                    {
+                        name: "545",
+                        index: 8,
+                    },
+                ], index: 6,
+            },
         ]
     }, {
         date: '2016-05-01',
         name: '王小虎3',
         address: '上海市普陀区金沙江路 9 弄',
-        index:9,
-        children:[
-            {name:"asdas",
-                index:10,},
-            {name:"545",
-                index:11,},
+        index: 9,
+        children: [
+            {
+                name: "asdas",
+                index: 10,
+            },
+            {
+                name: "545",
+                index: 11,
+            },
         ]
     }, {
         date: '2016-05-03',
         name: '王小虎4',
-        index:12,
+        index: 12,
         address: '上海市普陀区金沙江路 12 弄'
     }]
 }, {
     date: '2016-05-01',
     name: '王小虎',
-    index:13,
+    index: 13,
     address: '上海市普陀区金沙江路 13 弄'
 }, {
     date: '2016-05-03',
     name: '王小虎',
-    index:14,
+    index: 14,
     address: '上海市普陀区金沙江路 14 弄'
-}])
-const updateData = ()=>{
+}
+])
+const updateData = () => {
     data.value = [
         {
             date: '454544445454',
             name: '544',
-            index:45,
+            index: 45,
             address: '4545'
         }
     ]
-    setTimeout(()=>{
+    setTimeout(() => {
         columns.value = [
-            {label:"index", prop:"index"},
-            {label:"地址", prop:"address"},
+            {label: "index", prop: "index"},
+            {label: "地址", prop: "address"},
         ]
-    },2000)
+    }, 2000)
+}
+const table = ref(null);
+const getRadio = () => {
+    console.log(table.value.getRadio())
+}
+const getCheckbox = () => {
+    console.log(table.value.getCheckbox())
+}
+const setRadio = () => {
+    table.value.setRadio((Math.random()*13).toFixed(0))
+}
+const setCheckbox = () => {
+    table.value.setCheckbox([1,12,4,5])
+}
+const setCheckboxAll = () => {
+    table.value.setCheckboxAll()
+}
+const clearRadio = () => {
+    table.value.clearRadio()
+}
+const clearCheckbox = () => {
+    table.value.clearCheckbox()
+}
+</script>
+<style lang="scss">
+#app .wp-table .wp-table-cell-row-radio td {
+    background-color: #c2b3ff;
 }
 
-</script>
+#app .wp-table .wp-table-cell-row-checkbox td {
+    background-color: #00dcb3;
+}
+</style>
 ```
 
 :::
@@ -421,6 +473,18 @@ const updateData = ()=>{
 | align     | 文本对齐方式                                                                  | _string_             | 可选（ left,center, right） |
 | radio     | 单选栏目                                                                    | _boolean_            | false                   |
 | checkbox     | 复选栏目                                                                    | _boolean_             | false |
+
+### Methods
+
+| 参数  | 说明     | 参数                             |
+|-----|--------|--------------------------------|
+|  getRadio  | 获取单选数据 | _()=>row_                      |
+|  setRadio  | 设置单选数据 | _(rowIndex)=>void)_            |
+|  clearRadio  | 清除单选数据 | _()=>void_                     |
+|  getCheckbox  | 获取复选数据 | _()=>row[]_                    |
+|  setCheckbox  | 设置复选数据 | _(rowIndexs:rowIndex[])=>void_ |
+|  setCheckboxAll  | 全选数据   | _(bool:boolean = true)=>void_  |
+|  clearCheckbox  | 清除复选数据 | _()=>void_                       |
 
 ### Slots
 

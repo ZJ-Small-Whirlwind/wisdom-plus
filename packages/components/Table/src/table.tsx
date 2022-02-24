@@ -334,6 +334,71 @@ export default defineComponent({
                 }
             }catch (e){}
         }
+        const getRadio = ()=>{
+            return ((tbodyCells.value.find(cell=>String(cell[0].rowIndex) === radioValue.value) || [])[0] || {}).row;
+        }
+
+        const getCheckbox = ()=>{
+            return tbodyCells.value.filter(e=>e[0].row.$$checkboxValue).map(e=>e[0].row);
+        }
+        const setRadio = (rowIndex)=>{
+            radioValue.value = String(rowIndex);
+        }
+        const setCheckbox = (rowIndexs:any[] = [])=>{
+            tbodyCells.value.forEach(cell=>{
+                const rowIndex = cell[0].rowIndex;
+                if(rowIndexs.includes(rowIndex)){
+                    cell[0].row.$$checkboxValue = true;
+                    const column = (cell.find(e=>e.column.checkbox) || {}).column
+                    CheckboxRow(true, rowIndex, column)
+                }
+            });
+        }
+        const setCheckboxAll = (bool = true)=>{
+            const column = theadColumns.value.columns_col.find(e=>e.checkbox) || {};
+            column.$$checkboxValue = bool;
+            CheckboxAll(bool);
+        }
+        // 栏目全选
+        const CheckboxAll = (v)=>{
+            tbodyCells.value.forEach(cell=>{
+                const row = cell[0].row;
+                row.$$checkboxValue = v;
+            })
+        }
+        // 单元格复选
+        const CheckboxRow = (v,rowIndex,column)=>{
+            const cell = tbodyCells.value[rowIndex][0];
+            const row = cell.row;
+            // 检查孩子
+            flattenDeep(
+                row[props.treeChildrenFieldName] || [],
+                props.treeChildrenFieldName
+            ).forEach(row=>{
+                row.$$checkboxValue = v;
+            });
+            // 检查父级
+            row.$$parentDeep.reverse().forEach(parent=>{
+                let isCheck = true;
+                flattenDeep(
+                    parent[props.treeChildrenFieldName] || [],
+                    props.treeChildrenFieldName
+                ).forEach(row=>{
+                    if(!row.$$checkboxValue){
+                        isCheck = false;
+                    }
+                });
+                parent.$$checkboxValue = isCheck;
+            })
+            // 全选处理
+            column.$$checkboxValue = tbodyCells.value.filter(cellItem=>cellItem[0].row.$$checkboxValue).length === tbodyCells.value.length;
+        }
+        const clearRadio = ()=>{
+            radioValue.value = null;
+        }
+        const clearCheckbox = ()=>{
+            setCheckboxAll(false)
+        }
         return {
             onDragstart,
             onDragend,
@@ -351,6 +416,15 @@ export default defineComponent({
             flattenDeep,
             tableDatas,
             radioValue,
+            getRadio,
+            getCheckbox,
+            setRadio,
+            setCheckbox,
+            CheckboxRow,
+            CheckboxAll,
+            setCheckboxAll,
+            clearCheckbox,
+            clearRadio,
         }
     },
     mounted() {
@@ -362,38 +436,8 @@ export default defineComponent({
         })
     },
     render() {
-        const CheckboxAll = (v)=>{
-            this.tbodyCells.forEach(cell=>{
-                const row = cell[0].row;
-                row.$$checkboxValue = v;
-            })
-        }
-        const CheckboxRow = (v,rowIndex,column)=>{
-            const cell = this.tbodyCells[rowIndex][0];
-            const row = cell.row;
-            // 检查孩子
-            this.flattenDeep(
-                row[this.treeChildrenFieldName] || [],
-                this.treeChildrenFieldName
-            ).forEach(row=>{
-                row.$$checkboxValue = v;
-            });
-            // 检查父级
-            row.$$parentDeep.reverse().forEach(parent=>{
-                let isCheck = true;
-                this.flattenDeep(
-                    parent[this.treeChildrenFieldName] || [],
-                    this.treeChildrenFieldName
-                ).forEach(row=>{
-                     if(!row.$$checkboxValue){
-                         isCheck = false;
-                     }
-                });
-                parent.$$checkboxValue = isCheck;
-            })
-            // 全选处理
-            column.$$checkboxValue = this.tbodyCells.filter(cellItem=>cellItem[0].row.$$checkboxValue).length === this.tbodyCells.length;
-        }
+
+        // 获取栏目标识
         const getNameIndex =  (index)=>`wp-table_${this._.uid}_column_${index || 0}`;
         const theadRender = ()=>(<thead>
             {Object.values(this.theadColumns.columnsMap).map((item:any,key:number)=>(
@@ -414,19 +458,21 @@ export default defineComponent({
                             }}>{ this.$slots.header?.(column) ||
                                 column.label ||
                                 (column.radio ? '-' :null) ||
-                                (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>CheckboxAll(v)}></Checkbox>) : null)
+                                (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxAll(v)}></Checkbox>) : null)
                             }</div>
                         </th>
                     ))}
                 </tr>
             ))}
         </thead>)
+        // 单元格点击事件
         const cellClick = ({row})=>{
             if(this.tree && Object.prototype.toString.call(row[this.treeChildrenFieldName]) === '[object Array]'){
                 this.flattenDeep(row[this.treeChildrenFieldName] || [],this.treeChildrenFieldName).forEach(_row=>_row.$$treeShow = false);
                 row.$$treeShow = !row.$$treeShow;
             }
         }
+        // 树形箭头绘制
         const treeArrowRender = (bool, row)=>(
             <i class={{
                 "cell-tree-item-arrow":true,
@@ -481,7 +527,7 @@ export default defineComponent({
                                 }) ||
                                     row[column.prop] ||
                                     (column.radio ? (<WpRadio onClick={ev=>ev.stopPropagation()} v-model={this.radioValue} border-radius="0" value={String(rowIndex)}></WpRadio>) : null) ||
-                                    (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={row.$$checkboxValue} onUpdate:modelValue={v=>CheckboxRow(v, rowIndex, column)}></Checkbox>) : null)
+                                    (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={row.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxRow(v, rowIndex, column)}></Checkbox>) : null)
                                 }
                             </div>
                         </td>
