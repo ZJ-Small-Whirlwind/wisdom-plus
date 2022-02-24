@@ -2,8 +2,9 @@ import { buildProps } from "@wisdom-plus/utils/props"
 import {defineComponent, ExtractPropTypes, PropType, computed, ref, watch} from "vue"
 import  WpRadio from "../../Radio"
 import  Checkbox from "../../Checkbox"
+// import  Icon from "../../Icon"
+// import {}  from "@vicons/antd"
 import  simpleScroll from "./simpleScroll.js"
-import fa from "@wisdom-plus/locale/lang/fa";
 export const tableProps = buildProps({
     columns: {
         type: [Array] as PropType<Array<any>>,

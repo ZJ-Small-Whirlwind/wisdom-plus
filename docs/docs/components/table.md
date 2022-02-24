@@ -50,6 +50,41 @@ const data = ref([{
 ```
 :::
 
+#### 排序
+
+:::demo
+```vue
+<template>
+    <wp-table :columns="columns" :data="data"></wp-table>
+</template>
+<script setup lang="ts">
+import { ref } from 'vue'
+const columns = ref([
+    {label:"日期", prop:"date", width:120, sort:true},
+    {label:"姓名", prop:"name", align:'center'},
+    {label:"地址", prop:"address", sort:true},
+])
+const data = ref([{
+    date: '2016-05-02',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1518 弄45789'
+}, {
+    date: '2016-05-04',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1517 弄245'
+}, {
+    date: '2016-05-01',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1519 弄45787a'
+}, {
+    date: '2016-05-03',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1516 弄7897'
+}])
+</script>
+```
+:::
+
 #### 带斑马纹表格
 
 :::demo
