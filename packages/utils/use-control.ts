@@ -10,7 +10,7 @@ export function useAutoControl<
     Name extends string
 >(ref: T, props: P, key?: K, emit?: (name: Name, ...args: any[]) => void, options?: VModelOptions) {
     const vModal = useVModel(props, key, emit, options)
-    return computed<P[K]>({
+    return computed<P[K] | undefined>({
         get() {
             if (typeof vModal.value === 'undefined') {
                 return ref.value
@@ -19,20 +19,9 @@ export function useAutoControl<
             }
         },
         set(value) {
-            if (typeof vModal.value === 'undefined') {
+            if (typeof vModal.value === 'undefined' || value === undefined) {
                 if (key && emit) emit?.(`update:${key}` as Name, value)
-                nextTick(() => {
-                    if (typeof value === 'undefined') {
-                        ref.value = value
-                        vModal.value = value
-                        return
-                    }
-                    if (typeof vModal.value === 'undefined') {
-                        ref.value = value
-                    } else {
-                        vModal.value = value
-                    }
-                })
+                ref.value = value
             } else {
                 vModal.value = value
             }

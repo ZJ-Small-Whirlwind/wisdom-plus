@@ -18,7 +18,8 @@ export const radiopProps = buildProps({
         default: undefined
     },
     value: {
-        type: [Boolean, String, Number, Symbol] as PropType<string | number | symbol | boolean>
+        type: [Boolean, String, Number, Symbol] as PropType<string | number | symbol | boolean>,
+        default: undefined
     },
     label: {
         type: String
@@ -56,7 +57,7 @@ export default defineComponent({
                 if (checkedValue) {
                     return checkedValue.value === props.value
                 } else {
-                    if (props.value) {
+                    if (props.value !== undefined) {
                         return checkedControl.value === props.value
                     } else {
                         return Boolean(checkedControl.value)
@@ -68,7 +69,7 @@ export default defineComponent({
                     if (!props.value) return
                     checkedValue.value = props.value
                 } else {
-                    if (props.value) {
+                    if (props.value !== undefined) {
                         checkedControl.value = props.value
                     } else {
                         checkedControl.value = value

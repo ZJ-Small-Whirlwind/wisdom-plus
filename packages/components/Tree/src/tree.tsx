@@ -126,12 +126,15 @@ export default defineComponent({
         const treeListFlatten = computed(() => {
             const finalList: TreeListItemExtra[] = []
             filterItems.value.forEach(item => {
-                flattenList(item, finalList, 0, null, expends.value, props)
+                flattenList(item, finalList, 0, null, expends.value || [], props)
             })
             return finalList
         })
         const expendsList = ref<ExpendsList[]>([])
         const done = (isDelete: boolean, key: string | number | symbol) => {
+            if (!expends.value || props.expends) {
+                expends.value = []
+            }
             const index = expends.value.indexOf(key)
             if (isDelete) {
                 expends.value.splice(index, 1)
@@ -181,7 +184,7 @@ export default defineComponent({
             leave,
             done,
             treeListFlatten,
-            getCheckedItems: () => getCheckedItems(props.list, checked.value, props),
+            getCheckedItems: () => getCheckedItems(props.list, checked.value || [], props),
             getFlattenList: getFlattenListExpose,
             getItemsCount: (filter = false) => getItemsCount(filter ? filterItems.value : props.list, props),
             checkAll: () => {

@@ -10,7 +10,7 @@ import { SearchOutlined } from '@vicons/antd'
 ```vue
 <template>
     <wp-space vertical>
-        <wp-input placeholder='请输入' v-model="a" clearable :prefix="SearchIcon" />
+        <wp-input placeholder='请输入' v-model="input" clearable :prefix="SearchIcon" />
         <wp-input readonly />
         <wp-input disabled />
     </wp-space>
@@ -18,8 +18,9 @@ import { SearchOutlined } from '@vicons/antd'
 
 <script lang="ts" setup>
 const SearchIcon = SearchOutlined
+
 import { ref } from 'vue'
-const a = ref<string>()
+const input = ref<string>()
 </script>
 ```
 :::

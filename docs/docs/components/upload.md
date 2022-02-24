@@ -21,7 +21,7 @@ app.use(WpUpload)
 :::demo
 ```vue
 <template>
-    <wp-upload auto-upload :delete="handleDelete" :upload="handleUpload" multiple :limit="1" accept=".jpg,.png,.webp">
+    <wp-upload v-model="files" auto-upload :delete="handleDelete" :upload="handleUpload" multiple :limit="1" accept=".jpg,.png,.webp">
         <template #description>
             允许的文件格式 .jpg,.png,.webp
         </template>
@@ -29,6 +29,8 @@ app.use(WpUpload)
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
+const files = ref()
 const handleDelete = file => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {

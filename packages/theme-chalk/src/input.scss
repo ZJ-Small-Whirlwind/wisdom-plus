@@ -42,7 +42,7 @@
         }
     }
     &--textarea {
-        min-height: calc(1em + var(--wp-input-padding-top-bottom) * 2.4);
+        min-height: calc(1em + var(--wp-input-padding-top-bottom) * 2.8);
         line-height: calc(var(--wp-input-line-height) * 1.2);
     }
     &--size {

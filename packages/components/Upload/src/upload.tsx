@@ -1,6 +1,6 @@
 import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
-import { ref, defineComponent, ExtractPropTypes, PropType } from "vue"
+import { ref, defineComponent, ExtractPropTypes, PropType, nextTick } from "vue"
 import { getChunk } from './chunk'
 
 import UploadList from './uploadList'
@@ -89,7 +89,7 @@ export default defineComponent({
         }
     },
     expose: ['submit', 'addUpload'],
-    setup(props, { emit }) {
+    setup(props, { emit, attrs }) {
         const uploadFilesRef = ref<UploadFile[]>([])
         const uploadFiles = useAutoControl(uploadFilesRef, props, 'modelValue', emit, {
             passive: true,
@@ -103,6 +103,7 @@ export default defineComponent({
         }
         
         const handleUpload = async() => {
+            if (!uploadFiles.value) return
             const filesFilter = uploadFiles.value.filter(file => {
                 if (file.status === UploadFileStatus.Waiting) {
                     file.status = UploadFileStatus.Loading
@@ -122,11 +123,14 @@ export default defineComponent({
         const handleRetry = async (file: UploadFile) => {
             if (!props.retry) return
             file.status = UploadFileStatus.Loading
-            await props.upload?.([file], uploadFiles.value)
+            await props.upload?.([file], uploadFiles.value || [])
         }
 
         const handleAddUpload = async(files: FileList | File[]) => {
             if (files.length === 0) return
+            if (!props.modelValue || !uploadFiles.value) {
+                uploadFiles.value = []
+            }
             for (let i = 0; i < files.length; i++) {
                 uploadFiles.value.push({
                     name: files[i].name,
@@ -185,7 +189,7 @@ export default defineComponent({
             if (props.disabled) return
             try {
                 await props.delete?.(file, true)
-                uploadFiles.value.splice(index, 1)
+                uploadFiles.value?.splice(index, 1)
             } catch {
                 return
             }
