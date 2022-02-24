@@ -1,8 +1,9 @@
 import { buildProps } from "@wisdom-plus/utils/props"
-import {defineComponent, ExtractPropTypes, PropType, computed, ref, watch} from "vue"
+import {defineComponent, ExtractPropTypes, PropType, computed, ref, watch, h} from "vue"
 import  WpRadio from "../../Radio"
 import  Checkbox from "../../Checkbox"
 import  Icon from "../../Icon"
+import  Dropdown from "../../Dropdown"
 import {CaretUpFilled, CaretDownFilled}  from "@vicons/antd"
 import  simpleScroll from "./simpleScroll.js"
 export const tableProps = buildProps({
@@ -165,6 +166,7 @@ export default defineComponent({
                     if(!notResetShow){
                         item.value.$$treeShow = false;
                     }
+                    item.value.$$filterShow = false;
                     item.value.$$parent = parent;
                     item.value.$$parentDeep = parent ? parent.$$parentDeep.concat([parent]) : [];
                     item.value.$$level = level;
@@ -405,37 +407,39 @@ export default defineComponent({
             setCheckboxAll(false)
         }
         const sortClick = (ev, column, bool, isp, arrs)=>{
-            arrs.forEach(it=>{
-                it.forEach(item=>{
-                    if(item !== column){
-                        item.$$sort = 0;
-                    }
+            if(column.sort){
+                arrs.forEach(it=>{
+                    it.forEach(item=>{
+                        if(item !== column){
+                            item.$$sort = 0;
+                        }
+                    })
                 })
-            })
-            if(isp){
-                if(column.$$sort == 2){
-                    column.$$sort = 0;
+                if(isp){
+                    if(column.$$sort == 2){
+                        column.$$sort = 0;
+                    }else {
+                        column.$$sort += 1;
+                    }
                 }else {
-                    column.$$sort += 1;
+                    if(bool){
+                        column.$$sort = column.$$sort === 1 ? 0 : 1;
+                    }else {
+                        column.$$sort = column.$$sort === 2 ? 0 : 2;
+                    }
+                    ev.stopPropagation();
                 }
-            }else {
-                if(bool){
-                    column.$$sort = column.$$sort === 1 ? 0 : 1;
+                if(column.$$sort === 0){
+                    resetTbale(tableDatas.value, false, false);
                 }else {
-                    column.$$sort = column.$$sort === 2 ? 0 : 2;
+                    const newdata = JSON.parse(JSON.stringify(tableDatas.value)).sort((a,b)=> {
+                        return {
+                            1:String(a[column.prop]).localeCompare(String(b[column.prop])),
+                            2:String(b[column.prop]).localeCompare(String(a[column.prop])),
+                        }[column.$$sort] || 1;
+                    });
+                    resetTbale(newdata, false, false);
                 }
-                ev.stopPropagation();
-            }
-            if(column.$$sort === 0){
-                resetTbale(tableDatas.value, false, false);
-            }else {
-                const newdata = JSON.parse(JSON.stringify(tableDatas.value)).sort((a,b)=> {
-                    return {
-                        1:String(a[column.prop]).localeCompare(String(b[column.prop])),
-                        2:String(b[column.prop]).localeCompare(String(a[column.prop])),
-                    }[column.$$sort] || 1;
-                });
-                resetTbale(newdata, false, false);
             }
         }
         return {
@@ -490,6 +494,35 @@ export default defineComponent({
                         <CaretDownFilled></CaretDownFilled>
                     }
             </Icon>)
+        const columnLableRender = (column)=>this.$slots.header?.(column) ||
+            column.label ||
+            (column.radio ? '-' :null) ||
+            (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxAll(v)}></Checkbox>) : null)
+        const getFilterData = (column)=>{
+            return this.tbodyCells.map(cellRow=>{
+                const obj = cellRow[column.index - 1];
+                const row = obj.row;
+                console.log(row.$$filterShow)
+                return {
+                    title:h("div",{
+                        class:"wp-table-thead-cell-filter-content",
+                    },[
+                        h(Checkbox, {
+                            class: "wp-table-thead-cell-filter-content-checkbox",
+                            onClick:ev=>{
+                                ev.stopPropagation();
+                            },
+                            modelValue: row.$$filterShow,
+                            "onUpdate:modelValue":v=>{
+                                row.$$filterShow = v;
+                            }
+                        }),
+                        this.$slots.headerFilter?.({column, obj, row}) || row[column.prop]
+                    ]),
+                    index:obj.rowIndex
+                }
+            })
+        }
         const theadRender = ()=>(<thead>
             {Object.values(this.theadColumns.columnsMap).map((item:any,key:number,arrs)=>(
                 <tr>
@@ -508,11 +541,7 @@ export default defineComponent({
                                 "cell":true,
                                 "cell-sort":column.sort
                             }} onClick={(ev)=>this.sortClick(ev,column, true, true,arrs)}>
-                                { this.$slots.header?.(column) ||
-                                    column.label ||
-                                    (column.radio ? '-' :null) ||
-                                    (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxAll(v)}></Checkbox>) : null)
-                                }
+                                {column.filter ? (<Dropdown list={column.filterData || getFilterData(column)}>{columnLableRender(column)}</Dropdown>):columnLableRender(column)}
                                 {(column.sort ? (<div class={{
                                     "cell-sort-content":column.sort
                                 }}>
@@ -544,7 +573,7 @@ export default defineComponent({
         )
 
         const tbodyRender = ()=>(<tbody onDragover={this.onDragover}>
-            {this.tbodyCells.map((item,key)=>!item[0].row.$$parent || item[0].row.$$parent.$$treeShow  ?(
+            {this.tbodyCells.map((item,key)=>(!item[0].row.$$parent || item[0].row.$$parent.$$treeShow)  ?(
                 <tr
                     draggable={this.draggable}
                     onDragstart={this.onDragstart}
