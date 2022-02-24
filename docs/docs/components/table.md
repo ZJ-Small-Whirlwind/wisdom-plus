@@ -50,7 +50,7 @@ const data = ref([{
 ```
 :::
 
-#### 排序及过滤
+#### 排序、过滤、搜索、label过滤
 
 :::demo
 ```vue
@@ -65,30 +65,42 @@ const clickFilter = (...arg)=>{
 }
 const columns = ref([
     {label:"日期", prop:"date", width:120, sort:true, filter:true,filterData:[
-            {title:"自定义过滤数据",index:1}    
+        {title:"自定义过滤数据",index:1}    
     ]},
     {label:"姓名", prop:"name", align:'center', filter:true},
     {label:"地址", prop:"address", sort:true},
     {label:"地址", prop:"address", search:true, placeholder:"请输入关键字",change:(v,column)=>{
         table.value.search(v,column)
     }},
+    {label:"label过滤", prop:"status", labelFilter:({value})=>{
+            return {
+                1:"状态1",
+                2:"状态2",
+                3:"状态3",
+                4:"状态4",
+            }[value];
+    }},
 ])
 const data = ref([{
     date: '2016-05-02',
     name: '王小虎6',
-    address: '6上海市普陀区金沙江路 1518 弄45789'
+    address: '6上海市普陀区金沙江路 1518 弄45789',
+    status:1,
 }, {
     date: '2016-05-04',
     name: '王小虎3',
-    address: '3上海市普陀区金沙江路 1517 弄245'
+    address: '3上海市普陀区金沙江路 1517 弄245',
+    status:2,
 }, {
     date: '2016-05-01',
     name: '王小虎9',
-    address: '9上海市普陀区金沙江路 1519 弄45787a'
+    address: '9上海市普陀区金沙江路 1519 弄45787a',
+    status:3,
 }, {
     date: '2016-05-03',
     name: '王小虎1',
-    address: '1上海市普陀区金沙江路 1516 弄7897'
+    address: '1上海市普陀区金沙江路 1516 弄7897',
+    status:4,
 }])
 </script>
 ```

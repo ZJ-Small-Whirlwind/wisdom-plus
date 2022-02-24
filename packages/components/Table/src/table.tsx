@@ -645,7 +645,7 @@ export default defineComponent({
                                 {this.$slots.default?.({
                                 column, row, spanCell, rowIndex, columnIndex
                                 }) ||
-                                    get(row,column.prop) ||
+                                    (column.labelFilter ? column.labelFilter({value:get(row,column.prop),row,column}) : get(row,column.prop)) ||
                                     (column.radio ? (<WpRadio onClick={ev=>ev.stopPropagation()} v-model={this.radioValue} border-radius="0" value={String(rowIndex)}></WpRadio>) : null) ||
                                     (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={row.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxRow(v, rowIndex, column)}></Checkbox>) : null)
                                 }
