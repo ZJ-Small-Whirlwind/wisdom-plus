@@ -442,7 +442,7 @@ export default defineComponent({
                     resetTbale(newdata, false, false);
                 }
             }
-            emit('click-filter',column,ev);
+            emit('cell-header-click',column,ev);
         }
         return {
             onDragstart,
@@ -505,8 +505,8 @@ export default defineComponent({
                 const obj = cellRow[column.index - 1];
                 const row = obj.row;
                 return {
-                    $$row:row,
-                    $$column:column,
+                    row,
+                    column,
                     title:h("div",{
                         class:"wp-table-thead-cell-filter-content",
                     },[
