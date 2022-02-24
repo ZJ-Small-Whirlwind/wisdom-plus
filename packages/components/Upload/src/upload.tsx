@@ -123,12 +123,12 @@ export default defineComponent({
         const handleRetry = async (file: UploadFile) => {
             if (!props.retry) return
             file.status = UploadFileStatus.Loading
-            await props.upload?.([file], uploadFiles.value)
+            await props.upload?.([file], uploadFiles.value || [])
         }
 
         const handleAddUpload = async(files: FileList | File[]) => {
             if (files.length === 0) return
-            if (!props.modelValue) {
+            if (!props.modelValue || !uploadFiles.value) {
                 uploadFiles.value = []
             }
             for (let i = 0; i < files.length; i++) {
@@ -189,7 +189,7 @@ export default defineComponent({
             if (props.disabled) return
             try {
                 await props.delete?.(file, true)
-                uploadFiles.value.splice(index, 1)
+                uploadFiles.value?.splice(index, 1)
             } catch {
                 return
             }

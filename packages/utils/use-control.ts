@@ -10,7 +10,7 @@ export function useAutoControl<
     Name extends string
 >(ref: T, props: P, key?: K, emit?: (name: Name, ...args: any[]) => void, options?: VModelOptions) {
     const vModal = useVModel(props, key, emit, options)
-    return computed<P[K]>({
+    return computed<P[K] | undefined>({
         get() {
             if (typeof vModal.value === 'undefined') {
                 return ref.value

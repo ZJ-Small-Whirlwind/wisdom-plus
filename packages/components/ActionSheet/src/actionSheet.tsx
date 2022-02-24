@@ -162,7 +162,7 @@ export default defineComponent({
                             <div class="wp-action-sheet__cell wp-action-sheet--cancel">
                                 {
                                     slots.cancel?.() || (
-                                        <Button size="large" block round onClick={() => {
+                                        <Button size="large" round onClick={() => {
                                             show.value = false
                                         }}>{ props.cancelText }</Button>
                                     )

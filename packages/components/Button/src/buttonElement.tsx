@@ -120,7 +120,7 @@ export default defineComponent({
                 {
                     ( this.icon || this.$slots.icon ) ?
                         (
-                            <wp-icon>{h(this.icon) || this.$slots.icon()}</wp-icon>
+                            <wp-icon>{h(this.icon as any) || this.$slots.icon?.()}</wp-icon>
                         ) :
                         null
                 }
