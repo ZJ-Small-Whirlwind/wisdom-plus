@@ -50,7 +50,7 @@ const data = ref([{
 ```
 :::
 
-#### 排序
+#### 排序及过滤
 
 :::demo
 ```vue
@@ -60,26 +60,26 @@ const data = ref([{
 <script setup lang="ts">
 import { ref } from 'vue'
 const columns = ref([
-    {label:"日期", prop:"date", width:120, sort:true},
-    {label:"姓名", prop:"name", align:'center'},
+    {label:"日期", prop:"date", width:120, sort:true, filter:true},
+    {label:"姓名", prop:"name", align:'center', filter:true},
     {label:"地址", prop:"address", sort:true},
 ])
 const data = ref([{
     date: '2016-05-02',
-    name: '王小虎',
-    address: '上海市普陀区金沙江路 1518 弄45789'
+    name: '王小虎6',
+    address: '6上海市普陀区金沙江路 1518 弄45789'
 }, {
     date: '2016-05-04',
-    name: '王小虎',
-    address: '上海市普陀区金沙江路 1517 弄245'
+    name: '王小虎3',
+    address: '3上海市普陀区金沙江路 1517 弄245'
 }, {
     date: '2016-05-01',
-    name: '王小虎',
-    address: '上海市普陀区金沙江路 1519 弄45787a'
+    name: '王小虎9',
+    address: '9上海市普陀区金沙江路 1519 弄45787a'
 }, {
     date: '2016-05-03',
-    name: '王小虎',
-    address: '上海市普陀区金沙江路 1516 弄7897'
+    name: '王小虎1',
+    address: '1上海市普陀区金沙江路 1516 弄7897'
 }])
 </script>
 ```

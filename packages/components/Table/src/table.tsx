@@ -3,7 +3,7 @@ import {defineComponent, ExtractPropTypes, PropType, computed, ref, watch} from 
 import  WpRadio from "../../Radio"
 import  Checkbox from "../../Checkbox"
 import  Icon from "../../Icon"
-import {CaretUpFilled}  from "@vicons/antd"
+import {CaretUpFilled, CaretDownFilled}  from "@vicons/antd"
 import  simpleScroll from "./simpleScroll.js"
 export const tableProps = buildProps({
     columns: {
@@ -115,6 +115,7 @@ export default defineComponent({
                         index:it.columns ? -1:columnsIndex += 1,
                         fixedConfig,
                         $$checkboxValue:false,
+                        $$sort:0,
                     }
                     if(!it.columns){
                         columns_col.push(item);
@@ -212,10 +213,13 @@ export default defineComponent({
         let tableWidth:any = ref(null);// 表格宽度
         let radioValue:any = ref(null);// 单选数据
         // 重置表渲染
-        const resetTbale = (newdata, bool)=>{
-            tableDatas.value = newdata;
-            theadColumns.value = getColumnsMergedCell(props.columns)
-            tbodyCells.value = getTbodyMergedCells(tableDatas.value, bool);
+        const resetTbale = (newdata, bool, columnsUpdate = true)=>{
+            // 是否更新表头及源数据
+            if(columnsUpdate){
+                tableDatas.value = newdata;
+                theadColumns.value = getColumnsMergedCell(props.columns)
+            }
+            tbodyCells.value = getTbodyMergedCells(newdata, bool);
             colgroupArr = computed(()=>{
                 return theadColumns.value.columns_col.filter((e)=>props.height || !!e.width);
             })
@@ -400,6 +404,40 @@ export default defineComponent({
         const clearCheckbox = ()=>{
             setCheckboxAll(false)
         }
+        const sortClick = (ev, column, bool, isp, arrs)=>{
+            arrs.forEach(it=>{
+                it.forEach(item=>{
+                    if(item !== column){
+                        item.$$sort = 0;
+                    }
+                })
+            })
+            if(isp){
+                if(column.$$sort == 2){
+                    column.$$sort = 0;
+                }else {
+                    column.$$sort += 1;
+                }
+            }else {
+                if(bool){
+                    column.$$sort = column.$$sort === 1 ? 0 : 1;
+                }else {
+                    column.$$sort = column.$$sort === 2 ? 0 : 2;
+                }
+                ev.stopPropagation();
+            }
+            if(column.$$sort === 0){
+                resetTbale(tableDatas.value, false, false);
+            }else {
+                const newdata = JSON.parse(JSON.stringify(tableDatas.value)).sort((a,b)=> {
+                    return {
+                        1:String(a[column.prop]).localeCompare(String(b[column.prop])),
+                        2:String(b[column.prop]).localeCompare(String(a[column.prop])),
+                    }[column.$$sort] || 1;
+                });
+                resetTbale(newdata, false, false);
+            }
+        }
         return {
             onDragstart,
             onDragend,
@@ -426,6 +464,7 @@ export default defineComponent({
             setCheckboxAll,
             clearCheckbox,
             clearRadio,
+            sortClick,
         }
     },
     mounted() {
@@ -437,11 +476,22 @@ export default defineComponent({
         })
     },
     render() {
-
         // 获取栏目标识
         const getNameIndex =  (index)=>`wp-table_${this._.uid}_column_${index || 0}`;
+        const sortIconRender = (column, bool, active, arrs)=>(
+            <Icon class={{
+                    'active':column.$$sort === active
+                }}
+                size={12}
+                onClick={(ev)=>this.sortClick(ev,column, bool, false,arrs)}>
+                    {active === 1 ?
+                        <CaretUpFilled></CaretUpFilled>
+                        :
+                        <CaretDownFilled></CaretDownFilled>
+                    }
+            </Icon>)
         const theadRender = ()=>(<thead>
-            {Object.values(this.theadColumns.columnsMap).map((item:any,key:number)=>(
+            {Object.values(this.theadColumns.columnsMap).map((item:any,key:number,arrs)=>(
                 <tr>
                     {item.map((column)=>(
                         <th class={{
@@ -455,13 +505,21 @@ export default defineComponent({
                             colspan={column.colspan}
                             rowspan={column.colspan === 1 ? this.theadColumns.rowspanMax-key:1}>
                             <div class={{
-                                "cell":true
-                            }}>{ this.$slots.header?.(column) ||
-                                column.label ||
-                                (column.radio ? '-' :null) ||
-                                (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxAll(v)}></Checkbox>) : null) ||
-                                (column.sort ? (<Icon><CaretUpFilled></CaretUpFilled></Icon>) : null)
-                            }</div>
+                                "cell":true,
+                                "cell-sort":column.sort
+                            }} onClick={(ev)=>this.sortClick(ev,column, true, true,arrs)}>
+                                { this.$slots.header?.(column) ||
+                                    column.label ||
+                                    (column.radio ? '-' :null) ||
+                                    (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxAll(v)}></Checkbox>) : null)
+                                }
+                                {(column.sort ? (<div class={{
+                                    "cell-sort-content":column.sort
+                                }}>
+                                    {sortIconRender(column,true,1,arrs)}
+                                    {sortIconRender(column,false,2,arrs)}
+                                </div>) : null)}
+                            </div>
                         </th>
                     ))}
                 </tr>

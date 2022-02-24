@@ -102,6 +102,21 @@
           }
         }
       }
+      &-sort{
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        &-content{
+          display: flex;
+          flex-direction: column;
+          margin-left: 5px;
+          cursor: pointer;
+          .active{
+            color: #3a8ee6;
+          }
+        }
+      }
     }
   }
   &--border{
