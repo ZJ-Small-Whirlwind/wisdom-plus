@@ -117,6 +117,15 @@
           }
         }
       }
+      &-filter{
+        *{
+          display: flex;
+          align-items: center;
+        }
+        &-icon{
+          color: #999999;
+        }
+      }
     }
   }
   &--border{

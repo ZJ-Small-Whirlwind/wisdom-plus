@@ -4,7 +4,8 @@ import  WpRadio from "../../Radio"
 import  Checkbox from "../../Checkbox"
 import  Icon from "../../Icon"
 import  Dropdown from "../../Dropdown"
-import {CaretUpFilled, CaretDownFilled}  from "@vicons/antd"
+import {CaretUpFilled, CaretDownFilled, FilterFilled}  from "@vicons/antd"
+import {get}  from "lodash"
 import  simpleScroll from "./simpleScroll.js"
 export const tableProps = buildProps({
     columns: {
@@ -59,7 +60,7 @@ export type TableProps = ExtractPropTypes<typeof tableProps>
 export default defineComponent({
     name: 'WpTable',
     props: tableProps,
-    setup(props) {
+    setup(props,{emit}) {
         // 当前表格数据
         const tableDatas:any = ref([]);
         /**
@@ -166,7 +167,6 @@ export default defineComponent({
                     if(!notResetShow){
                         item.value.$$treeShow = false;
                     }
-                    item.value.$$filterShow = false;
                     item.value.$$parent = parent;
                     item.value.$$parentDeep = parent ? parent.$$parentDeep.concat([parent]) : [];
                     item.value.$$level = level;
@@ -185,6 +185,7 @@ export default defineComponent({
                         columnIndex,
                     }
                     row.$$rowIndex = rowIndex;
+                    row.$$filterShow = true;
                     const spanCell = props.spanCell(it) || []
                     it.spanCell = [spanCell[0] || 1,spanCell[1] || 1];
                     if(it.spanCell.reduce((a,b)=>a+b) > 2){
@@ -434,13 +435,14 @@ export default defineComponent({
                 }else {
                     const newdata = JSON.parse(JSON.stringify(tableDatas.value)).sort((a,b)=> {
                         return {
-                            1:String(a[column.prop]).localeCompare(String(b[column.prop])),
-                            2:String(b[column.prop]).localeCompare(String(a[column.prop])),
+                            1:String(get(a,column.prop)).localeCompare(String(get(b,column.prop))),
+                            2:String(get(b,column.prop)).localeCompare(String(get(a,column.prop))),
                         }[column.$$sort] || 1;
                     });
                     resetTbale(newdata, false, false);
                 }
             }
+            emit('click-filter',column,ev);
         }
         return {
             onDragstart,
@@ -502,8 +504,9 @@ export default defineComponent({
             return this.tbodyCells.map(cellRow=>{
                 const obj = cellRow[column.index - 1];
                 const row = obj.row;
-                console.log(row.$$filterShow)
                 return {
+                    $$row:row,
+                    $$column:column,
                     title:h("div",{
                         class:"wp-table-thead-cell-filter-content",
                     },[
@@ -517,7 +520,7 @@ export default defineComponent({
                                 row.$$filterShow = v;
                             }
                         }),
-                        this.$slots.headerFilter?.({column, obj, row}) || row[column.prop]
+                        this.$slots.headerFilter?.({column, obj, row}) || get(row,column.prop)
                     ]),
                     index:obj.rowIndex
                 }
@@ -539,9 +542,13 @@ export default defineComponent({
                             rowspan={column.colspan === 1 ? this.theadColumns.rowspanMax-key:1}>
                             <div class={{
                                 "cell":true,
-                                "cell-sort":column.sort
+                                "cell-sort":column.sort,
+                                "cell-filter":column.filter,
                             }} onClick={(ev)=>this.sortClick(ev,column, true, true,arrs)}>
-                                {column.filter ? (<Dropdown list={column.filterData || getFilterData(column)}>{columnLableRender(column)}</Dropdown>):columnLableRender(column)}
+                                {column.filter ? (<Dropdown list={column.filterData || getFilterData(column)} onClick={(...agrs)=>this.$emit('click-filter',...agrs)}>
+                                                {columnLableRender(column)}
+                                                {<Icon class={'cell-filter-icon'}><FilterFilled></FilterFilled></Icon>}
+                                            </Dropdown>):columnLableRender(column)}
                                 {(column.sort ? (<div class={{
                                     "cell-sort-content":column.sort
                                 }}>
@@ -555,11 +562,12 @@ export default defineComponent({
             ))}
         </thead>)
         // 单元格点击事件
-        const cellClick = ({row})=>{
+        const cellClick = ({row,ev,...args})=>{
             if(this.tree && Object.prototype.toString.call(row[this.treeChildrenFieldName]) === '[object Array]'){
                 this.flattenDeep(row[this.treeChildrenFieldName] || [],this.treeChildrenFieldName).forEach(_row=>_row.$$treeShow = false);
                 row.$$treeShow = !row.$$treeShow;
             }
+            this.$emit('cell-click',{...args,row},ev);
         }
         // 树形箭头绘制
         const treeArrowRender = (bool, row)=>(
@@ -573,12 +581,13 @@ export default defineComponent({
         )
 
         const tbodyRender = ()=>(<tbody onDragover={this.onDragover}>
-            {this.tbodyCells.map((item,key)=>(!item[0].row.$$parent || item[0].row.$$parent.$$treeShow)  ?(
+            {this.tbodyCells.map((item,key)=>(!item[0].row.$$parent || item[0].row.$$parent.$$treeShow) && item[0].row.$$filterShow  ?(
                 <tr
                     draggable={this.draggable}
                     onDragstart={this.onDragstart}
                     onDragend={this.onDragend}
                     index={key}
+                    onClick={(ev)=>this.$emit('cell-row-click',item, ev)}
                     class={{
                     "stripe":this.stripe,
                     "draggable-is-active":key === Number(this.draggableForbidIndex),
@@ -614,7 +623,7 @@ export default defineComponent({
                                 {this.$slots.default?.({
                                 column, row, spanCell, rowIndex, columnIndex
                                 }) ||
-                                    row[column.prop] ||
+                                    get(row,column.prop) ||
                                     (column.radio ? (<WpRadio onClick={ev=>ev.stopPropagation()} v-model={this.radioValue} border-radius="0" value={String(rowIndex)}></WpRadio>) : null) ||
                                     (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={row.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxRow(v, rowIndex, column)}></Checkbox>) : null)
                                 }

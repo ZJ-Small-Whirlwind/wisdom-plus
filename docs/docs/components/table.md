@@ -55,14 +55,20 @@ const data = ref([{
 :::demo
 ```vue
 <template>
-    <wp-table :columns="columns" :data="data"></wp-table>
+    <wp-table :columns="columns" :data="data" @clickFilter="clickFilter"></wp-table>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
+const clickFilter = (...arg)=>{
+    console.log(arg)
+}
 const columns = ref([
-    {label:"日期", prop:"date", width:120, sort:true, filter:true},
+    {label:"日期", prop:"date", width:120, sort:true, filter:true,filterData:[
+            {title:"自定义过滤数据",index:1}    
+    ]},
     {label:"姓名", prop:"name", align:'center', filter:true},
     {label:"地址", prop:"address", sort:true},
+    {label:"地址", prop:"address", search:true},
 ])
 const data = ref([{
     date: '2016-05-02',
@@ -524,12 +530,22 @@ const clearCheckbox = () => {
 |  setCheckboxAll  | 全选数据   | _(bool:boolean = true)=>void_  |
 |  clearCheckbox  | 清除复选数据 | _()=>void_                       |
 
+### Emits
+
+| 参数                | 说明 | 参数                             |
+|-------------------|--|--------------------------------|
+| click-filter      | 过滤点击回调 | _(ev:any)=>void_                      |
+| cell-click        | 单元格点击回调 | _(ev:any)=>void_                      |
+| cell-row-click    | 单行点击回调 | _(ev:any)=>void_                      |
+| cell-header-click | 表头单元格点击回调 | _(ev:any)=>void_                      |
+
 ### Slots
 
-| 参数  | 说明  | 参数                                                 |
-|-----|-----|----------------------------------------------------|
-|  -  | 默认卡槽  | _column_                                           |
+| 参数  | 说明     | 参数                                                 |
+|-----|--------|----------------------------------------------------|
+|  -  | 默认卡槽   | _column_                                           |
 |  header  | 表头插槽   | _{ column, row, spanCell, rowIndex, columnIndex }_ |
+|  headerFilter  | 表头过滤插槽 | _{ column, obj, row }_ |
 
 ## 定制
 

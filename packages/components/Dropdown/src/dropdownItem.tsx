@@ -24,7 +24,9 @@ export default defineComponent({
         children: {
             type: Array as PropType<DropdownRecord[]>
         },
-        icon: Object as PropType<Component>
+        icon: Object as PropType<Component>,
+        row: Object as PropType<any>,
+        column: Object as PropType<any>,
     },
     setup(props, { slots }) {
         const popoverProps = inject<ComputedRef<Partial<PopoverProps> & Record<string, any>>>('wp-popover-props')
