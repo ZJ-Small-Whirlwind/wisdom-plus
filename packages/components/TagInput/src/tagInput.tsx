@@ -84,7 +84,10 @@ export default defineComponent({
          */
         const tagPush = (clear = true) => {
             let text = inputingTag.value
-            if (!value.value || !props.modelValue) {
+            if (!props.modelValue) {
+                emit('update:modelValue', [])
+            }
+            if (!value.value) {
                 value.value = []
             }
             if (props.trim) {

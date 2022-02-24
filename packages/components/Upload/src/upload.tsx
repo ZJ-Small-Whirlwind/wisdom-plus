@@ -1,6 +1,6 @@
 import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
-import { ref, defineComponent, ExtractPropTypes, PropType, nextTick } from "vue"
+import { ref, defineComponent, ExtractPropTypes, PropType } from "vue"
 import { getChunk } from './chunk'
 
 import UploadList from './uploadList'
@@ -75,7 +75,7 @@ export default defineComponent({
     name: 'WpUpload',
     props: uploadProps,
     emits: {
-        'update:modelValue': (value: UploadFile[]) => Array.isArray(value),
+        'update:modelValue': (value?: UploadFile[]) => !value || Array.isArray(value),
         itemClick: (e: Event, value: UploadFile) => {
             void e
             void value
@@ -128,7 +128,7 @@ export default defineComponent({
 
         const handleAddUpload = async(files: FileList | File[]) => {
             if (files.length === 0) return
-            if (!props.modelValue || !uploadFiles.value) {
+            if (!uploadFiles.value) {
                 uploadFiles.value = []
             }
             for (let i = 0; i < files.length; i++) {

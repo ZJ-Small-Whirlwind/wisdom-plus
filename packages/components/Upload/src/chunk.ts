@@ -2,6 +2,22 @@ import {
     UploadFileStatus,
     UploadFile
 } from './interface'
+import sparkMD5 from 'spark-md5'
+
+export const getBlobMd5 = (file: File | Blob) => {
+    return new Promise<string>((resolve, reject) => {
+        const fileReader = new FileReader()
+        fileReader.readAsBinaryString(file)
+        fileReader.onloadend = () => {
+            if (typeof fileReader.result !== 'string') {
+                reject()
+                return
+            }
+            const md5 = sparkMD5.hashBinary(fileReader.result)
+            resolve(md5)
+        }
+    })
+}
 
 /**
  * 获取切片
@@ -24,14 +40,21 @@ export const getChunk = async (file: File | Blob, chunkSize: number)=>{
                 end = filesize;
             }
             index++;
-            chunks.push({
+            const fileSlice = file.slice(start, end)
+            const chunk = {
                 name: `${filename}-${now}-chunk-${index}`,
                 progress: 0,
-                file: file.slice(start, end),
+                file: fileSlice,
                 isChunk: true,
                 status: UploadFileStatus.Waiting,
-                pin: true
-            })
+                pin: true,
+                md5: ''
+            }
+            chunks.push(chunk)
+            getBlobMd5(fileSlice)
+                .then(res => {
+                    chunk.md5 = res
+                })
             start = end
         }
         const resUlt: UploadFile = {
