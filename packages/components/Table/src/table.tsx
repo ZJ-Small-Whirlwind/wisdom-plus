@@ -2,8 +2,8 @@ import { buildProps } from "@wisdom-plus/utils/props"
 import {defineComponent, ExtractPropTypes, PropType, computed, ref, watch} from "vue"
 import  WpRadio from "../../Radio"
 import  Checkbox from "../../Checkbox"
-// import  Icon from "../../Icon"
-// import {}  from "@vicons/antd"
+import  Icon from "../../Icon"
+import {CaretUpFilled}  from "@vicons/antd"
 import  simpleScroll from "./simpleScroll.js"
 export const tableProps = buildProps({
     columns: {
@@ -459,7 +459,8 @@ export default defineComponent({
                             }}>{ this.$slots.header?.(column) ||
                                 column.label ||
                                 (column.radio ? '-' :null) ||
-                                (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxAll(v)}></Checkbox>) : null)
+                                (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxAll(v)}></Checkbox>) : null) ||
+                                (column.sort ? (<Icon><CaretUpFilled></CaretUpFilled></Icon>) : null)
                             }</div>
                         </th>
                     ))}
