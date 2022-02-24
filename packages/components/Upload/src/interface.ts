@@ -14,5 +14,6 @@ export interface UploadFile {
     progress?: number,
     isChunk?: boolean,
     chunks?: UploadFile[],
+    md5?: string,
     [x: string]: any
 }

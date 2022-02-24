@@ -11,8 +11,8 @@ import { SearchOutlined } from '@vicons/antd'
 <template>
     <wp-space vertical>
         <wp-input placeholder='请输入' v-model="input" clearable :prefix="SearchIcon" />
-        <wp-input readonly />
-        <wp-input disabled />
+        <wp-input v-model="input" readonly />
+        <wp-input v-model="input" disabled />
     </wp-space>
 </template>
 

@@ -233,9 +233,15 @@ export default defineComponent({
                                                     {
                                                         file.chunks && file.chunks?.length > 0 && file.showChunk && (
                                                             <div class="wp-upload__cell__chunks__wrapper">
-                                                                <VirtualList class="wp-upload__cell__chunks" itemSize={20} items={file.chunks} itemResizable v-slots={{
-                                                                    default: ({ item: chunk, index: i }) => this.fileCellRender(chunk, i)
-                                                                }} showScrollbar={false}/>
+                                                                {
+                                                                    file.chunks.length <= 10 ? (
+                                                                        file.chunks.map((chunk, i) => this.fileCellRender(chunk, i))
+                                                                    ) : (
+                                                                        <VirtualList class="wp-upload__cell__chunks" itemSize={20} items={file.chunks} itemResizable v-slots={{
+                                                                            default: ({ item: chunk, index: i }) => this.fileCellRender(chunk, i)
+                                                                        }} showScrollbar={false}/>
+                                                                    )
+                                                                }
                                                             </div>
                                                         )
                                                     }
