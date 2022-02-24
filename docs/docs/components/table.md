@@ -303,7 +303,7 @@ const spanCell = ({rowIndex, columnIndex})=>{
 <script setup lang="ts">
 import { ref } from 'vue'
 const columns = ref([
-    {radio:true},
+    {radio:true, label: "单选"},
     {checkbox:true, prop:'checkbox'},
     {label:"index", prop:"index"},
     {label:"日期", prop:"date"},
@@ -409,16 +409,18 @@ const updateData = ()=>{
 
 ### ColumnAttributes
 
-| 参数        | 说明                                                                      | 类型                 | 默认值                     |
-|-----------|-------------------------------------------------------------------------|--------------------|-------------------------|
-| label     | 显示的标题                                                                   | _string_           | -                       |
-| prop      | 对应列内容的字段名，也可以使用 property 属性                                             | _string_           | -                       |
-| width     | 对应列的宽度                                                                  | _string_           | -                       |
-| min-width | 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 | _string_            | -                       |
-| max-width | 对应列的最大                                                                  | _string_            | -                       |
+| 参数        | 说明                                                                      | 类型                   | 默认值                     |
+|-----------|-------------------------------------------------------------------------|----------------------|-------------------------|
+| label     | 显示的标题                                                                   | _string_             | -                       |
+| prop      | 对应列内容的字段名，也可以使用 property 属性                                             | _string_             | -                       |
+| width     | 对应列的宽度                                                                  | _string_             | -                       |
+| min-width | 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 | _string_             | -                       |
+| max-width | 对应列的最大                                                                  | _string_             | -                       |
 | columns   | 多级表头                                                                    | _ColumnAttributes[]_ | _[]_                    |
-| fixed     | 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 | _string, boolean_  | 可选（true, left, right）   |
-| align     | 文本对齐方式                                                                  | _string_    | 可选（ left,center, right） |
+| fixed     | 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 | _string, boolean_    | 可选（true, left, right）   |
+| align     | 文本对齐方式                                                                  | _string_             | 可选（ left,center, right） |
+| radio     | 单选栏目                                                                    | _boolean_            | false                   |
+| checkbox     | 复选栏目                                                                    | _boolean_             | false |
 
 ### Slots
 

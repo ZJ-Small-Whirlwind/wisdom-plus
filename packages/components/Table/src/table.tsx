@@ -450,6 +450,8 @@ export default defineComponent({
                     "draggable-is-active-inset":key === Number(this.draggableObjDataIndex) && this.draggableInset,
                     "draggable-is-active-forbid":key === Number(this.draggableForbidIndex) && this.draggableForbid,
                     "draggable-is-active-start":key === Number(this.draggableObjDataIndexstart),
+                    "wp-table-cell-row-radio":String(item[0].rowIndex) === this.radioValue,
+                    "wp-table-cell-row-checkbox":item[0].row.$$checkboxValue,
                 }}>
                     {item.map(({column, row, spanCell, rowIndex, columnIndex}:any)=>(
                         <td onClick={(ev)=>cellClick({column, row, spanCell, rowIndex, columnIndex, ev})} class={{
@@ -478,7 +480,7 @@ export default defineComponent({
                                 column, row, spanCell, rowIndex, columnIndex
                                 }) ||
                                     row[column.prop] ||
-                                    (column.radio ? (<WpRadio onClick={ev=>ev.stopPropagation()} v-model={this.radioValue} border-radius="0" value={rowIndex.toString()}></WpRadio>) : null) ||
+                                    (column.radio ? (<WpRadio onClick={ev=>ev.stopPropagation()} v-model={this.radioValue} border-radius="0" value={String(rowIndex)}></WpRadio>) : null) ||
                                     (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={row.$$checkboxValue} onUpdate:modelValue={v=>CheckboxRow(v, rowIndex, column)}></Checkbox>) : null)
                                 }
                             </div>
