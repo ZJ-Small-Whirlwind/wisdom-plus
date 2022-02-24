@@ -104,6 +104,7 @@ export default defineComponent({
                         fixedConfig.position =  "sticky";
                         fixedConfig[it.fixed === true ? 'left' : (it.fixed || 'left')] = `${it.offset || 0}px`;
                     }
+
                     const item = {
                         ...it,
                         level:levelIndex,
@@ -361,11 +362,15 @@ export default defineComponent({
         })
     },
     render() {
-        const CheckboxAll = (v,column)=>{
-            console.log(v)
+        const CheckboxAll = (v)=>{
+            this.tbodyCells.forEach(cell=>{
+                const row = cell[0].row;
+                row.$$checkboxValue = v;
+            })
         }
-        const CheckboxRow = (v,rowIndex)=>{
-            const row = this.tbodyCells[rowIndex][0].row;
+        const CheckboxRow = (v,rowIndex,column)=>{
+            const cell = this.tbodyCells[rowIndex][0];
+            const row = cell.row;
             // 检查孩子
             this.flattenDeep(
                 row[this.treeChildrenFieldName] || [],
@@ -386,6 +391,8 @@ export default defineComponent({
                 });
                 parent.$$checkboxValue = isCheck;
             })
+            // 全选处理
+            column.$$checkboxValue = this.tbodyCells.filter(cellItem=>cellItem[0].row.$$checkboxValue).length === this.tbodyCells.length;
         }
         const getNameIndex =  (index)=>`wp-table_${this._.uid}_column_${index || 0}`;
         const theadRender = ()=>(<thead>
@@ -407,7 +414,7 @@ export default defineComponent({
                             }}>{ this.$slots.header?.(column) ||
                                 column.label ||
                                 (column.radio ? '-' :null) ||
-                                (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>CheckboxAll(v, column)}></Checkbox>) : null)
+                                (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>CheckboxAll(v)}></Checkbox>) : null)
                             }</div>
                         </th>
                     ))}
@@ -472,7 +479,7 @@ export default defineComponent({
                                 }) ||
                                     row[column.prop] ||
                                     (column.radio ? (<WpRadio onClick={ev=>ev.stopPropagation()} v-model={this.radioValue} border-radius="0" value={rowIndex.toString()}></WpRadio>) : null) ||
-                                    (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={row.$$checkboxValue} onUpdate:modelValue={v=>CheckboxRow(v, rowIndex)}></Checkbox>) : null)
+                                    (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={row.$$checkboxValue} onUpdate:modelValue={v=>CheckboxRow(v, rowIndex, column)}></Checkbox>) : null)
                                 }
                             </div>
                         </td>
