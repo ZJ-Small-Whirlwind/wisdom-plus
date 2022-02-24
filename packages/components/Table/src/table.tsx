@@ -4,6 +4,7 @@ import  WpRadio from "../../Radio"
 import  Checkbox from "../../Checkbox"
 import  Icon from "../../Icon"
 import  Dropdown from "../../Dropdown"
+import  WpInput from "../../Input"
 import {CaretUpFilled, CaretDownFilled, FilterFilled}  from "@vicons/antd"
 import {get}  from "lodash"
 import  simpleScroll from "./simpleScroll.js"
@@ -444,6 +445,26 @@ export default defineComponent({
             }
             emit('cell-header-click',column,ev);
         }
+        const search = (v,column, notResetRable)=>{
+            let newdata = JSON.parse(JSON.stringify(tableDatas.value));
+            const propArr = theadColumns.value.columns_col.filter(e=>e.prop && (column ? e === column : true)).map(e=>e.prop);
+            newdata = newdata.filter(row=>{
+                return propArr.some(prop=>{
+                    const value = get(row, prop);
+                    if([
+                        "[object String]",
+                        "[object Number]",
+                    ].includes(Object.prototype.toString.call(value))){
+                        return  String(value).indexOf(v) > -1;
+                    }
+                    return false;
+                })
+            });
+            if(!notResetRable){
+                resetTbale(newdata, false, false);
+            }
+            return newdata;
+        }
         return {
             onDragstart,
             onDragend,
@@ -471,6 +492,7 @@ export default defineComponent({
             clearCheckbox,
             clearRadio,
             sortClick,
+            search,
         }
     },
     mounted() {
@@ -497,7 +519,7 @@ export default defineComponent({
                     }
             </Icon>)
         const columnLableRender = (column)=>this.$slots.header?.(column) ||
-            column.label ||
+            (column.search ? <WpInput placeholder={column.placeholder || column.label} clearable onUpdate:modelValue={(v)=>(column.change || (()=>void (0)))(v, column)} modelValue={column.modelValue}></WpInput> : column.label) ||
             (column.radio ? '-' :null) ||
             (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxAll(v)}></Checkbox>) : null)
         const getFilterData = (column)=>{
