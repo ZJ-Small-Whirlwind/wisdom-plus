@@ -8,7 +8,7 @@ import  WpInput from "../../Input"
 import  Ellipsis from "../../Ellipsis"
 import  WpButton from "../../Button"
 import {CaretUpFilled, CaretDownFilled, FilterFilled}  from "@vicons/antd"
-import {get}  from "lodash"
+import {get, set}  from "lodash"
 import  simpleScroll from "./simpleScroll.js"
 export const tableProps = buildProps({
     columns: {
@@ -632,19 +632,22 @@ export default defineComponent({
         const editSave = (ev,value, label,column, row, editValueKeyName)=>{
             ev.stopPropagation();
             this.$emit('edit-save', value, {label,column, row, ev, next:()=>{
+                label = value;
                 row.$$editValueKeyName = null;
+                set(row,column.prop, value);
             }});
         }
         const cellLabelEditRender = (label,column, row)=>{
             const editValueKeyName = getEditKeyName(column, row);
             if(column.edit && row.$$editValueKeyName === editValueKeyName){
                 const editConfig = Object.prototype.toString.call(column.edit) === '[object Object]' ? column.edit : {};
-                return (<div class={{
+                return this.$slots.edit?.({label,column, row, editValueKeyName}) || (<div class={{
                     'cell-edit-input':true,
                 }}>
                     <WpInput {...editConfig}
                              placeholder={column.placeholder}
                              v-model={row[editValueKeyName]}
+                             clearable
                     ></WpInput>
                     <WpButton type="primary"
                               onClick={(ev)=>editSave(ev, row[editValueKeyName], label,column, row, editValueKeyName)}

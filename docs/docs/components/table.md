@@ -631,6 +631,7 @@ const draggableFilter = ({end_row, srart_row, inset})=>{
 |  -  | 默认卡槽   | _column_                                           |
 |  header  | 表头插槽   | _{ column, row, spanCell, rowIndex, columnIndex }_ |
 |  headerFilter  | 表头过滤插槽 | _{ column, obj, row }_ |
+|  edit  | 编辑插槽   | _{ label,column, row }_ |
 
 ## 定制
 
