@@ -740,8 +740,9 @@ export default defineComponent({
                     </div>))
                 ]
             }
-            return label ?  [
-                cellLabelEditIconRender(column, row,editValueKeyName),
+            const editIcon = cellLabelEditIconRender(column, row,editValueKeyName);
+            return editIcon ?  [
+                editIcon,
                 operatingButtonRender(label, column, row, editValueKeyName)
             ] : operatingButtonRender(label, column, row, editValueKeyName);
         }
