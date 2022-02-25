@@ -50,7 +50,7 @@ const data = ref([{
 ```
 :::
 
-#### 排序、过滤、搜索、label过滤
+#### 排序、过滤、搜索、label过滤、Ellipsis文本省略
 
 :::demo
 ```vue
@@ -80,27 +80,32 @@ const columns = ref([
                 4:"状态4",
             }[value];
     }},
+    {label:'Ellipsis文本省略', prop:'Ellipsis', ellipsis: true},
 ])
 const data = ref([{
     date: '2016-05-02',
     name: '王小虎6',
     address: '6上海市普陀区金沙江路 1518 弄45789',
     status:1,
+    Ellipsis:"很长的文字，阿斯顿咖啡上课就好阿四节课打瞌睡的贺卡上但很快就阿四大卡司打卡方式可哈萨克大发快三大卡司等哈就开始的贺卡阿斯顿咖啡上课就好阿四节课打瞌睡的贺卡上但很快就阿四大卡司打卡方式可哈萨克大发快三大卡司等哈就开始的贺卡===="
 }, {
     date: '2016-05-04',
     name: '王小虎3',
     address: '3上海市普陀区金沙江路 1517 弄245',
     status:2,
+    Ellipsis:"asdasd",
 }, {
     date: '2016-05-01',
     name: '王小虎9',
     address: '9上海市普陀区金沙江路 1519 弄45787a',
     status:3,
+    Ellipsis:"asdasd",
 }, {
     date: '2016-05-03',
     name: '王小虎1',
     address: '1上海市普陀区金沙江路 1516 弄7897',
     status:4,
+    Ellipsis:"asdasd",
 }])
 </script>
 ```
@@ -538,16 +543,17 @@ const clearCheckbox = () => {
 
 ### Methods
 
-| 参数  | 说明                                                                  | 参数                                               |
-|-----|---------------------------------------------------------------------|--------------------------------------------------|
-|  getRadio  | 获取单选数据                                                              | _()=>row_                                        |
-|  setRadio  | 设置单选数据                                                              | _(rowIndex)=>void)_                              |
-|  clearRadio  | 清除单选数据                                                              | _()=>void_                                       |
-|  getCheckbox  | 获取复选数据                                                              | _()=>row[]_                                      |
-|  setCheckbox  | 设置复选数据                                                              | _(rowIndexs:rowIndex[])=>void_                   |
-|  setCheckboxAll  | 全选数据                                                                | _(bool:boolean = true)=>void_                    |
-|  clearCheckbox  | 清除复选数据                                                              | _()=>void_                                       |
-|  search  | 模糊查询数据,column字段可选，填写后仅对当前column下的字段数据有效,notResetRable 是否重新渲染表格，默认渲染 | _(value, column?:object,notResetRable?:boolean)=>row[]_ |
+| 参数             | 说明                                                                  | 类型/参数                                                   |
+|----------------|---------------------------------------------------------------------|---------------------------------------------------------|
+| getRadio       | 获取单选数据                                                              | _()=>row_                                               |
+| setRadio       | 设置单选数据                                                              | _(rowIndex)=>void)_                                     |
+| clearRadio     | 清除单选数据                                                              | _()=>void_                                              |
+| getCheckbox    | 获取复选数据                                                              | _()=>row[]_                                             |
+| setCheckbox    | 设置复选数据                                                              | _(rowIndexs:rowIndex[])=>void_                          |
+| setCheckboxAll | 全选数据                                                                | _(bool:boolean = true)=>void_                           |
+| clearCheckbox  | 清除复选数据                                                              | _()=>void_                                              |
+| search         | 模糊查询数据,column字段可选，填写后仅对当前column下的字段数据有效,notResetRable 是否重新渲染表格，默认渲染 | _(value, column?:object,notResetRable?:boolean)=>row[]_ |
+| ellipsis       | 文本省略, 如果为对象请参考 ellipsis 组件参数                                        | _boolean, ellipsisConfig_                               |
 
 ### Emits
 

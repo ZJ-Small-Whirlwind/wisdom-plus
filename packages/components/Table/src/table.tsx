@@ -5,6 +5,7 @@ import  Checkbox from "../../Checkbox"
 import  Icon from "../../Icon"
 import  Dropdown from "../../Dropdown"
 import  WpInput from "../../Input"
+import  Ellipsis from "../../Ellipsis"
 import {CaretUpFilled, CaretDownFilled, FilterFilled}  from "@vicons/antd"
 import {get}  from "lodash"
 import  simpleScroll from "./simpleScroll.js"
@@ -601,7 +602,17 @@ export default defineComponent({
                 marginLeft:`${this.treeLevelDeep*row.$$level}px`
             }}></i>
         )
-
+        const cellLableRender = (label,column)=> {
+            if(column.ellipsis){
+                const ellipsisConfig = Object.prototype.toString.call(column.ellipsis) === '[object Object]' ? column.ellipsis : {};
+                return (<Ellipsis style={{width:'300px', paddingRight:'50px'}} v-slots={{
+                    title:()=>(<div style={{maxWidth:'300px'}}>{label}</div>)
+                }} line={2} force {...ellipsisConfig}>
+                    <div>{label}</div>
+                </Ellipsis>)
+            }
+            return label;
+        };
         const tbodyRender = ()=>(<tbody onDragover={this.onDragover}>
             {this.tbodyCells.map((item,key)=>(!item[0].row.$$parent || item[0].row.$$parent.$$treeShow) && item[0].row.$$filterShow  ?(
                 <tr
@@ -645,7 +656,7 @@ export default defineComponent({
                                 {this.$slots.default?.({
                                 column, row, spanCell, rowIndex, columnIndex
                                 }) ||
-                                    (column.labelFilter ? column.labelFilter({value:get(row,column.prop),row,column}) : get(row,column.prop)) ||
+                                    (column.labelFilter ? cellLableRender(column.labelFilter({value:get(row,column.prop),row,column}),column) : cellLableRender(get(row,column.prop), column)) ||
                                     (column.radio ? (<WpRadio onClick={ev=>ev.stopPropagation()} v-model={this.radioValue} border-radius="0" value={String(rowIndex)}></WpRadio>) : null) ||
                                     (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={row.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxRow(v, rowIndex, column)}></Checkbox>) : null)
                                 }
