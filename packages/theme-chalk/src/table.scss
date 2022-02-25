@@ -131,8 +131,18 @@
         flex-shrink: 0;
         align-items: center;
         &>*{
+          &.wp-input{
+            min-width: 120px;
+          }
           &:last-child{
             margin-left: 10px;
+          }
+        }
+        &-icon{
+          cursor: pointer;
+          margin-right: 10px;
+          &:hover{
+            color: #3a8ee6;
           }
         }
       }

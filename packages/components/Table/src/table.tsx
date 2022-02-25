@@ -7,7 +7,7 @@ import  Dropdown from "../../Dropdown"
 import  WpInput from "../../Input"
 import  Ellipsis from "../../Ellipsis"
 import  WpButton from "../../Button"
-import {CaretUpFilled, CaretDownFilled, FilterFilled}  from "@vicons/antd"
+import {CaretUpFilled, CaretDownFilled, FilterFilled, EditFilled, CloseSquareFilled}  from "@vicons/antd"
 import {get, set}  from "lodash"
 import  simpleScroll from "./simpleScroll.js"
 export const tableProps = buildProps({
@@ -620,13 +620,17 @@ export default defineComponent({
             }}></i>
         )
         const getEditKeyName = (column, row)=>`$$${column.index}-${row.$$rowIndex}`;
-        const cellDblclick = ({row,ev,column,...args})=>{
+        const cellLabelEditToggle = ({row,column, ev})=>{
             if(!row.$$editValueKeyName){
                 row.$$editValueKeyName = getEditKeyName(column, row);
                 row[row.$$editValueKeyName] = column.labelFilter ? column.labelFilter({value:get(row,column.prop),row,column}) : get(row,column.prop);
             }else {
                 row.$$editValueKeyName = false;
             }
+        }
+
+        const cellDblclick = ({row,ev,column,...args})=>{
+            cellLabelEditToggle({row,ev,column,...args});
             this.$emit('cell-dblclick',{row,ev,...args},ev);
         }
         const editSave = (ev,value, label,column, row, editValueKeyName)=>{
@@ -637,24 +641,39 @@ export default defineComponent({
                 set(row,column.prop, value);
             }});
         }
+        const cellLabelEditIconRender = (column,row,editValueKeyName)=>{
+            return (column.editIcon ? (<Icon class={{
+                'cell-edit-input-icon':true,
+            }} onClick={ev=>cellLabelEditToggle({row, column, ev})}>
+                {column.edit && row.$$editValueKeyName === editValueKeyName ?
+                    <CloseSquareFilled></CloseSquareFilled>
+                    :
+                    <EditFilled></EditFilled>
+                }
+            </Icon>) : null);
+        }
         const cellLabelEditRender = (label,column, row)=>{
             const editValueKeyName = getEditKeyName(column, row);
             if(column.edit && row.$$editValueKeyName === editValueKeyName){
                 const editConfig = Object.prototype.toString.call(column.edit) === '[object Object]' ? column.edit : {};
-                return this.$slots.edit?.({label,column, row, editValueKeyName}) || (<div class={{
-                    'cell-edit-input':true,
-                }}>
-                    <WpInput {...editConfig}
-                             placeholder={column.placeholder}
-                             v-model={row[editValueKeyName]}
-                             clearable
-                    ></WpInput>
-                    <WpButton type="primary"
-                              onClick={(ev)=>editSave(ev, row[editValueKeyName], label,column, row, editValueKeyName)}
-                              onDblclick={ev=>ev.stopPropagation()}>保存</WpButton>
-                </div>)
+                return [
+
+                    (this.$slots.edit?.({label,column, row, editValueKeyName}) || (<div class={{
+                        'cell-edit-input':true,
+                    }}>
+                        {cellLabelEditIconRender(column, row,editValueKeyName)}
+                        <WpInput {...editConfig}
+                                 placeholder={column.placeholder}
+                                 v-model={row[editValueKeyName]}
+                                 clearable
+                        ></WpInput>
+                        <WpButton type="primary"
+                                  onClick={(ev)=>editSave(ev, row[editValueKeyName], label,column, row, editValueKeyName)}
+                                  onDblclick={ev=>ev.stopPropagation()}>保存</WpButton>
+                    </div>))
+                ]
             }
-            return label;
+            return [cellLabelEditIconRender(column, row,editValueKeyName), label ];
         }
 
         const cellLableRender = (label, column, row)=> {

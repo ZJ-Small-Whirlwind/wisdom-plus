@@ -64,7 +64,7 @@ import {ref} from 'vue'
 
 const columns = ref([
     {label: "日期", prop: "date", width: 120, edit: true},
-    {label: "姓名", prop: "name", align: 'center', edit: true},
+    {label: "姓名", prop: "name", edit: true, editIcon:true},
     {label: "地址", prop: "address", edit: true},
 ])
 const data = ref([{
