@@ -740,10 +740,10 @@ export default defineComponent({
                     </div>))
                 ]
             }
-            return [
+            return label ?  [
                 cellLabelEditIconRender(column, row,editValueKeyName),
                 operatingButtonRender(label, column, row, editValueKeyName)
-            ];
+            ] : operatingButtonRender(label, column, row, editValueKeyName);
         }
         // 文本省略
         const cellLableRender = (label, column, row)=> {
