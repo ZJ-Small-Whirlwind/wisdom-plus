@@ -55,6 +55,10 @@ export const tableProps = buildProps({
         type: [Boolean] as PropType<boolean>,
         default: false
     },
+    draggableFilter: {
+        type: Function as PropType<(data) => boolean>,
+        default: null
+    },
 })
 
 export type TableProps = ExtractPropTypes<typeof tableProps>
@@ -310,7 +314,9 @@ export default defineComponent({
                     }
                     return data
                 }
-                resetTbale(addStart(deleteStart(tableDatas.value)), true);
+                const newData = addStart(deleteStart(tableDatas.value));
+                resetTbale(newData, true);
+                emit("draggable-change",newData);
             }
             isDragstart = false;
             draggableObjData.value = null;
@@ -330,8 +336,17 @@ export default defineComponent({
                         draggableForbidIndex.value = Number(el.attributes.getNamedItem("index").value);
                         const srart_row = tbodyCells.value[draggableObjDataIndexstart.value][0].row
                         const end_row = tbodyCells.value[draggableForbidIndex.value][0].row
-                        if(srart_row.index !== end_row.index && end_row.$$parentDeep.map(e=>e.index).indexOf(srart_row.index) === -1){
-                            draggableInset.value = ev.offsetY < el.clientHeight*0.5;
+                        const inset = ev.offsetY < el.clientHeight*0.5;
+                        // 拖拽过滤
+                        const draggableFilterResult = Object.prototype.toString.call(props.draggableFilter) === '[object Function]' ? props.draggableFilter({
+                            srart_row,
+                            end_row,
+                            index:draggableForbidIndex.value,
+                            ev,
+                            inset,
+                        }) : true;
+                        if(draggableFilterResult && srart_row.index !== end_row.index && end_row.$$parentDeep.map(e=>e.index).indexOf(srart_row.index) === -1){
+                            draggableInset.value = inset;
                             draggableObjDataIndex.value = draggableForbidIndex.value;
                             draggableObjData.value = tbodyCells.value[draggableObjDataIndex.value];
                         }else {

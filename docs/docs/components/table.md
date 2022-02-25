@@ -351,7 +351,7 @@ const spanCell = ({rowIndex, columnIndex})=>{
 ```
 :::
 
-#### 树形型表格、表格拖拽、单选、复选
+#### 树形型表格、表格拖拽（拖拽、回调、过滤）、单选、复选
 
 :::demo
 
@@ -367,7 +367,11 @@ const spanCell = ({rowIndex, columnIndex})=>{
     <wp-button @click="setCheckboxAll">设置全选数据</wp-button>
     <wp-button @click="clearRadio">清除单选数据</wp-button>
     <wp-button @click="clearCheckbox">清除复选数据</wp-button>
-    <wp-table ref="table" :columns="columns" :data="data" tree="checkbox" draggable></wp-table>
+    <wp-table ref="table" :columns="columns" :data="data" tree="checkbox"
+              draggable
+              @draggable-change="draggableChange"
+              :draggableFilter="draggableFilter"
+    ></wp-table>
 </template>
 
 <script setup lang="ts">
@@ -488,6 +492,13 @@ const clearRadio = () => {
 const clearCheckbox = () => {
     table.value.clearCheckbox()
 }
+const draggableChange = (newdata)=>{
+    console.log(newdata)
+}
+const draggableFilter = ({end_row, srart_row, inset})=>{
+    // 只允许同级排序
+    return srart_row.$$level === end_row.$$level && !inset
+}
 </script>
 <style lang="scss">
 #app .wp-table .wp-table-cell-row-radio td {
@@ -515,9 +526,10 @@ const clearCheckbox = () => {
 |   border  | 是否带边框表格                                                                                                                  | _boolean_                                         | false    |
 |   height  | Table 的高度，默认为自动高度。如果 height 为 number 类型，单位 px；如果 height 为 string 类型，则这个高度会设置为 Table 的 style.height 的值，Table 的高度会受控于外部样式。 | _[string,number]_                                 | -        |
 |   tree  | 是否开启树形表格，并可选执行放置的栏目位置，具体以栏目对应的prop值为准                                                                                    | _[string,boolean]_                                | false    |
-|   treeLevelDeep  | 树形箭头缩紧深度                                                                                                                 | _number_                                   | 15       |
-|   treeChildrenFieldName  | 自定义树形children字段名称                                                                                                        | _string_                                   | children |
-|   draggable  | 是否开启拖拽                                                                                                                   | _boolean_                                   | false    |
+|   treeLevelDeep  | 树形箭头缩紧深度                                                                                                                 | _number_                                          | 15       |
+|   treeChildrenFieldName  | 自定义树形children字段名称                                                                                                        | _string_                                          | children |
+|   draggable  | 是否开启拖拽                                                                                                                   | _boolean_                                         | false    |
+|   draggableFilter  | 拖拽过滤，可实现限制特定数据排序或者同级排序等功能                                                                                                | _({srart_row,end_row,index,ev,inset})=>boolean_                                   | -        |
 
 
 ### ColumnAttributes
@@ -563,6 +575,7 @@ const clearCheckbox = () => {
 | cell-click        | 单元格点击回调 | _(ev:any)=>void_                      |
 | cell-row-click    | 单行点击回调 | _(ev:any)=>void_                      |
 | cell-header-click | 表头单元格点击回调 | _(ev:any)=>void_                      |
+| draggable-change | 拖拽结束回调 | _(newdata:newrow[])=>void_                      |
 
 ### Slots
 
