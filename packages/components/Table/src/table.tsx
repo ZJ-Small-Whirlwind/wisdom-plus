@@ -7,10 +7,9 @@ import  Dropdown from "../../Dropdown"
 import  WpInput from "../../Input"
 import  Ellipsis from "../../Ellipsis"
 import  WpButton from "../../Button"
-import {CaretUpFilled, CaretDownFilled, FilterFilled, EditFilled, CloseSquareFilled}  from "@vicons/antd"
+import {CaretUpFilled, CaretDownFilled, FilterFilled, EditFilled, CloseSquareFilled, UnorderedListOutlined}  from "@vicons/antd"
 import {get, set}  from "lodash"
 import  simpleScroll from "./simpleScroll.js"
-import Button from "../../Button";
 export const tableProps = buildProps({
     columns: {
         type: [Array] as PropType<Array<any>>,
@@ -647,24 +646,33 @@ export default defineComponent({
         // 操作按钮
         const operatingButtonRender = (label, column, row, editValueKeyName)=>{
             if(Object.prototype.toString.call(column.btns) === '[object Array]'){
-                return  column.btns.map(({name, emit, emitData, ...ButtonConfig},k)=><WpButton
-                    {...ButtonConfig}
-                    onClick={ev=>this.$emit(emit || editValueKeyName+'-'+k, {
-                        ev,
-                        label,
-                        column,
-                        row,
-                        k,
-                        config:{
-                            name, emit, emitData,
-                            ...ButtonConfig,
-                        },
-                        editValueKeyName
-                    })}
-                    class="WpColor"
-                >
-                    {name}
-                </WpButton>)
+                return column.dropdown ?
+                        (<Dropdown list={column.btns} titleKeyName="name">
+                            <Icon><UnorderedListOutlined></UnorderedListOutlined></Icon>
+                        </Dropdown>)
+                    :
+                        (<div class={{
+                                'cell-operate-btns':true,
+                            }}>
+                                {column.btns.map(({name, emit, emitData, ...ButtonConfig},k)=><WpButton
+                                    {...ButtonConfig}
+                                    onClick={ev=>this.$emit(emit || editValueKeyName+'-'+k, {
+                                        ev,
+                                        label,
+                                        column,
+                                        row,
+                                        k,
+                                        config:{
+                                            name, emit, emitData,
+                                            ...ButtonConfig,
+                                        },
+                                        editValueKeyName
+                                    })}
+                                    class="WpColor"
+                                >
+                                    {name}
+                                </WpButton>)}
+                            </div>)
             }else {
                 return label;
             }

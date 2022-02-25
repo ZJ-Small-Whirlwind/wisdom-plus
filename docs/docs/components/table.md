@@ -31,6 +31,47 @@ const columns = ref([
     {label: "日期", prop: "date", width: 120},
     {label: "姓名", prop: "name", align: 'center'},
     {label: "地址", prop: "address"},
+])
+const data = ref([{
+    date: '2016-05-02',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1518 弄'
+}, {
+    date: '2016-05-04',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1517 弄'
+}, {
+    date: '2016-05-01',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1519 弄'
+}, {
+    date: '2016-05-03',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1516 弄'
+}])
+const add = (item) => {
+    console.log(item)
+}
+</script>
+```
+:::
+
+#### 操作按钮
+
+:::demo
+
+```vue
+
+<template>
+    <wp-table @add="add" :columns="columns" :data="data"></wp-table>
+</template>
+<script setup lang="ts">
+import {ref} from 'vue'
+
+const columns = ref([
+    {label: "日期", prop: "date", width: 120},
+    {label: "姓名", prop: "name", align: 'center'},
+    {label: "地址", prop: "address"},
     {
         label: "操作", prop: "address", btns: [
             {name: '添加', type: 'primary', emit: 'add'},
@@ -42,7 +83,25 @@ const columns = ref([
             {name: '详情', type:'text', class:"primary_bg"},
             {name: '详情', type:'text', class:"orange_bg"},
             {name: '详情', type:'text', class:"black_bg"},
-        ]
+            {name: '详情', type:'text', class:"primary"},
+            {name: '详情', type:'text', class:"success"},
+        ],
+    },
+    {
+        label: "折叠操作菜单", prop: "address", btns: [
+            {name: '添加', type: 'primary', emit: 'add'},
+            {name: '删除'},
+            {name: '编辑'},
+            {name: '详情', type:'text', class:"default_bg"},
+            {name: '详情', type:'text', class:"success_bg"},
+            {name: '详情', type:'text', class:"delete_bg"},
+            {name: '详情', type:'text', class:"primary_bg"},
+            {name: '详情', type:'text', class:"orange_bg"},
+            {name: '详情', type:'text', class:"black_bg"},
+            {name: '详情', type:'text', class:"primary"},
+            {name: '详情', type:'text', class:"success"},
+        ],
+        dropdown:true,
     },
 ])
 const data = ref([{
@@ -596,28 +655,29 @@ const draggableFilter = ({end_row, srart_row, inset})=>{
 
 ### ColumnAttributes
 
-| 参数          | 说明                                                                      | 类型                                          | 默认值                    |
-|-------------|-------------------------------------------------------------------------|---------------------------------------------|------------------------|
-| label       | 显示的标题                                                                   | _string_                                    | -                      |
-| prop        | 对应列内容的字段名，也可以使用 property 属性                                             | _string_                                    | -                      |
-| width       | 对应列的宽度                                                                  | _string_                                    | -                      |
-| min-width   | 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 | _string_                                    | -                      |
-| max-width   | 对应列的最大                                                                  | _string_                                    | -                      |
-| columns     | 多级表头                                                                    | _ColumnAttributes[]_                        | _[]_                   |
-| fixed       | 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 | _string, boolean_                           | 可选（true, left, right）  |
+| 参数          | 说明                                                                      | 类型                                          | 默认值                     |
+|-------------|-------------------------------------------------------------------------|---------------------------------------------|-------------------------|
+| label       | 显示的标题                                                                   | _string_                                    | -                       |
+| prop        | 对应列内容的字段名，也可以使用 property 属性                                             | _string_                                    | -                       |
+| width       | 对应列的宽度                                                                  | _string_                                    | -                       |
+| min-width   | 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 | _string_                                    | -                       |
+| max-width   | 对应列的最大                                                                  | _string_                                    | -                       |
+| columns     | 多级表头                                                                    | _ColumnAttributes[]_                        | _[]_                    |
+| fixed       | 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 | _string, boolean_                           | 可选（true, left, right）   |
 | align       | 文本对齐方式                                                                  | _string_                                    | 可选（ left,center, right） |
-| radio       | 单选栏目                                                                    | _boolean_                                   | false                  |
-| checkbox    | 复选栏目                                                                    | _boolean_                                   | false                  |
-| sort        | 是否需要排序                                                                  | _boolean_                                   | false                  |
-| filter      | 是否需要数据过滤                                                                | _boolean_                                   | false                  |
-| filterData  | 自定义下拉过滤数据                                                               | _Dropdown[]_                                | -                      |
-| search      | 是否开启输入搜索模式, 可实现动态输入查询当前表数据                                              | _boolean_                                   | false                  |
-| modelValue  | 输入搜索模式默认值                                                               | _string_                                    | -                      |
-| change      | 输入搜索模式回调                                                                | _(value:string,column:object)=>void(0)_     | -                      |
+| radio       | 单选栏目                                                                    | _boolean_                                   | false                   |
+| checkbox    | 复选栏目                                                                    | _boolean_                                   | false                   |
+| sort        | 是否需要排序                                                                  | _boolean_                                   | false                   |
+| filter      | 是否需要数据过滤                                                                | _boolean_                                   | false                   |
+| filterData  | 自定义下拉过滤数据                                                               | _Dropdown[]_                                | -                       |
+| search      | 是否开启输入搜索模式, 可实现动态输入查询当前表数据                                              | _boolean_                                   | false                   |
+| modelValue  | 输入搜索模式默认值                                                               | _string_                                    | -                       |
+| change      | 输入搜索模式回调                                                                | _(value:string,column:object)=>void(0)_     | -                       |
 | ellipsis    | 文本省略, 如果为对象请参考 ellipsis 组件参数                                            | _boolean, ellipsisConfig_                   |
 | edit        | 文本省略, 如果为对象请参考 input 组件参数                                               | _boolean, editConfig_                       |
-| placeholder | placeholder表单提示                                                         | _string_                                    | -                      |
+| placeholder | placeholder表单提示                                                         | _string_                                    | -                       |
 | btns        | 操作按钮 ,ButtonConfig 请参考button 说明  ;emitData为提供额外数据，放置vue底层警告             | _{name, emit, emitData, ...ButtonConfig}[]_ | -                       |
+| dropdown        | 是否收起菜单，btns存在生效                                                         | _boolean_                                   | false                   |
 
 ### Methods
 

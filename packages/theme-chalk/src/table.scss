@@ -195,6 +195,17 @@
           }
         }
       }
+      &-operate-btns{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        &>*{
+          margin: 0;
+          &:hover{
+            text-decoration: underline;
+          }
+        }
+      }
     }
   }
   &--border{

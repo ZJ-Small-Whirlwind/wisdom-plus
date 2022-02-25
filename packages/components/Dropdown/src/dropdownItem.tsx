@@ -12,11 +12,16 @@ import { RightOutlined } from '@vicons/antd'
 
 export default defineComponent({
     name: 'WpDropdownItem',
+    inheritAttrs: false,
     props: {
         index: {
             type: [String, Symbol, Number] as PropType<string | symbol | number>
         },
         title: [String, Object] as PropType<string | VNode>,
+        titleKeyName: {
+            type:[String] as PropType<string>,
+            default:'title'
+        },
         click: Function as PropType<(record?: DropdownRecord) => void>,
         groupName: String,
         disabled: Boolean,
@@ -25,8 +30,6 @@ export default defineComponent({
             type: Array as PropType<DropdownRecord[]>
         },
         icon: Object as PropType<Component>,
-        row: Object as PropType<any>,
-        column: Object as PropType<any>,
     },
     setup(props, { slots }) {
         const popoverProps = inject<ComputedRef<Partial<PopoverProps> & Record<string, any>>>('wp-popover-props')
@@ -55,7 +58,7 @@ export default defineComponent({
                             <Icon class="wp-dropdown-item__icon">{ h(props.icon) }</Icon>
                         ) : null
                     }
-                    { slots.title?.() || props.title }
+                    { slots.title?.() || [props[props.titleKeyName]] }
                     {
                         showArrow?.value && props.children && props.children.length > 0 ? (
                             <Icon class="wp-dropdown-item__arrow"><RightOutlined /></Icon>
@@ -92,8 +95,8 @@ export default defineComponent({
                                     reference: () => DropdownItemRaw,
                                     default: () => (
                                         props.children?.map(item => (
-                                            <DropdownItem { ...item } v-slots={{
-                                                title: () => parentSlot?.title?.(item) || item.title
+                                            <DropdownItem { ...item } titleKeyName={props.titleKeyName} v-slots={{
+                                                title: () => parentSlot?.title?.(item) || item[props.titleKeyName]
                                             }} />
                                         ))
                                     )

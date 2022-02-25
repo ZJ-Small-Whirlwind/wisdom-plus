@@ -30,6 +30,10 @@ export const dropdownProps = buildProps({
     showArrow: {
         type: Boolean,
         default: true
+    },
+    titleKeyName: {
+        type:[String] as PropType<string>,
+        default:'title'
     }
 })
 
@@ -83,8 +87,8 @@ export default defineComponent({
                         <div class="wp-dropdown" { ...attrs }>
                             {
                                 props.list.map(item => (
-                                    <DropdownItem { ...item } v-slots={{
-                                        title: () => slots.title?.(item) || item.title
+                                    <DropdownItem { ...item } titleKeyName={props.titleKeyName} v-slots={{
+                                        title: () => slots.title?.(item) || item[props.titleKeyName]
                                     }} />
                                 ))
                             }

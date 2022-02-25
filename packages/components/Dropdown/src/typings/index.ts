@@ -8,5 +8,6 @@ export interface DropdownRecord {
     groupName?: string,
     disabled?: boolean,
     divided?: boolean,
-    icon?: Component
+    icon?: Component,
+    titleKeyName?: string,
 }
