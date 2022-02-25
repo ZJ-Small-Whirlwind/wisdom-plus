@@ -6,6 +6,55 @@
     --wp-table-tr-cell-background-color: #ffffff;
 }
 
+//todo 按钮文字
+@mixin styleInit($color, $n){
+  background-color:adjust-color($color,$lightness:$n);
+  color: $color;
+  padding:2px 5px;
+  border:1px solid $color;
+  border-radius: 5px;
+  overflow: hidden;
+  display: inline-block;
+  cursor: pointer;
+  &:hover,&:active,&:focus{
+    color: #ffffff;
+    background-color:$color;
+    border-color: $color;
+  }
+}
+@mixin colorBaInitFun($className,$color,$n:35%){
+  &.#{$className}_bg{
+    @include styleInit($color,$n);
+  }
+  &.#{$className}_bg_init{
+    @include styleInit($color,$n);
+    padding: 12px 20px;
+  }
+  &.#{$className}{
+    color: $color;
+  }
+  &.#{$className}_link{
+    color:$color;
+    cursor: pointer;
+    &:hover{
+      text-decoration: underline;
+    }
+  }
+}
+
+@mixin colorInit(){
+  @include colorBaInitFun(default,#999999);
+  @include colorBaInitFun(success,#67C23A);
+  @include colorBaInitFun(delete,#f00);
+  @include colorBaInitFun(primary,#409eff);
+  @include colorBaInitFun(orange,#E15501);
+  @include colorBaInitFun(black,#000000);
+}
+.WpColor{
+  @include colorInit();
+}
+
+
 .wp-table {
   .wp-table--body{
     .wp-table--empty{

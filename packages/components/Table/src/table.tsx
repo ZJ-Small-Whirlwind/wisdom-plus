@@ -10,6 +10,7 @@ import  WpButton from "../../Button"
 import {CaretUpFilled, CaretDownFilled, FilterFilled, EditFilled, CloseSquareFilled}  from "@vicons/antd"
 import {get, set}  from "lodash"
 import  simpleScroll from "./simpleScroll.js"
+import Button from "../../Button";
 export const tableProps = buildProps({
     columns: {
         type: [Array] as PropType<Array<any>>,
@@ -619,7 +620,9 @@ export default defineComponent({
                 marginLeft:`${this.treeLevelDeep*row.$$level}px`
             }}></i>
         )
+        // 获取单元格唯一标识名称
         const getEditKeyName = (column, row)=>`$$${column.index}-${row.$$rowIndex}`;
+
         const cellLabelEditToggle = ({row,column, ev})=>{
             if(!row.$$editValueKeyName){
                 row.$$editValueKeyName = getEditKeyName(column, row);
@@ -641,6 +644,32 @@ export default defineComponent({
                 set(row,column.prop, value);
             }});
         }
+        // 操作按钮
+        const operatingButtonRender = (label, column, row, editValueKeyName)=>{
+            if(Object.prototype.toString.call(column.btns) === '[object Array]'){
+                return  column.btns.map(({name, emit, emitData, ...ButtonConfig},k)=><WpButton
+                    {...ButtonConfig}
+                    onClick={ev=>this.$emit(emit || editValueKeyName+'-'+k, {
+                        ev,
+                        label,
+                        column,
+                        row,
+                        k,
+                        config:{
+                            name, emit, emitData,
+                            ...ButtonConfig,
+                        },
+                        editValueKeyName
+                    })}
+                    class="WpColor"
+                >
+                    {name}
+                </WpButton>)
+            }else {
+                return label;
+            }
+        }
+        // 快捷编辑图标
         const cellLabelEditIconRender = (column,row,editValueKeyName)=>{
             return (column.editIcon ? (<Icon class={{
                 'cell-edit-input-icon':true,
@@ -652,6 +681,7 @@ export default defineComponent({
                 }
             </Icon>) : null);
         }
+        // 快捷编辑
         const cellLabelEditRender = (label,column, row)=>{
             const editValueKeyName = getEditKeyName(column, row);
             if(column.edit && row.$$editValueKeyName === editValueKeyName){
@@ -673,11 +703,13 @@ export default defineComponent({
                     </div>))
                 ]
             }
-            return [cellLabelEditIconRender(column, row,editValueKeyName), label ];
+            return [
+                cellLabelEditIconRender(column, row,editValueKeyName),
+                operatingButtonRender(label, column, row, editValueKeyName)
+            ];
         }
-
+        // 文本省略
         const cellLableRender = (label, column, row)=> {
-            // 文本省略
             if(column.ellipsis){
                 const ellipsisConfig = Object.prototype.toString.call(column.ellipsis) === '[object Object]' ? column.ellipsis : {};
                 return (<Ellipsis style={{width:'300px', paddingRight:'50px'}} v-slots={{
