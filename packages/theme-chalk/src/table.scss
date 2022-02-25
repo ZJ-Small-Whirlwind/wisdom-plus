@@ -126,6 +126,16 @@
           color: #999999;
         }
       }
+      &-edit-input{
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        &>*{
+          &:last-child{
+            margin-left: 10px;
+          }
+        }
+      }
     }
   }
   &--border{

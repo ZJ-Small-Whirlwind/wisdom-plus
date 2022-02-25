@@ -50,6 +50,49 @@ const data = ref([{
 ```
 :::
 
+#### 双击单元格快捷编辑
+
+:::demo
+
+```vue
+
+<template>
+    <wp-table :columns="columns" :data="data" @edit-save="editSave"></wp-table>
+</template>
+<script setup lang="ts">
+import {ref} from 'vue'
+
+const columns = ref([
+    {label: "日期", prop: "date", width: 120, edit: true},
+    {label: "姓名", prop: "name", align: 'center', edit: true},
+    {label: "地址", prop: "address", edit: true},
+])
+const data = ref([{
+    date: '2016-05-02',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1518 弄'
+}, {
+    date: '2016-05-04',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1517 弄'
+}, {
+    date: '2016-05-01',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1519 弄'
+}, {
+    date: '2016-05-03',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1516 弄'
+}])
+
+const editSave = (value, {next}) => {
+    console.log(value);
+    next();
+}
+</script>
+```
+:::
+
 #### 排序、过滤、搜索、label过滤、Ellipsis文本省略
 
 :::demo
@@ -534,24 +577,27 @@ const draggableFilter = ({end_row, srart_row, inset})=>{
 
 ### ColumnAttributes
 
-| 参数         | 说明                                                                      | 类型                                      | 默认值                     |
-|------------|-------------------------------------------------------------------------|-----------------------------------------|-------------------------|
-| label      | 显示的标题                                                                   | _string_                                | -                       |
-| prop       | 对应列内容的字段名，也可以使用 property 属性                                             | _string_                                | -                       |
-| width      | 对应列的宽度                                                                  | _string_                                | -                       |
-| min-width  | 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 | _string_                                | -                       |
-| max-width  | 对应列的最大                                                                  | _string_                                | -                       |
-| columns    | 多级表头                                                                    | _ColumnAttributes[]_                    | _[]_                    |
-| fixed      | 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 | _string, boolean_                       | 可选（true, left, right）   |
-| align      | 文本对齐方式                                                                  | _string_                                | 可选（ left,center, right） |
-| radio      | 单选栏目                                                                    | _boolean_                               | false                   |
-| checkbox   | 复选栏目                                                                    | _boolean_                               | false                   |
-| sort       | 是否需要排序                                                                  | _boolean_                               | false                   |
-| filter     | 是否需要数据过滤                                                                | _boolean_                               | false                   |
-| filterData | 自定义下拉过滤数据                                                               | _Dropdown[]_                            | -                       |
-| search     | 是否开启输入搜索模式, 可实现动态输入查询当前表数据                                              | _boolean_                               | false                   |
-| modelValue | 输入搜索模式默认值                                                               | _string_                                | -                       |
-| change     | 输入搜索模式回调                                                                | _(value:string,column:object)=>void(0)_ | -                       |
+| 参数          | 说明                                                                      | 类型                                      | 默认值                     |
+|-------------|-------------------------------------------------------------------------|-----------------------------------------|-------------------------|
+| label       | 显示的标题                                                                   | _string_                                | -                       |
+| prop        | 对应列内容的字段名，也可以使用 property 属性                                             | _string_                                | -                       |
+| width       | 对应列的宽度                                                                  | _string_                                | -                       |
+| min-width   | 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 | _string_                                | -                       |
+| max-width   | 对应列的最大                                                                  | _string_                                | -                       |
+| columns     | 多级表头                                                                    | _ColumnAttributes[]_                    | _[]_                    |
+| fixed       | 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 | _string, boolean_                       | 可选（true, left, right）   |
+| align       | 文本对齐方式                                                                  | _string_                                | 可选（ left,center, right） |
+| radio       | 单选栏目                                                                    | _boolean_                               | false                   |
+| checkbox    | 复选栏目                                                                    | _boolean_                               | false                   |
+| sort        | 是否需要排序                                                                  | _boolean_                               | false                   |
+| filter      | 是否需要数据过滤                                                                | _boolean_                               | false                   |
+| filterData  | 自定义下拉过滤数据                                                               | _Dropdown[]_                            | -                       |
+| search      | 是否开启输入搜索模式, 可实现动态输入查询当前表数据                                              | _boolean_                               | false                   |
+| modelValue  | 输入搜索模式默认值                                                               | _string_                                | -                       |
+| change      | 输入搜索模式回调                                                                | _(value:string,column:object)=>void(0)_ | -                       |
+| ellipsis    | 文本省略, 如果为对象请参考 ellipsis 组件参数                                            | _boolean, ellipsisConfig_                               |
+| edit        | 文本省略, 如果为对象请参考 input 组件参数                                               | _boolean, editConfig_                               |
+| placeholder | placeholder表单提示                                                         | _string_                                | -                       |
 
 ### Methods
 
@@ -565,17 +611,18 @@ const draggableFilter = ({end_row, srart_row, inset})=>{
 | setCheckboxAll | 全选数据                                                                | _(bool:boolean = true)=>void_                           |
 | clearCheckbox  | 清除复选数据                                                              | _()=>void_                                              |
 | search         | 模糊查询数据,column字段可选，填写后仅对当前column下的字段数据有效,notResetRable 是否重新渲染表格，默认渲染 | _(value, column?:object,notResetRable?:boolean)=>row[]_ |
-| ellipsis       | 文本省略, 如果为对象请参考 ellipsis 组件参数                                        | _boolean, ellipsisConfig_                               |
 
 ### Emits
 
 | 参数                | 说明 | 参数                             |
 |-------------------|--|--------------------------------|
 | click-filter      | 过滤点击回调 | _(ev:any)=>void_                      |
+| cell-dblclick        | 单元格双击回调 | _(ev:any)=>void_                      |
 | cell-click        | 单元格点击回调 | _(ev:any)=>void_                      |
 | cell-row-click    | 单行点击回调 | _(ev:any)=>void_                      |
 | cell-header-click | 表头单元格点击回调 | _(ev:any)=>void_                      |
 | draggable-change | 拖拽结束回调 | _(newdata:newrow[])=>void_                      |
+| edit-save | 快捷编辑保存回调, 其中next执行后，快捷编辑才关闭，并写入最新数据 | _(value:any,{label,column, row, ev, next})=>void_                      |
 
 ### Slots
 

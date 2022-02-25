@@ -6,6 +6,7 @@ import  Icon from "../../Icon"
 import  Dropdown from "../../Dropdown"
 import  WpInput from "../../Input"
 import  Ellipsis from "../../Ellipsis"
+import  WpButton from "../../Button"
 import {CaretUpFilled, CaretDownFilled, FilterFilled}  from "@vicons/antd"
 import {get}  from "lodash"
 import  simpleScroll from "./simpleScroll.js"
@@ -192,6 +193,7 @@ export default defineComponent({
                     }
                     row.$$rowIndex = rowIndex;
                     row.$$filterShow = true;
+                    row.$$editValueKeyName = null;
                     const spanCell = props.spanCell(it) || []
                     it.spanCell = [spanCell[0] || 1,spanCell[1] || 1];
                     if(it.spanCell.reduce((a,b)=>a+b) > 2){
@@ -617,16 +619,52 @@ export default defineComponent({
                 marginLeft:`${this.treeLevelDeep*row.$$level}px`
             }}></i>
         )
-        const cellLableRender = (label,column)=> {
+        const getEditKeyName = (column, row)=>`$$${column.index}-${row.$$rowIndex}`;
+        const cellDblclick = ({row,ev,column,...args})=>{
+            if(!row.$$editValueKeyName){
+                row.$$editValueKeyName = getEditKeyName(column, row);
+                row[row.$$editValueKeyName] = column.labelFilter ? column.labelFilter({value:get(row,column.prop),row,column}) : get(row,column.prop);
+            }else {
+                row.$$editValueKeyName = false;
+            }
+            this.$emit('cell-dblclick',{row,ev,...args},ev);
+        }
+        const editSave = (ev,value, label,column, row, editValueKeyName)=>{
+            ev.stopPropagation();
+            this.$emit('edit-save', value, {label,column, row, ev, next:()=>{
+                row.$$editValueKeyName = null;
+            }});
+        }
+        const cellLabelEditRender = (label,column, row)=>{
+            const editValueKeyName = getEditKeyName(column, row);
+            if(column.edit && row.$$editValueKeyName === editValueKeyName){
+                const editConfig = Object.prototype.toString.call(column.edit) === '[object Object]' ? column.edit : {};
+                return (<div class={{
+                    'cell-edit-input':true,
+                }}>
+                    <WpInput {...editConfig}
+                             placeholder={column.placeholder}
+                             v-model={row[editValueKeyName]}
+                    ></WpInput>
+                    <WpButton type="primary"
+                              onClick={(ev)=>editSave(ev, row[editValueKeyName], label,column, row, editValueKeyName)}
+                              onDblclick={ev=>ev.stopPropagation()}>保存</WpButton>
+                </div>)
+            }
+            return label;
+        }
+
+        const cellLableRender = (label, column, row)=> {
+            // 文本省略
             if(column.ellipsis){
                 const ellipsisConfig = Object.prototype.toString.call(column.ellipsis) === '[object Object]' ? column.ellipsis : {};
                 return (<Ellipsis style={{width:'300px', paddingRight:'50px'}} v-slots={{
                     title:()=>(<div style={{maxWidth:'300px'}}>{label}</div>)
                 }} line={2} force {...ellipsisConfig}>
-                    <div>{label}</div>
+                    {cellLabelEditRender(label, column, row)}
                 </Ellipsis>)
             }
-            return label;
+            return cellLabelEditRender(label, column, row);
         };
         const tbodyRender = ()=>(<tbody onDragover={this.onDragover}>
             {this.tbodyCells.map((item,key)=>(!item[0].row.$$parent || item[0].row.$$parent.$$treeShow) && item[0].row.$$filterShow  ?(
@@ -650,6 +688,7 @@ export default defineComponent({
                                 "wp-table__cell":true,
                                 [getNameIndex(column.index)]:true,
                             }}
+                            onDblclick={(ev)=>cellDblclick({column, row, spanCell, rowIndex, columnIndex, ev})}
                             align={column.align}
                             rowspan={spanCell[0]}
                             colspan={spanCell[1]}
@@ -671,7 +710,7 @@ export default defineComponent({
                                 {this.$slots.default?.({
                                 column, row, spanCell, rowIndex, columnIndex
                                 }) ||
-                                    (column.labelFilter ? cellLableRender(column.labelFilter({value:get(row,column.prop),row,column}),column) : cellLableRender(get(row,column.prop), column)) ||
+                                    (column.labelFilter ? cellLableRender(column.labelFilter({value:get(row,column.prop),row,column}),column, row) : cellLableRender(get(row,column.prop), column, row)) ||
                                     (column.radio ? (<WpRadio onClick={ev=>ev.stopPropagation()} v-model={this.radioValue} border-radius="0" value={String(rowIndex)}></WpRadio>) : null) ||
                                     (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={row.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxRow(v, rowIndex, column)}></Checkbox>) : null)
                                 }
