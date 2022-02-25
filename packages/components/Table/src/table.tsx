@@ -645,6 +645,17 @@ export default defineComponent({
                 set(row,column.prop, value);
             }});
         }
+        // 文本样式
+        const cellTextTypeRender = (label, column, row, editValueKeyName)=>{
+            if(Object.prototype.toString.call(column.textType) === '[object String]' || Object.prototype.toString.call(column.textTypeFilter) === '[object Function]'){
+                let textType = column.textType;
+                if(Object.prototype.toString.call(column.textTypeFilter) === '[object Function]'){
+                    textType = column.textTypeFilter({label, column, row, editValueKeyName})
+                }
+                return (<span class={`WpColor ${textType || ''}`}>{label}</span>)
+            }
+            return label;
+        }
         // 操作按钮
         const operatingButtonRender = (label, column, row, editValueKeyName)=>{
             if(Object.prototype.toString.call(column.btns) === '[object Array]'){
@@ -663,7 +674,7 @@ export default defineComponent({
                                 editValueKeyName
                             })
                         }} v-slots={{
-                            title:(item)=>(<span class={`WpColor ${item.class}`}>{item.name}</span>)
+                            title:(item)=>(<div class={`WpColor ${item.class || ''}`}>{item.name}</div>)
                         }}>
                             <Icon><UnorderedListOutlined></UnorderedListOutlined></Icon>
                         </Dropdown>)
@@ -691,7 +702,7 @@ export default defineComponent({
                                 </WpButton>)}
                             </div>)
             }else {
-                return label;
+                return cellTextTypeRender(label, column, row, editValueKeyName);
             }
         }
         // 快捷编辑图标
