@@ -1,4 +1,4 @@
-import { ref, computed, defineComponent, PropType, type ExtractPropTypes, watch, Teleport, Transition } from 'vue'
+import { ref, computed, defineComponent, PropType, type ExtractPropTypes, watch, Teleport, Transition, onMounted } from 'vue'
 
 const CircularIcon = (
     <svg class={'wp-spin__circular'} viewBox="25 25 50 50">
@@ -32,10 +32,7 @@ export const spinProps = {
     textSize: numericProp,
     textColor: String,
     text: String,
-    loading: {
-        type: Boolean,
-        default: true
-    },
+    loading: Boolean,
     fullscreen: Boolean,
     background: String
 }
@@ -70,6 +67,13 @@ export default defineComponent({
                 document.body.style.overflowY = 'hidden'
             } else if (props.fullscreen) {
                 document.body.style.overflowY = ''
+            }
+        })
+
+        onMounted(() => {
+            if (props.loading && props.fullscreen) {
+                zIndex.value = getMaxZIndex()
+                document.body.style.overflowY = 'hidden'
             }
         })
 
