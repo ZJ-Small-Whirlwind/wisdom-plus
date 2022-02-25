@@ -66,8 +66,8 @@ export default defineComponent({
         provide('wp-popover-close', () => {
             show.value = false
         })
-        provide('wp-dropdown-click', (record?: DropdownRecord) => {
-            emit('click', record)
+        provide('wp-dropdown-click', (record?: DropdownRecord, attrs?:any,ev?:any) => {
+            emit('click', record, attrs)
         })
         provide('wp-dropdown-parent-slot', slots)
         provide('wp-dropdown-show-arrow', computed(() => props.showArrow))

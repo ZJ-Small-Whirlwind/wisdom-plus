@@ -31,11 +31,11 @@ export default defineComponent({
         },
         icon: Object as PropType<Component>,
     },
-    setup(props, { slots }) {
+    setup(props, { slots, attrs }) {
         const popoverProps = inject<ComputedRef<Partial<PopoverProps> & Record<string, any>>>('wp-popover-props')
         const subMenuPlacement = inject<ComputedRef<PopoverPlacement>>('wp-dropdown-sub-menu-placement', computed(() => 'right'))
         const popoverClose = inject<() => void>('wp-popover-close')
-        const dropdownClick = inject<(record?: DropdownRecord) => void>('wp-dropdown-click')
+        const dropdownClick = inject<(record?: DropdownRecord, attrs?:any, ev?:any) => void>('wp-dropdown-click')
         const popoverShow = ref(false)
         const parentSlot = inject<typeof slots>('wp-dropdown-parent-slot')
         const showArrow = inject<Ref<boolean>>('wp-dropdown-show-arrow')
@@ -46,11 +46,11 @@ export default defineComponent({
                     'wp-dropdown-item__disabled': props.disabled,
                     'wp-dropdown-item__divided': props.divided && !props.groupName,
                     'wp-dropdown-item__with-arrow': showArrow?.value && props.children && props.children.length > 0
-                }} onClick={() => {
+                }} onClick={ev => {
                     if (props.disabled) return
                     if (!props.children || props.children.length === 0) popoverClose?.()
                     if (!props.click?.(props)) {
-                        dropdownClick?.(props)
+                        dropdownClick?.(props, attrs,ev)
                     }
                 }}>
                     {

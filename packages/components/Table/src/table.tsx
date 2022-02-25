@@ -67,6 +67,7 @@ export type TableProps = ExtractPropTypes<typeof tableProps>
 export default defineComponent({
     name: 'WpTable',
     props: tableProps,
+    inheritAttrs:false,
     setup(props,{emit}) {
         // 当前表格数据
         const tableDatas:any = ref([]);
@@ -523,6 +524,7 @@ export default defineComponent({
     },
     render() {
         // 获取栏目标识
+        // @ts-ignore
         const getNameIndex =  (index)=>`wp-table_${this._.uid}_column_${index || 0}`;
         const sortIconRender = (column, bool, active, arrs)=>(
             <Icon class={{
@@ -647,7 +649,22 @@ export default defineComponent({
         const operatingButtonRender = (label, column, row, editValueKeyName)=>{
             if(Object.prototype.toString.call(column.btns) === '[object Array]'){
                 return column.dropdown ?
-                        (<Dropdown list={column.btns} titleKeyName="name">
+                        (<Dropdown list={column.btns} titleKeyName="name" onClick={({index},{emit,name,emitData,...ButtonConfig},ev)=> {
+                            this.$emit(emit || editValueKeyName+'-'+index, {
+                                ev,
+                                label,
+                                column,
+                                row,
+                                k:index,
+                                config:{
+                                    name, emit, emitData,
+                                    ...ButtonConfig,
+                                },
+                                editValueKeyName
+                            })
+                        }} v-slots={{
+                            title:(item)=>(<span class={`WpColor ${item.class}`}>{item.name}</span>)
+                        }}>
                             <Icon><UnorderedListOutlined></UnorderedListOutlined></Icon>
                         </Dropdown>)
                     :
@@ -694,6 +711,7 @@ export default defineComponent({
             const editValueKeyName = getEditKeyName(column, row);
             if(column.edit && row.$$editValueKeyName === editValueKeyName){
                 const editConfig = Object.prototype.toString.call(column.edit) === '[object Object]' ? column.edit : {};
+
                 return [
 
                     (this.$slots.edit?.({label,column, row, editValueKeyName}) || (<div class={{
