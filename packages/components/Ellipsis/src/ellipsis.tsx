@@ -17,7 +17,8 @@ export const ellipsisProps = buildProps({
     line: {
         type: Number,
         default: 1
-    }
+    },
+    force: Boolean
 })
 
 export type EllipsisProps = ExtractPropTypes<typeof ellipsisProps>
@@ -31,6 +32,10 @@ export default defineComponent({
         const showTitle = ref(false)
         const handleMouseEnter = () => {
             if (!ellipsisRef.value) return
+            if (props.force) {
+                showTitle.value = true
+                return
+            }
             /**
              * 判断是否溢出
              */

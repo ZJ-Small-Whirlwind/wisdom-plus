@@ -96,6 +96,7 @@ app.use(WpEllipsis)
 | tooltip         | Tooltip 组件的 props                                                        | _TooltipProps_                                                   | {}     |
 | noTooltip  | 是否关闭 Tooltip | _boolean_                                                   | false      |
 | line | 是否是多行模式     | _number_                                                   | 1      |
+| force | 是否强制显示 Tooptip | _boolean_ | false |
 
 ### Slots
 
