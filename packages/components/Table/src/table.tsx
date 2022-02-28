@@ -830,6 +830,7 @@ export default defineComponent({
                         ></WpInput>
                         <WpButton type="primary"
                                   onClick={(ev)=>editSave(ev, row[editValueKeyName], label,column, row, editValueKeyName)}
+                                  // @ts-ignore
                                   onDblclick={ev=>ev.stopPropagation()}>保存</WpButton>
                     </div>))
                 ]
@@ -858,6 +859,7 @@ export default defineComponent({
                     draggable={this.draggable}
                     onDragstart={this.onDragstart}
                     onDragend={this.onDragend}
+                    // @ts-ignore
                     index={key}
                     onClick={(ev)=>this.$emit('cell-row-click',item, ev)}
                     class={{
@@ -906,10 +908,12 @@ export default defineComponent({
                 </tr>
             ) : null)}
         </tbody>)
+
         const colgroupRender = ()=>this.colgroupArr ? (
             <colgroup>
                 {this.colgroupArr.map((it)=>(
-                    <col name={getNameIndex(it.index)} width={it.width}></col>
+                    // @ts-ignore
+                    <col name={getNameIndex(it.index)} width={it.width}/>
                 ))}
             </colgroup>
         ) : null;
@@ -919,7 +923,7 @@ export default defineComponent({
             'wp-table--body--fixed-header': isFixedHeader,
         }}>
             <div class={'wp-table--body--content'}>
-                <table border={0} cellPadding={0} cellSpacing={0} style={{width:this.height ? this.tableWidth : '100%'}}>
+                <table cellpadding={0} cellspacing={0} style={{width:this.height ? this.tableWidth : '100%'}}>
                     { this.height ? [
                         isFixedHeader ? [colgroupRender(),theadRender()] : [colgroupRender(),tbodyRender()]
                     ] : [this.colgroupArr.length === 0 ? null: colgroupRender(),theadRender(),tbodyRender()]}
