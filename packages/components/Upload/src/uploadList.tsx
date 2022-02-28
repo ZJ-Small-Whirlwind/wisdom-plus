@@ -1,4 +1,4 @@
-import { h, defineComponent, type PropType, computed, ref, CSSProperties } from "vue"
+import { h, defineComponent, type PropType, computed, ref } from "vue"
 
 import Icon from '../../Icon'
 import Button from '../../Button'
@@ -11,7 +11,7 @@ import {
     CheckCircleTwotone,
     UploadOutlined,
     Loading3QuartersOutlined,
-    CloseSquareTwotone,
+    CloseOutlined,
     CloudUploadOutlined,
     ReloadOutlined
 } from '@vicons/antd'
@@ -24,7 +24,7 @@ const Icons = {
     [UploadFileStatus.Success]: CheckCircleTwotone,
     [UploadFileStatus.Waiting]: UploadOutlined,
     [UploadFileStatus.Loading]: Loading3QuartersOutlined,
-    [UploadFileStatus.Fail]: CloseSquareTwotone
+    [UploadFileStatus.Fail]: CloseOutlined
 }
 
 interface UploadFileExtend extends UploadFile {

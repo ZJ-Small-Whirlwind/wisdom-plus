@@ -40,6 +40,7 @@ declare module 'vue' {
     WpDialog: typeof import('wisdom-plus')['WpDialog']
     WpDrawer: typeof import('wisdom-plus')['WpDrawer']
     WpUpload: typeof import('wisdom-plus')['WpUpload']
+    WpProUpload: typeof import('wisdom-plus')['WpProUpload']
     WpCountTo: typeof import('wisdom-plus')['WpCountTo']
     WpPagination: typeof import('wisdom-plus')['WpPagination']
     WpImagePreview: typeof import('wisdom-plus')['WpImagePreview']
