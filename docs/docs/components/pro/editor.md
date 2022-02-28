@@ -46,6 +46,7 @@ const text = ref('')
 | modelValue `v-model` | 编辑的文本       | _string_                                                      | -                  |
 | height   | 编辑器的高度                  | _height_                                                            | 300                  |
 | excludeMenus | 排除的菜单                                     | _string[]_                                                           | -                  |
+| editor | 编辑器，必填 | _object_ | - |
 
 ### Methods
 
