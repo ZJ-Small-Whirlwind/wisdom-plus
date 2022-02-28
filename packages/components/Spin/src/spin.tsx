@@ -1,4 +1,6 @@
-import { ref, computed, defineComponent, PropType, type ExtractPropTypes, watch, Teleport, Transition, onMounted } from 'vue'
+import { ref, defineComponent, PropType, type ExtractPropTypes, watch, Teleport, Transition, onMounted } from 'vue'
+
+import { getMaxZIndex } from '@wisdom-plus/utils/get-max-zindex'
 
 const CircularIcon = (
     <svg class={'wp-spin__circular'} viewBox="25 25 50 50">
@@ -8,12 +10,6 @@ const CircularIcon = (
 
 const isNumeric = (value?: number | string) => {
     return !isNaN(Number(value))
-}
-
-const getMaxZIndex = () => {
-    const elements = Array.from(document.querySelectorAll('*'))
-    const arr = elements.map(e => +window.getComputedStyle(e).zIndex || 0);
-    return arr.length ? Math.max(...arr) + 1 : 1
 }
 
 export function addUnit(value?: string | number): string | undefined {
