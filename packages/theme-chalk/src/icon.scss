@@ -1,0 +1,12 @@
+.wp-icon {
+    width: 1em;
+    height: 1em;
+    display: inline-flex;
+    svg {
+        width: 1em;
+        height: 1em;
+    }
+    svg:not([fill]) {
+        fill: currentColor;
+    }
+}

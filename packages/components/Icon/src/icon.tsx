@@ -1,4 +1,4 @@
-import { defineComponent, ExtractPropTypes } from 'vue'
+import { defineComponent, ExtractPropTypes, h } from 'vue'
 import { Icon } from '@vicons/utils'
 import { buildProps, definePropType } from '@wisdom-plus/utils/props'
 
@@ -19,14 +19,19 @@ export default defineComponent({
     props: iconProps,
     setup(props, { slots }) {
         return () => (
-            <Icon
-                size={props.size}
-                color={props.color}
-                tag={props.tag}
-                class="wp-icon"
-            >
-                {slots.default?.() || <i class={props.name} />}
-            </Icon>
+            h(
+                props.tag,
+                {
+                    style: {
+                        fontSize: props.size,
+                        color: props.color
+                    },
+                    class: 'wp-icon'
+                },
+                h('svg', null, {
+                    default: slots.default || (() => h('i', { class: props.name }))
+                })
+            )
         )
     },
 })
