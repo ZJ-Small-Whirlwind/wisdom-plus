@@ -53,6 +53,7 @@ export * from './List'
 export * from './PullRefresh'
 export * from './Spin'
 export * from './Input'
+export * from './Form'
 
 export * from './Pro/Upload'
 export * from './Pro/Editor'

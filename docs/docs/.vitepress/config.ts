@@ -97,6 +97,10 @@ export default defineConfig({
                         {
                             text: 'Tree 树',
                             link: '/components/tree'
+                        },
+                        {
+                            text: 'Form 表单',
+                            link: '/components/form'
                         }
                     ]
                 },

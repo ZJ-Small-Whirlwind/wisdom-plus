@@ -28,6 +28,7 @@
 
 @mixin button-variant($type) {
   --wp-button-text-color: var(--wp-color-white);
+  --wp-button-hover-text-color: var(--wp-color-white);
   --wp-button-disabled-text-color: var(--wp-color-white);
   &.is-plain {
     @include button-plain(var(--wp-button-bg-color), $type);

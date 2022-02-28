@@ -208,7 +208,7 @@ export function deduplicate<T>(arr: T[]) {
   return Array.from(new Set(arr))
 }
 
-export function addUnit(value: string | number) {
+export function addUnit(value?: string | number) {
   if (isString(value)) {
     return value
   } else if (isNumber(value)) {
