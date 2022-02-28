@@ -1,6 +1,6 @@
-<script lang="ts" setup>
+<!-- <script lang="ts" setup>
 import E from 'wangeditor'
-</script>
+</script> -->
 
 # Editor 编辑器
 
@@ -22,7 +22,7 @@ app.use(WpProEditor)
 
 #### 基础用法
 
-:::demo
+<!-- :::demo
 ```vue
 <template>
     <wp-pro-editor v-model="text" :editor="editor" />
@@ -35,7 +35,7 @@ const editor = E
 const text = ref('')
 </script>
 ```
-:::
+::: -->
 
 ## API
 

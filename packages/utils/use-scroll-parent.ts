@@ -3,7 +3,6 @@ import { ref, Ref, onMounted } from 'vue';
 type ScrollElement = HTMLElement | HTMLBodyElement;
 
 const overflowScrollReg = /scroll|auto/i;
-const defaultRoot = document.body || undefined
 
 function isElement(node: Element) {
     const ELEMENT_NODE_TYPE = 1;
@@ -16,9 +15,10 @@ function isElement(node: Element) {
 
 export function getScrollParent(
     el: HTMLElement,
-    root: ScrollElement | undefined = defaultRoot
+    root: ScrollElement | undefined
 ) {
     let node = el;
+    if (!root) root = document.body || undefined
 
     while (node && node !== root && isElement(node)) {
         const { overflowY } = window.getComputedStyle(node);
@@ -33,9 +33,10 @@ export function getScrollParent(
 
 export function useScrollParent(
     el: Ref<HTMLElement | HTMLBodyElement | undefined>,
-    root: ScrollElement | undefined = defaultRoot
+    root: ScrollElement | undefined
 ) {
     const scrollParent = ref<HTMLElement | HTMLBodyElement>()
+    if (!root) root = document.body || undefined
 
     onMounted(() => {
         if (el.value) {
