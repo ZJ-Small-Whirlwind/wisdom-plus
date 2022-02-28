@@ -13,6 +13,19 @@ export default defineConfig({
         sidebar: {
             '/components/': [
                 {
+                    text: '业务组件',
+                    children: [
+                        {
+                            text: 'Upload 上传',
+                            link: '/components/pro/upload'
+                        },
+                        {
+                            text: 'Editor 编辑器',
+                            link: '/components/pro/editor'
+                        }
+                    ]
+                },
+                {
                     text: '布局组件',
                     children: [
                         {
