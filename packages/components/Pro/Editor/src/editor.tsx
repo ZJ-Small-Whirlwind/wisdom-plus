@@ -1,7 +1,6 @@
 import { useVModel } from "@vueuse/core"
 import { buildProps } from "@wisdom-plus/utils/props"
 import { defineComponent, onBeforeUnmount, onMounted, PropType, ref, watch } from "vue"
-import E from 'wangeditor'
 
 export const proEditorProps = buildProps({
     modelValue: String,
@@ -9,7 +8,11 @@ export const proEditorProps = buildProps({
         type: Number,
         default: 300
     },
-    excludeMenus: Array as PropType<string[]>
+    excludeMenus: Array as PropType<string[]>,
+    editor: {
+        type: Object as PropType<any>,
+        required: true
+    }
 })
 
 export default defineComponent ({
@@ -26,12 +29,12 @@ export default defineComponent ({
         })
         
         const editorId = `w-e-${Math.random().toString().slice(-5)}`
-        let editor: InstanceType<typeof E> | null = null
+        let editor: any | null = null
 
         const changing = ref(false)
 
         onMounted(() => {
-            editor = new E('#' + editorId)
+            editor = new props.editor('#' + editorId)
             editor.config.height = props.height
             editor.config.onchange = (html: string) => {
                 changing.value = true

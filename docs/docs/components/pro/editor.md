@@ -1,3 +1,7 @@
+<script lang="ts" setup>
+import E from 'wangeditor'
+</script>
+
 # Editor 编辑器
 
 ### 介绍
@@ -21,12 +25,13 @@ app.use(WpProEditor)
 :::demo
 ```vue
 <template>
-    <wp-pro-editor v-model="text" />
+    <wp-pro-editor v-model="text" :editor="editor" />
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
 
+const editor = E
 const text = ref('')
 </script>
 ```
