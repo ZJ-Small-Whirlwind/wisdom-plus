@@ -127,13 +127,15 @@
       &.cell-tree-item{
         display: flex;
         align-items: center;
+        $index:6px;
+        $index2:16px;
+        $gap:14px;
         i{
-          $index:5px;
           &.cell-tree-item-arrow{
             display: inline-block;
             width: $index;
             height: $index;
-            margin-right: 14px;
+            margin-right: $gap;
             transition: all ease-in-out 0.3s;
             transform: rotate(45deg);
             &.cell-tree-item-arrow-parent{
@@ -141,6 +143,7 @@
               border-left: none;
               border-bottom: none;
               cursor: pointer;
+              transform-origin: center;
               &:hover{
                 border-color: #3a8ee6;
               }
@@ -154,6 +157,15 @@
               }
             }
           }
+        }
+        .cell-tree-item-arrow-loading{
+          margin-right: ($index + $gap ) - $index2;
+          width: $index2;
+          height: $index2;
+          //transform-origin: center;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
       }
       &-sort{

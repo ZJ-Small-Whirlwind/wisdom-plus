@@ -1,5 +1,5 @@
 import { buildProps } from "@wisdom-plus/utils/props"
-import {defineComponent, ExtractPropTypes, PropType, computed, ref, watch, h, isRef} from "vue"
+import {defineComponent, ExtractPropTypes, PropType, computed, ref, watch, h, nextTick} from "vue"
 import  WpRadio from "../../Radio"
 import  Checkbox from "../../Checkbox"
 import  Icon from "../../Icon"
@@ -7,6 +7,7 @@ import  Dropdown from "../../Dropdown"
 import  WpInput from "../../Input"
 import  Ellipsis from "../../Ellipsis"
 import  WpButton from "../../Button"
+import  Spin from "../../Spin"
 import {CaretUpFilled, CaretDownFilled, FilterFilled, EditFilled, CloseSquareFilled, UnorderedListOutlined}  from "@vicons/antd"
 import {get, set}  from "lodash"
 import  simpleScroll from "./simpleScroll.js"
@@ -60,7 +61,7 @@ export const tableProps = buildProps({
         type: Function as PropType<(data) => boolean>,
         default: null
     },
-    onRemote: {
+    remote: {
         type: Function as PropType<(data) => boolean>,
         default: null
     },
@@ -194,7 +195,13 @@ export default defineComponent({
                 row.$$checkboxValue = false;
                 if(props.tree){
                     // 远程加载处理
-                    row.$$isRemote = Object.prototype.toString.call(props.remoteFilter) === "[object Function]" ? props.remoteFilter(row) : true;
+                    if(Object.prototype.toString.call(props.remote) === "[object Function]"){
+                        row.$$isRemote = Object.prototype.toString.call(props.remoteFilter) === "[object Function]" ? props.remoteFilter(row) : true;
+                        row.$$isRemoteLoading = false;
+                    }else {
+                        row.$$isRemote = false;
+                        row.$$isRemoteLoading = false;
+                    }
                 }
                 const item:any = [];
                 theadColumns.value.columns_col.forEach((column, columnIndex)=>{
@@ -231,36 +238,14 @@ export default defineComponent({
             })
         }
 
+        // todo 初始化声明
         let theadColumns:any = ref({});// 表头数据
         let tbodyCells:any = ref([]);// 表单元格数据
         let colgroupArr:any = ref([]);// 表限制关联数据
         let tableWidth:any = ref(null);// 表格宽度
         let radioValue:any = ref(null);// 单选数据
-        // 重置表渲染
-        const resetTbale = (newdata, bool, columnsUpdate = true)=>{
-            // 是否更新表头及源数据
-            if(columnsUpdate){
-                tableDatas.value = newdata;
-                theadColumns.value = getColumnsMergedCell(props.columns)
-            }
-            tbodyCells.value = getTbodyMergedCells(newdata, bool);
-            colgroupArr = computed(()=>{
-                return theadColumns.value.columns_col.filter((e)=>props.height || !!e.width);
-            })
-            tableWidth = computed(()=>{
-                const sum = colgroupArr.value.reduce((a,b)=>a+(b.width),0)
-                return sum ? ((sum+50) + 'px') : null;
-            })
-            radioValue.value = null;
-        }
-        // 数据监听，响应式
-        watch([
-            computed(()=>props.columns),
-            computed(()=>props.data)
-        ],()=>{
-            resetTbale(props.data, false);
-        },{ immediate:true})
 
+        // todo 拖拽声明
         let isDragstart = false;// 是否拖拽
         let draggableObjData = ref(null);// 拖拽目标对象数据
         let draggableObjDataIndex:any = ref(-1);// 拖拽目标对象索引
@@ -496,6 +481,42 @@ export default defineComponent({
             }
             return newdata;
         }
+        // 远程数据处理
+        const remoteDataInit = ({ev, bool, row, res})=>{
+            row.$$treeShow = true;
+            row[props.treeChildrenFieldName] = (row[props.treeChildrenFieldName] || []).concat(res);
+            resetTbale(tableDatas.value, true, false);
+            nextTick(()=>{
+                emit("remote-success", {ev, bool, row, res})
+            })
+        }
+
+        // 重置表渲染
+        const resetTbale = (newdata, notResetShow, columnsUpdate = true)=>{
+            // 是否更新表头及源数据
+            if(columnsUpdate){
+                tableDatas.value = newdata;
+                theadColumns.value = getColumnsMergedCell(props.columns)
+            }
+            tbodyCells.value = getTbodyMergedCells(newdata, notResetShow);
+            colgroupArr = computed(()=>{
+                return theadColumns.value.columns_col.filter((e)=>props.height || !!e.width);
+            })
+            tableWidth = computed(()=>{
+                const sum = colgroupArr.value.reduce((a,b)=>a+(b.width),0)
+                return sum ? ((sum+50) + 'px') : null;
+            })
+            radioValue.value = null;
+            clearCheckbox();
+        }
+
+        // 数据监听，响应式
+        watch([
+            computed(()=>props.columns),
+            computed(()=>props.data)
+        ],()=>{
+            resetTbale(props.data, false);
+        },{ immediate:true})
         return {
             onDragstart,
             onDragend,
@@ -524,6 +545,7 @@ export default defineComponent({
             clearRadio,
             sortClick,
             search,
+            remoteDataInit,
         }
     },
     mounted() {
@@ -630,13 +652,43 @@ export default defineComponent({
                 this.$emit(column.emit || '',{...args,column,row},ev);
             }
         }
+
+        // 展开数据处理
         const treeArrowClick = (ev, bool, row)=>{
-            console.log(row.$$isRemote)
+            try {
+                if(row.$$isRemote && !row[this.treeChildrenFieldName] || row[this.treeChildrenFieldName].length === 0){
+                    row.$$isRemoteLoading = true;
+                    const remoteData = this.remote({ev, bool, row}) || [];
+                    if(Object.prototype.toString.call(remoteData) === '[object Promise]'){
+                        remoteData.then((res)=>{
+                            row.$$isRemoteLoading = false;
+                            this.remoteDataInit({ev, bool, row, res})
+                        }).catch((err)=>{
+                            // 请求失败
+                            row.$$isRemoteLoading = false;
+                            row.$$isRemote = true;
+                            this.$emit("remote-error", err)
+                        })
+                    }else {
+                        row.$$isRemoteLoading = false;
+                        this.remoteDataInit({ev, bool, row, res:remoteData})
+                    }
+                    row.$$isRemote = false;
+                }
+            }catch (err) {
+                this.$emit("remote-error", err)
+            }
             this.$emit("tree-arrow-click", {ev, bool, row})
         }
         // 树形箭头绘制
-        const treeArrowRender = (bool, row)=>(
-            <i onClick={ev=>treeArrowClick(ev, bool, row)} class={{
+        const treeArrowRender = (bool, row)=> row.$$isRemoteLoading ?
+            (<Spin class={{
+            "cell-tree-item-arrow-loading":true,
+            }} style={{
+                marginLeft:`${this.treeLevelDeep*row.$$level}px`
+            }}></Spin>)
+            :
+            (<i onClick={ev=>treeArrowClick(ev, bool, row)} class={{
                 "cell-tree-item-arrow":true,
                 "cell-tree-item-arrow-parent":bool || row.$$isRemote,
                 "cell-tree-item-arrow-parent-open":row.$$treeShow,
@@ -763,9 +815,7 @@ export default defineComponent({
             const editValueKeyName = getEditKeyName(column, row);
             if(column.edit && row.$$editValueKeyName === editValueKeyName){
                 const editConfig = Object.prototype.toString.call(column.edit) === '[object Object]' ? column.edit : {};
-
                 return [
-
                     (this.$slots.edit?.({label,column, row, editValueKeyName}) || (<div class={{
                         'cell-edit-input':true,
                     }}>

@@ -28,8 +28,8 @@ app.use(WpTable)
 import {ref} from 'vue'
 
 const columns = ref([
-    {checkbox: true},
-    { prop: "date", number: true},
+    {checkbox: true, width:30},
+    { prop: "date", number: true, width:50},
     {label: "日期", prop: "date", width: 120},
     {label: "姓名", prop: "name", align: 'center'},
     {label: "地址", prop: "address"},
@@ -510,7 +510,8 @@ const spanCell = ({rowIndex, columnIndex})=>{
     <wp-button @click="clearCheckbox">清除复选数据</wp-button>
     <wp-table ref="table" :columns="columns" :data="data" tree="checkbox"
               draggable
-              @onRemote="onRemote"
+              :remote="onRemote"
+              :remoteFilter="row=>row.index === 1"
               @draggable-change="draggableChange"
               :draggableFilter="draggableFilter"
     ></wp-table>
@@ -642,8 +643,17 @@ const draggableFilter = ({end_row, srart_row, inset})=>{
     return srart_row.$$level === end_row.$$level && !inset
 }
 // 远程加载数据
-const onRemote = ()=>{
-    
+const onRemote = ({row})=>{
+    return new Promise((resolve, reject) => {
+        setTimeout(()=>reject([
+            {
+                date: '2022-02-28',
+                name: '我是新数据',
+                address: '新地址',
+                index:Math.random()
+            }
+        ]), 2000);
+    })
 }
 </script>
 <style lang="scss">
@@ -663,21 +673,21 @@ const onRemote = ()=>{
 
 ### Props
 
-| 参数                    | 说明                                                                                                                  | 类型                                                | 默认值        |
-|-----------------------|---------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|------------|
-| columns               | 表头栏目                                                                                                                | _ColumnAttributes[]_                              | []         |
-| data                  | 表格数据                                                                                                                | _object[]_                                        | []         |
-| spanCell              | 合并单元格                                                                                                               | _({column,row,rowIndex,columnIndex}) => number[]_ | -          |
-| stripe                | 是否为斑马纹 table                                                                                                        | _boolean_                                         | false      |
-| border                | 是否带边框表格                                                                                                             | _boolean_                                         | false      |
+| 参数                    | 说明                                                                                                                       | 类型                                                | 默认值        |
+|-----------------------|--------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|------------|
+| columns               | 表头栏目                                                                                                                     | _ColumnAttributes[]_                              | []         |
+| data                  | 表格数据                                                                                                                     | _object[]_                                        | []         |
+| spanCell              | 合并单元格                                                                                                                    | _({column,row,rowIndex,columnIndex}) => number[]_ | -          |
+| stripe                | 是否为斑马纹 table                                                                                                             | _boolean_                                         | false      |
+| border                | 是否带边框表格                                                                                                                  | _boolean_                                         | false      |
 | height                | Table 的高度，默认为自动高度。如果 height 为 number 类型，单位 px；如果 height 为 string 类型，则这个高度会设置为 Table 的 style.height 的值，Table 的高度会受控于外部样式。 | _[string,number]_                                 | -          |
-| tree                  | 是否开启树形表格，并可选执行放置的栏目位置，具体以栏目对应的prop值为准                                                                               | _[string,boolean]_                                | false      |
-| treeLevelDeep         | 树形箭头缩紧深度                                                                                                            | _number_                                          | 15         |
-| treeChildrenFieldName | 自定义树形children字段名称                                                                                                   | _string_                                          | children   |
-| draggable             | 是否开启拖拽                                                                                                              | _boolean_                                         | false      |
-| draggableFilter       | 拖拽过滤，可实现限制特定数据排序或者同级排序等功能                                                                                           | _({srart_row,end_row,index,ev,inset})=>boolean_   | -          |
-| onRemote              | 远程加载                                                                                                                | _({})=>rows[]_                                    | -          |
-| remoteFilter              | 远程加载过滤，通过返回结果判断是否支持远程加载                                                                                             | _(row:any)=>boolean_                              | _()=>true_ |
+| tree                  | 是否开启树形表格，并可选执行放置的栏目位置，具体以栏目对应的prop值为准                                                                                    | _[string,boolean]_                                | false      |
+| treeLevelDeep         | 树形箭头缩紧深度                                                                                                                 | _number_                                          | 15         |
+| treeChildrenFieldName | 自定义树形children字段名称                                                                                                        | _string_                                          | children   |
+| draggable             | 是否开启拖拽                                                                                                                   | _boolean_                                         | false      |
+| draggableFilter       | 拖拽过滤，可实现限制特定数据排序或者同级排序等功能                                                                                                | _({srart_row,end_row,index,ev,inset})=>boolean_   | -          |
+| remote                | 远程加载,必须为函数才生效                                                                                                            | _({})=>rows[]_                                    | -          |
+| remoteFilter          | 远程加载过滤，通过返回结果判断是否支持远程加载                                                                                                  | _(row:any)=>boolean_                              | _()=>true_ |
 
 
 ### ColumnAttributes
@@ -737,6 +747,8 @@ const onRemote = ()=>{
 | tree-arrow-click | 树形展开箭头回调 | _(ev:any)=>void_                      |
 | draggable-change | 拖拽结束回调 | _(newdata:newrow[])=>void_                      |
 | edit-save | 快捷编辑保存回调, 其中next执行后，快捷编辑才关闭，并写入最新数据 | _(value:any,{label,column, row, ev, next})=>void_                      |
+| remote-success | 远程数据加载成功回调 | _({ev, bool, row, res})=>void_                      |
+| remote-error | 远程数据加载错误回调 | _(error:any)=>void_                      |
 
 ### Slots
 
