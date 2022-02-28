@@ -28,7 +28,7 @@ app.use(WpTable)
 import {ref} from 'vue'
 
 const columns = ref([
-    {label: "序号", prop: "date", index: true},
+    {label: "序号", prop: "date", number: true},
     {label: "日期", prop: "date", width: 120},
     {label: "姓名", prop: "name", align: 'center'},
     {label: "地址", prop: "address"},
@@ -64,20 +64,20 @@ const add = (item) => {
 ```vue
 
 <template>
-    <wp-table @add="add" :columns="columns" :data="data"></wp-table>
+    <wp-table @nameClick="nameClick" @add="add" :columns="columns" :data="data"></wp-table>
 </template>
 <script setup lang="ts">
 import {ref} from 'vue'
 
 const columns = ref([
     {label: "日期", prop: "date", width: 120},
-    {label: "姓名", prop: "name", align: 'center', textType:'primary_link'},
-    {label: "文本过滤", prop: "name", align: 'center', textTypeFilter:({row})=>{
+    {label: "姓名", prop: "name", align: 'center', textType:'primary'},
+    {label: "文本过滤,并可以点击", emit:"nameClick", prop: "name", align: 'center', textTypeFilter:({row})=>{
         return {
-            1:'primary',
-            2:'success',
-            3:'delete',
-            4:'orange',
+            1:'primary_link',
+            2:'success_link',
+            3:'delete_link',
+            4:'orange_link',
         }[row.index]
     }},
     {label: "地址", prop: "address"},
@@ -138,6 +138,9 @@ const data = ref([{
     index:4,
 }])
 const add = (item) => {
+    console.log(item)
+}
+const nameClick = item=>{
     console.log(item)
 }
 </script>
@@ -699,7 +702,7 @@ const draggableFilter = ({end_row, srart_row, inset})=>{
 | textType       | 文本样式                                                                  | _string_                                                                | -                       |
 | textTypeFilter | 文本样式过滤                                                                | _({label, column, row, editValueKeyName})=>textType_                    | -                       |
 | labelFilter | 文本过滤                                                                  | _({value,row,column})=>string_                                          | -                       |
-| index | 序号索引                                                                  | _boolean_                                                               | false                   |
+| number | 序号索引                                                                  | _boolean_                                                               | false                   |
 
 ### Methods
 
