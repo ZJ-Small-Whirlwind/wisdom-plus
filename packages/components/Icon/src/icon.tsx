@@ -1,6 +1,6 @@
 import { defineComponent, ExtractPropTypes, h } from 'vue'
-import { Icon } from '@vicons/utils'
 import { buildProps, definePropType } from '@wisdom-plus/utils/props'
+import { addUnit } from '@wisdom-plus/utils/util'
 
 export const iconProps = buildProps({
     size: definePropType<string | number>([String, Number]),
@@ -23,7 +23,7 @@ export default defineComponent({
                 props.tag,
                 {
                     style: {
-                        fontSize: props.size,
+                        fontSize: addUnit(props.size),
                         color: props.color
                     },
                     class: 'wp-icon'
