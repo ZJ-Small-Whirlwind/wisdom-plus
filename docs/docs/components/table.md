@@ -28,7 +28,7 @@ app.use(WpTable)
 import {ref} from 'vue'
 
 const columns = ref([
-    {label: "序号", prop: "date", number: true},
+    { prop: "date", number: true},
     {label: "日期", prop: "date", width: 120},
     {label: "姓名", prop: "name", align: 'center'},
     {label: "地址", prop: "address"},

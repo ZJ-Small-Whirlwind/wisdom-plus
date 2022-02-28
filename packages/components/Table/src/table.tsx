@@ -539,7 +539,11 @@ export default defineComponent({
                     }
             </Icon>)
         const columnLableRender = (column)=>this.$slots.header?.(column) ||
-            (column.search ? <WpInput placeholder={column.placeholder || column.label} clearable onUpdate:modelValue={(v)=>(column.change || (()=>void (0)))(v, column)} modelValue={column.modelValue}></WpInput> : column.label) ||
+            (column.search ?
+                <WpInput placeholder={column.placeholder || column.label} clearable onUpdate:modelValue={(v)=>(column.change || (()=>void (0)))(v, column)} modelValue={column.modelValue}></WpInput>
+                :
+                column.number ? (column.label || 'number') : column.label
+            ) ||
             (column.radio ? '-' :null) ||
             (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxAll(v)}></Checkbox>) : null)
         const getFilterData = (column)=>{
