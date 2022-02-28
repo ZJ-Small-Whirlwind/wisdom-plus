@@ -1,11 +1,6 @@
 import { createApp, defineComponent, ref, VNode, Transition, Teleport, App, CSSProperties } from 'vue'
 
-const getMaxZIndex = () => {
-    const elements = Array.from(document.querySelectorAll('*'))
-    const arr = elements.map(e => +window.getComputedStyle(e).zIndex || 0);
-    return arr.length ? Math.max(...arr) + 1 : 1
-}
-
+import { getMaxZIndex } from '@wisdom-plus/utils/get-max-zindex'
 export interface ToastOptions {
     dark?: boolean;
     message?: VNode | string;

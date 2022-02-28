@@ -1,6 +1,8 @@
 import { defineComponent, ExtractPropTypes, PropType, watch, ref, Teleport, RendererElement, Transition, provide, inject } from 'vue'
 import { buildProps } from '@wisdom-plus/utils/props'
 
+import { getMaxZIndex } from '@wisdom-plus/utils/get-max-zindex'
+
 export const overlayProps = buildProps({
     modelValue: {
         type: Boolean,
@@ -42,12 +44,6 @@ export const overlayProps = buildProps({
 })
 
 export type OverlayProps =  ExtractPropTypes<typeof overlayProps>
-
-const getMaxZIndex = () => {
-    const elements = Array.from(document.querySelectorAll('*'))
-    const arr = elements.map(e => +window.getComputedStyle(e).zIndex || 0);
-    return arr.length ? Math.max(...arr) + 1 : 1
-}
 
 export default defineComponent({
     name: 'WpOverlay',

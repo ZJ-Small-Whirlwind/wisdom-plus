@@ -7,6 +7,8 @@ import type { ExtractPropTypes } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import { closeAll } from './utils'
 
+import { getMaxZIndex } from '@wisdom-plus/utils/get-max-zindex'
+
 export type PopoverTrigger = 'click' | 'hover' | 'focus' | 'none'
 export type PopoverPlacement = 'top-start' | 'top' | 'top-end' | 'right-start' | 'right' | 'right-end' | 'bottom-start' | 'bottom' | 'bottom-end' | 'left-start' | 'left' | 'left-end'
 export const popoverProps = buildProps({
@@ -77,12 +79,6 @@ export const popoverEmits = {
 export type PopoverEmits = typeof popoverEmits
 
 const textVNodeType = createTextVNode('').type
-
-const getMaxZIndex = () => {
-    const elements = Array.from(document.querySelectorAll('*'))
-    const arr = elements.map(e => +window.getComputedStyle(e).zIndex || 0);
-    return arr.length ? Math.max(...arr) + 1 : 1
-}
 
 export default defineComponent({
     name: 'WpPopover',
