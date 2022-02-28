@@ -4,10 +4,6 @@ import { defineComponent, onBeforeUnmount, onMounted, PropType, ref, watch } fro
 import E from 'wangeditor'
 
 export const proEditorProps = buildProps({
-    mode: {
-        type: String as PropType<'default' | 'simple'>,
-        default: 'simple'
-    },
     modelValue: String,
     height: {
         type: Number,
