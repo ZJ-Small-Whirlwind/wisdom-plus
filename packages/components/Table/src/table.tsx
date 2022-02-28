@@ -484,11 +484,14 @@ export default defineComponent({
         // 远程数据处理
         const remoteDataInit = ({ev, bool, row, res})=>{
             row.$$treeShow = true;
-            row[props.treeChildrenFieldName] = (row[props.treeChildrenFieldName] || []).concat(res);
-            resetTbale(tableDatas.value, true, false);
-            nextTick(()=>{
-                emit("remote-success", {ev, bool, row, res})
+            setTimeout(()=>{
+                row[props.treeChildrenFieldName] = (row[props.treeChildrenFieldName] || []).concat(res);
+                resetTbale(tableDatas.value, true, false);
+                nextTick(()=>{
+                    emit("remote-success", {ev, bool, row, res})
+                })
             })
+
         }
 
         // 重置表渲染
@@ -656,7 +659,7 @@ export default defineComponent({
         // 展开数据处理
         const treeArrowClick = (ev, bool, row)=>{
             try {
-                if(row.$$isRemote && !row[this.treeChildrenFieldName] || row[this.treeChildrenFieldName].length === 0){
+                if(row.$$isRemote && (!row[this.treeChildrenFieldName] || row[this.treeChildrenFieldName].length === 0)){
                     row.$$isRemoteLoading = true;
                     const remoteData = this.remote({ev, bool, row}) || [];
                     if(Object.prototype.toString.call(remoteData) === '[object Promise]'){

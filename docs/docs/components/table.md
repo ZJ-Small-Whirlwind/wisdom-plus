@@ -527,6 +527,7 @@ const columns = ref([
     {label: "日期", prop: "date"},
     {label: "姓名", prop: "name"},
     {label: "地址", prop: "address"},
+    {label: "备注", prop: "remark"},
 ])
 const data = ref([
 {
@@ -534,6 +535,7 @@ const data = ref([
     name: '王小虎',
     address: '上海市普陀区金沙江路 1 弄',
     index: 1,
+    remark:"可获取远程数据"
 }, {
     date: '2016-05-04',
     name: '王小虎children',
@@ -644,8 +646,8 @@ const draggableFilter = ({end_row, srart_row, inset})=>{
 }
 // 远程加载数据
 const onRemote = ({row})=>{
-    return new Promise((resolve, reject) => {
-        setTimeout(()=>reject([
+    return new Promise((resolve) => {
+        setTimeout(()=>resolve([
             {
                 date: '2022-02-28',
                 name: '我是新数据',
@@ -687,7 +689,7 @@ const onRemote = ({row})=>{
 | draggable             | 是否开启拖拽                                                                                                                   | _boolean_                                         | false      |
 | draggableFilter       | 拖拽过滤，可实现限制特定数据排序或者同级排序等功能                                                                                                | _({srart_row,end_row,index,ev,inset})=>boolean_   | -          |
 | remote                | 远程加载,必须为函数才生效                                                                                                            | _({})=>rows[]_                                    | -          |
-| remoteFilter          | 远程加载过滤，通过返回结果判断是否支持远程加载                                                                                                  | _(row:any)=>boolean_                              | _()=>true_ |
+| remoteFilter          | 远程加载过滤，通过返回结果判断是否支持远程加载， 注：默认children 为空才生效                                                                              | _(row:any)=>boolean_                              | _()=>true_ |
 
 
 ### ColumnAttributes
