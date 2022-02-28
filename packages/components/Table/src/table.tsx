@@ -657,10 +657,21 @@ export default defineComponent({
             return label;
         }
         // 操作按钮
+        const filterBtns = (label, column, row, editValueKeyName)=>{
+            return column.btns.filter(e=>{
+                return Object.prototype.toString.call(e.show) === '[object Function]' ?
+                    e.show({label, column, row, editValueKeyName, btnConfig:e})
+                    :
+                    Object.prototype.toString.call(e.show) === '[object Boolean]' ?
+                        e.show
+                        :
+                        true;
+            })
+        }
         const operatingButtonRender = (label, column, row, editValueKeyName)=>{
             if(Object.prototype.toString.call(column.btns) === '[object Array]'){
                 return column.dropdown ?
-                        (<Dropdown list={column.btns} titleKeyName="name" onClick={({index},{emit,name,emitData,...ButtonConfig},ev)=> {
+                        (<Dropdown list={filterBtns(label, column, row, editValueKeyName)} titleKeyName="name" onClick={({index},{emit,name,emitData,...ButtonConfig},ev)=> {
                             this.$emit(emit || editValueKeyName+'-'+index, {
                                 ev,
                                 label,
@@ -682,7 +693,7 @@ export default defineComponent({
                         (<div class={{
                                 'cell-operate-btns':true,
                             }}>
-                                {column.btns.map(({name, emit, emitData, ...ButtonConfig},k)=><WpButton
+                                {filterBtns(label, column, row, editValueKeyName).map(({name, emit, emitData, ...ButtonConfig},k)=><WpButton
                                     {...ButtonConfig}
                                     onClick={ev=>this.$emit(emit || editValueKeyName+'-'+k, {
                                         ev,

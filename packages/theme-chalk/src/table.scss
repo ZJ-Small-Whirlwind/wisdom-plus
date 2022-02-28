@@ -23,17 +23,17 @@
   }
 }
 @mixin colorBaInitFun($className,$color,$n:35%){
-  &.#{$className}_bg{
+  &.#{""+$className}_bg{
     @include styleInit($color,$n);
   }
-  &.#{$className}_bg_init{
+  &.#{""+$className}_bg_init{
     @include styleInit($color,$n);
     padding: 12px 20px;
   }
-  &.#{$className}{
+  &.#{""+$className}{
     color: $color;
   }
-  &.#{$className}_link{
+  &.#{""+$className}_link{
     color:$color;
     cursor: pointer;
     &:hover{
