@@ -539,7 +539,11 @@ export default defineComponent({
                     }
             </Icon>)
         const columnLableRender = (column)=>this.$slots.header?.(column) ||
-            (column.search ? <WpInput placeholder={column.placeholder || column.label} clearable onUpdate:modelValue={(v)=>(column.change || (()=>void (0)))(v, column)} modelValue={column.modelValue}></WpInput> : column.label) ||
+            (column.search ?
+                <WpInput placeholder={column.placeholder || column.label} clearable onUpdate:modelValue={(v)=>(column.change || (()=>void (0)))(v, column)} modelValue={column.modelValue}></WpInput>
+                :
+                column.number ? (column.label || 'number') : column.label
+            ) ||
             (column.radio ? '-' :null) ||
             (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxAll(v)}></Checkbox>) : null)
         const getFilterData = (column)=>{
@@ -604,12 +608,15 @@ export default defineComponent({
             ))}
         </thead>)
         // 单元格点击事件
-        const cellClick = ({row,ev,...args})=>{
+        const cellClick = ({row,column,ev,...args})=>{
             if(this.tree && Object.prototype.toString.call(row[this.treeChildrenFieldName]) === '[object Array]'){
                 this.flattenDeep(row[this.treeChildrenFieldName] || [],this.treeChildrenFieldName).forEach(_row=>_row.$$treeShow = false);
                 row.$$treeShow = !row.$$treeShow;
             }
-            this.$emit('cell-click',{...args,row},ev);
+            this.$emit('cell-click',{...args,column,row},ev);
+            if(Object.prototype.toString.call(column.emit) === '[object String]'){
+                this.$emit(column.emit || '',{...args,column,row},ev);
+            }
         }
         // 树形箭头绘制
         const treeArrowRender = (bool, row)=>(
@@ -655,6 +662,12 @@ export default defineComponent({
                 return (<span class={`WpColor ${textType || ''}`}>{label}</span>)
             }
             return label;
+        }
+        const cellNumberRender = (label, column, row, editValueKeyName)=>{
+            if(column.number){
+                return cellTextTypeRender(row.$$rowIndex+1, column, row, editValueKeyName);
+            }
+            return cellTextTypeRender(label, column, row, editValueKeyName)
         }
         // 操作按钮
         const filterBtns = (label, column, row, editValueKeyName)=>{
@@ -713,7 +726,7 @@ export default defineComponent({
                                 </WpButton>)}
                             </div>)
             }else {
-                return cellTextTypeRender(label, column, row, editValueKeyName);
+                return cellNumberRender(label, column, row, editValueKeyName);
             }
         }
         // 快捷编辑图标
