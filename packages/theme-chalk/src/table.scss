@@ -148,6 +148,11 @@
                 transform: rotate(135deg);
               }
             }
+            &.cell-tree-item-arrow-is-remote{
+              &:hover{
+                border-color: #3a8ee6;
+              }
+            }
           }
         }
       }

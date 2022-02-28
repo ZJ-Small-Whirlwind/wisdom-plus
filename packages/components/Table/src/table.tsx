@@ -1,5 +1,5 @@
 import { buildProps } from "@wisdom-plus/utils/props"
-import {defineComponent, ExtractPropTypes, PropType, computed, ref, watch, h} from "vue"
+import {defineComponent, ExtractPropTypes, PropType, computed, ref, watch, h, isRef} from "vue"
 import  WpRadio from "../../Radio"
 import  Checkbox from "../../Checkbox"
 import  Icon from "../../Icon"
@@ -59,6 +59,14 @@ export const tableProps = buildProps({
     draggableFilter: {
         type: Function as PropType<(data) => boolean>,
         default: null
+    },
+    onRemote: {
+        type: Function as PropType<(data) => boolean>,
+        default: null
+    },
+    remoteFilter: {
+        type: Function as PropType<(data) => boolean>,
+        default: (row:any)=>true
     },
 })
 
@@ -178,12 +186,16 @@ export default defineComponent({
                     item.value.$$parent = parent;
                     item.value.$$parentDeep = parent ? parent.$$parentDeep.concat([parent]) : [];
                     item.value.$$level = level;
-                    item.value.$$checkboxValue = false;
                 })
             }
             const result:any = [];
             const spanCellFilters:any = []
             bodyCellData.forEach((row,rowIndex)=>{
+                row.$$checkboxValue = false;
+                if(props.tree){
+                    // 远程加载处理
+                    row.$$isRemote = Object.prototype.toString.call(props.remoteFilter) === "[object Function]" ? props.remoteFilter(row) : true;
+                }
                 const item:any = [];
                 theadColumns.value.columns_col.forEach((column, columnIndex)=>{
                     const it:any = {
@@ -406,7 +418,7 @@ export default defineComponent({
                 row.$$checkboxValue = v;
             });
             // 检查父级
-            row.$$parentDeep.reverse().forEach(parent=>{
+            (row.$$parentDeep || []).reverse().forEach(parent=>{
                 let isCheck = true;
                 flattenDeep(
                     parent[props.treeChildrenFieldName] || [],
@@ -618,12 +630,17 @@ export default defineComponent({
                 this.$emit(column.emit || '',{...args,column,row},ev);
             }
         }
+        const treeArrowClick = (ev, bool, row)=>{
+            console.log(row.$$isRemote)
+            this.$emit("tree-arrow-click", {ev, bool, row})
+        }
         // 树形箭头绘制
         const treeArrowRender = (bool, row)=>(
-            <i class={{
+            <i onClick={ev=>treeArrowClick(ev, bool, row)} class={{
                 "cell-tree-item-arrow":true,
-                "cell-tree-item-arrow-parent":bool,
+                "cell-tree-item-arrow-parent":bool || row.$$isRemote,
                 "cell-tree-item-arrow-parent-open":row.$$treeShow,
+                "cell-tree-item-arrow-is-remote":row.$$isRemote,
             }} style={{
                 marginLeft:`${this.treeLevelDeep*row.$$level}px`
             }}></i>
@@ -819,7 +836,7 @@ export default defineComponent({
                                 "cell-tree-item":this.tree && (this.tree === column.prop || column.index === 1)
                             }}>
                                 {this.tree && (this.tree === column.prop || (column.index === 1 && typeof this.tree === 'boolean')) ?
-                                    ((row[this.treeChildrenFieldName] || []).length > 0 ? (
+                                    ((row[this.treeChildrenFieldName] || []).length > 0 || row.$$isRemote ? (
                                         treeArrowRender(true,row)
                                     ) : treeArrowRender(false,row))
                                     : null}
