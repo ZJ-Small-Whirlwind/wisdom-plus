@@ -18,6 +18,10 @@ export default defineConfig({
                         {
                             text: 'Upload 上传',
                             link: '/components/pro/upload'
+                        },
+                        {
+                            text: 'Editor 编辑器',
+                            link: '/components/pro/editor'
                         }
                     ]
                 },

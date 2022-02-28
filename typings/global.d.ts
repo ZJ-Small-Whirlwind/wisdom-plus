@@ -47,6 +47,7 @@ declare module 'vue' {
     WpPullRefresh: typeof import('wisdom-plus')['WpPullRefresh']
     WpList: typeof import('wisdom-plus')['WpList']
     WpSpin: typeof import('wisdom-plus')['WpSpin']
+    WpProEditor: typeof import('wisdom-plus')['WpProEditor']
   }
 }
 
