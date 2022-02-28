@@ -484,11 +484,14 @@ export default defineComponent({
         // 远程数据处理
         const remoteDataInit = ({ev, bool, row, res})=>{
             row.$$treeShow = true;
-            row[props.treeChildrenFieldName] = (row[props.treeChildrenFieldName] || []).concat(res);
-            resetTbale(tableDatas.value, true, false);
-            nextTick(()=>{
-                emit("remote-success", {ev, bool, row, res})
+            setTimeout(()=>{
+                row[props.treeChildrenFieldName] = (row[props.treeChildrenFieldName] || []).concat(res);
+                resetTbale(tableDatas.value, true, false);
+                nextTick(()=>{
+                    emit("remote-success", {ev, bool, row, res})
+                })
             })
+
         }
 
         // 重置表渲染
@@ -656,7 +659,7 @@ export default defineComponent({
         // 展开数据处理
         const treeArrowClick = (ev, bool, row)=>{
             try {
-                if(row.$$isRemote && !row[this.treeChildrenFieldName] || row[this.treeChildrenFieldName].length === 0){
+                if(row.$$isRemote && (!row[this.treeChildrenFieldName] || row[this.treeChildrenFieldName].length === 0)){
                     row.$$isRemoteLoading = true;
                     const remoteData = this.remote({ev, bool, row}) || [];
                     if(Object.prototype.toString.call(remoteData) === '[object Promise]'){
@@ -827,6 +830,7 @@ export default defineComponent({
                         ></WpInput>
                         <WpButton type="primary"
                                   onClick={(ev)=>editSave(ev, row[editValueKeyName], label,column, row, editValueKeyName)}
+                                  // @ts-ignore
                                   onDblclick={ev=>ev.stopPropagation()}>保存</WpButton>
                     </div>))
                 ]
@@ -855,6 +859,7 @@ export default defineComponent({
                     draggable={this.draggable}
                     onDragstart={this.onDragstart}
                     onDragend={this.onDragend}
+                    // @ts-ignore
                     index={key}
                     onClick={(ev)=>this.$emit('cell-row-click',item, ev)}
                     class={{
@@ -903,10 +908,12 @@ export default defineComponent({
                 </tr>
             ) : null)}
         </tbody>)
+
         const colgroupRender = ()=>this.colgroupArr ? (
             <colgroup>
                 {this.colgroupArr.map((it)=>(
-                    <col name={getNameIndex(it.index)} width={it.width}></col>
+                    // @ts-ignore
+                    <col name={getNameIndex(it.index)} width={it.width}/>
                 ))}
             </colgroup>
         ) : null;
@@ -916,7 +923,7 @@ export default defineComponent({
             'wp-table--body--fixed-header': isFixedHeader,
         }}>
             <div class={'wp-table--body--content'}>
-                <table border={0} cellPadding={0} cellSpacing={0} style={{width:this.height ? this.tableWidth : '100%'}}>
+                <table cellpadding={0} cellspacing={0} style={{width:this.height ? this.tableWidth : '100%'}}>
                     { this.height ? [
                         isFixedHeader ? [colgroupRender(),theadRender()] : [colgroupRender(),tbodyRender()]
                     ] : [this.colgroupArr.length === 0 ? null: colgroupRender(),theadRender(),tbodyRender()]}
