@@ -124,7 +124,15 @@ export default defineComponent({
                 {
                     this.loading ? <Spin></Spin> : ( this.icon || this.$slots.icon ) ?
                         (
-                            <wp-icon>{antdIcons[this.icon as any]?.render?.() || this.$slots.icon?.()}</wp-icon>
+                            <wp-icon>{
+                                this.$slots.icon?.() || (
+                                    typeof this.icon === 'string' ? (
+                                        antdIcons[this.icon as any]?.render?.()
+                                    ) : (
+                                        h(this.icon)
+                                    )
+                                )
+                            }</wp-icon>
                         ) :
                         null
                 }

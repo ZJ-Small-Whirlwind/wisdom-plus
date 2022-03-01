@@ -34,6 +34,10 @@ export default defineConfig({
                         {
                             text: 'PersonTransfer 人员穿梭框',
                             link: '/components/pro/person-transfer'
+                        },
+                        {
+                            text: 'PageLayout 页面脚手架',
+                            link: '/components/pro/page-layout'
                         }
                     ]
                 },
