@@ -8,10 +8,10 @@
 
 ```js
 import { createApp } from 'vue'
-import { WpPersonTree } from 'wisdom-plus'
+import { WpProPersonTree } from 'wisdom-plus'
 
 const app = createApp()
-app.use(WpPersonTree)
+app.use(WpProPersonTree)
 ```
 
 ## 代码演示

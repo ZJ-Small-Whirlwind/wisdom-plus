@@ -53,6 +53,7 @@ declare module 'vue' {
     WpFormItem: typeof import('wisdom-plus')['WpFormItem']
     WpProForm: typeof import('wisdom-plus')['WpProForm']
     WpProPersonTree: typeof import('wisdom-plus')['WpProPersonTree']
+    WpProPersonTransfer: typeof import('wisdom-plus')['WpProPersonTransfer']
   }
 }
 
