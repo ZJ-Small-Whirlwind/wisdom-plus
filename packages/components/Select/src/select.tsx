@@ -11,6 +11,8 @@ export default defineComponent({
 
     },
     render(){
-        return (<div>asdas</div>)
+        return (<div class={{
+            'wp-select':true
+        }}>asdas</div>)
     }
 })
