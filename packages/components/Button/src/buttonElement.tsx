@@ -5,6 +5,8 @@ import { buttonGroupContextKey } from '@wisdom-plus/tokens'
 import { lighten, darken } from '@wisdom-plus/utils/color'
 import { buttonEmits, buttonProps } from '@wisdom-plus/components/button/src/button'
 import WpIcon from "@wisdom-plus/components/Icon";
+import * as antdIcons from "@vicons/antd";
+import Spin from "../../Spin";
 
 export default defineComponent({
     name: 'WpButton',
@@ -13,7 +15,7 @@ export default defineComponent({
     emits: buttonEmits,
     setup(props, { emit, slots }) {
         const buttonRef = ref()
-        const buttonGroupContext = inject(buttonGroupContextKey, undefined)
+        const buttonGroupContext:any = inject(buttonGroupContextKey, undefined)
         const globalConfig = useGlobalConfig()
         const autoInsertSpace = computed(() => {
             return props.autoInsertSpace ?? globalConfig?.button.autoInsertSpace
@@ -36,6 +38,7 @@ export default defineComponent({
             disabled: buttonDisabled,
         } = useFormItem({
             size: computed(() => buttonGroupContext?.size),
+            disabled: computed(() => buttonGroupContext?.disabled),
         })
         const buttonType = computed(
             () => props.type || buttonGroupContext?.type || 'default'
@@ -117,10 +120,11 @@ export default defineComponent({
                 style={this.buttonStyle}
                 onClick={this.handleClick}
             >
+
                 {
-                    ( this.icon || this.$slots.icon ) ?
+                    this.loading ? <Spin></Spin> : ( this.icon || this.$slots.icon ) ?
                         (
-                            <wp-icon>{h(this.icon as any) || this.$slots.icon?.()}</wp-icon>
+                            <wp-icon>{antdIcons[this.icon as any]?.render?.() || this.$slots.icon?.()}</wp-icon>
                         ) :
                         null
                 }

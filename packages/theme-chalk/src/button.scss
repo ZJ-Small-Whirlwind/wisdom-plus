@@ -136,6 +136,11 @@
   @include when(loading) {
     position: relative;
     pointer-events: none;
+    .wp-spin{
+      display: inline-block;
+      margin-right: 10px;
+      color: #ffffff;
+    }
 
     &:before {
       pointer-events: none;
@@ -218,5 +223,55 @@
     &.is-disabled:focus {
       border-color: transparent;
     }
+  }
+}
+
+.wp-button-group {
+  display: inline-block;
+  vertical-align: middle;
+  &:before{
+    display: table;
+    content: "";
+  }
+  &:after{
+    display: table;
+    content: "";
+    clear: both;
+  }
+  .wp-button{
+    &+.wp-button{
+      margin-left: 0;
+    }
+  }
+  &>.wp-button:not(:last-child){
+    margin-right: -1px;
+  }
+  &>.wp-button:not(:first-child):not(:last-child) {
+    border-radius: 0;
+  }
+  .wp-button--primary:not(:first-child):not(:last-child) {
+    border-left-color: hsla(0,0%,100%,.5);
+    border-right-color: hsla(0,0%,100%,.5);
+  }
+  .wp-button--primary:last-child {
+    border-left-color: hsla(0,0%,100%,.5);
+  }
+  &>.wp-button:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .wp-button--primary:first-child {
+    border-right-color: hsla(0,0%,100%,.5);
+  }
+  &>.wp-button:not(:last-child) {
+    margin-right: -1px;
+  }
+  &>.wp-button:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  &>.wp-button {
+    float: left;
+    position: relative;
   }
 }
