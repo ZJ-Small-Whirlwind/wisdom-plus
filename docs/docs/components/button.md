@@ -165,6 +165,28 @@ const RightOutlined2 = RightOutlined
 :::
 
 
+#### 倒计时
+
+
+:::demo
+
+```vue
+
+<template>
+    <wp-space>
+        <WpButton @click="countdownClick" :countdown="0">点击看效果</WpButton>
+    </wp-space>
+</template>
+<script lang="ts" setup>
+const countdownClick = (e,next)=>{
+    console.log(11)
+    next();
+}
+</script>
+```
+:::
+
+
 #### 不同尺寸
 
 :::demo
@@ -185,28 +207,6 @@ const RightOutlined2 = RightOutlined
         <WpButton round size="mini">超小按钮</WpButton>
     </wp-space>
 </template>
-```
-:::
-
-
-#### 倒计时
-
-
-:::demo
-
-```vue
-
-<template>
-    <wp-space>
-        <WpButton @click="countdownClick" :countdown="0">点击看效果</WpButton>
-    </wp-space>
-</template>
-<script lang="ts" setup>
-const countdownClick = (e,next)=>{
-    console.log(11)
-    next();
-}
-</script>
 ```
 :::
 
