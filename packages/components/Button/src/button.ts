@@ -41,6 +41,10 @@ export const buttonProps = buildProps({
   autoInsertSpace: {
     type: Boolean,
   },
+ countdown: {
+    type: [Boolean, Number],
+     default:null
+  },
 } as const)
 
 export interface ButtonConfigContext {
@@ -48,7 +52,7 @@ export interface ButtonConfigContext {
 }
 
 export const buttonEmits = {
-  click: (evt: MouseEvent) => evt instanceof MouseEvent,
+  click: (evt: MouseEvent, next?:any) => evt instanceof MouseEvent,
 }
 
 export type ButtonProps = ExtractPropTypes<typeof buttonProps>
