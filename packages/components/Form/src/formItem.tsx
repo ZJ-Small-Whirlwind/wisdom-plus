@@ -345,7 +345,7 @@ export default defineComponent({
                 </LabelWrap>
                 <div class="wp-form-item__content" style={this.contentStyle}>
                     { this.$slots.default?.() }
-                    <Transition name="el-zoom-in-top">
+                    <Transition name="wp-zoom-in-top">
                         {
                             this.shouldShowError && (
                                 this.$slots.error?.({ error: this.validateMessage }) || (

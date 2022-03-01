@@ -30,6 +30,10 @@ export default defineConfig({
                         {
                             text: 'PersonTree 人员树',
                             link: '/components/pro/person-tree'
+                        },
+                        {
+                            text: 'PersonTransfer 人员穿梭框',
+                            link: '/components/pro/person-transfer'
                         }
                     ]
                 },
