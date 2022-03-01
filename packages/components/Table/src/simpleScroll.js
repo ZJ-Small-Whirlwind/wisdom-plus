@@ -181,4 +181,4 @@ export default (function(w,d){
 	function s(o, $el){return new S(o,$el)};
     // w.simpleScroll = s;
     return s;
-})(global !== undefined ? global : window, global !== undefined ? {} : document);
+})(typeof global !== "undefined" ? global : window, typeof global !== "undefined" ? {} : document);
