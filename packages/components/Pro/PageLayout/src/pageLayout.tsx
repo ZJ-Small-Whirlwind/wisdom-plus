@@ -189,7 +189,6 @@ export default defineComponent({
         }
 
         const handleDeleteSelect = async() => {
-            selections.value = tableRef.value?.getCheckbox() || []
             if (selections.value.length === 0) {
                 Toast({
                     message: '请先选中任意项'
@@ -305,7 +304,7 @@ export default defineComponent({
                                 {this.$slots.buttons?.()}
                                 {
                                     this.showCheckedDelete && (
-                                        <WpButton type="danger" onClick={this.handleDeleteSelect}>
+                                        <WpButton type="danger" onClick={this.handleDeleteSelect} disabled={this.selections.length === 0}>
                                             批量删除
                                         </WpButton>
                                     )
@@ -323,6 +322,7 @@ export default defineComponent({
                             row-key="id"
                             {...this.tableProps}
                             v-slots={this.$slots}
+                            onSelectionChange={this.handleSelectionChange}
                         />
                         {
                             this.showPagination && (
