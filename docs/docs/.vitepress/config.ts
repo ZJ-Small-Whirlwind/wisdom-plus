@@ -26,6 +26,10 @@ export default defineConfig({
                         {
                             text: 'Form 数据表单',
                             link: '/components/pro/form'
+                        },
+                        {
+                            text: 'PersonTree 人员树',
+                            link: '/components/pro/person-tree'
                         }
                     ]
                 },
