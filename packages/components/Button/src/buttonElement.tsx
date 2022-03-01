@@ -1,4 +1,4 @@
-import { computed, inject, defineComponent, Text, ref, watch } from 'vue'
+import { computed, inject, defineComponent, Text, ref, watch, h } from 'vue'
 import { useCssVar } from '@vueuse/core'
 import { useFormItem, useGlobalConfig } from '@wisdom-plus/hooks'
 import { buttonGroupContextKey } from '@wisdom-plus/tokens'
@@ -156,7 +156,15 @@ export default defineComponent({
                 {
                     this.loading ? <Spin></Spin> : ( this.icon || this.$slots.icon ) ?
                         (
-                            <wp-icon>{antdIcons[this.icon as any]?.render?.() || this.$slots.icon?.()}</wp-icon>
+                            <wp-icon>{
+                                this.$slots.icon?.() || (
+                                    typeof this.icon === 'string' ? (
+                                        antdIcons[this.icon as any]?.render?.()
+                                    ) : (
+                                        h(this.icon)
+                                    )
+                                )
+                            }</wp-icon>
                         ) :
                         null
                 }
