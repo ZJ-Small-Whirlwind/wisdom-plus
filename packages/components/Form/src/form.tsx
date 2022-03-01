@@ -1,6 +1,7 @@
 import {
   computed,
   defineComponent,
+  ExtractPropTypes,
   provide,
   reactive,
   ref,
@@ -61,39 +62,43 @@ export interface Callback {
   (isValid?: boolean, invalidFields?: ValidateFieldsError): void
 }
 
+export const formProps = {
+  model: Object,
+  rules: Object as PropType<FormRulesMap>,
+  labelPosition: String,
+  labelWidth: {
+    type: [String, Number],
+    default: '',
+  },
+  labelSuffix: {
+    type: String,
+    default: '',
+  },
+  inline: Boolean,
+  inlineMessage: Boolean,
+  statusIcon: Boolean,
+  showMessage: {
+    type: Boolean,
+    default: true,
+  },
+  size: String as PropType<ComponentSize>,
+  disabled: Boolean,
+  validateOnRuleChange: {
+    type: Boolean,
+    default: true,
+  },
+  hideRequiredAsterisk: {
+    type: Boolean,
+    default: false,
+  },
+  scrollToError: Boolean,
+}
+
+export type FormProps =  ExtractPropTypes<typeof formProps>
+
 export default defineComponent({
   name: 'WpForm',
-  props: {
-    model: Object,
-    rules: Object as PropType<FormRulesMap>,
-    labelPosition: String,
-    labelWidth: {
-      type: [String, Number],
-      default: '',
-    },
-    labelSuffix: {
-      type: String,
-      default: '',
-    },
-    inline: Boolean,
-    inlineMessage: Boolean,
-    statusIcon: Boolean,
-    showMessage: {
-      type: Boolean,
-      default: true,
-    },
-    size: String as PropType<ComponentSize>,
-    disabled: Boolean,
-    validateOnRuleChange: {
-      type: Boolean,
-      default: true,
-    },
-    hideRequiredAsterisk: {
-      type: Boolean,
-      default: false,
-    },
-    scrollToError: Boolean,
-  },
+  props: formProps,
   emits: ['validate'],
   setup(props, { emit }) {
     const fields: FormItemCtx[] = []

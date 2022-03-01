@@ -46,7 +46,10 @@ export default defineComponent({
     name: 'WpInput',
     props: inputProps,
     emits: {
-        'update:modelValue': (value: string) => typeof value === 'string'
+        'update:modelValue': (value: string) => {
+            void value
+            return true
+        }
     },
     setup(props, { emit }) {
         const inputElementRef = ref<HTMLInputElement | HTMLTextAreaElement>()

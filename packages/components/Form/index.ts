@@ -9,3 +9,6 @@ export const WpForm = withInstall(Form, {
 export default WpForm
 
 export const WpFormItem = withNoopInstall(FormItem)
+
+export * from './src/form'
+export * from './src/formItem'
