@@ -514,6 +514,8 @@ const spanCell = ({rowIndex, columnIndex})=>{
               :remoteFilter="row=>row.index === 1"
               @draggable-change="draggableChange"
               :draggableFilter="draggableFilter"
+              @select="select"
+              @select-all="select"
     ></wp-table>
 </template>
 
@@ -657,6 +659,9 @@ const onRemote = ({row})=>{
         ]), 2000);
     })
 }
+const select = (...args)=>{
+    console.log(args,111)
+}
 </script>
 <style lang="scss">
 #app .wp-table .wp-table-cell-row-radio td {
@@ -741,6 +746,9 @@ const onRemote = ({row})=>{
 
 | 参数                | 说明 | 参数                             |
 |-------------------|--|--------------------------------|
+| select      | 当用户手动勾选数据行的 Checkbox 时触发的事件 | _(selection, row, isRadio)=>void_                      |
+| select-all      | 当用户手动勾选全选 Checkbox 时触发的事件 | _(selection)=>void_                      |
+| selection-change      | 当选择项发生变化时会触发该事件 | _(selection, isRadio)=>void_                      |
 | click-filter      | 过滤点击回调 | _(ev:any)=>void_                      |
 | cell-dblclick        | 单元格双击回调 | _(ev:any)=>void_                      |
 | cell-click        | 单元格点击回调 | _(ev:any)=>void_                      |

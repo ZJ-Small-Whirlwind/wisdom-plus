@@ -366,16 +366,23 @@ export default defineComponent({
         const getCheckbox = ()=>{
             return tbodyCells.value.filter(e=>e[0].row.$$checkboxValue).map(e=>e[0].row);
         }
+        watch(radioValue,()=>{
+            const selection = getRadio();
+            emit("select", selection, null, true)
+            emit("selection-change", selection, true)
+        })
         const setRadio = (rowIndex)=>{
             radioValue.value = String(rowIndex);
         }
         const setCheckbox = (rowIndexs:any[] = [])=>{
+            let index = 0;
             tbodyCells.value.forEach(cell=>{
                 const rowIndex = cell[0].rowIndex;
                 if(rowIndexs.includes(rowIndex)){
                     cell[0].row.$$checkboxValue = true;
-                    const column = (cell.find(e=>e.column.checkbox) || {}).column
-                    CheckboxRow(true, rowIndex, column)
+                    const column = (cell.find(e=>e.column.checkbox) || {}).column;
+                    index += 1;
+                    CheckboxRow(true, rowIndex, column, index === rowIndexs.length)
                 }
             });
         }
@@ -389,10 +396,13 @@ export default defineComponent({
             tbodyCells.value.forEach(cell=>{
                 const row = cell[0].row;
                 row.$$checkboxValue = v;
-            })
+            });
+            const selection = getCheckbox();
+            emit("select-all", selection)
+            emit("selection-change", selection, false)
         }
         // 单元格复选
-        const CheckboxRow = (v,rowIndex,column)=>{
+        const CheckboxRow = (v,rowIndex,column, isChange)=>{
             const cell = tbodyCells.value[rowIndex][0];
             const row = cell.row;
             // 检查孩子
@@ -417,6 +427,11 @@ export default defineComponent({
             })
             // 全选处理
             column.$$checkboxValue = tbodyCells.value.filter(cellItem=>cellItem[0].row.$$checkboxValue).length === tbodyCells.value.length;
+            if(isChange){
+                const selection = getCheckbox();
+                emit("select", selection, row, false)
+                emit("selection-change", selection, false)
+            }
         }
         const clearRadio = ()=>{
             radioValue.value = null;
@@ -900,7 +915,7 @@ export default defineComponent({
                                 }) ||
                                     (column.labelFilter ? cellLableRender(column.labelFilter({value:get(row,column.prop),row,column}),column, row) : cellLableRender(get(row,column.prop), column, row)) ||
                                     (column.radio ? (<WpRadio onClick={ev=>ev.stopPropagation()} v-model={this.radioValue} border-radius="0" value={String(rowIndex)}></WpRadio>) : null) ||
-                                    (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={row.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxRow(v, rowIndex, column)}></Checkbox>) : null)
+                                    (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={row.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxRow(v, rowIndex, column, true)}></Checkbox>) : null)
                                 }
                             </div>
                         </td>
