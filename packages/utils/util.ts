@@ -214,7 +214,6 @@ export function addUnit(value?: string | number) {
   } else if (isNumber(value)) {
     return `${value}px`
   }
-  debugWarn(SCOPE, 'binding value must be a string or number')
   return ''
 }
 
