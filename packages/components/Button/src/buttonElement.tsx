@@ -1,4 +1,4 @@
-import { computed, inject, defineComponent, Text, ref, h } from 'vue'
+import { computed, inject, defineComponent, Text, ref, watch } from 'vue'
 import { useCssVar } from '@vueuse/core'
 import { useFormItem, useGlobalConfig } from '@wisdom-plus/hooks'
 import { buttonGroupContextKey } from '@wisdom-plus/tokens'
@@ -82,11 +82,41 @@ export default defineComponent({
             }
             return styles
         })
+        const countdown = ref(false);
+        const countdownIndex = ref(0);
+        let timeIndex:any = null;
+        const countdownStart = (start)=>{
+            if(start){
+                try {
+                    clearTimeout(timeIndex)
+                }catch (e) {}
+                countdown.value = true;
+                countdownIndex.value = Object.prototype.toString.call(props.countdown) === '[object Number]' && props.countdown !== 0 ? props.countdown : 60;
+            }
+            timeIndex = setTimeout(()=>{
+                countdownIndex.value -= 1;
+                if(countdownIndex.value <= 0){
+                    countdown.value = false;
+                }else {
+                    countdownStart(false);
+                }
+            },1000)
+        }
+        const isCountdown = computed(()=>['[object Number]','[object Boolean]'].includes(Object.prototype.toString.call(props.countdown)) && props.countdown !== false)
+        watch([computed(()=>props.countdown)],()=>{
+            if(props.countdown === 0){
+                countdownStart(true)
+            }
+        },{
+            immediate:true,
+        })
         const handleClick = (evt: MouseEvent) => {
             if (props.nativeType === 'reset') {
                 form?.resetFields()
             }
-            emit('click', evt)
+            emit('click', evt, isCountdown.value ? ()=>{
+                countdownStart(true)
+            } : null)
         }
         return {
             buttonRef,
@@ -96,6 +126,8 @@ export default defineComponent({
             buttonDisabled,
             shouldAddSpace,
             handleClick,
+            countdown,
+            countdownIndex,
         }
     },
     render() {
@@ -107,14 +139,14 @@ export default defineComponent({
                     this.buttonType ? 'wp-button--' + this.buttonType : '',
                     this.buttonSize ? 'wp-button--' + this.buttonSize : '',
                     {
-                        'is-disabled': this.buttonDisabled,
-                        'is-loading': this.loading,
+                        'is-disabled':!!this.countdown || this.buttonDisabled,
+                        'is-loading':!!this.countdown ||  this.loading,
                         'is-plain': this.plain,
                         'is-round': this.round,
                         'is-circle': this.circle,
                     }
                 ]}
-                disabled={this.buttonDisabled || this.loading}
+                disabled={!!this.countdown || this.buttonDisabled || this.loading}
                 autofocus={this.autofocus}
                 type={this.nativeType}
                 style={this.buttonStyle}
@@ -134,6 +166,7 @@ export default defineComponent({
                             class={{ 'wp-button__text--expand': this.shouldAddSpace }}
                         >
                             { this.$slots.default() }
+                            {this.countdown ? `(${this.countdownIndex}s)` : null}
                         </span>
                     )
                 }

@@ -189,20 +189,43 @@ const RightOutlined2 = RightOutlined
 :::
 
 
+#### 倒计时
+
+
+:::demo
+
+```vue
+
+<template>
+    <wp-space>
+        <WpButton @click="countdownClick" :countdown="0">点击看效果</WpButton>
+    </wp-space>
+</template>
+<script lang="ts" setup>
+const countdownClick = (e,next)=>{
+    console.log(11)
+    next();
+}
+</script>
+```
+:::
+
+
 ## API
 
 ### Props
 
-|参数	|说明|	类型	|可选值|	默认|
-|----|----|----|----|---|
-| size	| 尺寸	| string	| medium / small / mini| 	—|
-| type	| 类型	| string	| primary / success / warning / danger / info / text	| —|
-| plain	| 是否朴素按钮	| boolean	| —	| false|
-| round	| 是否圆角按钮	| boolean	| —	| false|
-| circle	| 是否圆形按钮	| boolean	| —	| false|
-| loading	| 是否加载中状态	| boolean	| —	| false|
-| disabled	| 是否禁用状态	| boolean	| —	| false|
-| icon	| 图标类名	| string	| —	| —|
-| autofocus	| 是否默认聚焦	| boolean	| —	| false|
-| native-type	| 原生 type 属性	| string	| button / submit / reset	| button|
+|参数	| 说明                          | 	类型	              |可选值| 	默认    |
+|----|-----------------------------|-------------------|----|--------|
+| size	| 尺寸	                         | _string_	         | _medium / small / mini_| 	—     |
+| type	| 类型	                         | _string_	         | _primary / success / warning / danger / info / text_	| —      |
+| plain	| 是否朴素按钮	                     | _boolean_	        | —	| false  |
+| round	| 是否圆角按钮	                     | _boolean_	        | —	| false  |
+| circle	| 是否圆形按钮	                     | _boolean_	        | —	| false  |
+| loading	| 是否加载中状态	                    | _boolean_	        | —	| false  |
+| disabled	| 是否禁用状态	                     | _boolean_	        | —	| false  |
+| icon	| 图标类名	                       | _string	          | —	| —      |
+| autofocus	| 是否默认聚焦	                     | _boolean_	        | —	| false  |
+| native-type	| 原生 type 属性	                 | _string_	         | _button / submit / reset_	| button |
+| countdown	| 是否启用倒计时功能, 如果为 0 则自动执行默认时间	 | _boolean,number_	 | _boolean,number_	| 60秒    |
 
