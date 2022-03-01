@@ -121,6 +121,10 @@ export default defineConfig({
                         {
                             text: 'Form 表单',
                             link: '/components/form'
+                        },
+                        {
+                            text: 'select 选择器',
+                            link: '/components/select'
                         }
                     ]
                 },
