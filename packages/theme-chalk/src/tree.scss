@@ -99,10 +99,10 @@
             .loading {
                 animation: wp-tree-loading infinite 1s;
             }
-            > .xicon {
+            > .wp-icon {
                 transition: transform .2s;
             }
-            > .xicon.expend {
+            > .wp-icon.expend {
                 transform: rotate(90deg);
             }
         }

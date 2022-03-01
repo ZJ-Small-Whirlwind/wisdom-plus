@@ -1,0 +1,27 @@
+.wp-pro-person-tree {
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    line-height: 1em;
+    .wp-tree-nodes {
+        .wp-tree-node {
+            height: 30px;
+        }
+        .wp-tree-node__content {
+            font-size: 12px;
+        }
+        .wp-checkbox {
+            --wp-checkbox-size: 14px;
+            --wp-checkbox-font-size: 12px;
+        }
+    }
+    &-bar {
+        font-size: 12px;
+    }
+    .wp-button {
+        padding: 0;
+        height: 20px;
+        min-height: 0px;
+        font-size: 12px;
+    }
+}

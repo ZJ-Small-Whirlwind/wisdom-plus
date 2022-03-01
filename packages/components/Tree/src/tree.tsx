@@ -132,7 +132,7 @@ export default defineComponent({
         })
         const expendsList = ref<ExpendsList[]>([])
         const done = (isDelete: boolean, key: string | number | symbol) => {
-            if (!expends.value || props.expends) {
+            if (!expends.value) {
                 expends.value = []
             }
             const index = expends.value.indexOf(key)
