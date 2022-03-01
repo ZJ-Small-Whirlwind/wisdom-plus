@@ -6,6 +6,7 @@ declare module 'vue' {
     WpCollapse: typeof import('wisdom-plus')['WpCollapse']
     WpCollapseItem: typeof import('wisdom-plus')['WpCollapseItem']
     CollapseTransition: typeof import('wisdom-plus')['CollapseTransition']
+    WpCollapseTransition: typeof import('wisdom-plus')['CollapseTransition']
     WpG: typeof import('wisdom-plus')['WpGrid']
     WpGrid: typeof import('wisdom-plus')['WpGrid']
     WpGridItem: typeof import('wisdom-plus')['WpGridItem']
@@ -48,6 +49,9 @@ declare module 'vue' {
     WpList: typeof import('wisdom-plus')['WpList']
     WpSpin: typeof import('wisdom-plus')['WpSpin']
     WpProEditor: typeof import('wisdom-plus')['WpProEditor']
+    WpForm: typeof import('wisdom-plus')['WpForm']
+    WpFormItem: typeof import('wisdom-plus')['WpFormItem']
+    WpProForm: typeof import('wisdom-plus')['WpProForm']
   }
 }
 

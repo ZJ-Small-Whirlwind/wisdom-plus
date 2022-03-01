@@ -40,7 +40,10 @@ export default defineComponent({
     name: 'WpCheckbox',
     props: checkboxProps,
     emits: {
-        'update:modelValue': (value: boolean) => typeof value === 'boolean'
+        'update:modelValue': (value: boolean) => {
+            void value
+            return true
+        }
     },
     setup(props, { slots, emit }) {
         const checkedRef = ref(false)

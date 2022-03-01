@@ -22,6 +22,10 @@ export default defineConfig({
                         {
                             text: 'Editor 编辑器',
                             link: '/components/pro/editor'
+                        },
+                        {
+                            text: 'Form 数据表单',
+                            link: '/components/pro/form'
                         }
                     ]
                 },

@@ -11,7 +11,8 @@ import {
     toRefs,
     watch,
     nextTick,
-    Transition
+    Transition,
+    ExtractPropTypes
 } from 'vue'
 import { NOOP } from '@vue/shared'
 import AsyncValidator from 'async-validator'
@@ -26,37 +27,40 @@ import type { ComponentSize } from '@wisdom-plus/utils/types'
 import type { ElFormContext, ValidateFieldCallback } from '@wisdom-plus/tokens'
 import type { FormItemRule } from './form.type'
 
+export const formItemProps = {
+    label: String,
+    labelWidth: {
+        type: [String, Number],
+        default: '',
+    },
+    prop: String,
+    required: {
+        type: Boolean,
+        default: undefined,
+    },
+    rules: [Object, Array] as PropType<FormItemRule | FormItemRule[]>,
+    error: String,
+    validateStatus: String,
+    for: String,
+    inlineMessage: {
+        type: [String, Boolean],
+        default: '',
+    },
+    showMessage: {
+        type: Boolean,
+        default: true,
+    },
+    size: {
+        type: String as PropType<ComponentSize>,
+        validator: isValidComponentSize,
+    },
+}
+export type FormItemProps = ExtractPropTypes<typeof formItemProps>
+
 export default defineComponent({
     name: 'WpFormItem',
     componentName: 'WpFormItem',
-    props: {
-        label: String,
-        labelWidth: {
-            type: [String, Number],
-            default: '',
-        },
-        prop: String,
-        required: {
-            type: Boolean,
-            default: undefined,
-        },
-        rules: [Object, Array] as PropType<FormItemRule | FormItemRule[]>,
-        error: String,
-        validateStatus: String,
-        for: String,
-        inlineMessage: {
-            type: [String, Boolean],
-            default: '',
-        },
-        showMessage: {
-            type: Boolean,
-            default: true,
-        },
-        size: {
-            type: String as PropType<ComponentSize>,
-            validator: isValidComponentSize,
-        },
-    },
+    props: formItemProps,
     setup(props, { slots }) {
         const elForm = inject(elFormKey, {} as ElFormContext)
         const validateState = ref('')
