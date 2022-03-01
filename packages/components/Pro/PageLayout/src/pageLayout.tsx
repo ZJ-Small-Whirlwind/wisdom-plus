@@ -3,22 +3,6 @@ import { TableProps, SpaceProps, WpTable, Dialog, Toast, WpSpace, WpButton, WpIn
 import { buildProps } from '@wisdom-plus/utils/props'
 import { useVModel } from '@vueuse/core'
 
-export interface ResponseType<T = any> {
-    code: number;
-    msg?: string;
-    message?: string;
-    state?: number;
-    data: T;
-    success?: boolean;
-}
-
-export interface List<T = any> {
-    list: T[]
-    page_no: number
-    page_size: number
-    total: number
-}
-
 export interface PageMap {
     page: string | number,
     size: string | number
@@ -34,10 +18,6 @@ export const proPageLayoutProps = buildProps({
         hideSearch?: boolean
     }>,
     showCheckedDelete: {
-        type: Boolean,
-        default: true
-    },
-    showDelete: {
         type: Boolean,
         default: true
     },
@@ -77,8 +57,8 @@ export const proPageLayoutProps = buildProps({
     },
     apis: {
         type: Object as PropType<{
-            list?: (data: Record<string, any>, page: PageMap) => Promise<ResponseType<List<any>>>,
-            delete?: (ids: (number | string)[]) => Promise<ResponseType<any>>
+            list?: (data: Record<string, any>, page: PageMap) => Promise<any>,
+            delete?: (ids: (number | string)[]) => Promise<any>
         }>,
         default: () => ({})
     }
@@ -179,6 +159,7 @@ export default defineComponent({
                 page.size = 20
                 handleQuery(true, true)
             }
+            tableRef.value?.clearCheckbox()
             emit('reset')
         }
 
@@ -202,12 +183,19 @@ export default defineComponent({
                 await props.delete?.([row])
             }
             Toast({
-                message: '删除成功！'
+                message: '删除成功'
             })
             handleQuery(false)
         }
 
         const handleDeleteSelect = async() => {
+            selections.value = tableRef.value?.getCheckbox() || []
+            if (selections.value.length === 0) {
+                Toast({
+                    message: '请先选中任意项'
+                })
+                return
+            }
             await Dialog({
                 content: '确定要删除选中的记录吗？',
                 confirmProps: {
@@ -218,7 +206,6 @@ export default defineComponent({
                     size: 'small'
                 }
             })
-            selections.value = tableRef.value?.getCheckbox() || []
             if (props.apis.delete) {
                 await props.apis.delete((selections.value as { id: number | string }[]).map(item => item.id))
             } else {
@@ -226,7 +213,7 @@ export default defineComponent({
             }
             tableRef.value?.clearCheckbox()
             Toast({
-                message: '删除成功！'
+                message: '删除成功'
             })
             handleQuery(false)
         }
@@ -318,7 +305,7 @@ export default defineComponent({
                                 {this.$slots.buttons?.()}
                                 {
                                     this.showCheckedDelete && (
-                                        <WpButton type="danger" disabled={this.selections.length === 0} onClick={this.handleDeleteSelect}>
+                                        <WpButton type="danger" onClick={this.handleDeleteSelect}>
                                             批量删除
                                         </WpButton>
                                     )

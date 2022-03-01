@@ -22,7 +22,7 @@ app.use(WpProPageLayout)
 ```vue
 <template>
     <div style="background-color: #f5f5f5; padding: 20px;">
-        <wp-pro-page-layout v-model:data="data" :table="{ columns }" />
+        <wp-pro-page-layout v-model:data="data" :table="{ columns }" :total="data.length" />
     </div>
 </template>
 <script lang="ts" setup>
@@ -58,24 +58,23 @@ const data = ref([{
 
 | 参数      | 说明                                          | 类型                                                                  | 默认值                |
 | --------- |---------------------------------------------|---------------------------------------------------------------------|--------------------|
-| modelValue `v-model` | 双向绑定的对象       | _Record\<string, any>_                                                      | -                  |
-| enterToSubmit   | 是否可以通过回车提交表单                  | _boolean_                                                            | false                  |
-| schemas | 表单生成参数，可以使用所有的 WpFormItem 的参数以及附加参数                                     | _Schema[]_                                                           | -                  |
-| grid | 布局参数 | _Partial\<GridProps>_ | - |
-| initReset | 组件创建时是否重置表单 | _boolean_ | - |
-| rules | 表单整体的规则，优先级参考 Form | _Record\<string, any>_ | - |
-| props | Form 的 Props | _Record\<string, any>_ | - |
-| labelWidth | label 的统一宽度 | _string_ | - |
-| plain | 是否是纯文本 | _boolean_ | - |
-| onSubmit | 表单提交的回调 | _() => void_ | - |
-
+| data `v-model` | 表格数据       | _unknown_                                                      | -                  |
+| form   | 表单选项                  | _{ field: string, placehoder: string, queryAfterReset: boolean, hideReset: boolean, hideInput: boolean, hideSearch: boolean }_                                                            | -                  |
+| table | 表格选项 | _{ props: WpTableProps, columns: WpTableProps['columns'], hideSelection: boolean, keepSelection: boolean }_ | -                  |
+| apis | 接口 | _{ list: (data: Record\<string, any>, page: PageMap) => Promise\<ResponseType\<List\<any>>> }, delete: (ids: (number \| string)[]) => Promise\<ResponseType\<any>>_ | - |
+| showCheckedDelete | 是否显示批量删除按钮 | _boolean_ | - |
+| showPagination | 是否显示分页 | _boolean_ | - |
+| total | 项目总数，会覆盖内部的项目总数 | _boolean_ | - |
+| delete | 删除函数，填写本字段则不会使用 apis 内的 delete | _(items: any[]) => Promise\<unknown>_ | - |
+| spaceProps | Space 组件的 Props | _Partial\<SpaceProps>_ | - |
+| queryOnActive | 在激活的时候查询（仅 keep-alive 模式下有效） | _boolean_ | - |
 
 ### 插槽
 
+本组件继承了 table 组件的所有插槽
 ### Slots
 
 | 名称    | 说明     | 参数 |
 | ------- | -------- | --- |
-| default | 任意内容，放置于表单内 | - |
-| [prop] | 表单内容替换插槽，替换 prop 对应的表单项 | - |
-| [prop]\_plain | 纯文本表单内容替换插槽，替换 prop 对应的纯文本表单项 | - |
+| form | 表单插槽 | - |
+| buttons | 按钮插槽 | - |
