@@ -58,7 +58,8 @@
     "normalize-wheel-es": "^1.1.1",
     "spark-md5": "^3.0.2",
     "vdirs": "^0.1.7",
-    "vueuc": "^0.4.19"
+    "vueuc": "^0.4.19",
+    "wangeditor": "^4.7.12"
   },
   "devDependencies": {
     "@pnpm/find-workspace-packages": "^3.1.26",
