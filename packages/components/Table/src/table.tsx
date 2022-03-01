@@ -392,14 +392,19 @@ export default defineComponent({
             CheckboxAll(bool);
         }
         // 栏目全选
+        let isSetUpInit = false;
         const CheckboxAll = (v)=>{
             tbodyCells.value.forEach(cell=>{
                 const row = cell[0].row;
                 row.$$checkboxValue = v;
             });
-            const selection = getCheckbox();
-            emit("select-all", selection)
-            emit("selection-change", selection, false)
+            if(isSetUpInit){
+                const selection = getCheckbox();
+                emit("select-all", selection)
+                emit("selection-change", selection, false)
+            }else {
+                isSetUpInit = true;
+            }
         }
         // 单元格复选
         const CheckboxRow = (v,rowIndex,column, isChange)=>{
