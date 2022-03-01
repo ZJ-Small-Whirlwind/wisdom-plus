@@ -65,7 +65,11 @@ export default defineComponent({
             count.value = treeRef.value.getItemsCount(!props.noFilterCount)
         }
 
-        watch(() => props.list, updateCount)
+        watch(listComputed, updateCount, {
+            deep: true
+        })
+
+        onMounted(updateCount)
 
         const getCheckedItems = () => {
             if (!treeRef.value) return
@@ -81,8 +85,6 @@ export default defineComponent({
         }, {
             deep: true
         })
-
-        onMounted(updateCount)
 
         const checkedAll = computed<boolean>({
             get() {
@@ -107,7 +109,6 @@ export default defineComponent({
             props.getData?.()
                 .then(data => {
                     userData.value = data
-                    nextTick(updateCount)
                 })
         }
 
@@ -128,7 +129,7 @@ export default defineComponent({
     render() {
         return (
             <div class="wp-pro-person-tree">
-                <WpInput v-model={this.filter} prefix={SearchOutlined} placeholder="请输入关键词" />
+                <WpInput v-model={this.filter} prefix={SearchOutlined} placeholder="请输入关键词" size="small" />
                 <WpSpace class="wp-pro-person-tree-bar" align="center" itemStyle={{
                     common: {
                         marginTop: '10px',

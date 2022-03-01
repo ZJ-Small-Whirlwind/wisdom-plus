@@ -1,4 +1,4 @@
-import { defineComponent, ref, nextTick, computed, watch, PropType, ExtractPropTypes } from "vue"
+import { defineComponent, ref, nextTick, computed, watch, PropType, ExtractPropTypes, onMounted } from "vue"
 import { TreeListItemCustom, WpGrid, WpGridItem, WpProPersonTree, WpSpace, WpButton } from '@wisdom-plus/components'
 import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
@@ -73,6 +73,8 @@ export default defineComponent({
         watch(bindPersons, updateCount, {
             deep: true
         })
+
+        onMounted(updateCount)
 
         return {
             choosing,
