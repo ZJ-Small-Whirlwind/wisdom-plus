@@ -65,6 +65,8 @@ export default defineComponent({
             count.value = treeRef.value.getItemsCount(!props.noFilterCount)
         }
 
+        watch(() => props.list, updateCount)
+
         const getCheckedItems = () => {
             if (!treeRef.value) return
             return treeRef.value.getCheckedItems()
