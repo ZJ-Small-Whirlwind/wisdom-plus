@@ -1,10 +1,9 @@
-import { defineComponent, ref, watchEffect, watch, onMounted, computed, nextTick, PropType, ExtractPropTypes } from "vue"
+import { defineComponent, ref, watchEffect, watch, onMounted, computed, PropType, ExtractPropTypes } from "vue"
 
-import { WpTree, type TreeListItemCustom } from '@wisdom-plus/components'
 import { useVModel } from '@vueuse/core'
 import { buildProps } from "@wisdom-plus/utils/props"
 
-import { WpInput, WpButton, WpSpace, WpCheckbox } from '@wisdom-plus/components'
+import { WpInput, WpButton, WpSpace, WpCheckbox, WpTree, type TreeListItemCustom } from '@wisdom-plus/components'
 import { SearchOutlined } from '@vicons/antd'
 
 export const proPersonTree = buildProps({

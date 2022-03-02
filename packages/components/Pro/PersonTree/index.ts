@@ -1,7 +1,7 @@
 import { withInstall } from '@wisdom-plus/utils/with-install'
-import PersonTree from './src/personTree'
+import PersonTree from './src/tree'
 
-export const WpProPersonTree = withInstall(PersonTree)
+export const WpProPersonTree = PersonTree && withInstall(PersonTree)
 export default WpProPersonTree
 
-export * from './src/personTree'
+export * from './src/tree'
