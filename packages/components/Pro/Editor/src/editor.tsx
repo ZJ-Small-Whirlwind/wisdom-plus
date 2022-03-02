@@ -9,7 +9,10 @@ export const proEditorProps = buildProps({
         type: Number,
         default: 300
     },
-    excludeMenus: Array as PropType<string[]>
+    excludeMenus: Array as PropType<string[]>,
+    api: {
+        type: Function as PropType<(file: File | Blob) => Promise<any>>
+    }
 })
 
 export default defineComponent ({
@@ -38,6 +41,16 @@ export default defineComponent ({
                 emit('update:modelValue', html)
             }
             if (props.excludeMenus) editor.config.excludeMenus = props.excludeMenus
+            if (props.api) {
+                const upload = async(resultFiles: File[], insertImgFn: (url: string) => void) => {
+                    for (const file of resultFiles) {
+                        const res = await props.api?.(file)
+                        if (res.data.url) insertImgFn(res.data.url)
+                    }
+                }
+                editor.config.customUploadImg = upload
+                editor.config.customUploadVideo = upload
+            }
             editor.config.menuTooltipPosition = 'down'
             editor.create()
             editor.txt.html(props.modelValue)

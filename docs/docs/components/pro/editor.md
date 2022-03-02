@@ -41,6 +41,7 @@ const text = ref('')
 | modelValue `v-model` | 编辑的文本       | _string_                                                      | -                  |
 | height   | 编辑器的高度                  | _height_                                                            | 300                  |
 | excludeMenus | 排除的菜单                                     | _string[]_                                                           | -                  |
+| api | 上传接口 | _(file: File \| Blob) => Promise\<any>_ | - |
 
 ### Methods
 
