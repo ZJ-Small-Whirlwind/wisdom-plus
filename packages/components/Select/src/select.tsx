@@ -50,7 +50,27 @@ export default defineComponent({
         const input = ref(null);
         const currentValue = ref(null);
         const inputChangeValue:any = ref(null);
-        const options = computed(()=>props.options.map(e=>{
+        /**
+         * 扁平化数据
+         * @param bodyCellData
+         * @param treeChildrenFieldName
+         * @param callback
+         * @param result
+         * @param parent
+         * @param level
+         */
+        const flattenDeep = (data,treeChildrenFieldName:string,callback:any = ()=>{}, result:any = [], parent:any = null,level:number = 0)=>{
+            data.forEach(it=>{
+                const item = ref(it);
+                callback({item, parent,level, data, result});
+                result.push(item.value);
+                if(Object.prototype.toString.call(item.value[treeChildrenFieldName]) === '[object Array]'){
+                    flattenDeep(item.value[treeChildrenFieldName], treeChildrenFieldName, callback,  result, item.value,level+1);
+                }
+            })
+            return result;
+        }
+        const options = computed(()=>flattenDeep(props.options || [],'options').map(e=>{
             if(Object.prototype.toString.call(e) === '[object Object]'){
                 return e;
             }else {
@@ -64,20 +84,23 @@ export default defineComponent({
         }));
         const placeholder = ref(null)
         const setModelValue = (value)=>{
+            inputChangeValue.value = null;
+            placeholder.value = null;
             currentValue.value = value;
             emit('update:modelValue', value);
         }
         const valueStr = computed(()=> (props.options.find(e=>e[props.valueName] === currentValue.value) || {})[props.labelName]);
         const modelValueStr = computed(()=> (props.options.find(e=>e[props.valueName] === props.modelValue) || {})[props.labelName]);
         const optionClick = ({item, ev})=>{
-            if(!item.disabled){
-                show.value = false;
-                setModelValue(item[props.valueName]);
-            }
+            nextTick(()=> {
+                if (!item.disabled) {
+                    show.value = false;
+                    setModelValue(item[props.valueName]);
+                }
+            })
         }
         const onClear = (ev)=>{
             show.value = false;
-            placeholder.value = null;
             setModelValue(null);
             ev.stopPropagation();
         }
@@ -94,7 +117,6 @@ export default defineComponent({
                 placeholder.value = props.placeholder;
                 currentValue.value = props.modelValue;
             }
-            inputChangeValue.value = null
         }
         return {
             input,
@@ -151,9 +173,11 @@ export default defineComponent({
             <div class={{
                 'wp-select-panel': true,
             }}>
-                {this.options.map((item:any)=>(
+                {this.options.map((item:any,key)=>(
                 <div
-                    onClick={ev=>this.optionClick({item,ev})}
+                    onClick={ev=>{
+                        this.optionClick({item,ev})
+                    }}
                     class={{
                     'wp-select-panel-option': true,
                     'wp-select-panel-option-disabled': item.disabled,

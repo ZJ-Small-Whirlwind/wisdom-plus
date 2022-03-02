@@ -114,6 +114,47 @@ const value = ref('')
 ```
 :::
 
+#### 分组
+
+:::demo
+```vue
+<template>
+    <WpSelect :options="options" v-model="value" clearable></WpSelect>
+</template>
+<script lang="ts" setup>
+import { ref } from 'vue'
+
+const options = ref([{
+    label: '热门城市',
+    options: [{
+        value: 'Shanghai',
+        label: '上海'
+    }, {
+        value: 'Beijing',
+        label: '北京'
+    }]
+}, {
+    label: '城市名',
+    options: [{
+        value: 'Chengdu',
+        label: '成都'
+    }, {
+        value: 'Shenzhen',
+        label: '深圳'
+    }, {
+        value: 'Guangzhou',
+        label: '广州'
+    }, {
+        value: 'Dalian',
+        label: '大连'
+    }]
+}])
+
+const value = ref('')
+</script>
+```
+:::
+
 ## API
 
 ### Props
@@ -121,7 +162,7 @@ const value = ref('')
 | 参数      | 说明 | 类型                             | 默认值        |
 |---------|--|--------------------------------|------------|
 | value / v-model | 绑定值 | _object[], string , number , boolean_           | -         |
-| options | 选项数据 | _any[]_           | []         |
+| options | 选项数据 | _optionItem[]_           | []         |
 | disabled | 禁用选项 | _boolean_           | false         |
 | labelName | 选项显示字段名称 | _string_           | label         |
 | valueName | v-model绑定字段名称 | _string_           | value         |
@@ -129,6 +170,15 @@ const value = ref('')
 | filterable | 可搜索 | _boolean_           | false         |
 | placeholder | placeholder默认提示 | _string_           | '请选择'         |
 | activeIconShow | 是否显示选中图标 | _boolean_           | true         |
+
+### optionItem
+
+| 参数      | 说明 | 类型                             | 默认值        |
+|---------|--|--------------------------------|------------|
+| label | 显示内容 | _string_           | _any_         |
+| value | 绑定内容 | _string_           | _any_         |
+| disabled | 禁用 | _boolean_           | _boolean_         |
+| options | 分组 | _optionItem[]_           | -        |
 
 ### Slots
 
