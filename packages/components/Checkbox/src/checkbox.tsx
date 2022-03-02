@@ -7,10 +7,12 @@ import {
     defineComponent,
     type ExtractPropTypes,
     type PropType,
-    type Ref
+    type Ref,
+    watch
 } from "vue"
 import Icon from '../../Icon'
 import { CheckOutlined, MinusOutlined } from '@vicons/antd'
+import { useFormItem } from "@wisdom-plus/hooks"
 
 export const checkboxProps = buildProps({
     modelValue: {
@@ -83,17 +85,24 @@ export default defineComponent({
             return disabledInject.value || props.disabled
         })
         const sizeInject = inject<Ref<boolean> | false>('wp-checkbox-size', false)
+
+        const sizeMap = computed(() => props.size ? props.size : (sizeInject ? sizeInject.value : 'default'))
+        const { size, disabled: formDisabled, formItem } = useFormItem({ size: sizeMap.value as "small" | "large" | "medium" | "mini", disabled: disabled.value })
+
+        watch(checked, () => {
+            formItem?.validate('change')
+        })
         return () => (
             <div
                 class={{
                     'wp-checkbox': true,
                     'wp-checkbox__checked': checked.value || props.indeterminate,
-                    'wp-checkbox__disabled': disabled.value,
-                    [`wp-checkbox__${props.size ? props.size : ( sizeInject ? sizeInject.value : 'default' )}`]: true
+                    'wp-checkbox__disabled': formDisabled.value,
+                    [`wp-checkbox__${size}`]: true
                 }}
-                tabindex={!disabled.value ? 0 : undefined}
+                tabindex={!formDisabled.value ? 0 : undefined}
                 onClick={() => {
-                    if (disabled.value) return
+                    if (formDisabled.value) return
                     checked.value = !checked.value
                 }}
                 onKeydown={e => {
@@ -101,6 +110,9 @@ export default defineComponent({
                         e.preventDefault()
                         checked.value = !checked.value
                     }
+                }}
+                onBlur={() => {
+                    formItem?.validate('blur')
                 }}
             >
                 <div

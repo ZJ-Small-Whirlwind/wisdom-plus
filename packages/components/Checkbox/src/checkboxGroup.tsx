@@ -1,6 +1,7 @@
+import { useFormItem } from "@wisdom-plus/hooks"
 import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
-import { computed, defineComponent, ExtractPropTypes, PropType, provide, ref, toRef } from "vue"
+import { computed, defineComponent, ExtractPropTypes, PropType, provide, ref, toRef, watch } from "vue"
 
 import Space, { spaceProps } from '../../Space'
 
@@ -37,14 +38,18 @@ export default defineComponent({
             deep: true
         })
         provide('wp-checkbox-list', checkboxList)
-        provide('wp-checkbox-disabled', toRef(props, 'disabled'))
-        provide('wp-checkbox-size', toRef(props, 'size'))
+        const { size, disabled, formItem } = useFormItem({ size: props.size as "small" | "large" | "medium" | "mini", disabled: props.disabled })
+        provide('wp-checkbox-disabled', disabled)
+        provide('wp-checkbox-size', size)
         const spacePropsMap = computed(() => {
             const spacePropsTemp: Partial<CheckboxGroupProps> = { ...props }
             delete spacePropsTemp.modelValue
             delete spacePropsTemp.disabled
             delete spacePropsTemp.size
             return spacePropsTemp
+        })
+        watch(checkboxList, () => {
+            formItem?.validate('change')
         })
         return () => (
             <Space {...spacePropsMap.value} size={props.spaceSize}>

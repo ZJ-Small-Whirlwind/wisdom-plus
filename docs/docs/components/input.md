@@ -63,7 +63,7 @@ const SearchIcon = SearchOutlined
 <template>
     <wp-space vertical>
         <wp-input type="textarea" />
-        <wp-input type="textarea" :rows="5" show-word-size :maxlength="300" />
+        <wp-input type="textarea" :rows="5" show-word-size :maxlength="300" autosize />
     </wp-space>
 </template>
 ```
@@ -92,6 +92,7 @@ const SearchIcon = SearchOutlined
 | resize | 可调整的维度 | _'none' \| 'both' \| 'horizontal' \| 'vertical'_ | - |
 | rows | 文本域的默认高度，行 | _number_ | - |
 | showPasswordIcon | 是否显示密码切换按钮 | _boolean_ | true |
+| autosize | 是否自适应高度 | _boolean \| {minRows: number, maxRows: number}_ | - |
 
 ### Slots
 

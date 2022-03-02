@@ -7,10 +7,12 @@ import {
     defineComponent,
     type ExtractPropTypes,
     type PropType,
-    type Ref
+    type Ref,
+    watch
 } from "vue"
 import Icon from '../../Icon'
 import { CheckOutlined } from '@vicons/antd'
+import { useFormItem } from "@wisdom-plus/hooks"
 
 export const radiopProps = buildProps({
     modelValue: {
@@ -81,17 +83,22 @@ export default defineComponent({
          * disabled
          */
         const disabledInject = inject<Ref<boolean>>('wp-radio-disabled', ref(false))
-        const disabled = computed(() => {
+        const disabledComputed = computed(() => {
             return disabledInject.value || props.disabled
         })
         const sizeInject = inject<Ref<boolean> | false>('wp-radio-size', false)
+        const sizeComputed = computed(() => props.size ? props.size : (sizeInject ? sizeInject.value : 'default'))
+        const { size, disabled, formItem } = useFormItem({ size: sizeComputed.value as "small" | "large" | "medium" | "mini", disabled: disabledComputed.value })
+        watch(() => checkedValue, () => {
+            formItem?.validate('change')
+        })
         return () => (
             <div
                 class={{
                     'wp-radio': true,
                     'wp-radio__checked': checked.value,
                     'wp-radio__disabled': disabled.value,
-                    [`wp-radio__${props.size ? props.size : ( sizeInject ? sizeInject.value : 'default' )}`]: true
+                    [`wp-radio__${size.value}`]: true
                 }}
                 tabindex={!disabled.value ? 0 : undefined}
                 onClick={() => {
@@ -103,6 +110,9 @@ export default defineComponent({
                         e.preventDefault()
                         checked.value = !checked.value
                     }
+                }}
+                onBlur={() => {
+                    formItem?.validate('blur')
                 }}
             >
                 <div
