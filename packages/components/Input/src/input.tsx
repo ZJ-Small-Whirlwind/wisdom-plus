@@ -1,9 +1,13 @@
 import { useFocus } from "@vueuse/core"
 import { buildProps } from "@wisdom-plus/utils/props"
-import { ref, defineComponent, ExtractPropTypes, computed, Component, PropType, h } from "vue"
+import { ref, defineComponent, ExtractPropTypes, computed, Component, PropType, h, CSSProperties, watch, nextTick } from "vue"
 import Icon from '../../Icon'
 import { CloseOutlined, EyeOutlined, EyeInvisibleOutlined } from '@vicons/antd'
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
+import {
+    useFormItem,
+} from '@wisdom-plus/hooks'
+import { calcTextareaHeight } from './calc-textarea-height'
 
 export const inputProps = buildProps({
     modelValue: {
@@ -37,6 +41,13 @@ export const inputProps = buildProps({
     resize: {
         type: String as PropType<'none' | 'both' | 'horizontal' | 'vertical'>,
         default: 'vertical'
+    },
+    validateEvent: {
+        type: Boolean,
+        default: true
+    },
+    autosize: {
+        type: [Boolean, Object] as PropType<boolean | { minRows?: number, maxRows?: number }>
     }
 })
 
@@ -49,6 +60,10 @@ export default defineComponent({
         'update:modelValue': (value: string) => {
             void value
             return true
+        },
+        'blur': (e: Event) => {
+            void e
+            return true
         }
     },
     setup(props, { emit }) {
@@ -58,18 +73,57 @@ export default defineComponent({
         const inputRef = ref('')
         const input = useAutoControl(inputRef, props, 'modelValue', emit)
 
+        const { size, disabled, form, formItem } = useFormItem({ size: props.size, disabled: props.disabled })
         const clearable = computed(() => {
-            return !props.readonly && !props.disabled && input.value && props.clearable
+            return !props.readonly && !disabled.value && input.value && props.clearable
         })
 
         const showPassword = ref(true)
+
+        const _textareaCalcStyle = ref<CSSProperties>({})
+
+        const resizeTextarea = () => {
+            const { type, autosize } = props
+
+            if (type !== 'textarea') return
+
+            if (autosize) {
+                const minRows = typeof autosize === 'object' ? autosize.minRows : undefined
+                const maxRows = typeof autosize === 'object' ? autosize.maxRows : undefined
+                _textareaCalcStyle.value = {
+                    ...calcTextareaHeight((inputElementRef.value as HTMLTextAreaElement)!, minRows, maxRows),
+                }
+            } else {
+                _textareaCalcStyle.value = {
+                    minHeight: calcTextareaHeight((inputElementRef.value as HTMLTextAreaElement)!).minHeight,
+                }
+            }
+        }
+
+        watch(input, () => {
+            nextTick(resizeTextarea)
+            if (props.validateEvent) {
+                formItem?.validate?.('change')
+            }
+        })
+
+        const onBlur = (event: Event) => {
+            emit('blur', event)
+            if (props.validateEvent) {
+                formItem?.validate?.('blur')
+            }
+        }
 
         return {
             input,
             focused,
             inputElementRef,
             clearable,
-            showPassword
+            showPassword,
+            size,
+            disabled,
+            resizeTextarea,
+            onBlur
         }
     },
     render() {
@@ -86,6 +140,7 @@ export default defineComponent({
                 autofocus={this.autofocus}
                 tabindex={this.tabindex}
                 name={this.name}
+                onBlur={this.onBlur}
             />
         ) : (
             <textarea
@@ -102,6 +157,7 @@ export default defineComponent({
                 autofocus={this.autofocus}
                 tabindex={this.tabindex}
                 name={this.name}
+                onBlur={this.onBlur}
             />
         )
         const Size = this.showWordSize && (
