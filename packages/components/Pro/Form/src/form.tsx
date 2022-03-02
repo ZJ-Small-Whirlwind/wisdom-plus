@@ -101,8 +101,8 @@ export const proFormGenerate = (name = 'WpProForm',Form: Component = WpForm, For
                 }
             }
             const submit = (isEnter = false, e?: Event) => {
-                e?.preventDefault()
                 if (isEnter && !props.enterToSubmit) return
+                e?.preventDefault()
                 formRef.value?.validate(vaild => {
                     if (!vaild) return
                     emit('submit')
