@@ -80,7 +80,7 @@ export default defineComponent({
 
         const showPassword = ref(true)
 
-        const _textareaCalcStyle = ref<Record<string, any>>({})
+        const textareaCalcStyle = ref<Record<string, any>>({})
 
         const resizeTextarea = () => {
             const { type, autosize } = props
@@ -90,11 +90,11 @@ export default defineComponent({
             if (autosize) {
                 const minRows = typeof autosize === 'object' ? autosize.minRows : undefined
                 const maxRows = typeof autosize === 'object' ? autosize.maxRows : undefined
-                _textareaCalcStyle.value = {
+                textareaCalcStyle.value = {
                     ...calcTextareaHeight((inputElementRef.value as HTMLTextAreaElement)!, minRows, maxRows),
                 }
             } else {
-                _textareaCalcStyle.value = {
+                textareaCalcStyle.value = {
                     minHeight: calcTextareaHeight((inputElementRef.value as HTMLTextAreaElement)!).minHeight,
                 }
             }
@@ -124,7 +124,7 @@ export default defineComponent({
             disabled,
             resizeTextarea,
             onBlur,
-            _textareaCalcStyle
+            textareaCalcStyle
         }
     },
     render() {
@@ -150,7 +150,7 @@ export default defineComponent({
                 class="wp-input--textarea"
                 style={{
                     resize: this.resize || 'vertical',
-                    ...this._textareaCalcStyle
+                    ...this.textareaCalcStyle
                 }}
                 rows={this.rows}
                 readonly={this.readonly || this.disabled}
