@@ -7,7 +7,7 @@ import { WpInput } from '../../../Input'
 import { WpButton } from '../../../Button'
 import { WpSpace } from '../../../Space'
 import { WpCheckbox } from '../../../Checkbox'
-import { WpTree, TreeListItemCustom } from '../../../Tree'
+import { WpTree, TreeProps, TreeListItemCustom } from '../../../Tree'
 import { SearchOutlined } from '@vicons/antd'
 
 export const proPersonTreeProps = buildProps({
@@ -24,6 +24,9 @@ export const proPersonTreeProps = buildProps({
     noFilterCount: Boolean,
     getData: {
         type: Function as PropType<() => Promise<TreeListItemCustom[]>>
+    },
+    treeProps: {
+        type: Object as PropType<Partial<TreeProps> & Record<any, any>>
     }
 })
 
@@ -199,8 +202,10 @@ export default defineComponent({
                     virtual
                     useRadio={this.useRadio}
                     filterCall={this.filterCall}
+                    { ...this.treeProps }
                     v-slots={{
-                        title: ({ name, username }) => name || username
+                        ...this.$slots,
+                        title: this.$slots.title || (({ name, username }) => name || username)
                     }}
                 />
             </div >
