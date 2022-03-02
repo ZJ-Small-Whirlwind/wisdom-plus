@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { RightOutlined } from '@vicons/antd'
+import { RightOutlined, ShareAltOutlined, DeleteFilled, SearchOutlined, CloudUploadOutlined, CheckOutlined, MailOutlined, StarOutlined, DeleteOutlined } from '@vicons/antd'
 </script>
 #Button 按钮
 
@@ -52,14 +52,18 @@ app.use(WpButton)
     </wp-space>
 
     <wp-space>
-        <WpButton icon="SearchOutlined" circle></WpButton>
-        <WpButton type="primary" icon="EditOutlined" circle></WpButton>
-        <WpButton type="success" icon="CheckOutlined" circle></WpButton>
-        <WpButton type="info" icon="MailOutlined" circle></WpButton>
-        <WpButton type="warning" icon="StarOutlined" circle></WpButton>
-        <WpButton type="danger" icon="DeleteOutlined" circle></WpButton>
+        <WpButton :icon="icon.SearchOutlined" circle></WpButton>
+        <WpButton type="primary" :icon="icon.RightOutlined" circle></WpButton>
+        <WpButton type="success" :icon="icon.CheckOutlined" circle></WpButton>
+        <WpButton type="info" :icon="icon.MailOutlined" circle></WpButton>
+        <WpButton type="warning" :icon="icon.StarOutlined" circle></WpButton>
+        <WpButton type="danger" :icon="icon.DeleteOutlined" circle></WpButton>
     </wp-space>
 </template>
+
+<script lang="ts" setup>
+const icon = { SearchOutlined, RightOutlined, CheckOutlined, MailOutlined, StarOutlined, DeleteOutlined }
+</script>
 ```
 :::
 
@@ -111,13 +115,17 @@ app.use(WpButton)
 ```vue
 <template>
     <wp-space>
-        <WpButton type="primary" icon="EditFilled"></WpButton>
-        <WpButton type="primary" icon="ShareAltOutlined"></WpButton>
-        <WpButton type="primary" icon="DeleteFilled"></WpButton>
-        <WpButton type="primary" icon="SearchOutlined">搜索</WpButton>
-        <WpButton type="primary" icon="CloudUploadOutlined">上传</WpButton>
+        <WpButton type="primary" :icon="icon.RightOutlined"></WpButton>
+        <WpButton type="primary" :icon="icon.ShareAltOutlined"></WpButton>
+        <WpButton type="primary" :icon="icon.DeleteFilled"></WpButton>
+        <WpButton type="primary" :icon="icon.SearchOutlined">搜索</WpButton>
+        <WpButton type="primary" :icon="icon.CloudUploadOutlined">上传</WpButton>
     </wp-space>
 </template>
+
+<script lang="ts" setup>
+const icon = { RightOutlined, ShareAltOutlined, DeleteFilled, SearchOutlined, CloudUploadOutlined }
+</script>
 ```
 :::
 
@@ -132,10 +140,12 @@ app.use(WpButton)
     <wp-space>
         <WpButtonGroup>
             <WpButton type="primary" icon="LeftOutlined">上一页</WpButton>
-            <WpButton type="primary">下一页
-                <WpIcon>
-                    <component :is="RightOutlined2" />
-                </WpIcon>
+            <WpButton type="primary" icon-placement="right">下一页
+                <template #icon>
+                    <WpIcon>
+                        <component :is="RightOutlined2" />
+                    </WpIcon>
+                </template>
             </WpButton>
         </WpButtonGroup>
         <WpButtonGroup>

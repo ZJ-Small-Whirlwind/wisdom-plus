@@ -11,7 +11,7 @@
 }
 
 @include b(button) {
-  display: inline-block;
+  display: inline-flex;
   line-height: 1;
   min-height: map.get($input-height, 'default');
   white-space: nowrap;
@@ -24,7 +24,8 @@
   );
   color: var(--wp-button-text-color, #{map.get($button, 'text-color')});
   -webkit-appearance: none;
-  text-align: center;
+  align-items: center;
+  justify-content: center;
   box-sizing: border-box;
   outline: none;
   margin: 0;
@@ -73,6 +74,9 @@
 
   & [class*='#{$namespace}-icon'] {
     & + span {
+      margin-left: 5px;
+    }
+    &:last-child:not(:only-child) {
       margin-left: 5px;
     }
     svg {
