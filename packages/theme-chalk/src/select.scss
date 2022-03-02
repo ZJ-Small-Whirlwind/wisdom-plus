@@ -41,12 +41,38 @@
     }
   }
   &-panel{
+    overflow: auto;
+    max-height: 300px;
+    z-index: 111;
+    position: relative;
+    user-select: none;
     &-option{
       min-width: var(--wp-select--min-width);
       padding: 10px 15px;
       cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       &:hover{
         background-color: #eeeeee;
+      }
+      &-disabled{
+        color: #c0c4cc;
+        cursor: not-allowed;
+        &:hover{
+          background-color: transparent;
+        }
+      }
+      &-active{
+        color: #3a8ee6;
+      }
+      &-empty{
+        color: #c0c4cc;
+        text-align: center;
+        &:hover{
+          background-color: transparent;
+        }
       }
     }
   }

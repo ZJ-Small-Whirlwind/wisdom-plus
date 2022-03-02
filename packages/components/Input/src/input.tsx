@@ -48,6 +48,10 @@ export const inputProps = buildProps({
     },
     autosize: {
         type: [Boolean, Object] as PropType<boolean | { minRows?: number, maxRows?: number }>
+    },
+    isSelect: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -64,6 +68,14 @@ export default defineComponent({
         'blur': (e: Event) => {
             void e
             return true
+        },
+        'focus': (e: Event) => {
+            void e
+            return true
+        },
+        'clear': (e: Event) => {
+            void e
+            return true
         }
     },
     setup(props, { emit }) {
@@ -75,7 +87,7 @@ export default defineComponent({
 
         const { size, disabled, form, formItem } = useFormItem({ size: props.size, disabled: props.disabled })
         const clearable = computed(() => {
-            return !props.readonly && !disabled.value && input.value && props.clearable
+            return (props.isSelect || !props.readonly) && !disabled.value && input.value && props.clearable
         })
 
         const showPassword = ref(true)
@@ -114,6 +126,10 @@ export default defineComponent({
             }
         }
 
+        const onFocus = (event: Event) => {
+            emit('focus', event)
+        }
+
         return {
             input,
             focused,
@@ -123,7 +139,8 @@ export default defineComponent({
             size,
             disabled,
             resizeTextarea,
-            onBlur
+            onBlur,
+            onFocus,
         }
     },
     render() {
@@ -141,6 +158,7 @@ export default defineComponent({
                 tabindex={this.tabindex}
                 name={this.name}
                 onBlur={this.onBlur}
+                onFocus={this.onFocus}
             />
         ) : (
             <textarea
@@ -197,11 +215,6 @@ export default defineComponent({
                     (this.clearable || (this.showPasswordIcon && this.type === 'password') || this.suffix || this.$slots.suffix) && (
                         <div class="wp-input--suffix">
                             {
-                                this.$slots.suffix?.() || (
-                                    this.suffix && <Icon>{h(this.suffix)}</Icon>
-                                )
-                            }
-                            {
                                 this.showPasswordIcon && this.type === 'password' && (
                                     <div class="wp-input__password">
                                         <div class="wp-input__password-icon" onClick={() => {
@@ -219,14 +232,20 @@ export default defineComponent({
                             {
                                 this.clearable && (
                                     <div class="wp-input__clear">
-                                        <div class="wp-input__clear-icon" onClick={() => {
+                                        <div class="wp-input__clear-icon" onClick={(ev) => {
                                             this.input = ''
+                                            this.$emit('clear',ev);
                                         }}>
                                             <Icon>
                                                 { this.$slots.clearIcon?.() || <CloseOutlined /> }
                                             </Icon>
                                         </div>
                                     </div>
+                                )
+                            }
+                            {
+                                this.$slots.suffix?.() || (
+                                    this.suffix && <Icon>{h(this.suffix)}</Icon>
                                 )
                             }
                         </div>
