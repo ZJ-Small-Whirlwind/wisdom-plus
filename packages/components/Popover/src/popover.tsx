@@ -8,6 +8,7 @@ import { onClickOutside } from '@vueuse/core'
 import { closeAll } from './utils'
 
 import { getMaxZIndex } from '@wisdom-plus/utils/get-max-zindex'
+import { useAutoControl } from '@wisdom-plus/utils/use-control'
 
 export type PopoverTrigger = 'click' | 'hover' | 'focus' | 'none'
 export type PopoverPlacement = 'top-start' | 'top' | 'top-end' | 'right-start' | 'right' | 'right-end' | 'bottom-start' | 'bottom' | 'bottom-end' | 'left-start' | 'left' | 'left-end'
@@ -90,22 +91,7 @@ export default defineComponent({
          */
         const popoverShow = ref(false)
         const zIndex = ref(0)
-        const show = computed<boolean>({
-            get() {
-                if (typeof props.modelValue === 'undefined') {
-                    return popoverShow.value
-                } else {
-                    return props.modelValue
-                }
-            },
-            set(value) {
-                if (typeof props.modelValue === 'undefined') {
-                    popoverShow.value = value
-                } else {
-                    emit('update:modelValue', value)
-                }
-            }
-        })
+        const show = useAutoControl(popoverShow, props, 'modelValue', emit)
         watch(show, () => {
             if (show.value && !props.zIndex) {
                 zIndex.value = getMaxZIndex()

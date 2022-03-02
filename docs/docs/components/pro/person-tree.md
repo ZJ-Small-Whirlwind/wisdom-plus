@@ -80,13 +80,16 @@ const list = ref(new Array(100).fill({
 | useRadio | 是否使用单选                                     | _boolean_                                                           | -                  |
 | handleDelete | 多选状态下的全部删除操作回调 | _() => void_ | - |
 | list | 列表项 | _TreeListItemCustom[]_ | - |
-| exclude | 排除项 | _(string | number | symbol)[]_ | - |
+| exclude | 排除项 | _(string \| number \| symbol)[]_ | - |
 | noFilterCount | 获取全选数值时是否包括过滤项 | _boolean_ | - |
 | getData | 在没有 list 选项时，可以设置 getData 由组件内部管理数据 | _() => Promise<TreeListItemCustom[]_ | - |
+| treeProps | 树组件的 props | _Partial\<TreeProps> & Record\<any, any>_ | - |
 
 ### 插槽
 
 ### Slots
+
+该组件继承了所有 tree 组件的 Slots
 
 | 名称    | 说明     | 参数 |
 | ------- | -------- | --- |

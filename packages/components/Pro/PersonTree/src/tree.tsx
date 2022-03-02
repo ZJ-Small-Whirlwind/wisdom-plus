@@ -3,10 +3,14 @@ import { defineComponent, ref, watchEffect, watch, onMounted, computed, PropType
 import { useVModel } from '@vueuse/core'
 import { buildProps } from "@wisdom-plus/utils/props"
 
-import { WpInput, WpButton, WpSpace, WpCheckbox, WpTree, type TreeListItemCustom } from '@wisdom-plus/components'
+import { WpInput } from '../../../Input'
+import { WpButton } from '../../../Button'
+import { WpSpace } from '../../../Space'
+import { WpCheckbox } from '../../../Checkbox'
+import { WpTree, TreeProps, TreeListItemCustom } from '../../../Tree'
 import { SearchOutlined } from '@vicons/antd'
 
-export const proPersonTree = buildProps({
+export const proPersonTreeProps = buildProps({
     modelValue: {
         type: Array as PropType<(string | number | symbol)[]>
     },
@@ -20,14 +24,17 @@ export const proPersonTree = buildProps({
     noFilterCount: Boolean,
     getData: {
         type: Function as PropType<() => Promise<TreeListItemCustom[]>>
+    },
+    treeProps: {
+        type: Object as PropType<Partial<TreeProps> & Record<any, any>>
     }
 })
 
-export type ProPersonTreeProps = ExtractPropTypes<typeof proPersonTree>
+export type ProPersonTreeProps = ExtractPropTypes<typeof proPersonTreeProps>
 
 export default defineComponent({
     name: 'WpProPersonTree',
-    props: proPersonTree,
+    props: proPersonTreeProps,
     emits: {
         'update:modelValue': (value: (string | number | symbol)[]) => {
             void value
@@ -195,8 +202,10 @@ export default defineComponent({
                     virtual
                     useRadio={this.useRadio}
                     filterCall={this.filterCall}
+                    { ...this.treeProps }
                     v-slots={{
-                        title: ({ name, username }) => name || username
+                        ...this.$slots,
+                        title: this.$slots.title || (({ name, username }) => name || username)
                     }}
                 />
             </div >
