@@ -9,6 +9,7 @@ import { CloseOutlined } from '@vicons/antd'
 
 import { useFocus } from '@vueuse/core'
 import { useAutoControl } from '../../../utils/use-control'
+import { useFormItem } from '@wisdom-plus/hooks'
 
 export const tagInputProps = buildProps({
     modelValue: {
@@ -64,6 +65,8 @@ export default defineComponent({
         })
         const inputingTag = ref('')
         const inputRef = ref<HTMLDivElement | null>(null)
+
+        const { size, disabled, formItem } = useFormItem({ size: props.size, disabled: props.disabled })
 
         /**
          * Bind foucs of inputRef
@@ -140,17 +143,17 @@ export default defineComponent({
             <div
                 class={{
                     'wp-taginput': true,
-                    'wp-taginput-disabled': props.disabled,
-                    [`wp-taginput-${props.size}`]: true,
+                    'wp-taginput-disabled': disabled.value,
+                    [`wp-taginput-${size.value}`]: true,
                     'focus': focused.value
                 }}
                 onClick={() => {
-                    if (!focused.value && !props.disabled && !props.readonly && notLimited.value) {
+                    if (!focused.value && !disabled.value && !props.readonly && notLimited.value) {
                         inputRef.value?.focus()
                     }
                 }}
                 onKeydown={e => {
-                    if (!props.keyboardDelete || props.disabled || props.readonly || !notLimited.value) return
+                    if (!props.keyboardDelete || disabled.value || props.readonly || !notLimited.value) return
                     /**
                      * press Enter to copy value to input
                      */
@@ -194,7 +197,7 @@ export default defineComponent({
                                             'active': tag.active,
                                         }}
                                         onClick={() => {
-                                            if (!props.keyboardDelete || props.disabled || props.readonly || tag.index === -1 || !notLimited.value) return
+                                            if (!props.keyboardDelete || disabled.value || props.readonly || tag.index === -1 || !notLimited.value) return
                                             if (active.value !== tag.tag) {
                                                 active.value = tag.tag
                                             } else {
@@ -202,7 +205,7 @@ export default defineComponent({
                                             }
                                         }}
                                         onMousedown={e => {
-                                            if (props.disabled || props.readonly || tag.index === -1) return
+                                            if (disabled.value || props.readonly || tag.index === -1) return
                                             /**
                                              * press Middle button to remove an item
                                              */
@@ -216,8 +219,8 @@ export default defineComponent({
                                             slots.tag?.(tag) || (
                                                 <Tag
                                                     
-                                                    size={props.size}
-                                                    closable={!props.readonly && !props.disabled && tag.index !== -1}
+                                                    size={size.value}
+                                                    closable={!props.readonly && !disabled.value && tag.index !== -1}
                                                     { ...props.tagProps }
                                                     onClose={(e: Event) => {
                                                         e.stopPropagation()
@@ -255,12 +258,14 @@ export default defineComponent({
                                 } else {
                                     inputingTag.value = text
                                 }
+                                formItem?.validate?.('change')
                             }}
                             onBlur={() => {
                                 if (!inputingTag.value) return
                                 tagPush()
+                                formItem?.validate?.('blur')
                             }}
-                            contenteditable={!props.readonly && !props.disabled && notLimited.value ? 'true' : 'false'}
+                            contenteditable={!props.readonly && !disabled.value && notLimited.value ? 'true' : 'false'}
                             onKeydown={e => {
                                 /**
                                  * press Enter to push a value
@@ -278,7 +283,7 @@ export default defineComponent({
                                  * press Delete to make a tag active
                                  */
                                 if (e.code === 'Backspace' || e.code === 'Delete') {
-                                    if (!props.keyboardDelete || props.disabled || props.readonly || !notLimited.value) return
+                                    if (!props.keyboardDelete || disabled.value || props.readonly || !notLimited.value) return
                                     if (active.value || !value.value) return
                                     e.stopPropagation()
                                     if (!inputingTag.value && value.value.length > 0) {
@@ -290,7 +295,7 @@ export default defineComponent({
                     </Space>
                 </div>
                 {
-                    props.clearable && (value.value?.length || 0) > 0 && !props.readonly && !props.disabled ? (
+                    props.clearable && (value.value?.length || 0) > 0 && !props.readonly && !disabled.value ? (
                         <div class="wp-taginput__clear">
                             <div class="wp-taginput__clear-icon" onClick={() => {
                                 value.value = []

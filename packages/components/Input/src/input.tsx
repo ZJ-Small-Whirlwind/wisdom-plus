@@ -73,14 +73,14 @@ export default defineComponent({
         const inputRef = ref('')
         const input = useAutoControl(inputRef, props, 'modelValue', emit)
 
-        const { size, disabled, form, formItem } = useFormItem({ size: props.size, disabled: props.disabled })
+        const { size, disabled, formItem } = useFormItem({ size: props.size, disabled: props.disabled })
         const clearable = computed(() => {
             return !props.readonly && !disabled.value && input.value && props.clearable
         })
 
         const showPassword = ref(true)
 
-        const _textareaCalcStyle = ref<CSSProperties>({})
+        const _textareaCalcStyle = ref<Record<string, any>>({})
 
         const resizeTextarea = () => {
             const { type, autosize } = props
@@ -123,7 +123,8 @@ export default defineComponent({
             size,
             disabled,
             resizeTextarea,
-            onBlur
+            onBlur,
+            _textareaCalcStyle
         }
     },
     render() {
@@ -148,7 +149,8 @@ export default defineComponent({
                 ref='inputElementRef'
                 class="wp-input--textarea"
                 style={{
-                    resize: this.resize || 'vertical'
+                    resize: this.resize || 'vertical',
+                    ...this._textareaCalcStyle
                 }}
                 rows={this.rows}
                 readonly={this.readonly || this.disabled}
