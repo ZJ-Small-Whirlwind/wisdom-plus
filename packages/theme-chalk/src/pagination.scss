@@ -8,6 +8,11 @@
     font-size: var(--wp-pagination-font-size);
     &--pager {
         height: var(--wp-pagination-button-height);
+        padding: 7px 12px;
+    }
+    .wp-pagination--prev,
+    .wp-pagination--next {
+        padding: 7px 10px;
     }
     .wp-pagination--jump-right,
     .wp-pagination--jump-left {

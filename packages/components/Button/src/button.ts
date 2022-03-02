@@ -1,6 +1,6 @@
 import { useFormItemProps } from '@wisdom-plus/hooks'
 import { buildProps, definePropType } from '@wisdom-plus/utils/props'
-import type { ExtractPropTypes, Component } from 'vue'
+import type { ExtractPropTypes, Component, PropType } from 'vue'
 import type button from './buttonElement'
 
 export const buttonType = [
@@ -41,10 +41,13 @@ export const buttonProps = buildProps({
   autoInsertSpace: {
     type: Boolean,
   },
- countdown: {
-    type: [Boolean, Number],
-     default:null
+  iconPlacement: {
+    type: definePropType<'left' | 'right'>([String])
   },
+  countdown: {
+      type: [Boolean, Number],
+      default:null
+  }
 } as const)
 
 export interface ButtonConfigContext {

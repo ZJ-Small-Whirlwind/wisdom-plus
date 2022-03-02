@@ -3,9 +3,8 @@ import { useCssVar } from '@vueuse/core'
 import { useFormItem, useGlobalConfig } from '@wisdom-plus/hooks'
 import { buttonGroupContextKey } from '@wisdom-plus/tokens'
 import { lighten, darken } from '@wisdom-plus/utils/color'
-import { buttonEmits, buttonProps } from '@wisdom-plus/components/button/src/button'
+import { buttonEmits, buttonProps } from './button'
 import WpIcon from "@wisdom-plus/components/Icon";
-import * as antdIcons from "@vicons/antd";
 import Spin from "../../Spin";
 
 export default defineComponent({
@@ -128,9 +127,24 @@ export default defineComponent({
             handleClick,
             countdown,
             countdownIndex,
+            iconPlacement: props.iconPlacement
         }
     },
     render() {
+        const Icon  = (
+            this.loading ? <Spin></Spin> : (
+                this.$slots.icon?.() || (
+                    this.icon  ?
+                    (
+                        typeof this.icon === 'string' ? (
+                            <i class={this.icon}></i>
+                        ) : (
+                            <wp-icon>{ h(this.icon) }</wp-icon>
+                        )
+                    ) : null
+                )
+            )
+        )
         return (
             <button
                 ref="buttonRef"
@@ -152,22 +166,7 @@ export default defineComponent({
                 style={this.buttonStyle}
                 onClick={this.handleClick}
             >
-
-                {
-                    this.loading ? <Spin></Spin> : ( this.icon || this.$slots.icon ) ?
-                        (
-                            <wp-icon>{
-                                this.$slots.icon?.() || (
-                                    typeof this.icon === 'string' ? (
-                                        antdIcons[this.icon as any]?.render?.()
-                                    ) : (
-                                        h(this.icon)
-                                    )
-                                )
-                            }</wp-icon>
-                        ) :
-                        null
-                }
+                {this.iconPlacement !== 'right' && Icon}
                 {
                     this.$slots.default && (
                         <span
@@ -178,6 +177,7 @@ export default defineComponent({
                         </span>
                     )
                 }
+                {this.iconPlacement === 'right' && Icon}
             </button>
         )
     }
