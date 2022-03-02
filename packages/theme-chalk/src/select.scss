@@ -1,5 +1,29 @@
 .wp-select{
+  width: 240px;
+  cursor: pointer;
+  *{
+    cursor: pointer;
+  }
   &-input{
-    width: 240px;
+    &:not(.wp-input--disabled) {
+      border-color: #dcdfe6;
+    }
+  }
+  &-icon{
+    transition: all ease-in-out 0.3s;
+    transform: rotate(0);
+  }
+
+  &-show{
+    &-input{
+      &:not(.wp-input--disabled) {
+        border-color: var(--wp-color-primary);
+      }
+    }
+    &-icon{
+      &-active{
+        transform: rotate(180deg);
+      }
+    }
   }
 }
