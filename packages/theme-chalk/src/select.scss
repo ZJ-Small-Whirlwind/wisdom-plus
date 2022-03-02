@@ -1,5 +1,8 @@
+:root{
+  --wp-select--min-width:240px;
+}
 .wp-select{
-  width: 240px;
+  width: var(--wp-select--min-width);
   cursor: pointer;
   *{
     cursor: pointer;
@@ -7,6 +10,9 @@
   &-input{
     &:not(.wp-input--disabled) {
       border-color: #dcdfe6;
+    }
+    &:not(.wp-input--disabled):not(.wp-input--focused):hover {
+      border-color: #ccc;
     }
   }
   &-icon{
@@ -19,10 +25,28 @@
       &:not(.wp-input--disabled) {
         border-color: var(--wp-color-primary);
       }
+      &:not(.wp-input--disabled):not(.wp-input--focused):hover {
+        border-color: var(--wp-color-primary);
+      }
     }
     &-icon{
       &-active{
         transform: rotate(180deg);
+      }
+    }
+  }
+  &-panel-popover{
+    .wp-popover-content{
+      padding: 0;
+    }
+  }
+  &-panel{
+    &-option{
+      min-width: var(--wp-select--min-width);
+      padding: 10px 15px;
+      cursor: pointer;
+      &:hover{
+        background-color: #eeeeee;
       }
     }
   }

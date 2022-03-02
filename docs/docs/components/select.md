@@ -8,10 +8,10 @@
 
 ```js
 import { createApp } from 'vue'
-import { WpScrollList } from 'wisdom-plus'
+import { WpSelect } from 'wisdom-plus'
 
 const app = createApp()
-app.use(WpScrollList)
+app.use(WpSelect)
 ```
 
 ## 代码演示
