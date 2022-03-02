@@ -1,5 +1,14 @@
 import { defineComponent, ExtractPropTypes, PropType, onActivated, ref, watch, computed, reactive } from "vue"
-import { TableProps, SpaceProps, WpTable, Dialog, Toast, WpSpace, WpButton, WpInput, WpXScroll, WpPagination } from '@wisdom-plus/components'
+
+import { WpButton } from '../../../Button'
+import { WpSpace, SpaceProps } from '../../../Space'
+import { Toast } from '../../../Toast'
+import { Dialog } from '../../../Modal'
+import { WpTable, TableProps } from '../../../Table'
+import { WpInput } from '../../../Input'
+import { WpXScroll } from '../../../XScroll'
+import { WpPagination } from '../../../Pagination'
+
 import { buildProps } from '@wisdom-plus/utils/props'
 import { useVModel } from '@vueuse/core'
 

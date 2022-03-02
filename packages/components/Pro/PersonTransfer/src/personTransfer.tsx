@@ -1,5 +1,13 @@
+
 import { defineComponent, ref, nextTick, computed, watch, PropType, ExtractPropTypes, onMounted } from "vue"
-import { TreeListItemCustom, WpGrid, WpGridItem, WpProPersonTree, WpSpace, WpButton } from '@wisdom-plus/components'
+
+import { WpButton } from '../../../Button'
+import { WpSpace } from '../../../Space'
+import { WpGrid } from '../../../Grid'
+import { WpGridItem } from '../../../GridItem'
+import { WpProPersonTree } from '../../PersonTree'
+import { TreeListItemCustom } from '../../../Tree'
+
 import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
 import { ArrowRightOutlined, ArrowLeftOutlined } from '@vicons/antd'
