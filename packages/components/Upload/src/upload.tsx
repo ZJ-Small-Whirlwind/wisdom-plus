@@ -1,6 +1,6 @@
 import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
-import { ref, defineComponent, ExtractPropTypes, PropType } from "vue"
+import { ref, defineComponent, ExtractPropTypes, PropType, watch } from "vue"
 import { getChunk } from './chunk'
 
 import UploadList from './uploadList'
@@ -10,6 +10,7 @@ import {
     type UploadFile,
     UploadFileStatus
 } from './interface'
+import { useFormItem } from "@wisdom-plus/hooks"
 
 export const uploadProps = buildProps({
     modelValue: {
@@ -95,7 +96,12 @@ export default defineComponent({
             passive: true,
             deep: true
         })
+        const { formItem } = useFormItem({})
         const fileRef = ref<HTMLInputElement | null>(null)
+
+        watch(uploadFiles, () => {
+            formItem?.validate('change')
+        })
 
         const startUpload = () => {
             if (props.disabled) return
