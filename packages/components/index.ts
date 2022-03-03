@@ -55,6 +55,8 @@ export * from './Spin'
 export * from './Input'
 export * from './Form'
 export * from './Select'
+export * from './Slider'
+export * from './InputNumber'
 
 export * from './Pro/Upload'
 export * from './Pro/Editor'

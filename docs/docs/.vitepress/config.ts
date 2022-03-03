@@ -99,12 +99,20 @@ export default defineConfig({
                             link: '/components/input'
                         },
                         {
+                            text: 'InputNumber 数字输入框',
+                            link: '/components/input-number'
+                        },
+                        {
                             text: 'Checkbox 复选框',
                             link: '/components/checkbox'
                         },
                         {
                             text: 'Radio 单选框',
                             link: '/components/radio'
+                        },
+                        {
+                            text: 'Slider 滑块',
+                            link: '/components/slider'
                         },
                         {
                             text: 'TagInput 标签输入',

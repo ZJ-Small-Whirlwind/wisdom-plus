@@ -192,7 +192,8 @@ export default defineComponent({
                 await props.delete?.([row])
             }
             Toast({
-                message: '删除成功'
+                message: '删除成功',
+                placement: 'center'
             })
             handleQuery(false)
         }
@@ -200,7 +201,8 @@ export default defineComponent({
         const handleDeleteSelect = async() => {
             if (selections.value.length === 0) {
                 Toast({
-                    message: '请先选中任意项'
+                    message: '请先选中任意项',
+                    placement: 'center'
                 })
                 return
             }
@@ -221,7 +223,8 @@ export default defineComponent({
             }
             tableRef.value?.clearCheckbox()
             Toast({
-                message: '删除成功'
+                message: '删除成功',
+                placement: 'center'
             })
             handleQuery(false)
         }
@@ -263,7 +266,7 @@ export default defineComponent({
             tableProps
         }
     },
-    expose: ['refresh', 'getSelections'],
+    expose: ['refresh', 'getSelections', 'handleDelete'],
     render() {
         return (
             <div class="wp-pro-page-layout">

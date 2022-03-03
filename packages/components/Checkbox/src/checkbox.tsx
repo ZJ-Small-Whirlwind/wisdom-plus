@@ -85,9 +85,7 @@ export default defineComponent({
             return disabledInject.value || props.disabled
         })
         const sizeInject = inject<Ref<boolean> | false>('wp-checkbox-size', false)
-
-        const sizeMap = computed(() => props.size ? props.size : (sizeInject ? sizeInject.value : 'default'))
-        const { size, disabled: formDisabled, formItem } = useFormItem({ size: sizeMap.value as "small" | "large" | "medium" | "mini", disabled: disabled.value })
+        const { formItem } = useFormItem({})
 
         watch(checked, () => {
             formItem?.validate('change')
@@ -97,12 +95,12 @@ export default defineComponent({
                 class={{
                     'wp-checkbox': true,
                     'wp-checkbox__checked': checked.value || props.indeterminate,
-                    'wp-checkbox__disabled': formDisabled.value,
-                    [`wp-checkbox__${size}`]: true
+                    'wp-checkbox__disabled': disabled.value,
+                    [`wp-checkbox__${props.size ? props.size : (sizeInject ? sizeInject.value : 'default')}`]: true
                 }}
-                tabindex={!formDisabled.value ? 0 : undefined}
+                tabindex={!disabled.value ? 0 : undefined}
                 onClick={() => {
-                    if (formDisabled.value) return
+                    if (disabled.value) return
                     checked.value = !checked.value
                 }}
                 onKeydown={e => {

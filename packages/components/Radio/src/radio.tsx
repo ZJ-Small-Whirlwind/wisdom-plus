@@ -83,12 +83,11 @@ export default defineComponent({
          * disabled
          */
         const disabledInject = inject<Ref<boolean>>('wp-radio-disabled', ref(false))
-        const disabledComputed = computed(() => {
+        const disabled = computed(() => {
             return disabledInject.value || props.disabled
         })
         const sizeInject = inject<Ref<boolean> | false>('wp-radio-size', false)
-        const sizeComputed = computed(() => props.size ? props.size : (sizeInject ? sizeInject.value : 'default'))
-        const { size, disabled, formItem } = useFormItem({ size: sizeComputed.value as "small" | "large" | "medium" | "mini", disabled: disabledComputed.value })
+        const { formItem } = useFormItem({})
         watch(() => checkedValue, () => {
             formItem?.validate('change')
         })
@@ -98,7 +97,7 @@ export default defineComponent({
                     'wp-radio': true,
                     'wp-radio__checked': checked.value,
                     'wp-radio__disabled': disabled.value,
-                    [`wp-radio__${size.value}`]: true
+                    [`wp-radio__${props.size ? props.size : (sizeInject ? sizeInject.value : 'default')}`]: true
                 }}
                 tabindex={!disabled.value ? 0 : undefined}
                 onClick={() => {

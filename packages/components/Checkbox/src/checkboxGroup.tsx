@@ -38,9 +38,9 @@ export default defineComponent({
             deep: true
         })
         provide('wp-checkbox-list', checkboxList)
-        const { size, disabled, formItem } = useFormItem({ size: props.size as "small" | "large" | "medium" | "mini", disabled: props.disabled })
-        provide('wp-checkbox-disabled', disabled)
-        provide('wp-checkbox-size', size)
+        const { formItem } = useFormItem({})
+        provide('wp-checkbox-disabled', toRef(props, 'disabled'))
+        provide('wp-checkbox-size', toRef(props, 'size'))
         const spacePropsMap = computed(() => {
             const spacePropsTemp: Partial<CheckboxGroupProps> = { ...props }
             delete spacePropsTemp.modelValue
