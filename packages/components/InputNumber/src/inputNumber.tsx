@@ -37,6 +37,10 @@ export const inputNumberProps = buildProps({
     },
     precision: {
         type: Number
+    },
+    placeholder: {
+        type: String,
+        default: '请输入'
     }
 })
 
@@ -70,7 +74,10 @@ export default defineComponent({
         const value = ref(model.value)
 
         watch(model, () => {
-            if (model.value === undefined) return
+            if (model.value === undefined) {
+                value.value = undefined
+                return
+            }
             if (props.max && model.value > props.max) model.value = props.max
             if (props.min && model.value < props.min) model.value = props.min
             value.value = model.value
@@ -78,7 +85,8 @@ export default defineComponent({
             immediate: true
         })
 
-        const changeByStep = (add = true) => {
+        const changeByStep = (add = true, e: Event) => {
+            e.preventDefault()
             if (props.readonly || props.disabled) return
             if (add) {
                 value.value = (value.value || 0) + props.step
@@ -105,7 +113,7 @@ export default defineComponent({
             ]}>
                 {
                     this.controls === 'both' && (
-                        <button class="wp-input-number--control wp-input-number--control-left" onClick={() => this.changeByStep(false)}>
+                        <button class="wp-input-number--control wp-input-number--control-left" onClick={(e) => this.changeByStep(false, e)}>
                             <Icon><MinusOutlined/></Icon>
                         </button>
                     )
@@ -126,6 +134,7 @@ export default defineComponent({
                     name={this.name}
                     min={this.min}
                     max={this.max}
+                    placeholder={this.placeholder}
                     step={this.stepStrictly ? this.step : undefined}
                     onBlur={e => this.$emit('blur', e)}
                     onFocus={e => this.$emit('focus', e)}
@@ -156,10 +165,10 @@ export default defineComponent({
                 {
                     this.controls === 'right' || this.controls === true && (
                         <div class="wp-input-number--controls">
-                            <button class="wp-input-number--control" onClick={() => this.changeByStep(true)}>
+                            <button class="wp-input-number--control" onClick={(e) => this.changeByStep(true, e)}>
                                 <Icon><CaretUpFilled/></Icon>
                             </button>
-                            <button class="wp-input-number--control" onClick={() => this.changeByStep(false)}>
+                            <button class="wp-input-number--control" onClick={(e) => this.changeByStep(false, e)}>
                                 <Icon><CaretDownFilled /></Icon>
                             </button>
                         </div>
@@ -167,7 +176,7 @@ export default defineComponent({
                 }
                 {
                     this.controls === 'both' && (
-                        <button class="wp-input-number--control wp-input-number--control-right" onClick={() => this.changeByStep(true)}>
+                        <button class="wp-input-number--control wp-input-number--control-right" onClick={(e) => this.changeByStep(true, e)}>
                             <Icon><PlusOutlined/></Icon>
                         </button>
                     )

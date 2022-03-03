@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { WpInput, WpCheckbox } from '@wisdom-plus/components'
+import { WpInput, WpCheckbox, WpInputNumber } from '@wisdom-plus/components'
 </script>
 
 # Form 数据表单
@@ -57,7 +57,7 @@ const schemas = [
     {
         prop: 'title2',
         label: '标题2',
-        component: WpInput,
+        component: WpInputNumber,
         grid: {
             span: 12
         },
