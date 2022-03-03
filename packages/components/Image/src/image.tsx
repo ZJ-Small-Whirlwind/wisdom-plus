@@ -32,7 +32,7 @@ export const imageProps = buildProps({
 
 export type ImageProps = ExtractPropTypes<typeof imageProps>
 
-import { FileImageTwotone, FileImageOutlined } from '@vicons/antd'
+import {FileImageTwotone, FileImageOutlined, EyeFilled} from '@vicons/antd'
 import Icon from '../../Icon'
 
 export default defineComponent({
@@ -96,11 +96,20 @@ export default defineComponent({
                     borderRadius: props.borderRadius,
                     background: props.background,
                     color: props.color
-                }} onClick={() => {
-                    if (props.preview && props.src) {
-                        Preview(props.previewList || [props.src], props.previewIndex ?? props.src)
-                    }
                 }}>
+                    {
+                        props.preview ? (
+                            <div class="wp-image-eye" onClick={() => {
+                                if (props.preview && props.src) {
+                                    Preview(props.previewList || [props.src], props.previewIndex ?? props.src)
+                                }
+                            }}>
+                                <Icon>
+                                    <EyeFilled/>
+                                </Icon>
+                            </div>
+                        ) : null
+                    }
                     {
                         loading.value ? (
                             slots.loading?.() || (

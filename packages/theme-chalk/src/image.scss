@@ -4,8 +4,28 @@
     align-items: center;
     justify-content: center;
     vertical-align: middle;
+    position: relative;
     > img {
         width: 100%;
         height: 100%;
+    }
+    &-eye {
+        position: absolute;
+        left: 0;
+        top: 100%;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        color: white;
+        font-size: 20px;
+        transition: all .3s;
+        overflow: hidden;
+    }
+    &:hover &-eye{
+        top: 0;
     }
 }
