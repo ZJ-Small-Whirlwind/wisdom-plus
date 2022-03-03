@@ -107,6 +107,10 @@ export default defineConfig({
                             link: '/components/radio'
                         },
                         {
+                            text: 'Slider 滑块',
+                            link: '/components/slider'
+                        },
+                        {
                             text: 'TagInput 标签输入',
                             link: '/components/tag-input'
                         },
