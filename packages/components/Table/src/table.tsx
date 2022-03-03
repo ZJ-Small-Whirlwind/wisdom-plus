@@ -596,7 +596,7 @@ export default defineComponent({
                     }
             </Icon>)
         const columnLableRenderSchedulingLine = (column)=>{
-            if(Object.prototype.toString.call(column.label) === '[object Array]'){
+            if(Object.prototype.toString.call(column.label) === '[object Array]' && column.label.length > 0){
                 const data = column.label.slice(0,3);
                 return (<div class={{
                     'wp-table--cell-scheduling-line':true,
