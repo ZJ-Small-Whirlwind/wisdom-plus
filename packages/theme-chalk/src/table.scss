@@ -313,6 +313,56 @@
       }
     }
   }
+  &--cell-scheduling{
+    $gap:50px;
+    padding: 0;
+    &-line{
+      min-width: 140px;
+      min-height: 70px;
+      position: relative;
+      overflow: hidden;
+      &-item{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: calc(100% + $gap);
+        transform-origin: 0 0;
+        border-top: 1px solid var(--wp-table-boder-color);
+        text-align: right;
+        div{
+          margin-right: $gap;
+        }
+        &:nth-child(1){
+          border-top: none;
+          transform: rotate(0deg) translate(-10px,6px);
+        }
+        &:nth-child(2){
+          transform: rotate(20deg);
+          div{
+            transform: rotate(-20deg) translate(-10px,23px);
+          }
+        }
+        &:nth-child(3){
+          transform: rotate(45deg);
+          text-align: left;
+          div{
+            transform: rotate(-45deg) translate(35px,0px);
+          }
+        }
+      }
+      &-len-2{
+        &-item{
+          &:nth-child(2){
+            transform: rotate(26deg);
+            div{
+              transform: rotate(-26deg) translate(24px,7px);
+              text-align: left;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 .wp-table-thead-cell-filter-content{
   display: flex;

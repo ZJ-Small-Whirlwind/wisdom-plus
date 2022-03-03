@@ -58,6 +58,69 @@ const add = (item) => {
 ```
 :::
 
+#### 表格斜线
+
+用于排课等功能，注意一定要写width，建议为140px
+
+:::demo
+
+```vue
+
+<template>
+    <wp-table border @add="add" :columns="columns" :data="data"></wp-table>
+</template>
+<script setup lang="ts">
+import {ref} from 'vue'
+const textTypeFilter = ({label})=>{
+    return {
+        "语文":"primary",
+        "数学":"success",
+        "英语":"delete",
+    }[label]
+}
+const columns = ref([
+    {label: ["星期","课程","时间"], prop: "time", width: 120},
+    {label: "星期一", prop: "kc[0]", textTypeFilter:textTypeFilter},
+    {label: "星期二", prop: "kc[1]", textTypeFilter:textTypeFilter},
+    {label: "星期三", prop: "kc[2]", textTypeFilter:textTypeFilter},
+    {label: "星期四", prop: "kc[3]", textTypeFilter:textTypeFilter},
+    {label: "星期五", prop: "kc[4]", textTypeFilter:textTypeFilter},
+    {label: "星期六", prop: "kc[5]", textTypeFilter:textTypeFilter},
+    {label: "星期日", prop: "kc[6]", textTypeFilter:textTypeFilter},
+])
+const data = ref([
+    {
+        time: '8:00-10:00',
+        kc: ["语文", "数学", "英语", "化学", "地理", "历史"],
+    },
+    {
+        time: '10:00-12:00',
+        kc: ["语文", "地理", "地理", "语文", "英语", "美术"],
+    },
+    {
+        time: '14:00-16:00',
+        kc: ["语文", "数学", "英语", "化学", "英语", "体育"],
+    },
+    {
+        time: '16:00-18:00',
+        kc: ["语文", "数学", "英语", "化学", "地理", "美术"],
+    },
+    {
+        time: '19:00-21:00',
+        kc: ["语文", "地理", "英语", "化学", "英语", "美术"],
+    },
+    {
+        time: '21:00-23:00',
+        kc: ["地理", "数学", "地理", "语文", "地理", "体育"],
+    }
+])
+const add = (item) => {
+    console.log(item)
+}
+</script>
+```
+:::
+
 #### 操作按钮及文本样式
 
 :::demo

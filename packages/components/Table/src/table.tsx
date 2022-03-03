@@ -9,7 +9,7 @@ import  Ellipsis from "../../Ellipsis"
 import  WpButton from "../../Button"
 import  Spin from "../../Spin"
 import {CaretUpFilled, CaretDownFilled, FilterFilled, EditFilled, CloseSquareFilled, UnorderedListOutlined}  from "@vicons/antd"
-import {get, set}  from "lodash"
+import {get, set, slice} from "lodash"
 import  simpleScroll from "./simpleScroll.js"
 export const tableProps = buildProps({
     columns: {
@@ -595,11 +595,30 @@ export default defineComponent({
                         <CaretDownFilled></CaretDownFilled>
                     }
             </Icon>)
+        const columnLableRenderSchedulingLine = (column)=>{
+            if(Object.prototype.toString.call(column.label) === '[object Array]'){
+                const data = column.label.slice(0,3);
+                return (<div class={{
+                    'wp-table--cell-scheduling-line':true,
+                    [`wp-table--cell-scheduling-line-len-`]:true,
+                }}>
+                    {data.map((label, key)=>(<div class={{
+                        'wp-table--cell-scheduling-line-item':true,
+                        [`wp-table--cell-scheduling-line-item-${key}`]:true,
+                        [`wp-table--cell-scheduling-line-len-${data.length}-item`]:true,
+                        [`wp-table--cell-scheduling-line-len-${data.length}-item-${key}`]:true,
+                    }}><div class={{
+                        'wp-table--cell-scheduling-line-item-label':true,
+                    }}>{label}</div></div>))}
+                </div>)
+            }
+            return column.label;
+        }
         const columnLableRender = (column)=>this.$slots.header?.(column) ||
             (column.search ?
                 <WpInput placeholder={column.placeholder || column.label} clearable onUpdate:modelValue={(v)=>(column.change || (()=>void (0)))(v, column)} modelValue={column.modelValue}></WpInput>
                 :
-                column.number ? (column.label || 'number') : column.label
+                column.number ? (column.label || 'number') : columnLableRenderSchedulingLine(column)
             ) ||
             (column.radio ? '-' :null) ||
             (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={column.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxAll(v)}></Checkbox>) : null)
@@ -635,6 +654,7 @@ export default defineComponent({
                     {item.map((column)=>(
                         <th class={{
                                 "wp-table__cell":true,
+                                "wp-table--cell-scheduling":Object.prototype.toString.call(column.label) === '[object Array]',
                                 [getNameIndex(column.index)]:true,
                             }}
                             style={{
