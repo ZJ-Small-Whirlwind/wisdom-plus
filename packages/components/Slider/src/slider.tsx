@@ -84,18 +84,24 @@ export default defineComponent({
                 transparent var(--wp-slider--percentage, 0%),  transparent
             )
         `
+        
+        const calcPercentage = (percentage: number, extra: string = '') => {
+            const startPoint = 'var(--wp-slider-thumb-width) / 2'
+            const distance = '(100% - var(--wp-slider-thumb-width))'
+            return `calc(${startPoint} + ${distance} * ${percentage / 100} ${extra})`
+        }
 
         const linearGradient = computed(() => {
             if (Array.isArray(data.value)) {
                 return GetLinearGradient(`
-                    transparent,  transparent var(--wp-slider--min-percentage, 0%),
-                    var(--wp-slider-track-active-background) var(--wp-slider--min-percentage, 0%), var(--wp-slider-track-active-background) var(--wp-slider--percentage, 0%),
+                    transparent,  transparent ${calcPercentage(minPercentage.value)},
+                    var(--wp-slider-track-active-background) ${calcPercentage(minPercentage.value)}, var(--wp-slider-track-active-background) ${calcPercentage(percentage.value)},
                 `)
-            } else {
+            } 
                 return GetLinearGradient(`
-                    var(--wp-slider-track-active-background), var(--wp-slider-track-active-background) var(--wp-slider--percentage, 0%),
+                    var(--wp-slider-track-active-background), var(--wp-slider-track-active-background) ${calcPercentage(percentage.value)},
                 `)
-            }
+            
         })
 
         const marksMap = computed(() => {
@@ -106,12 +112,6 @@ export default defineComponent({
                 return Object.entries(props.marks)
             }
         })
-
-        const calcPercentage = (percentage: number, extra: string = '') => {
-            const startPoint = 'var(--wp-slider-thumb-width) / 2'
-            const distance = '(100% - var(--wp-slider-thumb-width))'
-            return `calc(${startPoint} + ${distance} * ${percentage / 100} ${extra})`
-        }
 
         return {
             data,
@@ -147,8 +147,6 @@ export default defineComponent({
                         'wp-slider--range'
                     ]}
                     style={{
-                        '--wp-slider--percentage': `${this.percentage}%`,
-                        '--wp-slider--min-percentage': `${this.minPercentage}%`,
                         '--wp-slider--background-image': this.linearGradient
                     } as CSSProperties}
                     min={this.min}
