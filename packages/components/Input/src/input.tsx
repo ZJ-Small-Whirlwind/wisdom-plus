@@ -31,6 +31,9 @@ export const inputProps = buildProps({
         type: String as PropType<'small' | 'default' | 'medium' | 'large'>,
         default: 'default'
     },
+    min: Number,
+    max: Number,
+    step: Number,
     autofocus: Boolean,
     tabindex: [String, Number],
     name: String,
@@ -74,6 +77,10 @@ export default defineComponent({
             return true
         },
         'clear': (e: Event) => {
+            void e
+            return true
+        },
+        'change': (e: Event) => {
             void e
             return true
         }
@@ -160,6 +167,7 @@ export default defineComponent({
                 name={this.name}
                 onBlur={this.onBlur}
                 onFocus={this.onFocus}
+                onChange={(e) => this.$emit('change', e)}
             />
         ) : (
             <textarea
@@ -178,6 +186,7 @@ export default defineComponent({
                 tabindex={this.tabindex}
                 name={this.name}
                 onBlur={this.onBlur}
+                onChange={(e) => this.$emit('change', e)}
             />
         )
         const Size = this.showWordSize && (
