@@ -64,7 +64,7 @@ export default defineComponent({
             },
             set(value) {
                 if (checkedList) {
-                    if (!props.value) return
+                    if (props.value === undefined) return
                     const index = checkedList.value.indexOf(props.value)
                     if (value) {
                         if (index > -1) return
