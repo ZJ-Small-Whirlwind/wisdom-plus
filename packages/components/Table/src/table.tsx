@@ -540,7 +540,7 @@ export default defineComponent({
         ],()=>{
             resetTbale(props.data, false);
         },{ immediate:true})
-        const getSlots = _default=>_default[0] && (_default[0].type || "").toString().toLowerCase() !== "symbol(comment)" ? _default : null;
+        const getSlots = _default=>(_default || [])[0] && ((_default || [])[0].type || "").toString().toLowerCase() !== "symbol(comment)" ? _default : null;
         return {
             onDragstart,
             onDragend,
