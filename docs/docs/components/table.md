@@ -827,7 +827,7 @@ const select = (...args)=>{
 
 | 参数  | 说明     | 参数                                                 |
 |-----|--------|----------------------------------------------------|
-|  -  | 默认卡槽   | _column_                                           |
+|  -  | 默认卡槽   | _{column, row, spanCell, rowIndex, columnIndex}_                                           |
 |  header  | 表头插槽   | _{ column, row, spanCell, rowIndex, columnIndex }_ |
 |  headerFilter  | 表头过滤插槽 | _{ column, obj, row }_ |
 |  edit  | 编辑插槽   | _{ label,column, row }_ |
