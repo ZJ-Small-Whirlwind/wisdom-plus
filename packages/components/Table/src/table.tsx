@@ -540,6 +540,7 @@ export default defineComponent({
         ],()=>{
             resetTbale(props.data, false);
         },{ immediate:true})
+        const getSlots = _default=>_default[0] && (_default[0].type || "").toString().toLowerCase() !== "symbol(comment)" ? _default : null;
         return {
             onDragstart,
             onDragend,
@@ -569,6 +570,7 @@ export default defineComponent({
             sortClick,
             search,
             remoteDataInit,
+            getSlots,
         }
     },
     mounted() {
@@ -614,7 +616,7 @@ export default defineComponent({
             }
             return column.label;
         }
-        const columnLableRender = (column)=>this.$slots.header?.(column) ||
+        const columnLableRender = (column)=>(this.getSlots)(this.$slots.header?.(column) || []) ||
             (column.search ?
                 <WpInput placeholder={column.placeholder || column.label} clearable onUpdate:modelValue={(v)=>(column.change || (()=>void (0)))(v, column)} modelValue={column.modelValue}></WpInput>
                 :
@@ -642,7 +644,7 @@ export default defineComponent({
                                 row.$$filterShow = v;
                             }
                         }),
-                        this.$slots.headerFilter?.({column, obj, row}) || get(row,column.prop)
+                        this.getSlots(this.$slots.headerFilter?.({column, obj, row})) || get(row,column.prop)
                     ]),
                     index:obj.rowIndex
                 }
@@ -853,13 +855,14 @@ export default defineComponent({
                 }
             </Icon>) : null);
         }
+
         // 快捷编辑
         const cellLabelEditRender = (label,column, row)=>{
             const editValueKeyName = getEditKeyName(column, row);
             if(column.edit && row.$$editValueKeyName === editValueKeyName){
                 const editConfig = Object.prototype.toString.call(column.edit) === '[object Object]' ? column.edit : {};
                 return [
-                    (this.$slots.edit?.({label,column, row, editValueKeyName}) || (<div class={{
+                    (this.getSlots)(this.$slots.edit?.({label,column, row, editValueKeyName}) || (<div class={{
                         'cell-edit-input':true,
                     }}>
                         {cellLabelEditIconRender(column, row,editValueKeyName)}
@@ -935,9 +938,7 @@ export default defineComponent({
                                         treeArrowRender(true,row)
                                     ) : treeArrowRender(false,row))
                                     : null}
-                                {(_default=>{
-                                    return _default[0] && (_default[0].type || "").toString().toLowerCase() !== "symbol(comment)" ? _default : null;
-                                })(this.$slots.default?.({
+                                {(this.getSlots)(this.$slots.default?.({
                                 column, row, spanCell, rowIndex, columnIndex
                                 }) || []) ||
                                     (column.labelFilter ? cellLableRender(column.labelFilter({value:get(row,column.prop),row,column}),column, row) : cellLableRender(get(row,column.prop), column, row)) ||
