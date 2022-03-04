@@ -14,6 +14,26 @@
     &:not(.wp-input--disabled):not(.wp-input--focused):hover {
       border-color: #ccc;
     }
+    &-multiple{
+      .wp-input--element-content{
+        padding: 10px 0;
+        flex-direction: column;
+      }
+      .wp-input--prefix{
+        flex-grow: 1;
+        .wp-space{
+          .wp-tag{
+            background-color: #f4f4f5;
+            color: #333333;
+            border:1px solid #e9e9eb;
+            border-radius: 4px;
+          }
+        }
+      }
+      .wp-input--element{
+        flex: 1;
+      }
+    }
   }
   &-icon{
     transition: all ease-in-out 0.3s;
@@ -56,6 +76,35 @@
       align-items: center;
       &:hover{
         background-color: #eeeeee;
+      }
+      &-group{
+        color: #909399;
+        font-size: 12px;
+        position: relative;
+        &:after {
+          content: "";
+          position: absolute;
+          display: block;
+          left: 15px;
+          right: 15px;
+          top: -2px;
+          height: 1px;
+          background: #e4e7ed;
+        }
+        &:hover{
+          background-color: transparent;
+        }
+      }
+      &+&{
+        margin-top: 4px;
+      }
+      &:first-child{
+        &.wp-select-panel-option-group{
+          &:after{
+            height: 0;
+            background: transparent;
+          }
+        }
       }
       &-disabled{
         color: #c0c4cc;

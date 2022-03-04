@@ -207,20 +207,24 @@ export default defineComponent({
                     'wp-input--focused': this.focused
                 }
             ]}>
-                {
-                    (this.prefix || this.$slots.prefix) && (
-                        <div class="wp-input--prefix">
-                            {
-                                this.$slots.prefix?.() || (
-                                    this.prefix && <Icon>{h(this.prefix)}</Icon>
-                                )
-                            }
-                        </div>
-                    )
-                }
-                <div class="wp-input--element">
-                    {InputElement}
-                    {Size}
+                <div class={{
+                    'wp-input--element-content':true
+                }}>
+                    {
+                        (this.prefix || this.$slots.prefix) && (
+                            <div class="wp-input--prefix">
+                                {
+                                    this.$slots.prefix?.() || (
+                                        this.prefix && <Icon>{h(this.prefix)}</Icon>
+                                    )
+                                }
+                            </div>
+                        )
+                    }
+                    <div class="wp-input--element">
+                        {InputElement}
+                        {Size}
+                    </div>
                 </div>
                 {
                     (this.clearable || (this.showPasswordIcon && this.type === 'password') || this.suffix || this.$slots.suffix) && (

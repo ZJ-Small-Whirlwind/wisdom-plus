@@ -1,9 +1,11 @@
-import {defineComponent, ExtractPropTypes, ref, computed, nextTick} from "vue"
+import {defineComponent, ExtractPropTypes, ref, computed, nextTick, watch} from "vue"
 import {buildProps, definePropType} from "@wisdom-plus/utils/props";
 import {DownOutlined, CheckOutlined} from "@vicons/antd"
 import WpInput from "../../Input"
 import WpIcon from "../../Icon"
 import WpPopover from "../../Popover"
+import WpTag from "../../Tag"
+import WpSpace from "../../Space"
 export const selectProps = buildProps({
     disabled: Boolean,
     options:{
@@ -37,6 +39,14 @@ export const selectProps = buildProps({
     activeIconShow:{
         type:definePropType<boolean>([Boolean]),
         default:true,
+    },
+    multiple:{
+        type:definePropType<boolean>([Boolean]),
+        default:false,
+    },
+    collapseTags:{
+        type:definePropType<boolean>([Boolean]),
+        default:false,
     }
 })
 export type SelectProps = ExtractPropTypes<typeof selectProps>
@@ -48,7 +58,7 @@ export default defineComponent({
         const readonly = ref(true);
         const show = ref(false);
         const input = ref(null);
-        const currentValue = ref(null);
+        const currentValue:any = ref(null);
         const inputChangeValue:any = ref(null);
         /**
          * 扁平化数据
@@ -70,7 +80,15 @@ export default defineComponent({
             })
             return result;
         }
-        const options = computed(()=>flattenDeep(props.options || [],'options').map(e=>{
+        const optionsCopyFlatten = computed(()=>flattenDeep(props.options || [],'options',({item, parent})=>{
+            if(Object.prototype.toString.call(item.value) === '[object Object]'){
+                // 创建唯一id
+                item.value[props.valueName] = item.value[props.valueName] || `${Date.now()}-${Math.random()*10000}-${Math.random()*10000}`;
+                if(parent && Object.prototype.toString.call(parent) === '[object Object]'){
+                    item.value.disabled = (parent && parent.disabled === true ? true : item.value.disabled);
+                }
+            }
+        }).map(e=>{
             if(Object.prototype.toString.call(e) === '[object Object]'){
                 return e;
             }else {
@@ -79,21 +97,62 @@ export default defineComponent({
                 result[props.valueName] = e;
                 return result;
             }
-        }).filter(item=>{
+        }))
+        const options = computed(()=>optionsCopyFlatten.value.filter(item=>{
             return !inputChangeValue.value || item[props.labelName].indexOf(inputChangeValue.value) > -1
         }));
+        const optionsMaps = computed(()=>(optionsCopyFlatten.value || []).reduce((a,b, k)=>{
+            a[b[props.valueName] || k] = b;
+            return a;
+        },{}))
         const placeholder = ref(null)
-        const setModelValue = (value)=>{
+        const setModelValue = (value, isClear:boolean = false, isWatch:boolean = false)=>{
             inputChangeValue.value = null;
             placeholder.value = null;
-            currentValue.value = value;
-            emit('update:modelValue', value);
+            if(props.multiple){
+                value = value || [];
+            }
+            if(props.multiple && !isClear){
+                if(isWatch){
+                    currentValue.value = value;
+                }else {
+                    currentValue.value = currentValue.value || [];
+                    const index = currentValue.value.indexOf(value)
+                    if(index > -1){
+                        currentValue.value.splice(index,1);
+                    }else {
+                        currentValue.value.push(value);
+                    }
+                }
+                emit('update:modelValue', currentValue.value);
+            }else {
+                currentValue.value = value;
+                emit('update:modelValue', value);
+            }
         }
-        const valueStr = computed(()=> (props.options.find(e=>e[props.valueName] === currentValue.value) || {})[props.labelName]);
-        const modelValueStr = computed(()=> (props.options.find(e=>e[props.valueName] === props.modelValue) || {})[props.labelName]);
+        watch(computed(()=>props.modelValue),(value)=>{
+            setModelValue(value, false, true);
+        },{immediate:true})
+        watch(computed(()=>props.options),()=>{
+            setModelValue(null, true, true);
+        })
+        const valueStr = computed(()=> (options.value.find(e=>e[props.valueName] === currentValue.value) || {})[props.labelName]);
+        const modelValueStr = computed(()=> (options.value.find(e=>e[props.valueName] === props.modelValue) || {})[props.labelName]);
+        const currentValueMultipleTags = computed(()=>{
+            if(props.multiple){
+                const result = (currentValue.value || []).map(value=>(optionsMaps.value[value] || {})[props.labelName]);
+                if(props.collapseTags && result.length > 1){
+                    return  result.slice(0,1).concat(["+"+(result.length - 1)]);
+                }else {
+                    return result;
+                }
+            }else{
+                return currentValue.value
+            }
+        });
         const optionClick = ({item, ev})=>{
             nextTick(()=> {
-                if (!item.disabled) {
+                if (!item.disabled && Object.prototype.toString.call(item.options) !== '[object Array]') {
                     show.value = false;
                     setModelValue(item[props.valueName]);
                 }
@@ -101,22 +160,31 @@ export default defineComponent({
         }
         const onClear = (ev)=>{
             show.value = false;
-            setModelValue(null);
+            setModelValue(null, true);
             ev.stopPropagation();
         }
         const onFocus = ()=>{
-            currentValue.value = null;
-            if(props.modelValue){
-                nextTick(()=>{
-                    placeholder.value = modelValueStr.value;
-                })
+            if(props.filterable){
+                if(!props.multiple){
+                    currentValue.value = null;
+                }
+                if(props.modelValue){
+                    nextTick(()=>{
+                        placeholder.value = modelValueStr.value;
+                    })
+                }
             }
         }
         const onBlur = ()=>{
-            if(props.modelValue){
-                placeholder.value = props.placeholder;
-                currentValue.value = props.modelValue;
+            if(props.filterable) {
+                if (props.modelValue) {
+                    placeholder.value = props.placeholder;
+                    currentValue.value = props.modelValue;
+                }
             }
+        }
+        const onTagsClose = (value)=>{
+            setModelValue(value);
         }
         return {
             input,
@@ -131,9 +199,20 @@ export default defineComponent({
             placeholder,
             currentValue,
             inputChangeValue,
+            currentValueMultipleTags,
+            onTagsClose,
         }
     },
     render(){
+        const inputSuffixRender = ()=>(<WpIcon class={{
+            'wp-select-icon': true,
+            'wp-select-show-icon-active': this.show,
+        }}><DownOutlined></DownOutlined></WpIcon>);
+        const inputMultiplePrefixRender = ()=>this.$props.multiple ? (<WpSpace>
+            {(this.currentValueMultipleTags || []).map((value, k)=>(
+                <WpTag closable={!this.$props.collapseTags || (this.$props.collapseTags && k === 0)} onClose={()=>this.onTagsClose(value)}>{value}</WpTag>
+            ))}
+        </WpSpace>) : null;
         const inputRender = ()=>(<div class={{
             'wp-select': true,
             'wp-select-show': this.show,
@@ -152,15 +231,15 @@ export default defineComponent({
                      class={{
                          'wp-select-input': true,
                          'wp-select-show-input': this.show,
+                         'wp-select-input-multiple': this.$props.multiple,
                      }}
                      v-slots={{
-                         suffix: () => (<WpIcon class={{
-                             'wp-select-icon': true,
-                             'wp-select-show-icon-active': this.show,
-                         }}><DownOutlined></DownOutlined></WpIcon>)
+                         prefix:this.$props.multiple ? inputMultiplePrefixRender : null,
+                         suffix: () => inputSuffixRender(),
                      }}>
             </WpInput>
         </div>)
+        const getActive = item=>this.$props.multiple ? (this.currentValue || []).includes(item[this.$props.valueName]) : item[this.$props.valueName] === this.$props.modelValue;
         return this.$props.disabled ? inputRender() :  (<WpPopover
                    v-model={this.show}
                    arrow={false}
@@ -180,11 +259,12 @@ export default defineComponent({
                     }}
                     class={{
                     'wp-select-panel-option': true,
+                    'wp-select-panel-option-group':Object.prototype.toString.call(item.options) === '[object Array]',
                     'wp-select-panel-option-disabled': item.disabled,
-                    'wp-select-panel-option-active': item[this.$props.valueName] === this.$props.modelValue,
+                    'wp-select-panel-option-active': getActive(item),
                 }}>
                     {this.$slots.default?.(item) || item[this.$props.labelName]}
-                    {this.$props.activeIconShow && item[this.$props.valueName] === this.$props.modelValue ? <WpIcon>
+                    {this.$props.activeIconShow &&  getActive(item) ? <WpIcon>
                         <CheckOutlined></CheckOutlined>
                     </WpIcon> : null}
                 </div>))}

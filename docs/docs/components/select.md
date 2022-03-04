@@ -114,6 +114,42 @@ const value = ref('')
 ```
 :::
 
+#### 基础多选
+
+:::demo
+```vue
+<template>
+    <WpSpace>
+        <WpSelect :options="options" v-model="value" clearable multiple filterable></WpSelect>
+        <WpSelect :options="options" v-model="value" clearable multiple></WpSelect>
+        <WpSelect :options="options" v-model="value" clearable multiple collapseTags></WpSelect>
+    </WpSpace>
+</template>
+<script lang="ts" setup>
+import { ref } from 'vue'
+
+const options = ref([{
+    value: '选项1',
+    label: '黄金糕'
+}, {
+    value: '选项2',
+    label: '双皮奶',
+}, {
+    value: '选项3',
+    label: '蚵仔煎'
+}, {
+    value: '选项4',
+    label: '龙须面'
+}, {
+    value: '选项5',
+    label: '北京烤鸭'
+}])
+
+const value = ref(['选项1','选项2','选项3','选项4','选项5']);
+</script>
+```
+:::
+
 #### 分组
 
 :::demo
@@ -135,6 +171,7 @@ const options = ref([{
     }]
 }, {
     label: '城市名',
+    disabled:true,
     options: [{
         value: 'Chengdu',
         label: '成都'
@@ -170,6 +207,8 @@ const value = ref('')
 | filterable | 可搜索 | _boolean_           | false         |
 | placeholder | placeholder默认提示 | _string_           | '请选择'         |
 | activeIconShow | 是否显示选中图标 | _boolean_           | true         |
+| multiple | 是否多选 | _boolean_           | false         |
+| collapseTags | 多选时是否将选中值按文字的形式展示 | _boolean_           | false         |
 
 ### optionItem
 
