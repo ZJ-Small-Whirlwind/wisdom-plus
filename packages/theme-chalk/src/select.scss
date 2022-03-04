@@ -15,23 +15,45 @@
       border-color: #ccc;
     }
     &-multiple{
-      .wp-input--element-content{
-        padding: 10px 0;
-        flex-direction: column;
+      *{
+        user-select: none;
       }
-      .wp-input--prefix{
-        flex-grow: 1;
-        .wp-space{
-          .wp-tag{
-            background-color: #f4f4f5;
-            color: #333333;
-            border:1px solid #e9e9eb;
-            border-radius: 4px;
-          }
-        }
+      .wp-input--element-content{
+        padding: 10px;
+        flex: 1;
       }
       .wp-input--element{
         flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        .wp-tag{
+          background-color: #f4f4f5;
+          color: #333333;
+          border:1px solid #e9e9eb;
+          border-radius: 4px;
+        }
+        .wp-input--field, .wp-input--textarea{
+          width: 50%;
+          display: inline-block;
+        }
+      }
+      &-not-tags{
+        .wp-input--element-content{
+          padding: 0;
+        }
+        .wp-input--element{
+          .wp-input--field, .wp-input--textarea{
+            width: 100%;
+          }
+        }
+      }
+      &-collapse-tags{
+        .wp-input--element{
+          .wp-input--field, .wp-input--textarea{
+            flex: 1;
+          }
+        }
       }
     }
   }

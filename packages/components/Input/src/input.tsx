@@ -222,6 +222,7 @@ export default defineComponent({
                         )
                     }
                     <div class="wp-input--element">
+                        {this.$slots.inputPrefix?.()}
                         {InputElement}
                         {Size}
                     </div>

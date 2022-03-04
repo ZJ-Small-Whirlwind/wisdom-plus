@@ -5,7 +5,6 @@ import WpInput from "../../Input"
 import WpIcon from "../../Icon"
 import WpPopover from "../../Popover"
 import WpTag from "../../Tag"
-import WpSpace from "../../Space"
 export const selectProps = buildProps({
     disabled: Boolean,
     options:{
@@ -106,8 +105,10 @@ export default defineComponent({
             return a;
         },{}))
         const placeholder = ref(null)
-        const setModelValue = (value, isClear:boolean = false, isWatch:boolean = false)=>{
-            inputChangeValue.value = null;
+        const setModelValue = (value, isClear:boolean = false, isWatch:boolean = false, isAppend:boolean = true, index?:any)=>{
+            if(!props.multiple || (props.multiple && !props.filterable)){
+                inputChangeValue.value = null;
+            }
             placeholder.value = null;
             if(props.multiple){
                 value = value || [];
@@ -117,11 +118,15 @@ export default defineComponent({
                     currentValue.value = value;
                 }else {
                     currentValue.value = currentValue.value || [];
-                    const index = currentValue.value.indexOf(value)
-                    if(index > -1){
-                        currentValue.value.splice(index,1);
+                    if(isAppend){
+                        const key = currentValue.value.indexOf(value);
+                        if(key > -1){
+                            currentValue.value.splice(key,1);
+                        }else {
+                            currentValue.value.push(value);
+                        }
                     }else {
-                        currentValue.value.push(value);
+                        currentValue.value.splice(index,1);
                     }
                 }
                 emit('update:modelValue', currentValue.value);
@@ -153,7 +158,9 @@ export default defineComponent({
         const optionClick = ({item, ev})=>{
             nextTick(()=> {
                 if (!item.disabled && Object.prototype.toString.call(item.options) !== '[object Array]') {
-                    show.value = false;
+                    if(!props.multiple){
+                        show.value = false;
+                    }
                     setModelValue(item[props.valueName]);
                 }
             })
@@ -183,8 +190,8 @@ export default defineComponent({
                 }
             }
         }
-        const onTagsClose = (value)=>{
-            setModelValue(value);
+        const onTagsClose = (value, k)=>{
+            setModelValue(value, false, false, false, k);
         }
         return {
             input,
@@ -208,11 +215,11 @@ export default defineComponent({
             'wp-select-icon': true,
             'wp-select-show-icon-active': this.show,
         }}><DownOutlined></DownOutlined></WpIcon>);
-        const inputMultiplePrefixRender = ()=>this.$props.multiple ? (<WpSpace>
-            {(this.currentValueMultipleTags || []).map((value, k)=>(
-                <WpTag closable={!this.$props.collapseTags || (this.$props.collapseTags && k === 0)} onClose={()=>this.onTagsClose(value)}>{value}</WpTag>
-            ))}
-        </WpSpace>) : null;
+        const inputMultiplePrefixRender = ()=>this.$props.multiple ? (
+            (this.currentValueMultipleTags || []).map((value, k)=>(
+                <WpTag closable={!this.$props.collapseTags || (this.$props.collapseTags && k === 0)} onClose={()=>this.onTagsClose(value, k)}>{value}</WpTag>
+            ))
+        ) : null;
         const inputRender = ()=>(<div class={{
             'wp-select': true,
             'wp-select-show': this.show,
@@ -232,9 +239,11 @@ export default defineComponent({
                          'wp-select-input': true,
                          'wp-select-show-input': this.show,
                          'wp-select-input-multiple': this.$props.multiple,
+                         'wp-select-input-multiple-collapse-tags': this.$props.collapseTags,
+                         'wp-select-input-multiple-not-tags': (this.currentValueMultipleTags || []).length === 0,
                      }}
                      v-slots={{
-                         prefix:this.$props.multiple ? inputMultiplePrefixRender : null,
+                         inputPrefix:this.$props.multiple ? inputMultiplePrefixRender : null,
                          suffix: () => inputSuffixRender(),
                      }}>
             </WpInput>

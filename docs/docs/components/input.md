@@ -96,8 +96,9 @@ const SearchIcon = SearchOutlined
 
 ### Slots
 
-| 名称    | 说明     | 参数 |
-| ------- | -------- | --- |
-| prefix | 前缀替换插槽 | - |
-| suffix | 后缀替换插槽 | - |
-| close-icon | 关闭图标插槽 | - |
+| 名称           | 说明      | 参数 |
+|--------------|---------| --- |
+| prefix       | 前缀替换插槽  | - |
+| suffix       | 后缀替换插槽  | - |
+| close-icon   | 关闭图标插槽  | - |
+| input-prefix | 输入框前缀插槽 | - |

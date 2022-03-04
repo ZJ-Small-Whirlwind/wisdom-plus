@@ -123,6 +123,7 @@ const value = ref('')
         <WpSelect :options="options" v-model="value" clearable multiple filterable></WpSelect>
         <WpSelect :options="options" v-model="value" clearable multiple></WpSelect>
         <WpSelect :options="options" v-model="value" clearable multiple collapseTags></WpSelect>
+        <WpSelect :options="options" clearable multiple collapseTags filterable></WpSelect>
     </WpSpace>
 </template>
 <script lang="ts" setup>
