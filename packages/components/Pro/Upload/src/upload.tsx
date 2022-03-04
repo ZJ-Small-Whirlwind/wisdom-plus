@@ -1,6 +1,8 @@
 import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
-import { computed, defineComponent, ExtractPropTypes, PropType, ref } from "vue"
+import { computed, defineComponent, ExtractPropTypes, PropType, ref, watch } from "vue"
+
+import { useFormItem } from '@wisdom-plus/hooks'
 
 export interface FileItem {
     id: number,
@@ -96,6 +98,13 @@ export default defineComponent({
             passive: true,
             deep: true
         })
+
+        const { formItem } = useFormItem({})
+
+        watch(fileItems, () => {
+            formItem?.validate('change')
+        })
+        
         return {
             propsMap,
             fileItems,
