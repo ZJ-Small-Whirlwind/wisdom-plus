@@ -66,8 +66,11 @@ export default defineComponent ({
             }
             if (editor) {
                 editor.txt.html(props.modelValue)
-                formItem?.validate('change')
             }
+        })
+
+        watch(() => props.modelValue, () => {
+            formItem?.validate('change')
         })
 
         // 组件销毁时，也及时销毁编辑器
