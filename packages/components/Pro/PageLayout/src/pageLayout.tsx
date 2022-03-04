@@ -179,11 +179,7 @@ export default defineComponent({
             await Dialog({
                 content: '确定要删除本条记录吗？',
                 confirmProps: {
-                    type: 'danger',
-                    size: 'small'
-                },
-                cancelProps: {
-                    size: 'small'
+                    type: 'danger'
                 }
             })
             if (props.apis.delete) {
@@ -209,11 +205,7 @@ export default defineComponent({
             await Dialog({
                 content: '确定要删除选中的记录吗？',
                 confirmProps: {
-                    type: 'danger',
-                    size: 'small'
-                },
-                cancelProps: {
-                    size: 'small'
+                    type: 'danger'
                 }
             })
             if (props.apis.delete) {
