@@ -68,7 +68,7 @@ export default defineComponent({
             },
             set(value) {
                 if (checkedValue) {
-                    if (!props.value) return
+                    if (props.value === undefined) return
                     checkedValue.value = props.value
                 } else {
                     if (props.value !== undefined) {

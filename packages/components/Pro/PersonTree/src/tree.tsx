@@ -10,6 +10,8 @@ import { WpCheckbox } from '../../../Checkbox'
 import { WpTree, TreeProps, TreeListItemCustom } from '../../../Tree'
 import { SearchOutlined } from '@vicons/antd'
 
+import { useFormItem } from '@wisdom-plus/hooks'
+
 export const proPersonTreeProps = buildProps({
     modelValue: {
         type: Array as PropType<(string | number | symbol)[]>
@@ -82,7 +84,10 @@ export default defineComponent({
             return treeRef.value.getCheckedItems()
         }
 
+        const { formItem } = useFormItem({})
+
         watch(checked, () => {
+            formItem?.validate('change')
             if (props.checkedItems) {
                 const items = getCheckedItems()
                 if (!items) return

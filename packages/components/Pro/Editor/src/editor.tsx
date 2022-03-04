@@ -2,6 +2,7 @@ import { useVModel } from "@vueuse/core"
 import { buildProps } from "@wisdom-plus/utils/props"
 import { defineComponent, onBeforeUnmount, onMounted, PropType, ref, watch } from "vue"
 import E from 'wangeditor'
+import { useFormItem } from '@wisdom-plus/hooks'
 
 export const proEditorProps = buildProps({
     modelValue: String,
@@ -32,6 +33,7 @@ export default defineComponent ({
         let editor: InstanceType<typeof E> | null = null
 
         const changing = ref(false)
+        const { formItem } = useFormItem({})
 
         onMounted(() => {
             editor = new E('#' + editorId)
@@ -65,6 +67,10 @@ export default defineComponent ({
             if (editor) {
                 editor.txt.html(props.modelValue)
             }
+        })
+
+        watch(() => props.modelValue, () => {
+            formItem?.validate('change')
         })
 
         // 组件销毁时，也及时销毁编辑器

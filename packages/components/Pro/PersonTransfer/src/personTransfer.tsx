@@ -12,6 +12,8 @@ import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
 import { ArrowRightOutlined, ArrowLeftOutlined } from '@vicons/antd'
 
+import { useFormItem } from '@wisdom-plus/hooks'
+
 export const proPersonTransfer = buildProps({
     modelValue: {
         type: Array as PropType<TreeListItemCustom[]>
@@ -43,6 +45,14 @@ export default defineComponent({
 
         const choosing = ref<InstanceType<typeof WpProPersonTree> | null>(null)
         const personChoosing = ref<InstanceType<typeof WpProPersonTree> | null>(null)
+
+        const { formItem } = useFormItem({})
+
+        watch(bindPersonsChoosing, () => {
+            formItem?.validate('change')
+        }, {
+            deep: true
+        })
 
         const updateCount = () => {
             nextTick(() => {
