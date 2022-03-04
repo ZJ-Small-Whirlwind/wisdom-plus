@@ -201,6 +201,7 @@ const value = ref('')
 ```vue
 <template>
     <WpSpace>
+        <WpSelect :remote="remote" v-model="value" :options="options" clearable filterable multiple></WpSelect>
         <WpSelect :remote="remote" v-model="value" :options="options" clearable collapseTags filterable multiple></WpSelect>
         <WpSelect :remote="remote" v-model="value2" :options="options" clearable filterable></WpSelect>
     </WpSpace>
@@ -268,7 +269,7 @@ const remote = value=>{
 | activeIconShow | 是否显示选中图标 | _boolean_           | true         |
 | multiple | 是否多选 | _boolean_           | false         |
 | collapseTags | 多选时是否将选中值按文字的形式展示 | _boolean_           | false         |
-| remote | 是否为远程搜索 | _(searchValue:string)=>Promise<optionItem[]>_           | -         |
+| remote | 是否为远程搜索， 必须为可搜索模式 | _(searchValue:string)=>Promise<optionItem[]>_           | -         |
 
 ### optionItem
 

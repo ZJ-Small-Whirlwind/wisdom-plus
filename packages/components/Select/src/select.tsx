@@ -154,7 +154,7 @@ export default defineComponent({
             }
         }
         watch(inputChangeValue,(val)=>{
-            if(val && Object.prototype.toString.call(props.remote) === '[object Function]'){
+            if(val && props.filterable && Object.prototype.toString.call(props.remote) === '[object Function]'){
                 show.value = true;
                 const result:Promise<any> = props.remote(val);
                 if(Object.prototype.toString.call(result) === '[object Promise]'){
@@ -183,8 +183,6 @@ export default defineComponent({
         watch(computed(()=>props.options),()=>{
             setModelValue(null, true, true);
         })
-        // const valueStr = computed(()=> (options.value.find(e=>e[props.valueName] === currentValue.value) || {})[props.labelName]);
-        // const modelValueStr = computed(()=> (options.value.find(e=>e[props.valueName] === props.modelValue) || {})[props.labelName]);
         const valueStr = computed(()=> {
             const res = (optionsMaps.value[currentValue.value] || {})
             return res[props.labelName] || res[props.valueName]
