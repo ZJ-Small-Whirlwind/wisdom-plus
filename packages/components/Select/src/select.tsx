@@ -184,12 +184,12 @@ export default defineComponent({
             setModelValue(null, true, true);
         })
         const valueStr = computed(()=> {
-            const res = (optionsMaps.value[currentValue.value] || {})
+            const res = props.multiple ? {} : (optionsMaps.value[currentValue.value] || {})
             return res[props.labelName] || res[props.valueName]
         });
         const modelValueStr = computed(()=> {
             const res = (optionsMaps.value[props.modelValue] || {})
-            return res[props.labelName] || res[props.valueName]
+            return props.multiple ? {} : res[props.labelName] || res[props.valueName]
         });
         const currentValueMultipleTags = computed(()=>{
             if(props.multiple){
