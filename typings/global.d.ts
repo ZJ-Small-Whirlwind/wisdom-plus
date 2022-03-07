@@ -57,6 +57,7 @@ declare module 'vue' {
     WpSlider: typeof import('wisdom-plus')['WpSlider']
     WpSelect: typeof import('wisdom-plus')['WpSelect']
     WpProCascader: typeof import('wisdom-plus')['WpProCascader']
+    WpProPageLayout: typeof import('wisdom-plus')['WpProPageLayout']
   }
 }
 

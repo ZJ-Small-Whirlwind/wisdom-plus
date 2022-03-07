@@ -143,6 +143,7 @@ export const proFormGenerate = (name = 'WpProForm',Form: Component = WpForm, For
                 <FormRender
                     ref="formRef"
                     validateOnRuleChange={false}
+                    class="wp-pro-form"
                     { ...this.props }
                     model={this.data}
                     rules={this.rulesMap}

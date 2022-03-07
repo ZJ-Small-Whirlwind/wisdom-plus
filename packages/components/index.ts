@@ -66,3 +66,6 @@ export * from './Pro/PersonTree'
 export * from './Pro/PersonTransfer'
 export * from './Pro/PageLayout'
 export * from './Pro/Cascader'
+
+export * from './preset'
+export * from './resolver'

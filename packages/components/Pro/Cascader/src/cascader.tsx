@@ -3,7 +3,8 @@ import {
     computed,
     defineComponent,
     PropType,
-    ExtractPropTypes
+    ExtractPropTypes,
+    watch
 } from 'vue'
 import Draggable from './draggable/src/vuedraggable'
 import WpSpace from '../../../Space'
@@ -142,6 +143,10 @@ export default defineComponent({
 
         const { formItem } = useFormItem({})
 
+        watch(model, () => {
+            formItem?.validate('change')
+        })
+
         const menusDisplay = computed(() => {
             const final: CascaderMenuDisplay[] = []
             const path: unknown[] = []
@@ -166,13 +171,15 @@ export default defineComponent({
                     parent: findResult
                 })
             }
-            const finalIncludes = final[final.length - 1].menus.find(item => activeMenus.value.includes(item[cascaderProps.value.key]))
-            if (finalIncludes) {
-                final.push({
-                    menus: [],
-                    path: [],
-                    parent: finalIncludes
-                })
+            if (props.editable) {
+                const finalIncludes = final[final.length - 1].menus.find(item => activeMenus.value.includes(item[cascaderProps.value.key]))
+                if (finalIncludes) {
+                    final.push({
+                        menus: [],
+                        path: [],
+                        parent: finalIncludes
+                    })
+                }
             }
             return final
         })
@@ -315,7 +322,6 @@ export default defineComponent({
                                                                     setTo(menuItem[this.cascaderProps.children] as CascaderMenu[], false)
                                                                 }
                                                             }
-                                                            this.formItem?.validate('change')
                                                         }}
                                                         onClick={(e: Event) => {
                                                             e.stopPropagation()

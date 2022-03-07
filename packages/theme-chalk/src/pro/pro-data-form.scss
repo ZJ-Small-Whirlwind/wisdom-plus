@@ -1,0 +1,10 @@
+.wp-pro-form {
+    .wp-input,
+    .wp-tag-input,
+    .wp-pro-person-tree,
+    .wp-input-number,
+    .wp-select  {
+        flex: 1;
+        overflow: hidden;
+    }
+}
