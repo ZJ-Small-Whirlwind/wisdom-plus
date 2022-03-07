@@ -46,6 +46,10 @@ export const selectProps = buildProps({
     collapseTags:{
         type:definePropType<boolean>([Boolean]),
         default:false,
+    },
+    remote:{
+        type:definePropType<(value:null)=>object[]>([Function]),
+        default:null,
     }
 })
 export type SelectProps = ExtractPropTypes<typeof selectProps>
@@ -59,6 +63,8 @@ export default defineComponent({
         const input = ref(null);
         const currentValue:any = ref(null);
         const inputChangeValue:any = ref(null);
+        const remoteDatas:any = ref(null);
+        const remoteSelectMapDatas:any = ref({});
         /**
          * 扁平化数据
          * @param bodyCellData
@@ -79,15 +85,18 @@ export default defineComponent({
             })
             return result;
         }
-        const optionsCopyFlatten = computed(()=>flattenDeep(props.options || [],'options',({item, parent})=>{
-            if(Object.prototype.toString.call(item.value) === '[object Object]'){
-                // 创建唯一id
-                item.value[props.valueName] = item.value[props.valueName] || `${Date.now()}-${Math.random()*10000}-${Math.random()*10000}`;
-                if(parent && Object.prototype.toString.call(parent) === '[object Object]'){
-                    item.value.disabled = (parent && parent.disabled === true ? true : item.value.disabled);
+        const propsOptionsSource = computed(()=>{
+            return flattenDeep((props.options || []).concat(remoteDatas.value || []),'options',({item, parent})=>{
+                if(Object.prototype.toString.call(item.value) === '[object Object]'){
+                    // 创建唯一id
+                    item.value[props.valueName] = item.value[props.valueName] || `${Date.now()}-${Math.random()*10000}-${Math.random()*10000}`;
+                    if(parent && Object.prototype.toString.call(parent) === '[object Object]'){
+                        item.value.disabled = (parent && parent.disabled === true ? true : item.value.disabled);
+                    }
                 }
-            }
-        }).map(e=>{
+            });
+        })
+        const optionsCopyFlatten = computed(()=>propsOptionsSource.value.map(e=>{
             if(Object.prototype.toString.call(e) === '[object Object]'){
                 return e;
             }else {
@@ -98,18 +107,27 @@ export default defineComponent({
             }
         }))
         const options = computed(()=>optionsCopyFlatten.value.filter(item=>{
+            if(remoteDatas.value){
+                return item.$$isRemote;
+            }
             return !inputChangeValue.value || item[props.labelName].indexOf(inputChangeValue.value) > -1
         }));
         const optionsMaps = computed(()=>(optionsCopyFlatten.value || []).reduce((a,b, k)=>{
             a[b[props.valueName] || k] = b;
             return a;
-        },{}))
+        }, remoteSelectMapDatas.value || {}))
         const placeholder = ref(null)
         const setModelValue = (value, isClear:boolean = false, isWatch:boolean = false, isAppend:boolean = true, index?:any)=>{
             if(!props.multiple || (props.multiple && !props.filterable)){
                 inputChangeValue.value = null;
             }
             placeholder.value = null;
+            if(isWatch){
+                remoteDatas.value = null;
+            }
+            if(isClear){
+                remoteSelectMapDatas.value = {};
+            }
             if(props.multiple){
                 value = value || [];
             }
@@ -135,17 +153,50 @@ export default defineComponent({
                 emit('update:modelValue', value);
             }
         }
+        watch(inputChangeValue,(val)=>{
+            if(val && props.filterable && Object.prototype.toString.call(props.remote) === '[object Function]'){
+                show.value = true;
+                const result:Promise<any> = props.remote(val);
+                if(Object.prototype.toString.call(result) === '[object Promise]'){
+                    result.then(res=>{
+                        if(Object.prototype.toString.call(res) === '[object Array]'){
+                            remoteDatas.value = res.map(e=>{
+                                e.$$isRemote = true;
+                                return e;
+                            });
+                        }else {
+                            remoteDatas.value = null;
+                        }
+                    }).catch(()=>{
+                        remoteDatas.value = null;
+                    })
+                }else {
+                    remoteDatas.value = null;
+                }
+            }else {
+                remoteDatas.value = null;
+            }
+        })
         watch(computed(()=>props.modelValue),(value)=>{
             setModelValue(value, false, true);
         },{immediate:true})
         watch(computed(()=>props.options),()=>{
             setModelValue(null, true, true);
         })
-        const valueStr = computed(()=> (options.value.find(e=>e[props.valueName] === currentValue.value) || {})[props.labelName]);
-        const modelValueStr = computed(()=> (options.value.find(e=>e[props.valueName] === props.modelValue) || {})[props.labelName]);
+        const valueStr = computed(()=> {
+            const res = props.multiple ? {} : (optionsMaps.value[currentValue.value] || {})
+            return res[props.labelName] || res[props.valueName]
+        });
+        const modelValueStr = computed(()=> {
+            const res = (optionsMaps.value[props.modelValue] || {})
+            return props.multiple ? {} : res[props.labelName] || res[props.valueName]
+        });
         const currentValueMultipleTags = computed(()=>{
             if(props.multiple){
-                const result = (currentValue.value || []).map(value=>(optionsMaps.value[value] || {})[props.labelName]);
+                const result = (currentValue.value || []).map(value=>{
+                    const op = (optionsMaps.value[value] || {})
+                    return op[props.labelName] || op[props.valueName]
+                });
                 if(props.collapseTags && result.length > 1){
                     return  result.slice(0,1).concat(["+"+(result.length - 1)]);
                 }else {
@@ -160,6 +211,9 @@ export default defineComponent({
                 if (!item.disabled && Object.prototype.toString.call(item.options) !== '[object Array]') {
                     if(!props.multiple){
                         show.value = false;
+                    }
+                    if(item.$$isRemote){
+                        remoteSelectMapDatas[item[props.valueName]] = item;
                     }
                     setModelValue(item[props.valueName]);
                 }
@@ -272,7 +326,7 @@ export default defineComponent({
                     'wp-select-panel-option-disabled': item.disabled,
                     'wp-select-panel-option-active': getActive(item),
                 }}>
-                    {this.$slots.default?.(item) || item[this.$props.labelName]}
+                    {this.$slots.default?.(item) || item[this.$props.labelName] || item[this.$props.valueName]}
                     {this.$props.activeIconShow &&  getActive(item) ? <WpIcon>
                         <CheckOutlined></CheckOutlined>
                     </WpIcon> : null}

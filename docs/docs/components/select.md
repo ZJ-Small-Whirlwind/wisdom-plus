@@ -193,6 +193,65 @@ const value = ref('')
 ```
 :::
 
+#### 远程搜索
+
+请输入 123看效果
+
+:::demo
+```vue
+<template>
+    <WpSpace>
+        <WpSelect :remote="remote" v-model="value" :options="options" clearable filterable multiple></WpSelect>
+        <WpSelect :remote="remote" v-model="value" :options="options" clearable collapseTags filterable multiple></WpSelect>
+        <WpSelect :remote="remote" v-model="value2" :options="options" clearable filterable></WpSelect>
+    </WpSpace>
+</template>
+<script lang="ts" setup>
+import { ref } from 'vue'
+const options = ref([{
+    value: '选项1',
+    label: '黄金糕'
+}, {
+    value: '选项2',
+    label: '双皮奶',
+}, {
+    value: '选项3',
+    label: '蚵仔煎'
+}, {
+    value: '选项4',
+    label: '龙须面'
+}, {
+    value: '选项5',
+    label: '北京烤鸭'
+}])
+const value2 = ref(null);
+const value = ref(['选项1','选项2']);
+const remote = value=>{
+    return new Promise(resolve => {
+        resolve(value.split("").map(k=>([
+            {
+                value: 'Chengdu',
+                label: '成都'
+            },
+            {
+                value: 'Shenzhen',
+                label: '深圳'
+            },
+            {
+                value: 'Guangzhou',
+                label: '广州'
+            },
+            {
+                value: 'Dalian',
+                label: '大连'
+            }
+        ])[k]).filter(e=>e))
+    })
+}
+</script>
+```
+:::
+
 ## API
 
 ### Props
@@ -210,6 +269,7 @@ const value = ref('')
 | activeIconShow | 是否显示选中图标 | _boolean_           | true         |
 | multiple | 是否多选 | _boolean_           | false         |
 | collapseTags | 多选时是否将选中值按文字的形式展示 | _boolean_           | false         |
+| remote | 是否为远程搜索， 必须为可搜索模式 | _(searchValue:string)=>Promise<optionItem[]>_           | -         |
 
 ### optionItem
 
