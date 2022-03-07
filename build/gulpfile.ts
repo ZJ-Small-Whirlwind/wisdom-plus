@@ -14,6 +14,8 @@ export const copyFiles = () => {
   const copyTypings = async () => {
     const src = path.resolve(projRoot, 'typings', 'global.d.ts')
     await run(`cp ${src} ${epOutput}`)
+    const src2 = path.resolve(projRoot, 'typings', 'global-var.d.ts')
+    await run(`cp ${src2} ${epOutput}`)
   }
 
   return Promise.all([
