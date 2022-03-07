@@ -4,7 +4,6 @@ import { computed, defineComponent, ExtractPropTypes, PropType, ref, watch } fro
 
 import { WpOverlay, OverlayProps } from '../../Overlay'
 import { WpIcon } from '../../Icon'
-import { WpImage } from '../../Image'
 import { CloseCircleOutlined, RightCircleOutlined, LeftCircleOutlined, RedoOutlined, UndoOutlined, ZoomInOutlined, ZoomOutOutlined } from '@vicons/antd'
 
 export interface PreviewImage {
@@ -115,7 +114,7 @@ export default defineComponent({
                     }}>
                         {
                             this.currentImage && (
-                                <WpImage src={this.currentImage.src} onDblclick={() => {
+                                <img src={this.currentImage.src} onDblclick={() => {
                                     if (this.transform.scale !== 1) {
                                         this.transform.scale = 1
                                     } else {
