@@ -1,38 +1,31 @@
-import {defineComponent, computed, ref, watch} from 'vue'
-import {Icon} from 'vant'
+import {defineComponent, computed, ref, watch, PropType, ExtractPropTypes} from 'vue'
 import CalendarData from 'lunar-calendar-panel'
 import dayjs from 'dayjs'
-import  '@/assets/less/Calendar.less'
+import {buildProps} from "@wisdom-plus/utils/props";
+import Icon from "../../Icon";
+import {ArrowLeftOutlined, ArrowRightOutlined} from "@vicons/antd";
+export const calendarProps = buildProps({
+    /**
+     * 获取事件状态
+     */
+    getIsEvent:{
+        type: Function as PropType<(day:any) => boolean>,
+        default: ()=>()=>false
+    }
+})
 
+export type CalendarProps = ExtractPropTypes<typeof calendarProps>
 export default defineComponent({
-    props:{
-        /**
-         * 获取事件状态
-         */
-        getIsEvent:{type:Function, default:Function}
-    },
-    setup({getIsEvent}, {
-        emit,
-        expose
-    }) {
+    name:"WpCalendar",
+    props:calendarProps,
+    setup({getIsEvent}, {emit}) {
         const currentData:dayjs.Dayjs = dayjs()
         const year = ref(currentData.year())
         const month = ref(currentData.month() + 1)
         const date = ref(currentData.date())
-        const cd = new CalendarData()
-        expose({
-            year,
-            month,
-            date
-        })
-        /**
-         * 星期头
-         */
-        const daysHeader = ['日','一','二','三','四','五','六'].map(e => (
-            <div class={'calendar-tsx-content-day-header'}>
-                <span>{e}</span>
-            </div>
-        ))
+        const cd = new CalendarData();
+
+        const days = computed(()=>cd.returnDate(year.value, month.value))
 
         /**
          * 监听日期变化
@@ -49,22 +42,6 @@ export default defineComponent({
             month.value = e.dateMonth
             date.value = e.day
         }
-
-        /**
-         * 具体日期
-         */
-        const days = computed(() => {
-            return cd.returnDate(year.value, month.value).map(e => (
-                <div class={`calendar-tsx-content-day ${e.type}`}>
-                    <span  onClick={() => clickDays(e)} class={
-                        [
-                            e.dateYear == year.value && e.dateMonth == month.value && e.day == date.value ? 'isActive' : null,
-                            (getIsEvent || new Function)(e) ? 'isEvent' : null,
-                        ].join(' ')
-                    }>{e.day}</span>
-                </div>
-            ))
-        })
 
         /**
          * 年月
@@ -116,14 +93,49 @@ export default defineComponent({
             })
         }
 
-        return () => (
-            <div class={'calendar-tsx'}>
-                <div class={'calendar-tsx-header'}>
-                    <Icon class={'calendar-tsx-header-icon'} name={'arrow-left'} onClick={prevMonth}></Icon>
-                    <div class={'calendar-tsx-header-title'} onClick={herderTitleClick}>{title_str.value}</div>
-                    <Icon class={'calendar-tsx-header-icon'} name={'arrow'} onClick={nextMonth}></Icon>
+        return {
+            herderTitleClick,
+            title_str,
+            days,
+            clickDays,
+            prevMonth,
+            nextMonth,
+            year,
+            month,
+            date
+        }
+    },
+    render(){
+        /**
+         * 具体日期
+         */
+        const daysRender = ()=> this.days.map(e => (
+            <div class={`wp-calendar-content-day ${e.type}`}>
+                <span  onClick={() => this.clickDays(e)} class={{
+                    isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
+                    isEvent:this.$props.getIsEvent(e),
+                }}>{e.day}</span>
+            </div>
+        ))
+        /**
+         * 星期头
+         */
+        const daysHeaderRender = ()=>['日','一','二','三','四','五','六'].map(e => (
+            <div class={'wp-calendar-content-day-header'}>
+                <span>{e}</span>
+            </div>
+        ))
+        return (
+            <div class={'wp-calendar'}>
+                <div class={'wp-calendar-header'}>
+                    <Icon class={'wp-calendar-header-icon'} name={'arrow-left'} onClick={this.prevMonth}><ArrowLeftOutlined></ArrowLeftOutlined></Icon>
+                    <div class={'wp-calendar-header-title'} onClick={this.herderTitleClick}>{this.title_str}</div>
+                    <Icon class={'wp-calendar-header-icon'} name={'arrow'} onClick={this.nextMonth}><ArrowRightOutlined></ArrowRightOutlined></Icon>
                 </div>
-                <div class={'calendar-tsx-content'}>{daysHeader.concat(days.value)}</div>
+                <div class={'wp-calendar-content'}>
+                    {daysHeaderRender()}
+                    {daysRender()}
+                </div>
             </div>
         )
     }

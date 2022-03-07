@@ -36,6 +36,7 @@ importers:
       gulp: ^4.0.2
       gulp-typescript: ^6.0.0-alpha.1
       lodash: ^4.17.21
+      lunar-calendar-panel: ^0.0.5
       memoize-one: ^6.0.0
       normalize-wheel-es: ^1.1.1
       rimraf: ^3.0.2
@@ -78,6 +79,7 @@ importers:
       async-validator: 4.0.7
       dayjs: 1.10.7
       lodash: 4.17.21
+      lunar-calendar-panel: 0.0.5
       memoize-one: 6.0.0
       normalize-wheel-es: 1.1.1
       sortablejs: 1.14.0
@@ -4883,6 +4885,10 @@ packages:
     dependencies:
       yallist: 4.0.0
     dev: true
+
+  /lunar-calendar-panel/0.0.5:
+    resolution: {integrity: sha512-9xEmHlGfmJXSmf6DXI1K8Qgm5gFgGZNfZgnmgO/F7UhV5vyFtDOiQxLfR4QqcvidJabRhe+7RUwAIde3+8U+7Q==}
+    dev: false
 
   /magic-string/0.25.7:
     resolution: {integrity: sha512-4CrMT5DOHTDk4HYDlzmwu4FVCcIYI8gauveasrdCu2IKIFOJ3f0v/8MDGJCDL9oD2ppz/Av1b0Nj345H9M+XIA==}

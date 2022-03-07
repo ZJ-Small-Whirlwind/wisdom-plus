@@ -19,9 +19,11 @@ app.use(WpCalendar)
 #### 基础用法
 
 :::demo
+
 ```vue
 <template>
-    <WpCalendar></WpCalendar>
+    <wp-calendar ref="calendar"></wp-calendar>
 </template>
 ```
+
 :::
