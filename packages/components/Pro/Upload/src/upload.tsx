@@ -52,6 +52,18 @@ export default defineComponent({
         'update:modelValue': (value: (FileItem & UploadFile)[]) => {
             void value
             return true
+        },
+        'success': (file: UploadFile) => {
+            void file
+            return true
+        },
+        'error': (file: UploadFile) => {
+            void file
+            return true
+        },
+        'finished': (files: UploadFile[]) => {
+            void files
+            return true
         }
     },
     setup(props, { emit }) {
@@ -63,18 +75,21 @@ export default defineComponent({
         })
 
         const handleUpload = async(files: UploadFile[]) => {
-            files.forEach(async(file) => {
-                if (!file.file) return
+            for (const file of files) {
+                if (!file.file) continue
                 try {
                     const res = await props.api?.upload?.(file.file, props.extra, progress => {
                         file.progress = progress
                     })
                     Object.assign(file, res.data)
                     file.status = 0
+                    emit('success', file)
                 } catch {
                     file.status = 3
+                    emit('error', file)
                 }
-            })
+            }
+            emit('finished', files)
         }
 
         const handleDelete = async(file: UploadFile, initiative?: boolean) => {

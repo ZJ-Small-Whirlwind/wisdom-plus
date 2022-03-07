@@ -13,5 +13,6 @@ declare module 'vue' {
     onTouchstart?: EventHandler;
     onTouchcancel?: EventHandler;
     onKeydown?: EventHandler;
+    onDblclick?: EventHandler;
   }
 }

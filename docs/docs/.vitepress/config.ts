@@ -38,6 +38,10 @@ export default defineConfig({
                         {
                             text: 'PageLayout 页面脚手架',
                             link: '/components/pro/page-layout'
+                        },
+                        {
+                            text: 'Cascader 级联菜单',
+                            link: '/components/pro/cascader'
                         }
                     ]
                 },

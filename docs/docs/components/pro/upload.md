@@ -224,6 +224,9 @@ const handleUpload = filterFiles => {
 | update:modelValue      | 文件列表更新，若 `modelValue` 的值为 `undefined`，则该值也无效 | _(files: FileItem[] \| UploadFile[]) => void_                 | -     |
 | itemClick | 列表项点击事件                                   | _(e: Event, value: UploadFile) => void_         | - |
 | handleIconClick | 文件状态icon点击事件️️                           | _(file: UploadFile, index: number, status:number) => void_ | - |
+| success | 单个文件上传成功的回调                                   | _(file: UploadFile) => void_         | - |
+| error | 单个文件上传失败的回调                                   | _(file: UploadFile) => void_         | - |
+| finished | 一批文件上传成功的回调                                   | _(files: UploadFile[]) => void_         | - |
 
 ### Slots
 
