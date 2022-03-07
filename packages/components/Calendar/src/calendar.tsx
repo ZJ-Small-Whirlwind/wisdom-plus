@@ -10,7 +10,7 @@ export const calendarProps = buildProps({
      */
     getIsEvent:{
         type: Function as PropType<(day:any) => boolean>,
-        default: ()=>()=>false
+        default: ()=>false
     }
 })
 
