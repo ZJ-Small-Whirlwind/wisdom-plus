@@ -938,9 +938,12 @@ export default defineComponent({
                                         treeArrowRender(true,row)
                                     ) : treeArrowRender(false,row))
                                     : null}
-                                {(this.getSlots)(this.$slots.default?.({
-                                column, row, spanCell, rowIndex, columnIndex
-                                }) || []) ||
+                                {(this.getSlots)(
+                                    this.$slots[`table-${column.prop}`]?.({ column, row, spanCell, rowIndex, columnIndex }) ||
+                                    this.$slots.default?.({
+                                        column, row, spanCell, rowIndex, columnIndex
+                                    }
+                                ) || []) ||
                                     (column.labelFilter ? cellLableRender(column.labelFilter({value:get(row,column.prop),row,column}),column, row) : cellLableRender(get(row,column.prop), column, row)) ||
                                     (column.radio ? (<WpRadio onClick={ev=>ev.stopPropagation()} v-model={this.radioValue} border-radius="0" value={String(rowIndex)}></WpRadio>) : null) ||
                                     (column.checkbox ? (<Checkbox onClick={ev=>ev.stopPropagation()} v-model={row.$$checkboxValue} onUpdate:modelValue={v=>this.CheckboxRow(v, rowIndex, column, true)}></Checkbox>) : null)

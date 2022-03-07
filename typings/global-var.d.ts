@@ -58,6 +58,7 @@ declare global {
     const WpProPageLayout: typeof import('wisdom-plus')['WpProPageLayout']
     const WpInput: typeof import('wisdom-plus')['WpInput']
     const WpInputNumber: typeof import('wisdom-plus')['WpInputNumber']
+    const WpTable: typeof import('wisdom-plus')['WpTable']
 }
 
 export {}

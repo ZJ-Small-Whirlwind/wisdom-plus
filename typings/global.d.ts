@@ -60,6 +60,7 @@ declare module 'vue' {
     WpProPageLayout: typeof import('wisdom-plus')['WpProPageLayout']
     WpInput: typeof import('wisdom-plus')['WpInput']
     WpInputNumber: typeof import('wisdom-plus')['WpInputNumber']
+    WpTable: typeof import('wisdom-plus')['WpTable']
   }
 }
 
