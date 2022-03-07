@@ -6,3 +6,4 @@ export default WpDropdown
 
 export { dropdownProps } from './src/dropdown'
 export type { DropdownProps } from './src/dropdown'
+export * from './src/typings'

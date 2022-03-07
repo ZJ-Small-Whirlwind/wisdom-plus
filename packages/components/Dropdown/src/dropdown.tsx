@@ -1,4 +1,4 @@
-import { ref, computed, defineComponent, ExtractPropTypes, PropType, provide, toRefs } from 'vue'
+import { ref, computed, defineComponent, ExtractPropTypes, PropType, provide } from 'vue'
 
 import { buildProps } from '@wisdom-plus/utils/props'
 import Popover, { PopoverProps, PopoverPlacement } from '../../Popover'
@@ -45,7 +45,11 @@ export default defineComponent({
     props: dropdownProps,
     emits: {
         'update:modelValue': (value: boolean) => typeof value === 'boolean',
-        'click': null
+        'click': (record: DropdownRecord, attrs: any) => {
+            void record
+            void attrs
+            return true
+        }
     },
     setup(props, { slots, emit, attrs }) {
         const showRef = ref(false)
@@ -66,7 +70,7 @@ export default defineComponent({
         provide('wp-popover-close', () => {
             show.value = false
         })
-        provide('wp-dropdown-click', (record?: DropdownRecord, attrs?:any,ev?:any) => {
+        provide('wp-dropdown-click', (record: DropdownRecord, attrs?:any,ev?:any) => {
             emit('click', record, attrs)
         })
         provide('wp-dropdown-parent-slot', slots)
