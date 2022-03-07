@@ -46,6 +46,7 @@ importers:
       rollup-plugin-vue: ^6.0.0
       rollup-plugin-vue-jsx-compat: ^0.0.6
       sass: 1.49.9
+      sortablejs: ^1.14.0
       spark-md5: ^3.0.2
       sucrase: ^3.20.3
       ts-morph: ^13.0.2
@@ -56,7 +57,6 @@ importers:
       vue-jest: 5.0.0-alpha.10
       vue-router: 4.0.12
       vue-tsc: 0.29.6
-      vuedraggable: 4.1.0
       vueuc: ^0.4.19
       wangeditor: ^4.7.12
     dependencies:
@@ -80,9 +80,9 @@ importers:
       lodash: 4.17.21
       memoize-one: 6.0.0
       normalize-wheel-es: 1.1.1
+      sortablejs: 1.14.0
       spark-md5: 3.0.2
       vdirs: 0.1.7_vue@3.2.23
-      vuedraggable: 4.1.0_vue@3.2.23
       vueuc: 0.4.19_89e7ec3258896f4bc2944cafca047175
       wangeditor: 4.7.12
     devDependencies:
@@ -7666,15 +7666,6 @@ packages:
       '@vue/server-renderer': 3.2.31_vue@3.2.31
       '@vue/shared': 3.2.31
     dev: true
-
-  /vuedraggable/4.1.0_vue@3.2.23:
-    resolution: {integrity: sha512-FU5HCWBmsf20GpP3eudURW3WdWTKIbEIQxh9/8GE806hydR9qZqRRxRE3RjqX7PkuLuMQG/A7n3cfj9rCEchww==}
-    peerDependencies:
-      vue: ^3.0.1
-    dependencies:
-      sortablejs: 1.14.0
-      vue: 3.2.23
-    dev: false
 
   /vueuc/0.4.19_89e7ec3258896f4bc2944cafca047175:
     resolution: {integrity: sha512-mzhYwv60cldElLolvG5sMsDFNMP1+vQbxPnbWzT2BdIG6XfF0hzCxq0KMoYpg4cAekKijty2txRgNkySIjTWLA==}

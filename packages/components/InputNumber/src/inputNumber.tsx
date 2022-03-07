@@ -71,11 +71,11 @@ export default defineComponent({
         const valueRef = ref<number>()
         const model = useAutoControl(valueRef, props, 'modelValue', emit)
 
-        const value = ref(model.value)
+        const value = ref(model.value || '')
 
         watch(model, () => {
             if (model.value === undefined) {
-                value.value = undefined
+                value.value = ''
                 return
             }
             if (props.max && model.value > props.max) model.value = props.max
@@ -89,9 +89,9 @@ export default defineComponent({
             e.preventDefault()
             if (props.readonly || props.disabled) return
             if (add) {
-                value.value = (value.value || 0) + props.step
+                value.value = Number(value.value || 0) + props.step
             } else {
-                value.value = (value.value || 0) - props.step
+                value.value = Number(value.value || 0) - props.step
             }
             model.value = value.value
         }
@@ -139,18 +139,18 @@ export default defineComponent({
                     onBlur={e => this.$emit('blur', e)}
                     onFocus={e => this.$emit('focus', e)}
                     onChange={e => {
-                        const delta = (this.value || 0) - (this.model || 0)
+                        const delta = Number(this.value || 0) - (this.model || 0)
                         if (this.precision !== undefined) {
-                            this.value = Number((this.value || 0).toFixed(this.precision))
+                            this.value = Number(Number(this.value || 0).toFixed(this.precision))
                         }
                         if (!this.stepStrictly || delta % this.step === 0) {
-                            this.model = this.value
+                            this.model = Number(this.value || 0)
                             this.$emit('change', e)
                         } else if (delta !== 0) {
-                            const valueMore = (this.value || 0) + this.step - delta % this.step
-                            const valueLess = (this.value || 0) - this.step - delta % this.step
-                            const deltaMore = Math.abs(valueMore - (this.value || 0))
-                            const deltaLess = Math.abs(valueLess - (this.value || 0))
+                            const valueMore = Number(this.value || 0) + this.step - delta % this.step
+                            const valueLess = Number(this.value || 0) - this.step - delta % this.step
+                            const deltaMore = Math.abs(valueMore - Number(this.value || 0))
+                            const deltaLess = Math.abs(valueLess - Number(this.value || 0))
                             if (deltaMore >= deltaLess) {
                                 this.value = valueLess
                             } else {

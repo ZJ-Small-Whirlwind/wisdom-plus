@@ -5,7 +5,7 @@ import {
     PropType,
     ExtractPropTypes
 } from 'vue'
-import Draggable from 'vuedraggable'
+import Draggable from './draggable/src/vuedraggable'
 import WpSpace from '../../../Space'
 import WpRadio from '../../../Radio'
 import WpIcon from '../../../Icon'
