@@ -5,6 +5,7 @@ import WpInput from "../../Input"
 import WpIcon from "../../Icon"
 import WpPopover from "../../Popover"
 import WpTag from "../../Tag"
+import { useFormItem } from "@wisdom-plus/hooks";
 export const selectProps = buildProps({
     disabled: Boolean,
     options:{
@@ -117,6 +118,7 @@ export default defineComponent({
             return a;
         }, remoteSelectMapDatas.value || {}))
         const placeholder = ref(null)
+        const { formItem } = useFormItem({})
         const setModelValue = (value, isClear:boolean = false, isWatch:boolean = false, isAppend:boolean = true, index?:any)=>{
             if(!props.multiple || (props.multiple && !props.filterable)){
                 inputChangeValue.value = null;
@@ -152,6 +154,7 @@ export default defineComponent({
                 currentValue.value = value;
                 emit('update:modelValue', value);
             }
+            formItem?.validate('change')
         }
         watch(inputChangeValue,(val)=>{
             if(val && props.filterable && Object.prototype.toString.call(props.remote) === '[object Function]'){
