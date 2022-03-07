@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { WpInput, WpCheckbox, WpInputNumber } from '@wisdom-plus/components'
+import { WpInput, WpCheckbox, WpInputNumber, WpProCascader } from '@wisdom-plus/components'
 </script>
 
 # Form 数据表单
@@ -45,7 +45,9 @@ app.use(WpProForm)
 import { ref } from 'vue'
 
 const formRef = ref<any>(null)
-const formData = ref({})
+const formData = ref({
+    title: 'defaultTitle'
+})
 
 const schemas = [
     {
@@ -69,6 +71,35 @@ const schemas = [
         component: WpCheckbox,
         grid: {
             span: 12
+        },
+        required: true
+    },
+    {
+        prop: 'title4',
+        label: '父级',
+        component: WpProCascader,
+        componentProps: {
+            preset: 'compact',
+            editable: false,
+            menus: [
+                {
+                    name: 'test'
+                },
+                {
+                    name: 'test22',
+                    children: [
+                        {
+                            name: 'test223434',
+                            children: [
+                                {
+                                    name: 'test2234345'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            useRadio: true
         },
         required: true
     }

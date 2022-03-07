@@ -66,8 +66,16 @@
         transition: transform 0.5s;
     }
     &-compact {
+        border-radius: 4px;
+        border: 1px solid #dcdfe6;
+        overflow: auto;
+        line-height: 1.5;
+        height: 200px;
+        background-color: #fff;
         .wp-pro-cascader--list {
-            width: 250px;
+            box-shadow: none;
+            width: 220px;
+            min-height: 100%;
             &:not(:last-child) {
                 border-right: 1px solid #eee;
                 margin-right: 0;
