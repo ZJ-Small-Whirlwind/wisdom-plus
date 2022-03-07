@@ -170,6 +170,15 @@
             border-radius: var(--wp-slider-tip-border-radius);
         }
     }
+    &--disabled {
+        opacity: .6;
+        cursor: not-allowed;
+        .wp-slider--range {
+            pointer-events: none;
+            &::-webkit-slider-thumb { pointer-events: none; }
+            &::-moz-range-thumb { pointer-events: none; }
+        }
+    }
     .wp-slider--range:active + &--tip {
         opacity: 1;
     }

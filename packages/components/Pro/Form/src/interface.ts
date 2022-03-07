@@ -3,7 +3,7 @@ import type { GridItemProps } from '../../../GridItem'
 import type { FormItemProps } from '../../../Form'
 
 export type ColumnSchema = FormItemProps
-export type Schema<T extends string | object = string> = ColumnSchema & {
+export type Schema<T extends string | object = string> = Partial<ColumnSchema> & {
     prop: T extends string ? T : keyof T,
     label?: string,
     required?: boolean,

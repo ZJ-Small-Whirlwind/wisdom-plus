@@ -22,7 +22,7 @@ app.use(WpProPageLayout)
 ```vue
 <template>
     <div style="background-color: #f5f5f5; padding: 20px;">
-        <wp-pro-page-layout v-model:data="data" :table="{ columns }" :total="data.length" />
+        <wp-pro-page-layout v-model:data="data" :table="{ columns }" :total="data.length"/>
     </div>
 </template>
 <script lang="ts" setup>

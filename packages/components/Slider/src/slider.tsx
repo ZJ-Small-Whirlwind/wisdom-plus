@@ -1,3 +1,4 @@
+import { useFormItem } from '@wisdom-plus/hooks'
 import { buildProps } from '@wisdom-plus/utils/props'
 import { useAutoControl } from '@wisdom-plus/utils/use-control'
 import { addUnit } from '@wisdom-plus/utils/util'
@@ -28,6 +29,8 @@ export const sliderProps = buildProps({
     marks: {
         type: [Object, Array] as PropType<Record<number, string> | number[]>
     },
+    disabled: Boolean,
+    range: Boolean,
     showTip: Boolean
 })
 export type SliderProps = ExtractPropTypes<typeof sliderProps>
@@ -54,24 +57,34 @@ export default defineComponent({
         const percentage = computed(() => getPercentage(data.value))
         const minPercentage = computed(() => getPercentage(data.value, 'min'))
 
+        const { formItem } = useFormItem({})
+
         const currentModel = computed({
             get() {
-                return (Array.isArray(data.value) ? data.value[0] : data.value) || 0
+                return (Array.isArray(data.value) || props.range ? data.value?.[0] : data.value) || 0
             },
             set(value: number) {
-                if (Array.isArray(data.value)) {
+                if (props.disabled) return
+                if (Array.isArray(data.value) || props.range) {
+                    if (!Array.isArray(data.value)) data.value = [0, 0]
                     data.value[0] = value
                 } else {
                     data.value = Number(value)
                 }
+                formItem?.validate('change')
             }
         })
         const secondModel = computed({
             get() {
-                return (Array.isArray(data.value) ? data.value[1] : 0) || 0
+                return (Array.isArray(data.value) || props.range ? data.value?.[1] : 0) || 0
             },
             set(value: number) {
-                if (Array.isArray(data.value)) data.value[1] = Number(value)
+                if (props.disabled) return
+                if (Array.isArray(data.value) || props.range) {
+                    if (!Array.isArray(data.value)) data.value = [0, 0]
+                    data.value[1] = Number(value)
+                }
+                formItem?.validate('change')
             }
         })
 
@@ -92,16 +105,15 @@ export default defineComponent({
         }
 
         const linearGradient = computed(() => {
-            if (Array.isArray(data.value)) {
+            if (Array.isArray(data.value) || props.range) {
                 return GetLinearGradient(`
                     transparent,  transparent ${calcPercentage(minPercentage.value)},
                     var(--wp-slider-track-active-background) ${calcPercentage(minPercentage.value)}, var(--wp-slider-track-active-background) ${calcPercentage(percentage.value)},
                 `)
             } 
-                return GetLinearGradient(`
-                    var(--wp-slider-track-active-background), var(--wp-slider-track-active-background) ${calcPercentage(percentage.value)},
-                `)
-            
+            return GetLinearGradient(`
+                var(--wp-slider-track-active-background), var(--wp-slider-track-active-background) ${calcPercentage(percentage.value)},
+            `)
         })
 
         const marksMap = computed(() => {
@@ -133,7 +145,8 @@ export default defineComponent({
                     'wp-slider',
                     {
                         'wp-slider--vertical': this.vertical,
-                        'wp-slider--reverse': this.reverse
+                        'wp-slider--reverse': this.reverse,
+                        'wp-slider--disabled': this.disabled
                     }
                 ]}
                 style={{
@@ -155,7 +168,7 @@ export default defineComponent({
                     v-model={this.currentModel}
                 />
                 {
-                    this.showTip && !this.vertical && !Array.isArray(this.data) && (
+                    this.showTip && !this.vertical && !(Array.isArray(this.data) || this.range) && (
                         <div class="wp-slider--tip">
                             <div class="wp-slider--tip--content" style={{
                                 left: !this.vertical && !this.reverse ? this.calcPercentage(this.percentage) : '',
@@ -167,7 +180,7 @@ export default defineComponent({
                     )
                 }
                 {
-                    Array.isArray(this.data) && (
+                    (Array.isArray(this.data) || this.range) && (
                         <div class="wp-slider--second">
                             <input
                                 type="range"
@@ -192,7 +205,7 @@ export default defineComponent({
                                 this.marksMap.map(mark => {
                                     const number = Number(mark[0])
                                     const percentage = this.getPercentage(number)
-                                    const active = !Array.isArray(this.data) ? (
+                                    const active = !(Array.isArray(this.data) || this.range) ? (
                                         percentage > this.percentage ? false : true
                                     ) : (
                                         percentage > this.percentage || percentage < this.minPercentage ? false : true

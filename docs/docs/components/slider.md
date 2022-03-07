@@ -24,9 +24,13 @@ app.use(WpSlider)
     <wp-space vertical>
         <wp-slider v-model="data"/>
         <wp-slider v-model="data" reverse />
+        <wp-slider v-model="data" disabled/>
+        <wp-slider v-model="data" reverse disabled />
         <wp-space>
             <wp-slider v-model="data" vertical :marks="{ 30: '30%', 50: 'middle', 80: '80%' }" />
             <wp-slider v-model="data" vertical reverse :marks="{ 0: '', 30: '30%', 50: 'middle', 80: '80%' }" />
+            <wp-slider v-model="data" vertical :marks="{ 30: '30%', 50: 'middle', 80: '80%' }" disabled />
+            <wp-slider v-model="data" vertical reverse :marks="{ 0: '', 30: '30%', 50: 'middle', 80: '80%' }" disabled />
         </wp-space>
     </wp-space>
 </template>
@@ -41,7 +45,7 @@ const data = ref(60)
 #### 范围选择
 
 :::tip
-开启范围选择的方式很简单，只需要传入一个数组。
+开启范围选择的方式很简单，只需要传入一个数组或显性地指定 range 属性为 true。
 :::
 
 :::demo
@@ -49,10 +53,15 @@ const data = ref(60)
 <template>
     <wp-space vertical>
         <wp-slider v-model="data"/>
+        <wp-slider range/>
         <wp-slider v-model="data" reverse />
+        <wp-slider v-model="data" disabled/>
+        <wp-slider v-model="data" reverse disabled />
         <wp-space>
             <wp-slider v-model="data" vertical />
             <wp-slider v-model="data" vertical reverse />
+            <wp-slider v-model="data" vertical disabled />
+            <wp-slider v-model="data" vertical reverse disabled />
         </wp-space>
     </wp-space>
 </template>
@@ -112,7 +121,9 @@ const data = ref(20)
 | height | 如果是纵向，滚动条的高度     | _number \| string_                                                    | 100     |
 | reverse | 是否翻转       | _boolean_                                                    | false     |
 | marks | 标记       | _Record\<number, string> \| number[]_                                                    | -     |
+| disabled | 是否禁用 | _boolean_ | false |
 | showTip | 是否显示提示 | _boolean_ | false |
+| range | 是否强制开启范围选择 | _boolean_ | false |
 
 ## 定制
 
