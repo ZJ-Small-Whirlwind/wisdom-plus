@@ -124,6 +124,7 @@
     }
     .cell{
       font-size: var(--wp-table-font-size);
+      padding: 10px;
       &.cell-tree-item{
         display: flex;
         align-items: center;
