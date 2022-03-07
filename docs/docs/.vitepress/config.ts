@@ -238,6 +238,10 @@ export default defineConfig({
                         {
                             text: 'Pagination 分页',
                             link: '/components/pagination'
+                        },
+                        {
+                            text: 'Calendar 日历',
+                            link: '/components/calendar'
                         }
                     ]
                 }
