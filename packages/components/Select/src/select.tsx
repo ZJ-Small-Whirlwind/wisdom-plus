@@ -229,7 +229,7 @@ export default defineComponent({
                 if(!props.multiple){
                     currentValue.value = null;
                 }
-                if(props.modelValue){
+                if(props.modelValue && !props.multiple){
                     nextTick(()=>{
                         placeholder.value = modelValueStr.value;
                     })
