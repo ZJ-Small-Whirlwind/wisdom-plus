@@ -1,4 +1,4 @@
-import { computed, defineComponent, ExtractPropTypes, PropType, ref } from "vue"
+import { computed, defineComponent, ExtractPropTypes, PropType, ref, watch } from "vue"
 
 import { CloseOutlined, DownOutlined } from '@vicons/antd'
 import Icon from '../../Icon'
@@ -7,12 +7,18 @@ import TagInput, { tagInputProps, tagInputEmits } from '../../TagInput'
 
 export const basicSelectProps = {
     ...tagInputProps,
-    popoverProps: Object as PropType<Partial<PopoverProps> & Record<any, any>>
+    input: String,
+    popoverProps: Object as PropType<Partial<PopoverProps> & Record<any, any>>,
+    showPopoverWhenDisabled: Boolean
 }
 
 export type BasicSelectProps = ExtractPropTypes<typeof basicSelectProps>
 
-export const basicSelectEmits = tagInputEmits
+export const basicSelectEmits = {
+    'update:input': (value: string) => (void value, true),
+    clear: () => true,
+    ...tagInputEmits
+}
 
 export default defineComponent({
     name: 'WpBasicSelect',
@@ -21,12 +27,20 @@ export default defineComponent({
     setup(props) {
         const show = ref(false)
         const propsMap = computed(() => {
-            const final = {
-                placehoder: '请选择',
+            const final: Partial<BasicSelectProps> = {
                 ...props
             }
             delete final.popoverProps
+            delete final.showPopoverWhenDisabled
             return final
+        })
+
+        const tagInputRef = ref()
+        watch(() => props.input, () => {
+            if (!tagInputRef.value) return
+            tagInputRef.value.toInput(props.input)
+        }, {
+            immediate: true
         })
 
         const hover = ref(false)
@@ -34,7 +48,8 @@ export default defineComponent({
         return {
             hover,
             show,
-            propsMap
+            propsMap,
+            tagInputRef
         }
     },
     render() {
@@ -48,21 +63,30 @@ export default defineComponent({
                 v-slots={{
                     reference: () => (
                         <TagInput
+                            ref="tagInputRef"
                             {...this.propsMap as Partial<BasicSelectProps>}
-                            onFocus={() => {
+                            onClick={() => {
+                                if (this.disabled && !this.showPopoverWhenDisabled) return
                                 this.show = true
+                            }}
+                            onFocus={() => {
+                                if (this.disabled && !this.showPopoverWhenDisabled) return
+                                this.show = true
+                            }}
+                            onInput={e => {
+                                this.$emit('update:input', e)
                             }}
                             onMouseenter={() => this.hover = true}
                             onMouseleave={() => this.hover = false}
                             auto={false}
                             v-slots={{
                                 ...this.$slots,
-                                'closeIcon': ({ clear }: { clear: () => void }) => (
+                                'closeIcon': () => (
                                     <div class="wp-taginput__clear">
                                         <div class="wp-taginput__clear-icon" onClick={e => {
                                             e.stopPropagation()
                                             if (this.clearable && this.hover) {
-                                                clear()
+                                                this.$emit('clear')
                                             } else {
                                                 this.show = !this.show
                                             }

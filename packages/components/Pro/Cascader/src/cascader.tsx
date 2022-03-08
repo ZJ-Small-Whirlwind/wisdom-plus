@@ -4,7 +4,8 @@ import {
     defineComponent,
     PropType,
     ExtractPropTypes,
-    watch
+    watch,
+    nextTick
 } from 'vue'
 import Draggable from './draggable/src/vuedraggable'
 import WpSpace from '../../../Space'
@@ -28,7 +29,7 @@ export interface CascaderMenuDisplay {
     parent?: CascaderMenu;
 }
 
-export interface CascaderProps {
+export interface CascaderItemProps {
     key?: string;
     title?: string;
     children?: string;
@@ -41,7 +42,7 @@ export const proCascaderProps = buildProps({
         type: Array as PropType<CascaderMenu[]>
     },
     props: {
-        type: Object as PropType<CascaderProps>
+        type: Object as PropType<CascaderItemProps>
     },
     dropdownList: {
         type: Array as PropType<DropdownRecord[]>
@@ -84,11 +85,31 @@ export const proCascaderProps = buildProps({
 
 export type ProCascaderProps = ExtractPropTypes<typeof proCascaderProps>
 
-export const cascaderDefaultProps: Required<CascaderProps> = {
+export const cascaderDefaultProps: Required<CascaderItemProps> = {
     key: 'name',
     title: 'title',
     children: 'children',
     disabled: 'disabled'
+}
+
+export const findCascaderItems = (cascaderProps: Required<CascaderItemProps>, key: Set<unknown>, items: CascaderMenu[], menus?: CascaderMenu[]) => {
+    if (!menus || !Array.isArray(menus)) return
+    for (const menu of menus) {
+        if (key.has(menu[cascaderProps.key])) {
+            items.push(menu)
+            key.delete(menu[cascaderProps.key])
+        }
+        if (menu[cascaderProps.children]) {
+            findCascaderItems(cascaderProps, key, items, menu[cascaderProps.children] as CascaderMenu[])
+        }
+    }
+}
+
+export const getCascaderItems = (cascaderProps: Required<CascaderItemProps>, useRadio: boolean, model: unknown, menus?: CascaderMenu[]) => {
+    const key = new Set((useRadio ? [model] : model) as unknown[])
+    const items: CascaderMenu[] = []
+    findCascaderItems(cascaderProps, key, items, menus)
+    return items
 }
 
 export default defineComponent({
@@ -103,6 +124,7 @@ export default defineComponent({
             void value
             return true
         },
+        change: (value: unknown | unknown[]) => ((void value, true)),
         modify: (menuItem: CascaderMenu) => {
             void menuItem
             return true
@@ -147,6 +169,9 @@ export default defineComponent({
 
         watch(model, () => {
             formItem?.validate('change')
+            emit('change', model.value)
+        }, {
+            deep: true
         })
 
         const menusDisplay = computed(() => {
@@ -213,6 +238,10 @@ export default defineComponent({
             return finalList
         })
 
+        const getItems = () => {
+            return getCascaderItems(cascaderProps.value, props.useRadio, model.value, props.menus)
+        }
+
         return {
             activeMenus,
             menusDisplay,
@@ -221,9 +250,11 @@ export default defineComponent({
             dropdownList,
             cascaderProps,
             model,
-            formItem
+            formItem,
+            getItems
         }
     },
+    expose: ['getItems'],
     render() {
         return (
             <div
@@ -289,9 +320,7 @@ export default defineComponent({
                                                         disabled={this.disabled || menuItem[this.cascaderProps.disabled] as boolean}
                                                         modelValue={this.model?.includes(menuItem[this.cascaderProps.key])}
                                                         onUpdate:modelValue={value => {
-                                                            if (!Array.isArray(this.model)) {
-                                                                this.model = []
-                                                            }
+                                                            if (!this.model || !Array.isArray(this.model)) this.model = []
                                                             const index = this.model.indexOf(menuItem[this.cascaderProps.key])
                                                             const setTo = (children: CascaderMenu[], value = true) => {
                                                                 if (!children) return

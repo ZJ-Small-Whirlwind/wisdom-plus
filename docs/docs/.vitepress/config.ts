@@ -141,6 +141,10 @@ export default defineConfig({
                         {
                             text: 'select 选择器',
                             link: '/components/select'
+                        },
+                        {
+                            text: 'Cascader 级联选择器',
+                            link: '/components/cascader'
                         }
                     ]
                 },
