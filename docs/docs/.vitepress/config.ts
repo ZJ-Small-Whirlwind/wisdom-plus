@@ -135,6 +135,10 @@ export default defineConfig({
                             link: '/components/form'
                         },
                         {
+                            text: 'BasicSelect 基础选择器',
+                            link: '/components/basic-select'
+                        },
+                        {
                             text: 'select 选择器',
                             link: '/components/select'
                         }

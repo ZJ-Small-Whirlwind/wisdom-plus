@@ -1,4 +1,4 @@
-import { defineComponent, PropType, ref, ExtractPropTypes, computed, nextTick, CSSProperties } from 'vue'
+import { defineComponent, PropType, ref, ExtractPropTypes, computed, nextTick, CSSProperties, watch } from 'vue'
 
 import { buildProps } from '@wisdom-plus/utils/props'
 import Tag, { TagProps } from '../../Tag'
@@ -58,20 +58,22 @@ export const tagInputProps = buildProps({
 
 export type TagInputProps = ExtractPropTypes<typeof tagInputProps>
 
+export const tagInputEmits = {
+    'update:modelValue': (value: string[]) => Array.isArray(value),
+    'update:input': (value: string) => {
+        void value
+        return true
+    },
+    keydown: (e: KeyboardEvent) => ((void e, true)),
+    input: (e: Event) => ((void e, true)),
+    blur: (e: Event) => ((void e, true)),
+    focus: (e: Event) => ((void e, true))
+}
+
 export default defineComponent({
     name: 'WpTagInput',
     props: tagInputProps,
-    emits: {
-        'update:modelValue': (value: string[]) => Array.isArray(value),
-        'update:input': (value: string) => {
-            void value
-            return true
-        },
-        keydown: (e: KeyboardEvent) => ((void e, true)),
-        input: (e: Event) => ((void e, true)),
-        blur: (e: Event) => ((void e, true)),
-        focus: (e: Event) => ((void e, true))
-    },
+    emits: tagInputEmits,
     setup(props, { slots, emit }) {
         const valueRef = ref<string[]>([])
         const value = useAutoControl(valueRef, props, 'modelValue', emit, {
@@ -90,6 +92,12 @@ export default defineComponent({
         const { focused } = useFocus({
             target: inputRef
         })
+
+        // watch(focused, () => {
+        //     if (focused.value) {
+
+        //     }
+        // })
 
         /**
          * A RegExp to find string to be delimiter.
@@ -268,9 +276,12 @@ export default defineComponent({
                             }}
                             onInput={e => {
                                 emit('input', e)
-                                if (!props.auto) return
                                 const text = (e.target as HTMLDivElement).innerText
                                 active.value = ''
+                                if (!props.auto) {
+                                    inputingTag.value = text
+                                    return
+                                }
                                 if (regExp.value.test(text)) {
                                     inputingTag.value = text.substring(0, text.length - 1)
                                     tagPush()

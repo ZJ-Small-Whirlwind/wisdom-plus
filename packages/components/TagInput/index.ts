@@ -4,5 +4,5 @@ import TagInput from './src/tagInput'
 export const WpTagInput = withInstall(TagInput)
 export default WpTagInput
 
-export { tagInputProps } from './src/tagInput'
+export { tagInputProps, tagInputEmits } from './src/tagInput'
 export type { TagInputProps } from './src/tagInput'
