@@ -132,9 +132,14 @@ export default defineComponent({
             let getWan = (temp) => {
                 let strArr = temp.toString().split("").reverse();
                 let newNum = "";
-                for (var i = 0; i < strArr.length; i++) {
-                    newNum = (i == 0 && strArr[i] == 0 ? "" : (i > 0 && strArr[i] == 0 && strArr[i - 1] == 0 ? "" : changeNum[strArr[i]] + (strArr[i] == 0 ? unit[0] : unit[i]))) + newNum;
+                if(bool){
+                    newNum = strArr.map((e,k)=>k === 0 ? (changeNum[e] === changeNum[0] ? '':changeNum[e]) : unit[e]).reverse()
+                }else {
+                    for (var i = 0; i < strArr.length; i++) {
+                        newNum = (i == 0 && strArr[i] == 0 ? "" : (i > 0 && strArr[i] == 0 && strArr[i - 1] == 0 ? "" : changeNum[strArr[i]] + (strArr[i] == 0 ? unit[0] : unit[i]))) + newNum;
+                    }
                 }
+
                 return newNum;
             }
             let overWan = Math.floor(num / 10000);
