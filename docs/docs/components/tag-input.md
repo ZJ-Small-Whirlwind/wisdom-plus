@@ -103,6 +103,7 @@ const tags = ref<string[]>(['标签1', '标签2', '标签3'])
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | modelValue `v-model`      | 双向绑定的数组       | _string[]_          | -     |
+| input `v-model` | 输入的内容 | _string_ | - |
 | clearable     | 是否显示清空按钮   | _boolean_           | -      |
 | tagProps   | 标签的 Props | _Partial\<TagProps\> & Record\<string, any\>_ | {}      |
 | placeholder  | 未输入时显示的文本       | _string_                                                           | '请输入标签'  |
@@ -116,16 +117,24 @@ const tags = ref<string[]>(['标签1', '标签2', '标签3'])
 | limit | 限制最多可输入的 tag 数量 | _number_ | - |
 | trim | 是否去除两边空格 | _boolean_ | false |
 | keyboardDelete | 是否启用键盘删除 | _boolean_ | true |
+| auto | 是否自动添加标签 | _boolean_ | true |
 
 ### Methods
 
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | update:modelValue      | 双向绑定的数组       | _(value: string[]) => void_          | -     |
+| update:input      | 双向绑定的输入内容       | _(value: string) => void_          | -     |
+| blur | 输入框失去焦点时的事件 | _(e: Event) => void_ | - |
+| focus | 输入框获得焦点时的事件 | _(e: Event) => void_ | - |
+| keydown | 输入框中按下按键的事件 | _(e: KeyboardEvent) => void_ | - |
+| input | 输入框中输入的事件 | _(e: Event) => void_ | - |
 
 ### Slots
 
 | 名称    | 说明     | 参数 |
 | ------- | -------- | --- |
 | tag | 标签插槽 | _tag: string, index: number, active: boolean, close: () => void_ |
-| close-icon | 关闭图标插槽 | - |
+| close-icon | 关闭图标插槽 | _clearable: boolean, clear: () => void_ |
+| prefix | 前置插槽 | - |
+| suffix | 后置插槽 | - |

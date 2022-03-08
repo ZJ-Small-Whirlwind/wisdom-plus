@@ -294,6 +294,7 @@ export default defineComponent({
                                                             }
                                                             const index = this.model.indexOf(menuItem[this.cascaderProps.key])
                                                             const setTo = (children: CascaderMenu[], value = true) => {
+                                                                if (!children) return
                                                                 children.forEach(child => {
                                                                     if (child[this.cascaderProps.disabled]) return
                                                                     const index = this.model.indexOf(child[this.cascaderProps.key])

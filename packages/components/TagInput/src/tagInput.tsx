@@ -16,6 +16,9 @@ export const tagInputProps = buildProps({
         type: Array as PropType<string[]>,
         default: undefined
     },
+    input: {
+        type: String
+    },
     clearable: Boolean,
     tagProps: {
         type: Object as PropType<Partial<TagProps> & Record<string, any>>,
@@ -46,6 +49,10 @@ export const tagInputProps = buildProps({
     keyboardDelete: {
         type: Boolean,
         default: true
+    },
+    auto: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -55,7 +62,15 @@ export default defineComponent({
     name: 'WpTagInput',
     props: tagInputProps,
     emits: {
-        'update:modelValue': (value: string[]) => Array.isArray(value)
+        'update:modelValue': (value: string[]) => Array.isArray(value),
+        'update:input': (value: string) => {
+            void value
+            return true
+        },
+        keydown: (e: KeyboardEvent) => ((void e, true)),
+        input: (e: Event) => ((void e, true)),
+        blur: (e: Event) => ((void e, true)),
+        focus: (e: Event) => ((void e, true))
     },
     setup(props, { slots, emit }) {
         const valueRef = ref<string[]>([])
@@ -63,7 +78,8 @@ export default defineComponent({
             passive: true,
             deep: true
         })
-        const inputingTag = ref('')
+        const inputingTagRef = ref('')
+        const inputingTag = useAutoControl(inputingTagRef, props, 'input', emit)
         const inputRef = ref<HTMLDivElement | null>(null)
 
         const { size, disabled, formItem } = useFormItem({ size: props.size, disabled: props.disabled })
@@ -94,7 +110,7 @@ export default defineComponent({
                 value.value = []
             }
             if (props.trim) {
-                text = text.trim()
+                text = text?.trim() || ''
             }
             if (text && (props.allowRepeat || !value.value.includes(text))) {
                 value.value.push(text)
@@ -186,6 +202,7 @@ export default defineComponent({
                     }
                 }}
             >
+                { slots.prefix?.() }
                 <div class="wp-taginput__content">
                     <Space size={[10, 5]} align="center" { ...props.spaceProps }>
                         {
@@ -246,7 +263,12 @@ export default defineComponent({
                                 '--wp-taginput-placehoder': `'${props.placeholder || ' '}'`,
                                 minWidth: `${props.placeholder.length || 1}em`
                             } as CSSProperties}
-                            onInput={(e) => {
+                            onFocus={e => {
+                                emit('focus', e)
+                            }}
+                            onInput={e => {
+                                emit('input', e)
+                                if (!props.auto) return
                                 const text = (e.target as HTMLDivElement).innerText
                                 active.value = ''
                                 if (regExp.value.test(text)) {
@@ -260,13 +282,17 @@ export default defineComponent({
                                 }
                                 formItem?.validate?.('change')
                             }}
-                            onBlur={() => {
+                            onBlur={e => {
+                                emit('blur', e)
+                                if (!props.auto) return
                                 if (!inputingTag.value) return
                                 tagPush()
                                 formItem?.validate?.('blur')
                             }}
                             contenteditable={!props.readonly && !disabled.value && notLimited.value ? 'true' : 'false'}
                             onKeydown={e => {
+                                emit('keydown', e)
+                                if (!props.auto) return
                                 /**
                                  * press Enter to push a value
                                  */
@@ -295,18 +321,24 @@ export default defineComponent({
                     </Space>
                 </div>
                 {
-                    props.clearable && (value.value?.length || 0) > 0 && !props.readonly && !disabled.value ? (
-                        <div class="wp-taginput__clear">
-                            <div class="wp-taginput__clear-icon" onClick={() => {
-                                value.value = []
-                            }}>
-                                <Icon>
-                                    { slots.closeIcon?.() || <CloseOutlined /> }
-                                </Icon>
+                    slots.closeIcon?.({
+                        clearable: props.clearable && (value.value?.length || 0) > 0 && !props.readonly && !disabled.value,
+                        clear: () => value.value = []
+                    }) ?? (
+                        props.clearable && (value.value?.length || 0) > 0 && !props.readonly && !disabled.value && (
+                            <div class="wp-taginput__clear">
+                                <div class="wp-taginput__clear-icon" onClick={() => {
+                                    value.value = []
+                                }}>
+                                    <Icon>
+                                        <CloseOutlined />
+                                    </Icon>
+                                </div>
                             </div>
-                        </div>
-                    ) : null
+                        )
+                    )
                 }
+                { slots.suffix?.() }
             </div>
         )
     }
