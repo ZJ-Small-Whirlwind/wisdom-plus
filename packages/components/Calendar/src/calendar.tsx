@@ -192,7 +192,7 @@ export default defineComponent({
          */
         const titleRender = ()=>[
             <span onClick={()=>this.showYear = true}>{this.year}年</span>,
-            <span onClick={()=>this.showMonth = true}>{this.month}月</span>,
+            <span onClick={()=>(this.showYear = false, this.showMonth = true)}>{this.month}月</span>,
         ]
 
 
