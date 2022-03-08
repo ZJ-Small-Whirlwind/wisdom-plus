@@ -5,10 +5,8 @@ $unit15:15px;
 .wp-calendar{
   border-radius: 6px;
   overflow: hidden;
-  background-color: #F9F9F9;
   user-select: none;
   &-header{
-    background-color: #FFFFFF;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -16,15 +14,14 @@ $unit15:15px;
     &-icon{
       width: 22px;
       height: 22px;
-      background-color: #8bc4fd;
-      color: #FFFFFF;
+      color: #999999;
       display: flex;
       justify-content: center;
       align-items: center;
       border-radius: 100%;
       cursor: pointer;
       &:hover{
-        background-color:  #0088FF;
+        color:  #0088FF;
       }
     }
     &-title{
@@ -33,9 +30,15 @@ $unit15:15px;
       align-items: center;
       justify-content: center;
       font-size: 18px;
-      font-weight: 400;
-      color: #0088FF;
+      color: #666666;
       line-height: 25px;
+      font-weight: bold;
+      span{
+        &:hover{
+          color: #0088ff;
+          cursor: pointer;
+        }
+      }
     }
   }
   &-content{
@@ -92,10 +95,34 @@ $unit15:15px;
       }
 
       &-header{
-
+          border-bottom: 1px solid #eeeeee;
       }
       &.prev, &.next{
         color: #bababa;
+      }
+    }
+    &-year{
+      span{
+        &:hover{
+          color: #0088FF;
+          cursor: pointer;
+        }
+        &.active{
+          color: #0088FF;
+          font-weight: bold;
+        }
+      }
+    }
+    &-month{
+      span{
+        &:hover{
+          color: #0088FF;
+          cursor: pointer;
+        }
+        &.active{
+          color: #0088FF;
+          font-weight: bold;
+        }
       }
     }
   }
