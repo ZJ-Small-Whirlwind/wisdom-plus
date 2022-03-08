@@ -25,7 +25,7 @@ export default defineComponent({
         const month = ref(currentData.month() + 1)
         const date = ref(currentData.date())
         const showYear = ref(false)
-        const showMonth = ref(false)
+        const showMonth = ref(true)
         const cd = new CalendarData();
 
         const days = computed(()=>cd.returnDate(year.value, month.value))
@@ -125,6 +125,24 @@ export default defineComponent({
         }
     },
     render(){
+        const toChinesNum = (num, bool) => {
+            let changeNum = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+            let unit = ["", "十", "百", "千", "万"];
+            num = parseInt(num);
+            let getWan = (temp) => {
+                let strArr = temp.toString().split("").reverse();
+                let newNum = "";
+                for (var i = 0; i < strArr.length; i++) {
+                    newNum = (i == 0 && strArr[i] == 0 ? "" : (i > 0 && strArr[i] == 0 && strArr[i - 1] == 0 ? "" : changeNum[strArr[i]] + (strArr[i] == 0 ? unit[0] : unit[i]))) + newNum;
+                }
+                return newNum;
+            }
+            let overWan = Math.floor(num / 10000);
+            let noWan:any = num % 10000;
+            if (noWan.toString().length < 4) noWan = "0" + noWan;
+            return overWan ? getWan(overWan) + "万" + getWan(noWan) : getWan(num);
+
+        }
         /**
          * 具体日期
          */
@@ -160,7 +178,7 @@ export default defineComponent({
             }}>
                 <span class={{
                     active:this.month === month
-                }} onClick={()=>(this.month = month, this.showMonth = false)}>{month}月</span>
+                }} onClick={()=>(this.month = month, this.showMonth = false)}>{toChinesNum(month, true)}月</span>
             </div>
         ))
 
