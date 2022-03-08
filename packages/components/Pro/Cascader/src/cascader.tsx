@@ -294,6 +294,7 @@ export default defineComponent({
                                             'wp-pro-cascader--item--active': this.activeMenus.includes(menuItem[this.cascaderProps.key])
                                         }
                                     ]} onClick={() => {
+                                        if (!this.editable && (!menuItem[this.cascaderProps.children])) return
                                         this.activeMenus = [...menuList.path, menuItem[this.cascaderProps.key]]
                                     }}>
                                         <WpSpace size={8} class="wp-pro-cascader--item--text" align={'center'}>

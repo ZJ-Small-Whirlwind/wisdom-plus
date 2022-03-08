@@ -84,6 +84,7 @@ export default defineComponent({
                                 'closeIcon': () => (
                                     <div class="wp-taginput__clear">
                                         <div class="wp-taginput__clear-icon" onClick={e => {
+                                            if (this.disabled && !this.showPopoverWhenDisabled) return
                                             e.stopPropagation()
                                             if (this.clearable && this.hover) {
                                                 this.$emit('clear')

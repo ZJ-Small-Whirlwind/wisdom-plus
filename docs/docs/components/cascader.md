@@ -64,6 +64,7 @@ const menu = ref([
     {
         id: 1,
         name: 'test',
+        title: '测试',
         route: '/'
     },
     {

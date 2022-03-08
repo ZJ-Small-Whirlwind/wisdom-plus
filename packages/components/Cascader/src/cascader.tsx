@@ -4,6 +4,7 @@ import { ref, computed, defineComponent, ExtractPropTypes, watch, onMounted } fr
 import ProCascader, { proCascaderProps, cascaderDefaultProps, getCascaderItems } from "../../Pro/Cascader"
 import BasicSelect, { basicSelectProps } from "../../BasicSelect"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
+import { useFormItem } from "@wisdom-plus/hooks"
 
 export const cascaderProps = buildProps({
     modelValue: null,
@@ -52,6 +53,8 @@ export default defineComponent({
             }
         })
 
+        const { formItem } = useFormItem({})
+
         const updateValue = () => {
             const items = getCascaderItems(cascaderProps.value, !props.multiple, model.value, props.menus)
             if (props.multiple) {
@@ -66,6 +69,7 @@ export default defineComponent({
                 }
                 input.value = String((item as Record<any, unknown>)[cascaderProps.value.title] || (item as Record<any, unknown>)[cascaderProps.value.key])
             }
+            formItem?.validate('change')
         }
 
         onMounted(updateValue)
