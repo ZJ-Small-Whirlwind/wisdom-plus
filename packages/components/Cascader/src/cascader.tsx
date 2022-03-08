@@ -2,7 +2,7 @@ import { buildProps } from "@wisdom-plus/utils/props"
 import { ref, computed, defineComponent, ExtractPropTypes, watch, onMounted } from "vue"
 
 import ProCascader, { proCascaderProps, cascaderDefaultProps, getCascaderItems } from "../../Pro/Cascader"
-import BasicSelect from "../../BasicSelect"
+import BasicSelect, { basicSelectProps } from "../../BasicSelect"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
 
 export const cascaderProps = buildProps({
@@ -16,6 +16,9 @@ export const cascaderProps = buildProps({
         default: true
     },
     placeholder: proCascaderProps['placeholder'],
+    size: basicSelectProps['size'],
+    max: basicSelectProps['max'],
+    tagProps: basicSelectProps['tagProps'],
     clearable: Boolean
 })
 
@@ -104,6 +107,9 @@ export default defineComponent({
                 readonly
                 disabled={this.disabled}
                 clearable={this.clearable}
+                tagProps={this.tagProps}
+                size={this.size}
+                max={this.max}
                 onClear={() => {
                     if (!this.multiple) {
                         this.model = ''
@@ -111,6 +117,7 @@ export default defineComponent({
                         this.model = []
                     }
                 }}
+                v-slots={this.$slots}
             >
                 <ProCascader
                     ref="cascaderRef"
@@ -122,7 +129,6 @@ export default defineComponent({
                     disabled={this.disabled}
                     preset={'compact'}
                     editable={false}
-                    onChange={this.updateValue}
                 />
             </BasicSelect>
         )
