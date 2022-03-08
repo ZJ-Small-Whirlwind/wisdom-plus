@@ -861,8 +861,7 @@ export default defineComponent({
             const editValueKeyName = getEditKeyName(column, row);
             if(column.edit && row.$$editValueKeyName === editValueKeyName){
                 const editConfig = Object.prototype.toString.call(column.edit) === '[object Object]' ? column.edit : {};
-                return [
-                    (this.getSlots)(this.$slots.edit?.({label,column, row, editValueKeyName}) || (<div class={{
+                return (this.getSlots)(this.$slots.edit?.({label,column, row, editValueKeyName})) || (<div class={{
                         'cell-edit-input':true,
                     }}>
                         {cellLabelEditIconRender(column, row,editValueKeyName)}
@@ -875,8 +874,7 @@ export default defineComponent({
                                   onClick={(ev)=>editSave(ev, row[editValueKeyName], label,column, row, editValueKeyName)}
                                   // @ts-ignore
                                   onDblclick={ev=>ev.stopPropagation()}>保存</WpButton>
-                    </div>))
-                ]
+                    </div>)
             }
             const editIcon = cellLabelEditIconRender(column, row,editValueKeyName);
             return editIcon ?  [
