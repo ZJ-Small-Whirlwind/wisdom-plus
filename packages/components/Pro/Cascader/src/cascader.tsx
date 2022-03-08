@@ -116,46 +116,27 @@ export default defineComponent({
     name: 'WpProCascader',
     props: proCascaderProps,
     emits: {
-        'update:menus': (menus: CascaderMenu[]) => {
-            void menus
-            return true
-        },
-        'update:modelValue': (value: any) => {
-            void value
-            return true
-        },
-        change: (value: unknown | unknown[]) => ((void value, true)),
-        modify: (menuItem: CascaderMenu) => {
-            void menuItem
-            return true
-        },
-        delete: (menuItem: CascaderMenu) => {
-            void menuItem
-            return true
-        },
-        add: (menu: CascaderMenuDisplay) => {
-            void menu
-            return true
-        },
-        dragStart: (menu: CascaderMenuDisplay) => {
-            void menu
-            return true
-        },
-        dragEnd: (menu: CascaderMenuDisplay) => {
-            void menu
-            return true
-        },
-        dropdownClick: (record: DropdownRecord, menuItem: CascaderMenu) => {
-            void record
-            void menuItem
-            return true
-        }
+        'update:menus': (menus: CascaderMenu[]) => (void menus, true),
+        'update:modelValue': (value: any) => (void value, true),
+        change: (value: unknown | unknown[]) => (void value, true),
+        modify: (menuItem: CascaderMenu) => (void menuItem, true),
+        delete: (menuItem: CascaderMenu) => (void menuItem, true),
+        add: (menu: CascaderMenuDisplay) => (void menu, true),
+        dragStart: (menu: CascaderMenuDisplay) => (void menu, true),
+        dragEnd: (menu: CascaderMenuDisplay) => (void menu, true),
+        dropdownClick: (record: DropdownRecord, menuItem: CascaderMenu) => (void record, void menuItem, true)
     },
-    setup(props, { emit }) {
-        const activeMenus = ref<unknown[]>([])
+    setup(props, { emit, slots }) {
+        /**
+         * 菜单
+         */
         const menusRef = ref<CascaderMenu[]>([])
         const menus = useAutoControl(menusRef, props, 'menus', emit)
+        const activeMenus = ref<unknown[]>([])
 
+        /**
+        * model
+        */
         const modelRef = ref<any>('')
         const model = useAutoControl(modelRef, props, 'modelValue', emit)
 
@@ -242,6 +223,133 @@ export default defineComponent({
             return getCascaderItems(cascaderProps.value, props.useRadio, model.value, props.menus)
         }
 
+        /** radio render */
+        const RenderRadio = (menuItem: CascaderMenu) => (
+            <WpRadio
+                disabled={props.disabled || menuItem[cascaderProps.value.disabled] as boolean}
+                modelValue={model.value === menuItem[cascaderProps.value.key]}
+                onUpdate:modelValue={value => {
+                    if (value === true) {
+                        model.value = menuItem[cascaderProps.value.key]
+                    }
+                    formItem?.validate('change')
+                }}
+                onClick={(e: Event) => e.stopPropagation()}
+            />
+        )
+
+        /** 递归设置为 true / false */
+        const setTo = (children?: CascaderMenu[], value = true) => {
+            if (!children) return
+            children.forEach(child => {
+                if (child[cascaderProps.value.disabled]) return
+                const index = model.value.indexOf(child[cascaderProps.value.key])
+                if (index > -1 && !value) {
+                    model.value.splice(index, 1)
+                } else if (index === -1 && value) {
+                    model.value.push(child[cascaderProps.value.key])
+                }
+                setTo(model.value[cascaderProps.value.children])
+            })
+        }
+
+        /** checkbox render */
+        const RenderCheckbox = (menuItem: CascaderMenu) => {
+            const key = menuItem[cascaderProps.value.key]
+            const disabled = props.disabled || menuItem[cascaderProps.value.disabled] as boolean
+            return (
+                <WpCheckbox
+                    disabled={disabled}
+                    modelValue={model.value?.includes(key)}
+                    onUpdate:modelValue={value => {
+                        if (
+                            !model.value ||
+                            !Array.isArray(model.value)
+                        ) model.value = []
+                        const index = model.value.indexOf(key)
+                        if (value === true) {
+                            if (index === -1) model.value.push(key)
+                            for (const item of menusDisplay.value) {
+                                if (item.menus.find(menu => menu[cascaderProps.value.key] === key)) break
+                                for (const menu of item.menus) {
+                                    if (
+                                        activeMenus.value.includes(menu[cascaderProps.value.key]) &&
+                                        !model.value.includes(menu[cascaderProps.value.key])
+                                    ) {
+                                        model.value.push(menu[cascaderProps.value.key])
+                                    }
+                                }
+                            }
+                        } else {
+                            (model.value as unknown[]).splice(index, 1)
+                        }
+                        setTo(menuItem[cascaderProps.value.children] as CascaderMenu[], value)
+                    }}
+                    onClick={(e: Event) => e.stopPropagation()}
+                />
+            )
+        }
+
+        const RenderDropdown = (menuItem: CascaderMenu) => {
+            <WpDropdown
+                onClick={(record: DropdownRecord) => {
+                    if (record.index === 'modify') {
+                        emit('modify', menuItem)
+                    } else if (record.index === 'delete') {
+                        handleDelete(menuItem)
+                    }
+                    emit('dropdownClick', record, menuItem)
+                }}
+                list={dropdownList.value}
+            >
+                <WpIcon class="wp-pro-cascader--item--more"><MoreFilled /></WpIcon>
+            </WpDropdown>
+        }
+
+        const RenderMenuItem = (menuList: CascaderMenuDisplay, menuItem: CascaderMenu) => (
+            <div
+                key={menuItem[cascaderProps.value.key] as string}
+                class={[
+                    'wp-pro-cascader--item',
+                    {
+                        'wp-pro-cascader--item--active': activeMenus.value.includes(menuItem[cascaderProps.value.key])
+                    }
+                ]}
+                onClick={() => {
+                    if (!props.editable && (!menuItem[cascaderProps.value.children])) return
+                    activeMenus.value = [...menuList.path, menuItem[cascaderProps.value.key]]
+                }}
+            >
+                <WpSpace size={8} class="wp-pro-cascader--item--text" align={'center'}>
+                    {/* 单选多选 */}
+                    {
+                        props.useRadio ?
+                        RenderRadio(menuItem) : (
+                            props.useCheckbox && RenderCheckbox(menuItem)
+                        )
+                    }
+                    {/* 标题 */}
+                    {
+                        slots.title?.(menuItem) ??
+                        menuItem[cascaderProps.value.title] ??
+                        menuItem[cascaderProps.value.key]
+                    }
+                    {/* 下拉菜单 */}
+                    {
+                        props.editable && props.showDropdown && RenderDropdown(menuItem)
+                    }
+                </WpSpace>
+                {/* 箭头 */}
+                {
+                    menuItem[cascaderProps.value.children] && (
+                        <WpIcon>
+                            <ArrowRight />
+                        </WpIcon>
+                    )
+                }
+            </div>
+        )
+
         return {
             activeMenus,
             menusDisplay,
@@ -251,7 +359,8 @@ export default defineComponent({
             cascaderProps,
             model,
             formItem,
-            getItems
+            getItems,
+            RenderMenuItem
         }
     },
     expose: ['getItems'],
@@ -287,115 +396,11 @@ export default defineComponent({
                             }}
                             disabled={!this.draggable || !this.editable}
                             v-slots={{
-                                item: ({ element: menuItem }: { element: CascaderMenu }) => (
-                                    <div key={menuItem[this.cascaderProps.key] as string} class={[
-                                        'wp-pro-cascader--item',
-                                        {
-                                            'wp-pro-cascader--item--active': this.activeMenus.includes(menuItem[this.cascaderProps.key])
-                                        }
-                                    ]} onClick={() => {
-                                        if (!this.editable && (!menuItem[this.cascaderProps.children])) return
-                                        this.activeMenus = [...menuList.path, menuItem[this.cascaderProps.key]]
-                                    }}>
-                                        <WpSpace size={8} class="wp-pro-cascader--item--text" align={'center'}>
-                                            {
-                                                this.useRadio && (
-                                                    <WpRadio
-                                                        disabled={this.disabled || menuItem[this.cascaderProps.disabled] as boolean}
-                                                        modelValue={this.model === menuItem[this.cascaderProps.key]}
-                                                        onUpdate:modelValue={value => {
-                                                            if (value === true) {
-                                                                this.model = menuItem[this.cascaderProps.key]
-                                                            }
-                                                            this.formItem?.validate('change')
-                                                        }}
-                                                        onClick={(e: Event) => {
-                                                            e.stopPropagation()
-                                                        }}
-                                                    />
-                                                )
-                                            }
-                                            {
-                                                this.useCheckbox && (
-                                                    <WpCheckbox
-                                                        disabled={this.disabled || menuItem[this.cascaderProps.disabled] as boolean}
-                                                        modelValue={this.model?.includes(menuItem[this.cascaderProps.key])}
-                                                        onUpdate:modelValue={value => {
-                                                            if (!this.model || !Array.isArray(this.model)) this.model = []
-                                                            const index = this.model.indexOf(menuItem[this.cascaderProps.key])
-                                                            const setTo = (children: CascaderMenu[], value = true) => {
-                                                                if (!children) return
-                                                                children.forEach(child => {
-                                                                    if (child[this.cascaderProps.disabled]) return
-                                                                    const index = this.model.indexOf(child[this.cascaderProps.key])
-                                                                    if (index > -1 && !value) {
-                                                                        this.model.splice(index, 1)
-                                                                    } else if (index === -1 && value) {
-                                                                        this.model.push(child[this.cascaderProps.key])
-                                                                    }
-                                                                    if (this.model[this.cascaderProps.children]) setTo(this.model[this.cascaderProps.children])
-                                                                })
-                                                            }
-                                                            if (value === true) {
-                                                                if (index === -1) this.model.push(menuItem[this.cascaderProps.key])
-                                                                for (const item of this.menusDisplay) {
-                                                                    if (item.menus.find(menu => menu[this.cascaderProps.key] === menuItem[this.cascaderProps.key])) break
-                                                                    for (const menu of item.menus) {
-                                                                        if (
-                                                                            this.activeMenus.includes(menu[this.cascaderProps.key]) &&
-                                                                            !this.model.includes(menu[this.cascaderProps.key])
-                                                                        ) {
-                                                                            this.model.push(menu[this.cascaderProps.key])
-                                                                        }
-                                                                    }
-                                                                }
-                                                                setTo(menuItem[this.cascaderProps.children] as CascaderMenu[])
-                                                            } else {
-                                                                (this.model as any[]).splice(index, 1)
-                                                                if (menuItem[this.cascaderProps.children]) {
-                                                                    setTo(menuItem[this.cascaderProps.children] as CascaderMenu[], false)
-                                                                }
-                                                            }
-                                                        }}
-                                                        onClick={(e: Event) => {
-                                                            e.stopPropagation()
-                                                        }}
-                                                    />
-                                                )
-                                            }
-                                            {
-                                                this.$slots.title?.(menuItem) ||
-                                                menuItem[this.cascaderProps.title] ||
-                                                menuItem[this.cascaderProps.key]
-                                            }
-                                            {
-                                                this.editable && this.showDropdown && (
-                                                    <WpDropdown onClick={(record: DropdownRecord) => {
-                                                        if (record.index === 'modify') {
-                                                            this.$emit('modify', menuItem)
-                                                        } else if (record.index === 'delete') {
-                                                            this.handleDelete(menuItem)
-                                                        }
-                                                        this.$emit('dropdownClick', record, menuItem)
-                                                    }} list={this.dropdownList}>
-                                                        <WpIcon class="wp-pro-cascader--item--more"><MoreFilled /></WpIcon>
-                                                    </WpDropdown>
-                                                )
-                                            }
-                                        </WpSpace>
-                                        {
-                                            menuItem[this.cascaderProps.children] && (
-                                                <WpIcon>
-                                                    <ArrowRight />
-                                                </WpIcon>
-                                            )
-                                        }
-                                    </div>
-                                ),
+                                item: ({ element: menuItem }: { element: CascaderMenu }) => this.RenderMenuItem(menuList, menuItem),
                                 header: () => (
                                     this.showAdd && this.editable && (
                                         <div class="wp-pro-cascader--header" key={'header'} onClick={() => this.$emit('add', menuList)}>
-                                            { this.$slots.add?.(menuList) || (
+                                            { this.$slots.add?.(menuList) ?? (
                                                 <>
                                                     <WpIcon><Plus /></WpIcon> 添加 {index + 1} 级菜单
                                                 </>

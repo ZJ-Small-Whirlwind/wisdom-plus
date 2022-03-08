@@ -66,13 +66,35 @@ export default defineComponent({
             }
         }
 
+        /**
+         * When to show clear icon && if show clear icon.
+         */
+        const CloseIcon = computed(() => {
+            const showCloseIcon = props.clearable && hover.value
+            return (
+                <div class="wp-taginput__clear">
+                    <div class="wp-taginput__clear-icon" onClick={clear}>
+                        <Icon
+                            style={{
+                                transform: show.value && !showCloseIcon ? 'rotate(180deg)' : '',
+                                transition: '.2s'
+                            }}
+                        >
+                            { showCloseIcon ? <CloseOutlined /> : <DownOutlined /> }
+                        </Icon>
+                    </div>
+                </div>
+            )
+        })
+
         return {
             hover,
             clear,
             show,
             showPopover,
             propsMap,
-            tagInputRef
+            tagInputRef,
+            CloseIcon
         }
     },
     render() {
@@ -99,26 +121,7 @@ export default defineComponent({
                             auto={false}
                             v-slots={{
                                 ...this.$slots,
-                                closeIcon: () => (
-                                    <div class="wp-taginput__clear">
-                                        <div class="wp-taginput__clear-icon" onClick={this.clear}>
-                                            <Icon
-                                                style={{
-                                                    transform: this.show && !(this.clearable && this.hover) ? 'rotate(180deg)' : '',
-                                                    transition: '.2s'
-                                                }}
-                                            >
-                                                {
-                                                    this.clearable && this.hover ? (
-                                                        <CloseOutlined />
-                                                    ) : (
-                                                        <DownOutlined />
-                                                    )
-                                                }
-                                            </Icon>
-                                        </div>
-                                    </div>
-                                )
+                                closeIcon: () => this.CloseIcon
                             }}
                         />
                     )
