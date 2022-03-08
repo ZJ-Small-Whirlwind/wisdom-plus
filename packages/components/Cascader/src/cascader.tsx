@@ -129,7 +129,6 @@ export default defineComponent({
                     }
                 }}
                 onClose={index => {
-                    console.log('232')
                     if (Array.isArray(this.model)) {
                         this.model.splice(index, 1)
                     }
