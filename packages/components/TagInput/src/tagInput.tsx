@@ -1,4 +1,4 @@
-import { defineComponent, PropType, ref, ExtractPropTypes, computed, nextTick, CSSProperties, watch } from 'vue'
+import { defineComponent, PropType, ref, ExtractPropTypes, computed, nextTick, CSSProperties, watch, onMounted } from 'vue'
 
 import { buildProps } from '@wisdom-plus/utils/props'
 import Tag, { TagProps } from '../../Tag'
@@ -15,9 +15,6 @@ export const tagInputProps = buildProps({
     modelValue: {
         type: Array as PropType<string[]>,
         default: undefined
-    },
-    input: {
-        type: String
     },
     clearable: Boolean,
     tagProps: {
@@ -53,21 +50,19 @@ export const tagInputProps = buildProps({
     auto: {
         type: Boolean,
         default: true
-    }
+    },
+    closable: Boolean
 })
 
 export type TagInputProps = ExtractPropTypes<typeof tagInputProps>
 
 export const tagInputEmits = {
     'update:modelValue': (value: string[]) => Array.isArray(value),
-    'update:input': (value: string) => {
-        void value
-        return true
-    },
     keydown: (e: KeyboardEvent) => ((void e, true)),
-    input: (e: Event) => ((void e, true)),
+    input: (e: string) => ((void e, true)),
     blur: (e: Event) => ((void e, true)),
-    focus: (e: Event) => ((void e, true))
+    focus: (e: Event) => ((void e, true)),
+    close: (index: number) => ((void index, true))
 }
 
 export default defineComponent({
@@ -80,11 +75,14 @@ export default defineComponent({
             passive: true,
             deep: true
         })
-        const inputingTagRef = ref('')
-        const inputingTag = useAutoControl(inputingTagRef, props, 'input', emit)
+        const inputingTag = ref('')
         const inputRef = ref<HTMLDivElement | null>(null)
 
         const { size, disabled, formItem } = useFormItem({ size: props.size, disabled: props.disabled })
+
+        watch(inputingTag, () => {
+            emit('input', inputingTag.value)
+        })
 
         /**
          * Bind foucs of inputRef
@@ -92,12 +90,6 @@ export default defineComponent({
         const { focused } = useFocus({
             target: inputRef
         })
-
-        // watch(focused, () => {
-        //     if (focused.value) {
-
-        //     }
-        // })
 
         /**
          * A RegExp to find string to be delimiter.
@@ -146,6 +138,7 @@ export default defineComponent({
                     tag,
                     index,
                     close: () => {
+                        emit('close', index)
                         value.value?.splice(index, 1)
                     },
                     active: active.value === tag
@@ -163,33 +156,63 @@ export default defineComponent({
         const notLimited = computed(() => {
             return !props.limit || (value.value?.length || 0) < props.limit
         })
-        return () => (
+
+        onMounted(() => {
+            if (inputRef.value) inputRef.value.innerText = inputingTag.value || ''
+        })
+
+        const toInput = (value: string) => {
+            if (inputRef.value) {
+                inputRef.value.innerText = value || ''
+                inputingTag.value = value || ''
+            }
+        }
+
+        return {
+            disabled,
+            size,
+            focused,
+            toInput,
+            notLimited,
+            inputRef,
+            inputingTag,
+            active,
+            value,
+            tagsMap,
+            regExp,
+            tagPush,
+            formItem
+        }
+    },
+    expose: ['toInput'],
+    render() {
+        return (
             <div
                 class={{
                     'wp-taginput': true,
-                    'wp-taginput-disabled': disabled.value,
-                    [`wp-taginput-${size.value}`]: true,
-                    'focus': focused.value
+                    'wp-taginput-disabled': this.disabled,
+                    [`wp-taginput-${this.size}`]: true,
+                    'focus': this.focused
                 }}
                 onClick={() => {
-                    if (!focused.value && !disabled.value && !props.readonly && notLimited.value) {
-                        inputRef.value?.focus()
+                    if (!this.focused && !this.disabled && !this.readonly && this.notLimited) {
+                        this.inputRef?.focus()
                     }
                 }}
                 onKeydown={e => {
-                    if (!props.keyboardDelete || disabled.value || props.readonly || !notLimited.value) return
+                    if (!this.keyboardDelete || this.disabled || this.readonly || !this.notLimited || !this.auto) return
                     /**
                      * press Enter to copy value to input
                      */
-                    if ((e.code === 'Enter' || e.code === 'NumpadEnter') && active.value && inputRef.value) {
-                        inputRef.value.innerText = active.value
-                        inputingTag.value = active.value
+                    if ((e.code === 'Enter' || e.code === 'NumpadEnter') && this.active && this.inputRef) {
+                        this.inputRef.innerText = this.active
+                        this.inputingTag = this.active
                         nextTick(() => {
-                            if (!inputRef.value) return
-                            inputRef.value.focus()
+                            if (!this.inputRef) return
+                            this.inputRef.focus()
                             const selection = window.getSelection()
                             const range = document.createRange()
-                            range.selectNodeContents(inputRef.value)
+                            range.selectNodeContents(this.inputRef)
                             if (!selection) return
                             selection.removeAllRanges()
                             selection.addRange(range)
@@ -198,23 +221,24 @@ export default defineComponent({
                     /**
                      * press Delete to delete choosed one
                      */
-                    if ((e.code === 'Delete' || e.code === 'Backspace') && active.value) {
-                        const index = value.value?.indexOf(active.value) || -1
+                    if ((e.code === 'Delete' || e.code === 'Backspace') && this.active) {
+                        const index = this.value?.indexOf(this.active) || -1
                         if (index > -1) {
-                            value.value?.splice(index, 1)
-                            active.value = ''
+                            this.$emit('close', index)
+                            this.value?.splice(index, 1)
+                            this.active = ''
                             nextTick(() => {
-                                inputRef.value?.focus()
+                                this.inputRef?.focus()
                             })
                         }
                     }
                 }}
             >
-                { slots.prefix?.() }
+                { this.$slots.prefix?.() }
                 <div class="wp-taginput__content">
-                    <Space size={[10, 5]} align="center" { ...props.spaceProps }>
+                    <Space size={[10, 5]} align="center" { ...this.spaceProps }>
                         {
-                            tagsMap.value.map(tag => {
+                            this.tagsMap.map(tag => {
                                 return (
                                     <div
                                         class={{
@@ -222,35 +246,37 @@ export default defineComponent({
                                             'active': tag.active,
                                         }}
                                         onClick={() => {
-                                            if (!props.keyboardDelete || disabled.value || props.readonly || tag.index === -1 || !notLimited.value) return
-                                            if (active.value !== tag.tag) {
-                                                active.value = tag.tag
+                                            if (!this.keyboardDelete || this.disabled || this.readonly || tag.index === -1 || !this.notLimited) return
+                                            if (this.active !== tag.tag) {
+                                                this.active = tag.tag
                                             } else {
-                                                active.value = ''
+                                                this.active = ''
                                             }
                                         }}
                                         onMousedown={e => {
-                                            if (disabled.value || props.readonly || tag.index === -1) return
+                                            if (!this.closable && (this.disabled || this.readonly || tag.index === -1)) return
                                             /**
                                              * press Middle button to remove an item
                                              */
                                             if (e.button === 1) {
                                                 e.preventDefault()
-                                                value.value?.splice(tag.index, 1)
+                                                this.$emit('close', tag.index)
+                                                this.value?.splice(tag.index, 1)
                                             }
                                         }}
                                     >
                                         {
-                                            slots.tag?.(tag) || (
+                                            this.$slots.tag?.(tag) || (
                                                 <Tag
-                                                    
-                                                    size={size.value}
-                                                    closable={!props.readonly && !disabled.value && tag.index !== -1}
-                                                    { ...props.tagProps }
+
+                                                    size={this.size}
+                                                    closable={this.closable || (!this.readonly && !this.disabled && tag.index !== -1)}
                                                     onClose={(e: Event) => {
                                                         e.stopPropagation()
-                                                        value.value?.splice(tag.index, 1)
+                                                        this.$emit('close', tag.index)
+                                                        this.value?.splice(tag.index, 1)
                                                     }}
+                                                    { ...this.tagProps }
                                                 >
                                                     { tag.tag }
                                                 </Tag>
@@ -262,69 +288,68 @@ export default defineComponent({
                         }
                         <div
                             key="inputRef"
-                            ref={inputRef}
+                            ref="inputRef"
                             class={{
                                 'wp-taginput__content-input': true,
-                                'blank': !inputingTag.value
+                                'blank': !this.inputingTag
                             }}
                             style={{
-                                '--wp-taginput-placehoder': `'${props.placeholder || ' '}'`,
-                                minWidth: `${props.placeholder.length || 1}em`
+                                '--wp-taginput-placehoder': `'${this.placeholder || ' '}'`,
+                                minWidth: `${this.placeholder.length || 1}em`
                             } as CSSProperties}
                             onFocus={e => {
-                                emit('focus', e)
+                                this.$emit('focus', e)
                             }}
                             onInput={e => {
-                                emit('input', e)
-                                const text = (e.target as HTMLDivElement).innerText
-                                active.value = ''
-                                if (!props.auto) {
-                                    inputingTag.value = text
+                                const text = (e.currentTarget as HTMLDivElement).innerText
+                                this.active = ''
+                                if (!this.auto) {
+                                    this.inputingTag = text
                                     return
                                 }
-                                if (regExp.value.test(text)) {
-                                    inputingTag.value = text.substring(0, text.length - 1)
-                                    tagPush()
+                                if (this.regExp.test(text)) {
+                                    this.inputingTag = text.substring(0, text.length - 1)
+                                    this.tagPush()
                                     nextTick(() => {
-                                        inputRef.value?.focus()
+                                        this.inputRef?.focus()
                                     })
                                 } else {
-                                    inputingTag.value = text
+                                    this.inputingTag = text
                                 }
-                                formItem?.validate?.('change')
+                                this.formItem?.validate?.('change')
                             }}
                             onBlur={e => {
-                                emit('blur', e)
-                                if (!props.auto) return
-                                if (!inputingTag.value) return
-                                tagPush()
-                                formItem?.validate?.('blur')
+                                this.$emit('blur', e)
+                                if (!this.auto) return
+                                if (!this.inputingTag) return
+                                this.tagPush()
+                                this.formItem?.validate?.('blur')
                             }}
-                            contenteditable={!props.readonly && !disabled.value && notLimited.value ? 'true' : 'false'}
+                            contenteditable={!this.readonly && !this.disabled && this.notLimited ? 'true' : 'false'}
                             onKeydown={e => {
-                                emit('keydown', e)
-                                if (!props.auto) return
+                                this.$emit('keydown', e)
+                                if (!this.auto) return
                                 /**
                                  * press Enter to push a value
                                  */
                                 if (e.code === 'Enter' || e.code === 'NumpadEnter') {
                                     e.preventDefault()
-                                    if (!inputingTag.value) return
+                                    if (!this.inputingTag) return
                                     e.stopPropagation()
-                                    tagPush()
+                                    this.tagPush()
                                     nextTick(() => {
-                                        inputRef.value?.focus()
+                                        this.inputRef?.focus()
                                     })
                                 }
                                 /**
                                  * press Delete to make a tag active
                                  */
                                 if (e.code === 'Backspace' || e.code === 'Delete') {
-                                    if (!props.keyboardDelete || disabled.value || props.readonly || !notLimited.value) return
-                                    if (active.value || !value.value) return
+                                    if (!this.keyboardDelete || this.disabled || this.readonly || !this.notLimited) return
+                                    if (this.active || !this.value) return
                                     e.stopPropagation()
-                                    if (!inputingTag.value && value.value.length > 0) {
-                                        active.value = value.value[value.value.length - 1]
+                                    if (!this.inputingTag && this.value.length > 0) {
+                                        this.active = this.value[this.value.length - 1]
                                     }
                                 }
                             }}
@@ -332,14 +357,14 @@ export default defineComponent({
                     </Space>
                 </div>
                 {
-                    slots.closeIcon?.({
-                        clearable: props.clearable && (value.value?.length || 0) > 0 && !props.readonly && !disabled.value,
-                        clear: () => value.value = []
+                    this.$slots.closeIcon?.({
+                        clearable: this.clearable && (this.value?.length || 0) > 0 && !this.readonly && !this.disabled,
+                        clear: () => this.value = []
                     }) ?? (
-                        props.clearable && (value.value?.length || 0) > 0 && !props.readonly && !disabled.value && (
+                        this.clearable && (this.value?.length || 0) > 0 && !this.readonly && !this.disabled && (
                             <div class="wp-taginput__clear">
                                 <div class="wp-taginput__clear-icon" onClick={() => {
-                                    value.value = []
+                                    this.value = []
                                 }}>
                                     <Icon>
                                         <CloseOutlined />
@@ -349,7 +374,7 @@ export default defineComponent({
                         )
                     )
                 }
-                { slots.suffix?.() }
+                { this.$slots.suffix?.() }
             </div>
         )
     }

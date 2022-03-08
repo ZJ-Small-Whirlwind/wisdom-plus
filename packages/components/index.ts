@@ -59,6 +59,7 @@ export * from './Slider'
 export * from './InputNumber'
 export * from './Calendar'
 export * from './BasicSelect'
+export * from './Cascader'
 
 export * from './Pro/Upload'
 export * from './Pro/Editor'

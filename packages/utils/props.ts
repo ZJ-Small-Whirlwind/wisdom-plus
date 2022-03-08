@@ -117,7 +117,7 @@ export function buildProp<
           let valid = false
           let allowedValues: unknown[] = []
 
-          if (values) {
+          if (values && Array.isArray(values)) {
             allowedValues = [...values, defaultValue]
             valid ||= allowedValues.includes(val)
           }

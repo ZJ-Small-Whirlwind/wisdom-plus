@@ -103,7 +103,6 @@ const tags = ref<string[]>(['标签1', '标签2', '标签3'])
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | modelValue `v-model`      | 双向绑定的数组       | _string[]_          | -     |
-| input `v-model` | 输入的内容 | _string_ | - |
 | clearable     | 是否显示清空按钮   | _boolean_           | -      |
 | tagProps   | 标签的 Props | _Partial\<TagProps\> & Record\<string, any\>_ | {}      |
 | placeholder  | 未输入时显示的文本       | _string_                                                           | '请输入标签'  |
