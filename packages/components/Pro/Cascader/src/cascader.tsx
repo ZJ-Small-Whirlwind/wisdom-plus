@@ -32,6 +32,7 @@ export interface CascaderProps {
     key?: string;
     title?: string;
     children?: string;
+    disabled?: string;
 }
 
 export const proCascaderProps = buildProps({
@@ -86,7 +87,8 @@ export type ProCascaderProps = ExtractPropTypes<typeof proCascaderProps>
 export const cascaderDefaultProps: Required<CascaderProps> = {
     key: 'name',
     title: 'title',
-    children: 'children'
+    children: 'children',
+    disabled: 'disabled'
 }
 
 export default defineComponent({
@@ -267,7 +269,7 @@ export default defineComponent({
                                             {
                                                 this.useRadio && (
                                                     <WpRadio
-                                                        disabled={this.disabled}
+                                                        disabled={this.disabled || menuItem[this.cascaderProps.disabled] as boolean}
                                                         modelValue={this.model === menuItem[this.cascaderProps.key]}
                                                         onUpdate:modelValue={value => {
                                                             if (value === true) {
@@ -284,7 +286,7 @@ export default defineComponent({
                                             {
                                                 this.useCheckbox && (
                                                     <WpCheckbox
-                                                        disabled={this.disabled}
+                                                        disabled={this.disabled || menuItem[this.cascaderProps.disabled] as boolean}
                                                         modelValue={this.model?.includes(menuItem[this.cascaderProps.key])}
                                                         onUpdate:modelValue={value => {
                                                             if (!Array.isArray(this.model)) {
@@ -293,6 +295,7 @@ export default defineComponent({
                                                             const index = this.model.indexOf(menuItem[this.cascaderProps.key])
                                                             const setTo = (children: CascaderMenu[], value = true) => {
                                                                 children.forEach(child => {
+                                                                    if (child[this.cascaderProps.disabled]) return
                                                                     const index = this.model.indexOf(child[this.cascaderProps.key])
                                                                     if (index > -1 && !value) {
                                                                         this.model.splice(index, 1)
