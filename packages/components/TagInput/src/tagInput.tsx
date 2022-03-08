@@ -50,7 +50,8 @@ export const tagInputProps = buildProps({
     auto: {
         type: Boolean,
         default: true
-    }
+    },
+    closable: Boolean
 })
 
 export type TagInputProps = ExtractPropTypes<typeof tagInputProps>
@@ -60,7 +61,8 @@ export const tagInputEmits = {
     keydown: (e: KeyboardEvent) => ((void e, true)),
     input: (e: string) => ((void e, true)),
     blur: (e: Event) => ((void e, true)),
-    focus: (e: Event) => ((void e, true))
+    focus: (e: Event) => ((void e, true)),
+    close: (index: number) => ((void index, true))
 }
 
 export default defineComponent({
@@ -136,6 +138,7 @@ export default defineComponent({
                     tag,
                     index,
                     close: () => {
+                        emit('close', index)
                         value.value?.splice(index, 1)
                     },
                     active: active.value === tag
@@ -221,6 +224,7 @@ export default defineComponent({
                     if ((e.code === 'Delete' || e.code === 'Backspace') && this.active) {
                         const index = this.value?.indexOf(this.active) || -1
                         if (index > -1) {
+                            this.$emit('close', index)
                             this.value?.splice(index, 1)
                             this.active = ''
                             nextTick(() => {
@@ -250,12 +254,13 @@ export default defineComponent({
                                             }
                                         }}
                                         onMousedown={e => {
-                                            if (this.disabled || this.readonly || tag.index === -1) return
+                                            if (!this.closable && (this.disabled || this.readonly || tag.index === -1)) return
                                             /**
                                              * press Middle button to remove an item
                                              */
                                             if (e.button === 1) {
                                                 e.preventDefault()
+                                                this.$emit('close', tag.index)
                                                 this.value?.splice(tag.index, 1)
                                             }
                                         }}
@@ -265,12 +270,13 @@ export default defineComponent({
                                                 <Tag
 
                                                     size={this.size}
-                                                    closable={!this.readonly && !this.disabled && tag.index !== -1}
-                                                    {...this.tagProps }
+                                                    closable={this.closable || (!this.readonly && !this.disabled && tag.index !== -1)}
                                                     onClose={(e: Event) => {
                                                         e.stopPropagation()
+                                                        this.$emit('close', tag.index)
                                                         this.value?.splice(tag.index, 1)
                                                     }}
+                                                    { ...this.tagProps }
                                                 >
                                                     { tag.tag }
                                                 </Tag>

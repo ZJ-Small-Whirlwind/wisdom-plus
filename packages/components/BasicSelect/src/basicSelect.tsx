@@ -24,7 +24,7 @@ export default defineComponent({
     name: 'WpBasicSelect',
     props: basicSelectProps,
     emits: basicSelectEmits,
-    setup(props) {
+    setup(props, { attrs }) {
         const show = ref(false)
         const propsMap = computed(() => {
             const final: Partial<BasicSelectProps> = {
@@ -65,6 +65,7 @@ export default defineComponent({
                         <TagInput
                             ref="tagInputRef"
                             {...this.propsMap as Partial<BasicSelectProps>}
+                            {...this.$attrs}
                             onClick={() => {
                                 if (this.disabled && !this.showPopoverWhenDisabled) return
                                 this.show = true
@@ -75,6 +76,9 @@ export default defineComponent({
                             }}
                             onInput={e => {
                                 this.$emit('update:input', e)
+                            }}
+                            onClose={index => {
+                                this.$emit('close', index)
                             }}
                             onMouseenter={() => this.hover = true}
                             onMouseleave={() => this.hover = false}

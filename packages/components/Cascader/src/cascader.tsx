@@ -120,11 +120,18 @@ export default defineComponent({
                 tagProps={this.tagProps}
                 size={this.size}
                 max={this.max}
+                closable={!this.disabled}
                 onClear={() => {
                     if (!this.multiple) {
                         this.model = ''
                     } else {
                         this.model = []
+                    }
+                }}
+                onClose={index => {
+                    console.log('232')
+                    if (Array.isArray(this.model)) {
+                        this.model.splice(index, 1)
                     }
                 }}
                 v-slots={this.$slots}
