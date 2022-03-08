@@ -1,4 +1,4 @@
-import { defineComponent, ExtractPropTypes, Prop, PropType, VNode } from 'vue'
+import { defineComponent, ExtractPropTypes, PropType, VNode, h } from 'vue'
 
 import Space, { SpaceProps } from '../../Space'
 
@@ -24,7 +24,8 @@ export const breadcrumbProps = buildProps({
     spaceProps: {
         type: Object as PropType<Partial<SpaceProps> & Record<string, any>>,
         default: () => ({})
-    }
+    },
+    component: Object as PropType<typeof RouterLink>
 })
 
 export type BreadcrumbProps = ExtractPropTypes<typeof breadcrumbProps>
@@ -50,9 +51,14 @@ export default defineComponent({
                                 {
                                     slots.item?.(item) || (
                                         item.to ? (
-                                            <RouterLink to={item.to} replace={item.replace}>
-                                                { item.title }
-                                            </RouterLink>
+                                            props.component && (
+                                                h(props.component, {
+                                                    to: item.to,
+                                                    replace: item.replace
+                                                }, {
+                                                    default: () => item.title
+                                                })
+                                            )
                                         ) : item.title
                                     )
                                 }
