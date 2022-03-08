@@ -1,7 +1,7 @@
 import { BuildOptions } from 'vite'
 import { defineConfig } from 'vitepress'
 export default defineConfig({
-    base:process.argv.includes("dev") ? '/':"",
+    base:process.argv.includes("dev") ? '/':"/static",
     title: 'Wisdom Plus',
     themeConfig: {
         nav: [
