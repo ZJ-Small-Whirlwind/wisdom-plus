@@ -24,8 +24,12 @@ export default defineComponent({
     name: 'WpBasicSelect',
     props: basicSelectProps,
     emits: basicSelectEmits,
-    setup(props, { attrs }) {
+    inheritAttrs: false,
+    setup(props, { emit }) {
+        /** if popover show */
         const show = ref(false)
+
+        /** extends props and remove some no need */
         const propsMap = computed(() => {
             const final: Partial<BasicSelectProps> = {
                 ...props
@@ -35,6 +39,7 @@ export default defineComponent({
             return final
         })
 
+        /** sync input value */
         const tagInputRef = ref()
         watch(() => props.input, () => {
             if (!tagInputRef.value) return
@@ -43,11 +48,29 @@ export default defineComponent({
             immediate: true
         })
 
+        /** is hover? */
         const hover = ref(false)
+
+        const showPopover = () => {
+            if (props.disabled && !props.showPopoverWhenDisabled) return
+            show.value = true
+        }
+
+        const clear = (e: Event) => {
+            if (props.disabled && !props.showPopoverWhenDisabled) return
+            e.stopPropagation()
+            if (props.clearable && hover.value) {
+                emit('clear')
+            } else {
+                show.value = !show.value
+            }
+        }
 
         return {
             hover,
+            clear,
             show,
+            showPopover,
             propsMap,
             tagInputRef
         }
@@ -61,45 +84,30 @@ export default defineComponent({
                 width={300}
                 {...this.popoverProps}
                 v-slots={{
+                    default: this.$slots.default,
                     reference: () => (
                         <TagInput
                             ref="tagInputRef"
                             {...this.propsMap as Partial<BasicSelectProps>}
                             {...this.$attrs}
-                            onClick={() => {
-                                if (this.disabled && !this.showPopoverWhenDisabled) return
-                                this.show = true
-                            }}
-                            onFocus={() => {
-                                if (this.disabled && !this.showPopoverWhenDisabled) return
-                                this.show = true
-                            }}
-                            onInput={e => {
-                                this.$emit('update:input', e)
-                            }}
-                            onClose={index => {
-                                this.$emit('close', index)
-                            }}
+                            onClick={this.showPopover}
+                            onFocus={this.showPopover}
+                            onInput={e => this.$emit('update:input', e)}
+                            onClose={index => this.$emit('close', index)}
                             onMouseenter={() => this.hover = true}
                             onMouseleave={() => this.hover = false}
                             auto={false}
                             v-slots={{
                                 ...this.$slots,
-                                'closeIcon': () => (
+                                closeIcon: () => (
                                     <div class="wp-taginput__clear">
-                                        <div class="wp-taginput__clear-icon" onClick={e => {
-                                            if (this.disabled && !this.showPopoverWhenDisabled) return
-                                            e.stopPropagation()
-                                            if (this.clearable && this.hover) {
-                                                this.$emit('clear')
-                                            } else {
-                                                this.show = !this.show
-                                            }
-                                        }}>
-                                            <Icon style={{
-                                                transform: this.show && !(this.clearable && this.hover) ? 'rotate(180deg)' : '',
-                                                transition: '.4s'
-                                            }}>
+                                        <div class="wp-taginput__clear-icon" onClick={this.clear}>
+                                            <Icon
+                                                style={{
+                                                    transform: this.show && !(this.clearable && this.hover) ? 'rotate(180deg)' : '',
+                                                    transition: '.2s'
+                                                }}
+                                            >
                                                 {
                                                     this.clearable && this.hover ? (
                                                         <CloseOutlined />
@@ -115,9 +123,7 @@ export default defineComponent({
                         />
                     )
                 }}
-            >
-                { this.$slots.default?.() }
-            </Popover>
+            />
         )
     }
 })

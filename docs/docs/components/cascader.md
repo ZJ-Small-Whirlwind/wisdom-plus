@@ -1,5 +1,19 @@
 # Cascader 级联选择器
 
+
+### 介绍
+
+其实它是一个横着的树形
+
+### 引入
+
+```js
+import { createApp } from 'vue'
+import { WpCascader } from 'wisdom-plus'
+
+const app = createApp()
+app.use(WpCascader)
+```
 ## 代码演示
 
 #### 基础用法
@@ -95,13 +109,16 @@ const menu = ref([
 
 :::
 
-#### 禁用
+#### 禁用和尺寸
 
 :::demo
 
 ```vue
 <template>
-    <wp-cascader :menus="menu" modelValue="test" disabled :showPopoverWhenDisabled="false"></wp-cascader>
+    <wp-space vertical>
+        <wp-cascader :menus="menu" modelValue="test" disabled :showPopoverWhenDisabled="false" size="small"></wp-cascader>
+        <wp-cascader :menus="menu" modelValue="test" disabled></wp-cascader>
+    </wp-space>
 </template>
 
 <script lang="ts" setup>
@@ -157,6 +174,7 @@ const menu = ref([
 | size | 尺寸 | _'small' \| 'default' \| 'medium' \| 'large'_ | 'default' |
 | max | 最多显示的 tag 数量 | _number_ | - |
 | tagProps   | 标签的 Props | _Partial\<TagProps\> & Record\<string, any\>_ | {}      |
+| size | 尺寸 | _'small' \| 'default' \| 'medium' \| 'large'_ | 'default' |
 
 ### Slots
 
