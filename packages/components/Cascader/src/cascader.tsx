@@ -55,8 +55,12 @@ export default defineComponent({
 
         const { formItem } = useFormItem({})
 
+        const getItems = () => {
+            return getCascaderItems(cascaderProps.value, !props.multiple, model.value, props.menus)
+        }
+
         const updateValue = () => {
-            const items = getCascaderItems(cascaderProps.value, !props.multiple, model.value, props.menus)
+            const items = getItems()
             if (props.multiple) {
                 tags.value = items?.map(item => {
                     return String((item as Record<any, unknown>)[cascaderProps.value.title] || (item as Record<any, unknown>)[cascaderProps.value.key])
@@ -93,9 +97,11 @@ export default defineComponent({
             model,
             cascaderRef,
             updateValue,
-            clearable
+            clearable,
+            getItems
         }
     },
+    expose: ['getItems'],
     render() {
         return (
             <BasicSelect
