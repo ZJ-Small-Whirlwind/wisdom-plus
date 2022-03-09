@@ -7,7 +7,7 @@ $unit15: 15px;
     border-radius: 6px;
     overflow: hidden;
     user-select: none;
-
+    padding: 15px;
     &-header {
         display: flex;
         justify-content: space-around;
@@ -154,13 +154,23 @@ $unit15: 15px;
         }
     }
     &-lunar{
+        border:2px solid #5e67ef;
+        .wp-calendar-content-day-header{
+            margin-bottom: 15px;
+        }
         .wp-calendar-content-day{
             flex-direction: column;
+            min-height: 80px;
+            border-radius: 6px;
+            cursor: pointer;
+            span{
+                &:hover{
+                    background-color: transparent;
+                }
+            }
             &.current{
                 span{
-                    &:hover{
-                        background-color: transparent;
-                    }
+                    color: #000000;
                     &.isActive{
                         background-color: transparent;
                     }
@@ -169,7 +179,12 @@ $unit15: 15px;
             .wp-calendar-content-day-lunar{
                 width: auto;
                 font-size: 12px;
-
+            }
+            &:hover{
+                border:1px solid #d8d8d8;
+            }
+            &.isActive{
+                border:2px solid #5e67ef;
             }
         }
     }

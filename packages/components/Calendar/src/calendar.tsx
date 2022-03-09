@@ -23,7 +23,7 @@ export type CalendarProps = ExtractPropTypes<typeof calendarProps>
 export default defineComponent({
     name:"WpCalendar",
     props:calendarProps,
-    setup({getIsEvent}, {emit}) {
+    setup(props, {emit}) {
         const currentData:dayjs.Dayjs = dayjs()
         const year = ref(currentData.year())
         const month = ref(currentData.month() + 1)
@@ -166,12 +166,13 @@ export default defineComponent({
          * 具体日期
          */
         const daysRender = ()=> this.days.map(e => (
-            <div class={{
+            <div  onClick={() => this.$props.lunar ? this.clickDays(e) : null} class={{
                 'wp-calendar-content-day':true,
                 isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
+                isWeek:[0,6].includes(e.week),
                 [e.type]:true,
             }}>
-                <span  onClick={() => this.clickDays(e)} class={{
+                <span  onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{
                     isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
                     isEvent:this.$props.getIsEvent(e),
                 }}>{e.day}</span>
