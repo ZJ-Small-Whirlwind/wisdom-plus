@@ -109,6 +109,12 @@ $unit15: 15px;
                         }
                     }
                 }
+
+            }
+            &-lunar{
+                &.isLunarFestival{
+                    color: #f43e4e !important;
+                }
             }
 
             &-header {

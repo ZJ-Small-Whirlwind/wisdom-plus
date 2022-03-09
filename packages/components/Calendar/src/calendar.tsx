@@ -173,7 +173,7 @@ export default defineComponent({
         /**
          * 具体日期
          */
-        const daysRender = ()=> this.days.map(e => {
+        const daysRender = ()=> this.days.map((e:any) => {
             const EventList:any = this.$props.getIsEvent(e);
             return (
                 <div  onClick={() => this.$props.lunar ? this.clickDays(e) : null} class={{
@@ -187,9 +187,12 @@ export default defineComponent({
                         isEvent:EventList,
                         'wp-calendar-content-day-cell':true,
                     }}>{e.day}</span>
+                    {console.log(e.calendar)}
                     {this.$props.lunar ? (<span class={{
-                        "wp-calendar-content-day-lunar":true
-                    }}>{e.calendar.IDayCn} </span>) : null}
+                        "wp-calendar-content-day-lunar":true,
+                        isFestival:e.calendar.festival,
+                        isLunarFestival:e.calendar.lunarFestival,
+                    }}>{e.calendar.lunarFestival || e.calendar.festival || e.calendar.IDayCn} </span>) : null}
                     {Object.prototype.toString.call(EventList) === '[object Array]' ? (<div class={{
                         "wp-calendar-content-day-event":true
                     }}>
