@@ -165,7 +165,7 @@ const menu = ref([
 | 参数      | 说明                                          | 类型                                                                  | 默认值                |
 | --------- |---------------------------------------------|---------------------------------------------------------------------|--------------------|
 | modelValue `v-model` | 双向绑定的值       | _unknown \| unknown[]_                                                      | -                  |
-| menus   | 菜单                  | _height_                                                            | 300                  |
+| menus   | 菜单                  | _CascaderMenu[]_                                                            | -                  |
 | props | 自定义使用哪个字段作为 key, title 和 children                                     | _{ key?: string; title?: string; children?: string; disabled?: string; }_                                                           | _{ key: 'name', title: 'title', children: 'children' }_                  |
 | multiple | 是否多选 | _boolean_ | false |
 | disabled | 是否禁用 | _boolean_ | false |

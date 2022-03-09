@@ -1,7 +1,7 @@
 import { buildProps } from "@wisdom-plus/utils/props"
 import { ref, computed, defineComponent, ExtractPropTypes, watch, onMounted } from "vue"
 
-import ProCascader, { proCascaderProps, cascaderDefaultProps, getCascaderItems } from "../../Pro/Cascader"
+import ProCascader, { proCascaderProps, cascaderDefaultProps, getCascaderItems, CascaderMenu } from "../../Pro/Cascader"
 import BasicSelect, { basicSelectProps } from "../../BasicSelect"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
 import { useFormItem } from "@wisdom-plus/hooks"
@@ -43,7 +43,13 @@ export default defineComponent({
 
         const modelRef = ref()
         const model = useAutoControl(modelRef, props, 'modelValue', emit)
-        const tags = ref<string[]>([])
+        const tags = ref<CascaderMenu[]>([])
+
+        const stringTags = computed(() => {
+            return tags.value.map(item => {
+                return String((item as Record<any, unknown>)[cascaderProps.value.title] || (item as Record<any, unknown>)[cascaderProps.value.key])
+            })
+        })
 
         watch(() => props.multiple, () => {
             if (props.multiple) {
@@ -62,9 +68,7 @@ export default defineComponent({
         const updateValue = () => {
             const items = getItems()
             if (props.multiple) {
-                tags.value = items?.map(item => {
-                    return String((item as Record<any, unknown>)[cascaderProps.value.title] || (item as Record<any, unknown>)[cascaderProps.value.key])
-                }) || []
+                tags.value = items
             } else {
                 const item = items?.[0]
                 if (!item) {
@@ -98,14 +102,15 @@ export default defineComponent({
             cascaderRef,
             updateValue,
             clearable,
-            getItems
+            getItems,
+            stringTags
         }
     },
     expose: ['getItems'],
     render() {
         return (
             <BasicSelect
-                modelValue={this.tags}
+                modelValue={this.stringTags}
                 v-model:input={this.input}
                 placeholder={this.placeholder || '请选择'}
                 showPopoverWhenDisabled={this.showPopoverWhenDisabled}
@@ -130,7 +135,9 @@ export default defineComponent({
                 }}
                 onClose={index => {
                     if (Array.isArray(this.model)) {
-                        this.model.splice(index, 1)
+                        const trustModel = this.tags[index]
+                        const trustIndex = this.model.indexOf(trustModel[this.cascaderProps.key])
+                        if (trustIndex > -1) this.model.splice(trustIndex, 1)
                     }
                 }}
                 v-slots={this.$slots}
