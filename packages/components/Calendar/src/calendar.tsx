@@ -3,6 +3,7 @@ import CalendarData from 'lunar-calendar-panel'
 import dayjs from 'dayjs'
 import {buildProps} from "@wisdom-plus/utils/props";
 import Icon from "../../Icon";
+import WpButton from "../../Button";
 import {
     DoubleLeftOutlined,
     DoubleRightOutlined,
@@ -246,18 +247,22 @@ export default defineComponent({
             <span onClick={()=>(this.showYear = false, this.showMonth = true)}>{this.month}月</span>,
         ]
 
-
-        return (
-            <div class={{
-                'wp-calendar':true,
-                "wp-calendar-lunar":this.$props.lunar
+        const calendarRender = ()=>{
+            return (<div class={{
+                'wp-calendar': true,
+                "wp-calendar-lunar": this.$props.lunar
             }}>
                 <div class={'wp-calendar-header'}>
-                    <Icon class={'wp-calendar-header-icon'} name={'arrow-left'} onClick={this.prevYear}><DoubleLeftOutlined></DoubleLeftOutlined></Icon>
-                    <Icon class={'wp-calendar-header-icon'} name={'arrow-left'} onClick={this.prevMonth}><LeftOutlined></LeftOutlined></Icon>
-                    <div class={'wp-calendar-header-title'} onClick={this.herderTitleClick}>{titleRender()}</div>
-                    <Icon class={'wp-calendar-header-icon'} name={'arrow'} onClick={this.nextMonth}><RightOutlined></RightOutlined></Icon>
-                    <Icon class={'wp-calendar-header-icon'} name={'arrow'} onClick={this.nextYear}><DoubleRightOutlined></DoubleRightOutlined></Icon>
+                    <Icon class={'wp-calendar-header-icon'} name={'arrow-left'}
+                          onClick={this.prevYear}><DoubleLeftOutlined></DoubleLeftOutlined></Icon>
+                    <Icon class={'wp-calendar-header-icon'} name={'arrow-left'}
+                          onClick={this.prevMonth}><LeftOutlined></LeftOutlined></Icon>
+                    <div class={'wp-calendar-header-title'}
+                         onClick={this.herderTitleClick}>{titleRender()}</div>
+                    <Icon class={'wp-calendar-header-icon'} name={'arrow'}
+                          onClick={this.nextMonth}><RightOutlined></RightOutlined></Icon>
+                    <Icon class={'wp-calendar-header-icon'} name={'arrow'}
+                          onClick={this.nextYear}><DoubleRightOutlined></DoubleRightOutlined></Icon>
                 </div>
                 <div class={'wp-calendar-content'}>
                     {this.showYear ? yearRender() :
@@ -267,6 +272,34 @@ export default defineComponent({
                                 daysRender()
                             ]}
                 </div>
+            </div>)
+        }
+        const calendarPanelRender = ()=>(
+            <div class={{
+                'wp-calendar-layout-panel': true,
+                'wp-calendar-layout-lunar-panel': this.$props.lunar,
+            }}>
+                <div class={{
+                    "wp-calendar-layout-panel-title":true,
+                }}>{this.year}-{this.month}-{this.date}</div>
+                <div class={{
+                    "wp-calendar-layout-panel-btns":true,
+                }}>
+                    <WpButton size='mini'>今天</WpButton>
+                    <WpButton size='mini'>昨天</WpButton>
+                    <WpButton size='mini'>一周前</WpButton>
+                    <WpButton size='mini'>一周后</WpButton>
+                </div>
+            </div>
+        )
+
+        return (
+            <div class={{
+                'wp-calendar-layout': true,
+                'wp-calendar-layout-lunar': this.$props.lunar,
+            }}>
+                {calendarRender()}
+                {calendarPanelRender()}
             </div>
         )
     }

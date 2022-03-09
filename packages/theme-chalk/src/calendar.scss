@@ -259,4 +259,44 @@ $unit15: 15px;
             }
         }
     }
+    &-layout{
+        display: flex;
+        &-panel{
+            border-left: 1px solid #eeeeee;
+            padding: 15px;
+            min-width: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            &-title{
+                font-size: 18px;
+                margin-bottom: 15px;
+                text-align: center;
+            }
+            &-btns{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+                &>*{
+                    flex: 1;
+                    width: 100%;
+                    margin: 0 !important;
+                }
+            }
+        }
+        &-lunar{
+            .wp-calendar-lunar{
+                border-radius: 6px 0 0 6px;
+            }
+            &-panel{
+                background-color: #5661ee;
+                border-left: 0;
+                border-radius: 0 6px 6px 0;
+                *{
+                    color: #ffffff;
+                }
+            }
+        }
+    }
 }
