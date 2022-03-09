@@ -172,9 +172,10 @@ export default defineComponent({
                 isWeek:[0,6].includes(e.week),
                 [e.type]:true,
             }}>
-                <span  onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{
+                <span onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{
                     isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
                     isEvent:this.$props.getIsEvent(e),
+                    'wp-calendar-content-day-cell':true,
                 }}>{e.day}</span>
                 {this.$props.lunar ? (<span class={{
                     "wp-calendar-content-day-lunar":true
