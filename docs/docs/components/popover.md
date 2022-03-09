@@ -95,7 +95,7 @@ const show = ref(false)
 ```vue
 <template>
   <wp-space>
-    <wp-popover v-model="show" trigger="none" :x="x" :y="y">
+    <wp-popover v-model="show" trigger="none" :x="x" :y="y" use-v-show>
       你好
     </wp-popover>
     <div @click="showPopover" style="height: 200px; width: 200px; background: #eee;" />
@@ -178,6 +178,7 @@ const showPopover = (e) => {
 | doNotCloseMe | 是否不受全局 closeAllPopovers 函数影响 | _boolean_ | - |
 | x | 主动设置 X 轴位置 | _number_ | - |
 | y | 主动设置 Y 轴位置 | _number_ | - |
+| useVShow | 是否使用 v-show 代替 v-if | _boolean_ | false |
 
 ### Methods
 

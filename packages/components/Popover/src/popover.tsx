@@ -68,7 +68,8 @@ export const popoverProps = buildProps({
     },
     doNotCloseMe: Boolean,
     x: Number,
-    y: Number
+    y: Number,
+    useVShow: Boolean
 })
 
 export type PopoverProps = ExtractPropTypes<typeof popoverProps>
@@ -207,7 +208,7 @@ export default defineComponent({
                         }}
                     >
                         {
-                            show.value ?
+                            (show.value || props.useVShow) ?
                                 props.raw ?
                                     (
                                         <div
@@ -225,6 +226,7 @@ export default defineComponent({
                                                 width: typeof props.width === 'number' ? `${props.width}px`: '',
                                                 transform: props.offset ? `translateX(${props.offset[0]}px) translateY(${props.offset[1]}px)` : ''
                                             }}
+                                            v-show={!props.useVShow || show.value}
                                             { ...attrs }
                                         >
                                             { slots.default?.() }
@@ -252,6 +254,7 @@ export default defineComponent({
                                                     transform: props.offset ? `translateX(${props.offset[0]}px) translateY(${props.offset[1]}px)` : '',
                                                 }
                                             }, { style: props.popoverStyle })}
+                                            v-show={!props.useVShow || show.value}
                                             { ...attrs }
                                         >
                                             { props.arrow ? <div class="wp-popover-arrow" /> : null }
