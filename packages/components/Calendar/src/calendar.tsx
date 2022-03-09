@@ -3,7 +3,16 @@ import CalendarData from 'lunar-calendar-panel'
 import dayjs from 'dayjs'
 import {buildProps} from "@wisdom-plus/utils/props";
 import Icon from "../../Icon";
-import {DoubleLeftOutlined, DoubleRightOutlined, LeftOutlined, RightOutlined} from "@vicons/antd";
+import WpButton from "../../Button";
+import {
+    DoubleLeftOutlined,
+    DoubleRightOutlined,
+    LeftOutlined,
+    RightOutlined,
+    AlignRightOutlined,
+    CarryOutFilled,
+    CarryOutOutlined,
+} from "@vicons/antd";
 export const calendarProps = buildProps({
     /**
      * 获取事件状态
@@ -31,6 +40,7 @@ export default defineComponent({
         const showYear = ref(false)
         const showMonth = ref(false)
         const cd = new CalendarData();
+        const oneDayTimeIndex = 86400000;
 
         const days = computed(()=>cd.returnDate(year.value, month.value))
         const yearList = computed(()=>{
@@ -45,6 +55,22 @@ export default defineComponent({
             emit('change',arg)
         },{deep:true,immediate:true})
 
+        const goDay = nb=>{
+            switch (nb){
+                case 0:
+                    year.value = currentData.year();
+                    month.value = currentData.month() + 1;
+                    date.value = currentData.date();
+                    break;
+                default:
+                    const nbData = dayjs(Date.now() + oneDayTimeIndex*nb);
+                    year.value = nbData.year();
+                    month.value = nbData.month() + 1;
+                    date.value = nbData.date();
+                    break;
+            }
+
+        }
         /**
          * 日期点击
          */
@@ -136,6 +162,7 @@ export default defineComponent({
             showMonth,
             monthList,
             yearList,
+            goDay,
         }
     },
     render(){
@@ -165,23 +192,43 @@ export default defineComponent({
         /**
          * 具体日期
          */
-        const daysRender = ()=> this.days.map(e => (
-            <div  onClick={() => this.$props.lunar ? this.clickDays(e) : null} class={{
-                'wp-calendar-content-day':true,
-                isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
-                isWeek:[0,6].includes(e.week),
-                [e.type]:true,
-            }}>
-                <span onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{
+        const daysRender = ()=> this.days.map((e:any) => {
+            const EventList:any = this.$props.getIsEvent(e);
+            return (
+                <div  onClick={() => this.$props.lunar ? this.clickDays(e) : null} class={{
+                    'wp-calendar-content-day':true,
                     isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
-                    isEvent:this.$props.getIsEvent(e),
-                    'wp-calendar-content-day-cell':true,
-                }}>{e.day}</span>
-                {this.$props.lunar ? (<span class={{
-                    "wp-calendar-content-day-lunar":true
-                }}>{e.calendar.IDayCn} </span>) : null}
-            </div>
-        ))
+                    isWeek:[0,6].includes(e.week),
+                    [e.type]:true,
+                }}>
+                    <span onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{
+                        isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
+                        isEvent:EventList,
+                        'wp-calendar-content-day-cell':true,
+                    }}>{e.day}</span>
+                    {this.$props.lunar ? (<span class={{
+                        "wp-calendar-content-day-lunar":true,
+                        isFestival:e.calendar.festival,
+                        isLunarFestival:e.calendar.lunarFestival,
+                    }}>{e.calendar.lunarFestival || e.calendar.festival || e.calendar.IDayCn} </span>) : null}
+                    {Object.prototype.toString.call(EventList) === '[object Array]' ? (<div class={{
+                        "wp-calendar-content-day-event":true
+                    }}>
+                        {EventList.map(eventObj=>(
+                            <div class={{
+                                "wp-calendar-content-day-event-cell":true,
+                                "wp-calendar-content-day-event-cell-success":eventObj.success,
+                            }} onClick={(ev)=>(ev.stopPropagation(),this.$emit('event-click',{ev,day:e,eventData:eventObj}))}>
+                                {eventObj.name}
+                                <Icon size={18} class={{
+                                    "wp-calendar-content-day-event-cell-icon":true,
+                                }}>{eventObj.success ? <CarryOutFilled></CarryOutFilled> : <CarryOutOutlined></CarryOutOutlined>}</Icon>
+                            </div>
+                        ))}
+                    </div>) : null}
+                </div>
+            )
+        })
         /**
          * 星期头
          */
@@ -218,18 +265,22 @@ export default defineComponent({
             <span onClick={()=>(this.showYear = false, this.showMonth = true)}>{this.month}月</span>,
         ]
 
-
-        return (
-            <div class={{
-                'wp-calendar':true,
-                "wp-calendar-lunar":this.$props.lunar
+        const calendarRender = ()=>{
+            return (<div class={{
+                'wp-calendar': true,
+                "wp-calendar-lunar": this.$props.lunar
             }}>
                 <div class={'wp-calendar-header'}>
-                    <Icon class={'wp-calendar-header-icon'} name={'arrow-left'} onClick={this.prevYear}><DoubleLeftOutlined></DoubleLeftOutlined></Icon>
-                    <Icon class={'wp-calendar-header-icon'} name={'arrow-left'} onClick={this.prevMonth}><LeftOutlined></LeftOutlined></Icon>
-                    <div class={'wp-calendar-header-title'} onClick={this.herderTitleClick}>{titleRender()}</div>
-                    <Icon class={'wp-calendar-header-icon'} name={'arrow'} onClick={this.nextMonth}><RightOutlined></RightOutlined></Icon>
-                    <Icon class={'wp-calendar-header-icon'} name={'arrow'} onClick={this.nextYear}><DoubleRightOutlined></DoubleRightOutlined></Icon>
+                    <Icon class={'wp-calendar-header-icon'} name={'arrow-left'}
+                          onClick={this.prevYear}><DoubleLeftOutlined></DoubleLeftOutlined></Icon>
+                    <Icon class={'wp-calendar-header-icon'} name={'arrow-left'}
+                          onClick={this.prevMonth}><LeftOutlined></LeftOutlined></Icon>
+                    <div class={'wp-calendar-header-title'}
+                         onClick={this.herderTitleClick}>{titleRender()}</div>
+                    <Icon class={'wp-calendar-header-icon'} name={'arrow'}
+                          onClick={this.nextMonth}><RightOutlined></RightOutlined></Icon>
+                    <Icon class={'wp-calendar-header-icon'} name={'arrow'}
+                          onClick={this.nextYear}><DoubleRightOutlined></DoubleRightOutlined></Icon>
                 </div>
                 <div class={'wp-calendar-content'}>
                     {this.showYear ? yearRender() :
@@ -239,6 +290,36 @@ export default defineComponent({
                                 daysRender()
                             ]}
                 </div>
+            </div>)
+        }
+        const calendarPanelRender = ()=>(
+            <div class={{
+                'wp-calendar-layout-panel': true,
+                'wp-calendar-layout-lunar-panel': this.$props.lunar,
+            }}>
+                <div class={{
+                    "wp-calendar-layout-panel-title":true,
+                }}>{this.year}-{this.month}-{this.date}</div>
+                <div class={{
+                    "wp-calendar-layout-panel-btns":true,
+                }}>
+                    <WpButton size='mini' onClick={()=>this.goDay(0)}>返回今天</WpButton>
+                    <WpButton size='mini' onClick={()=>this.goDay(-1)}>昨天</WpButton>
+                    <WpButton size='mini' onClick={()=>this.goDay(-7)}>一周前</WpButton>
+                    <WpButton size='mini' onClick={()=>this.goDay(7)}>一周后</WpButton>
+                    <WpButton size='mini' onClick={()=>this.goDay(-30)}>一月前</WpButton>
+                    <WpButton size='mini' onClick={()=>this.goDay(30)}>一月后</WpButton>
+                </div>
+            </div>
+        )
+
+        return (
+            <div class={{
+                'wp-calendar-layout': true,
+                'wp-calendar-layout-lunar': this.$props.lunar,
+            }}>
+                {calendarRender()}
+                {calendarPanelRender()}
             </div>
         )
     }
