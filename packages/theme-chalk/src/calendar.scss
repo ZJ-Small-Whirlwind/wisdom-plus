@@ -103,6 +103,7 @@ $unit15:15px;
     }
     &-year{
       width: calc(100% / 4);
+      min-height: 50px;
       span{
         &:hover{
           color: #0088FF;
@@ -116,6 +117,7 @@ $unit15:15px;
     }
     &-month{
       width: calc(100% / 4);
+      min-height: 50px;
       span{
         &:hover{
           color: #0088FF;
