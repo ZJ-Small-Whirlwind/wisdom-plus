@@ -89,7 +89,7 @@ export default defineComponent({
             return true
         }
     },
-    expose: ['submit', 'addUpload'],
+    expose: ['submit', 'addUpload', 'deleteAllFiles'],
     setup(props, { emit, attrs }) {
         const uploadFilesRef = ref<UploadFile[]>([])
         const uploadFiles = useAutoControl(uploadFilesRef, props, 'modelValue', emit, {
@@ -248,6 +248,9 @@ export default defineComponent({
             handleAddUpload(files)
         }
 
+        const deleteAllFiles = () => {
+            console.log(11);
+        }
         return {
             fileRef,
             uploadFiles,
@@ -260,7 +263,8 @@ export default defineComponent({
             handleDrop,
             handleDragleave,
             handleDragover,
-            handleRetry
+            handleRetry,
+            deleteAllFiles
         }
     },
     render() {

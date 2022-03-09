@@ -21,11 +21,12 @@ app.use(WpUpload)
 :::demo
 ```vue
 <template>
-    <wp-upload v-model="files" auto-upload :delete="handleDelete" :upload="handleUpload" multiple :limit="5" accept=".jpg,.png,.webp">
+    <wp-upload ref="ak" v-model="files" auto-upload :delete="handleDelete" :upload="handleUpload" multiple :limit="5" accept=".jpg,.png,.webp">
         <template #description>
             允许的文件格式 .jpg,.png,.webp，已上传 {{ files?.length || 0 }} 个文件
         </template>
     </wp-upload>
+    <wp-button type="primary" @click="test">click</wp-button>
 </template>
 
 <script lang="ts" setup>
@@ -58,6 +59,10 @@ const handleUpload = filterFiles => {
         }, 1500)
     })
 }
+const test = () => {
+    console.log(ak.value)
+}
+const ak = ref()
 </script>
 ```
 :::
