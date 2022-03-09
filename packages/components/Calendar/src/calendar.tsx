@@ -40,6 +40,7 @@ export default defineComponent({
         const showYear = ref(false)
         const showMonth = ref(false)
         const cd = new CalendarData();
+        const oneDayTimeIndex = 86400000;
 
         const days = computed(()=>cd.returnDate(year.value, month.value))
         const yearList = computed(()=>{
@@ -54,6 +55,22 @@ export default defineComponent({
             emit('change',arg)
         },{deep:true,immediate:true})
 
+        const goDay = nb=>{
+            switch (nb){
+                case 0:
+                    year.value = currentData.year();
+                    month.value = currentData.month() + 1;
+                    date.value = currentData.date();
+                    break;
+                default:
+                    const nbData = dayjs(Date.now() + oneDayTimeIndex*nb);
+                    year.value = nbData.year();
+                    month.value = nbData.month() + 1;
+                    date.value = nbData.date();
+                    break;
+            }
+
+        }
         /**
          * 日期点击
          */
@@ -145,6 +162,7 @@ export default defineComponent({
             showMonth,
             monthList,
             yearList,
+            goDay,
         }
     },
     render(){
@@ -285,10 +303,12 @@ export default defineComponent({
                 <div class={{
                     "wp-calendar-layout-panel-btns":true,
                 }}>
-                    <WpButton size='mini'>今天</WpButton>
-                    <WpButton size='mini'>昨天</WpButton>
-                    <WpButton size='mini'>一周前</WpButton>
-                    <WpButton size='mini'>一周后</WpButton>
+                    <WpButton size='mini' onClick={()=>this.goDay(0)}>返回今天</WpButton>
+                    <WpButton size='mini' onClick={()=>this.goDay(-1)}>昨天</WpButton>
+                    <WpButton size='mini' onClick={()=>this.goDay(-7)}>一周前</WpButton>
+                    <WpButton size='mini' onClick={()=>this.goDay(7)}>一周后</WpButton>
+                    <WpButton size='mini' onClick={()=>this.goDay(-30)}>一月前</WpButton>
+                    <WpButton size='mini' onClick={()=>this.goDay(30)}>一月后</WpButton>
                 </div>
             </div>
         )
