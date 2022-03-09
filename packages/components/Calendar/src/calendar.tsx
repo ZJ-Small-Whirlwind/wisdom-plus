@@ -13,7 +13,6 @@ import {
     CarryOutFilled,
     CarryOutOutlined,
 } from "@vicons/antd";
-import th from "@wisdom-plus/locale/lang/th";
 export const calendarProps = buildProps({
     /**
      * 获取事件状态
@@ -23,6 +22,10 @@ export const calendarProps = buildProps({
         default: ()=>false
     },
     lunar:{
+        type:Boolean as PropType<boolean>,
+        default:false
+    },
+    showPanel:{
         type:Boolean as PropType<boolean>,
         default:false
     }
@@ -361,8 +364,7 @@ export default defineComponent({
                 {this.$props.lunar ? [calendarPanelLunarRender(), calendarPanelLunarTaskRender()] : calendarPanelBtnsRender()}
             </div>
         )
-
-        return (
+        return this.$props.showPanel ?  (
             <div class={{
                 'wp-calendar-layout': true,
                 'wp-calendar-layout-lunar': this.$props.lunar,
@@ -370,6 +372,6 @@ export default defineComponent({
                 {calendarRender()}
                 {calendarPanelRender()}
             </div>
-        )
+        ) : calendarRender()
     }
 })

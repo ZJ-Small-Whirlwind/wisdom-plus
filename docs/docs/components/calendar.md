@@ -28,6 +28,18 @@ app.use(WpCalendar)
 
 :::
 
+#### 显示侧边面板
+
+:::demo
+
+```vue
+<template>
+    <wp-calendar showPanel></wp-calendar>
+</template>
+```
+
+:::
+
 #### 农历模式
 
 :::demo
@@ -46,7 +58,7 @@ app.use(WpCalendar)
 
 ```vue
 <template>
-    <wp-calendar lunar :getIsEvent="getIsEvent"></wp-calendar>
+    <wp-calendar lunar :getIsEvent="getIsEvent" showPanel></wp-calendar>
 </template>
 <script setup lang="ts">
 const getIsEvent = e=>{
