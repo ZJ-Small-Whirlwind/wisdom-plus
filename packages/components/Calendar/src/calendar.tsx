@@ -11,6 +11,10 @@ export const calendarProps = buildProps({
     getIsEvent:{
         type: Function as PropType<(day:any) => boolean>,
         default: ()=>false
+    },
+    lunar:{
+        type:Boolean as PropType<boolean>,
+        default:false
     }
 })
 
@@ -25,7 +29,7 @@ export default defineComponent({
         const month = ref(currentData.month() + 1)
         const date = ref(currentData.date())
         const showYear = ref(false)
-        const showMonth = ref(true)
+        const showMonth = ref(false)
         const cd = new CalendarData();
 
         const days = computed(()=>cd.returnDate(year.value, month.value))
@@ -87,6 +91,11 @@ export default defineComponent({
          */
         const prevYear = ()=>{
             year.value -= 1;
+            emit('arrow-year-change',{
+                year,
+                month,
+                date,
+            },'prev')
         }
 
         /**
@@ -94,6 +103,11 @@ export default defineComponent({
          */
         const nextYear = ()=>{
             year.value += 1;
+            emit('arrow-year-change',{
+                year,
+                month,
+                date,
+            },'next')
         }
 
         /**
@@ -152,11 +166,18 @@ export default defineComponent({
          * 具体日期
          */
         const daysRender = ()=> this.days.map(e => (
-            <div class={`wp-calendar-content-day ${e.type}`}>
+            <div class={{
+                'wp-calendar-content-day':true,
+                isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
+                [e.type]:true,
+            }}>
                 <span  onClick={() => this.clickDays(e)} class={{
                     isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
                     isEvent:this.$props.getIsEvent(e),
                 }}>{e.day}</span>
+                {this.$props.lunar ? (<span class={{
+                    "wp-calendar-content-day-lunar":true
+                }}>{e.calendar.IDayCn} </span>) : null}
             </div>
         ))
         /**
@@ -197,7 +218,10 @@ export default defineComponent({
 
 
         return (
-            <div class={'wp-calendar'}>
+            <div class={{
+                'wp-calendar':true,
+                "wp-calendar-lunar":this.$props.lunar
+            }}>
                 <div class={'wp-calendar-header'}>
                     <Icon class={'wp-calendar-header-icon'} name={'arrow-left'} onClick={this.prevYear}><DoubleLeftOutlined></DoubleLeftOutlined></Icon>
                     <Icon class={'wp-calendar-header-icon'} name={'arrow-left'} onClick={this.prevMonth}><LeftOutlined></LeftOutlined></Icon>

@@ -27,3 +27,15 @@ app.use(WpCalendar)
 ```
 
 :::
+
+#### 农历模式
+
+:::demo
+
+```vue
+<template>
+    <wp-calendar ref="calendar" lunar></wp-calendar>
+</template>
+```
+
+:::
