@@ -8,6 +8,7 @@ $unit15: 15px;
     overflow: hidden;
     user-select: none;
     padding: 15px;
+    flex: 1;
     &-header {
         display: flex;
         justify-content: space-around;
@@ -261,10 +262,11 @@ $unit15: 15px;
     }
     &-layout{
         display: flex;
+        $w:150px;
         &-panel{
             border-left: 1px solid #eeeeee;
             padding: 15px;
-            min-width: 150px;
+            min-width: $w;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -295,6 +297,50 @@ $unit15: 15px;
                 border-radius: 0 6px 6px 0;
                 *{
                     color: #ffffff;
+                }
+                &-lunar{
+                    &-day{
+                        width: 80px;
+                        height: 80px;
+                        background-color: #a9b3f7;
+                        border-radius: 10px;
+                        font-size: 40px;
+                        font-weight: bold;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        margin: 0 auto 15px auto;
+                    }
+                    &-text{
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        font-size: 14px;
+                        &>*{
+                            margin-bottom: 10px;
+                        }
+                    }
+                    &-task{
+                        width: 100%;
+                        background-color: #6d7bf1;
+                        margin-top: 15px;
+                        display: flex;
+                        flex-direction: column;
+                        &>*{
+                            display: flex;
+                            padding:5px 10px;
+                            &+*{
+                                border-top: 1px solid #ffffff;
+                            }
+                            &>*{
+                                display: flex;
+                                align-items: center;
+                                &:nth-child(1){
+                                    flex: 1;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
