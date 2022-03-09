@@ -187,7 +187,6 @@ export default defineComponent({
                         isEvent:EventList,
                         'wp-calendar-content-day-cell':true,
                     }}>{e.day}</span>
-                    {console.log(e.calendar)}
                     {this.$props.lunar ? (<span class={{
                         "wp-calendar-content-day-lunar":true,
                         isFestival:e.calendar.festival,
