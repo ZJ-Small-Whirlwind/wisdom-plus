@@ -38,9 +38,14 @@ export default defineComponent({
     props:calendarProps,
     setup(props, {emit}) {
         const currentData:dayjs.Dayjs = dayjs()
-        const year = ref(currentData.year())
-        const month = ref(currentData.month() + 1)
-        const date = ref(currentData.date())
+        const today = ref({
+            year:currentData.year(),
+            month:currentData.month()+1,
+            date:currentData.date(),
+        })
+        const year = ref(today.value.year)
+        const month = ref(today.value.month)
+        const date = ref(today.value.date)
         const showYear = ref(false)
         const showMonth = ref(false)
         const cd = new CalendarData();
@@ -62,9 +67,9 @@ export default defineComponent({
         const goDay = nb=>{
             switch (nb){
                 case 0:
-                    year.value = currentData.year();
-                    month.value = currentData.month() + 1;
-                    date.value = currentData.date();
+                    year.value = today.value.year;
+                    month.value = today.value.month;
+                    date.value = today.value.date;
                     break;
                 default:
                     const nbData = dayjs(Date.now() + oneDayTimeIndex*nb);
@@ -174,6 +179,7 @@ export default defineComponent({
             yearList,
             goDay,
             currentDayObjData,
+            today,
         }
     },
     render(){
@@ -321,7 +327,7 @@ export default defineComponent({
             }}>
                 <div class={{
                     "wp-calendar-layout-lunar-panel-lunar-day": true,
-                }}>{this.date}</div>
+                }} title={this.today.year == this.year && this.today.month == this.month && this.today.date == this.date ? '今天' : ''} onClick={()=>this.goDay(0)}>{this.date}</div>
                 <div class={{
                     "wp-calendar-layout-lunar-panel-lunar-text": true,
                 }}>
@@ -331,7 +337,9 @@ export default defineComponent({
                     {[
                         this.currentDayObjData.calendar.lunarFestival,
                         this.currentDayObjData.calendar.festival,
-                    ].filter(e=>e).map(e=>(<div>· {e}</div>))}
+                    ].filter(e=>e).map(e=>(<div class={{
+                        "wp-calendar-layout-lunar-panel-lunar-text-festival": true,
+                    }}>· {e}</div>))}
                 </div>
 
             </div>
