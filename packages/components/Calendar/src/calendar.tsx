@@ -3,7 +3,15 @@ import CalendarData from 'lunar-calendar-panel'
 import dayjs from 'dayjs'
 import {buildProps} from "@wisdom-plus/utils/props";
 import Icon from "../../Icon";
-import {DoubleLeftOutlined, DoubleRightOutlined, LeftOutlined, RightOutlined} from "@vicons/antd";
+import {
+    DoubleLeftOutlined,
+    DoubleRightOutlined,
+    LeftOutlined,
+    RightOutlined,
+    AlignRightOutlined,
+    CarryOutFilled,
+    CarryOutOutlined,
+} from "@vicons/antd";
 export const calendarProps = buildProps({
     /**
      * 获取事件状态
@@ -165,23 +173,41 @@ export default defineComponent({
         /**
          * 具体日期
          */
-        const daysRender = ()=> this.days.map(e => (
-            <div  onClick={() => this.$props.lunar ? this.clickDays(e) : null} class={{
-                'wp-calendar-content-day':true,
-                isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
-                isWeek:[0,6].includes(e.week),
-                [e.type]:true,
-            }}>
-                <span onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{
+        const daysRender = ()=> this.days.map(e => {
+            const EventList:any = this.$props.getIsEvent(e);
+            return (
+                <div  onClick={() => this.$props.lunar ? this.clickDays(e) : null} class={{
+                    'wp-calendar-content-day':true,
                     isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
-                    isEvent:this.$props.getIsEvent(e),
-                    'wp-calendar-content-day-cell':true,
-                }}>{e.day}</span>
-                {this.$props.lunar ? (<span class={{
-                    "wp-calendar-content-day-lunar":true
-                }}>{e.calendar.IDayCn} </span>) : null}
-            </div>
-        ))
+                    isWeek:[0,6].includes(e.week),
+                    [e.type]:true,
+                }}>
+                    <span onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{
+                        isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
+                        isEvent:EventList,
+                        'wp-calendar-content-day-cell':true,
+                    }}>{e.day}</span>
+                    {this.$props.lunar ? (<span class={{
+                        "wp-calendar-content-day-lunar":true
+                    }}>{e.calendar.IDayCn} </span>) : null}
+                    {Object.prototype.toString.call(EventList) === '[object Array]' ? (<div class={{
+                        "wp-calendar-content-day-event":true
+                    }}>
+                        {EventList.map(eventObj=>(
+                            <div class={{
+                                "wp-calendar-content-day-event-cell":true,
+                                "wp-calendar-content-day-event-cell-success":eventObj.success,
+                            }} onClick={(ev)=>this.$emit('event-click',{ev,day:e,eventData:eventObj})}>
+                                {eventObj.name}
+                                <Icon size={18} class={{
+                                    "wp-calendar-content-day-event-cell-icon":true,
+                                }}>{eventObj.success ? <CarryOutFilled></CarryOutFilled> : <CarryOutOutlined></CarryOutOutlined>}</Icon>
+                            </div>
+                        ))}
+                    </div>) : null}
+                </div>
+            )
+        })
         /**
          * 星期头
          */

@@ -39,3 +39,23 @@ app.use(WpCalendar)
 ```
 
 :::
+
+#### 待办事件
+
+:::demo
+
+```vue
+<template>
+    <wp-calendar ref="calendar" lunar :getIsEvent="getIsEvent"></wp-calendar>
+</template>
+<script setup lang="ts">
+const getIsEvent = e=>{
+    return e.week === 0 ? [
+        {name:"待办事件1"},
+        {name:"待办事件2", success:true},
+    ] :false;
+}
+</script>
+```
+
+:::

@@ -13,7 +13,6 @@ $unit15: 15px;
         justify-content: space-around;
         align-items: center;
         padding: $unit15;
-
         &-icon {
             width: 22px;
             height: 22px;
@@ -66,9 +65,11 @@ $unit15: 15px;
         &-day {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            flex-direction: column;
+            margin-bottom: 15px;
 
-            span {
+            &-cell {
                 width: 25px;
                 height: 25px;
                 display: flex;
@@ -112,10 +113,59 @@ $unit15: 15px;
 
             &-header {
                 border-bottom: 1px solid #eeeeee;
+                margin-bottom: 15px;
+            }
+            &-event{
+                &-cell{
+                    background-color: #ffe4dd;
+                    border-radius: 2px;
+                    margin-top: 3px;
+                    padding:2px 5px;
+                    font-size: 12px;
+                    color: #ff724b;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    &-icon{
+                        color: #ff724b !important;
+                        margin-left: 5px;
+                    }
+                    &:hover{
+                        background-color: #ff724b;
+                        color: #ffffff;
+                        .wp-calendar-content-day-event-cell-icon{
+                            color: #ffffff !important;
+                        }
+                    }
+                    &-success{
+                        background-color: green;
+                        color: #ffffff;
+                        .wp-calendar-content-day-event-cell-icon{
+                            color: #ffffff !important;
+                        }
+                        &:hover{
+                            background-color: #01a201;
+                            color: #ffffff;
+                            .wp-calendar-content-day-event-cell-icon{
+                                color: #ffffff !important;
+                            }
+                        }
+                    }
+                }
             }
 
             &.prev, &.next {
                 color: #bababa;
+                .wp-calendar-content-day-event{
+                    .wp-calendar-content-day-event-cell{
+                        background-color: #d8d8d8;
+                        color: #999999;
+                        &-icon{
+                            color: #ffffff !important;
+                        }
+                    }
+                }
             }
         }
 
@@ -155,14 +205,12 @@ $unit15: 15px;
     }
     &-lunar{
         border:2px solid #5e67ef;
-        .wp-calendar-content-day-header{
-            margin-bottom: 15px;
-        }
         .wp-calendar-content-day{
-            flex-direction: column;
             min-height: 80px;
             border-radius: 6px;
             cursor: pointer;
+            border:2px solid transparent;
+            padding: 10px 0;
             span{
                 &:hover{
                     background-color: transparent;
@@ -176,6 +224,9 @@ $unit15: 15px;
                     color: #000000;
                     &.isActive{
                         background-color: transparent;
+                        &:before{
+                            background-color: #5e67ef;
+                        }
                     }
                 }
             }
@@ -184,15 +235,21 @@ $unit15: 15px;
                 font-size: 12px;
             }
             &:hover{
-                border:1px solid #d8d8d8;
+                border:2px solid #d8d8d8;
             }
             &.isActive{
                 border:2px solid #5e67ef;
             }
             &.isWeek{
                 .wp-calendar-content-day-cell{
-                    color: #f6434c;
+                    color: #fbaaae;
                 }
+                &.current{
+                    .wp-calendar-content-day-cell{
+                        color: #f6434c;
+                    }
+                }
+
             }
         }
     }
