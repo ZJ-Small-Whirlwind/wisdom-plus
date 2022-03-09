@@ -197,7 +197,7 @@ export default defineComponent({
                             <div class={{
                                 "wp-calendar-content-day-event-cell":true,
                                 "wp-calendar-content-day-event-cell-success":eventObj.success,
-                            }} onClick={(ev)=>this.$emit('event-click',{ev,day:e,eventData:eventObj})}>
+                            }} onClick={(ev)=>(ev.stopPropagation(),this.$emit('event-click',{ev,day:e,eventData:eventObj}))}>
                                 {eventObj.name}
                                 <Icon size={18} class={{
                                     "wp-calendar-content-day-event-cell-icon":true,
