@@ -60,8 +60,13 @@ const handleUpload = filterFiles => {
     })
 }
 const deleteAllFiles = () => {
-    ak.value.deleteAllFiles().then(() => {
+    ak.value.deleteAllFiles().then((res) => {
+        console.log(res);
         console.log('删除成功');
+        // 删除失败
+        setTimeout(() => {
+            files.value = res
+        }, 1000)
     })
 }
 const ak = ref()

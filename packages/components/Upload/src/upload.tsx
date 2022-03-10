@@ -249,7 +249,9 @@ export default defineComponent({
         }
 
         const deleteAllFiles = async() => {
+            const files = uploadFiles.value
             uploadFiles.value = []
+            return files
         }
         return {
             fileRef,

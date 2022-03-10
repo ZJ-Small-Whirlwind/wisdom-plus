@@ -105,7 +105,9 @@ export default defineComponent({
                                             ) : null
                                         }
                                         <Image preview={
-                                            this.preview && (file.url || file.__wp_src__ )
+                                            this.preview && (
+                                                Object.prototype.toString.call(file.url) === '[object String]' ||
+                                                Object.prototype.toString.call(file.__wp_src__) === '[object String]' )
                                         } previewList={
                                             (this.uploadFiles?.map(file => file.url || file.__wp_src__) || [])?.filter(file => file) as string[]
                                         } src={file.__wp_src__} contain={'cover'} />
