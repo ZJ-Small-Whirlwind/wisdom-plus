@@ -1,4 +1,4 @@
-import { ref, computed, defineComponent, ExtractPropTypes, PropType, provide, watch, Transition } from 'vue'
+import { ref, computed, defineComponent, ExtractPropTypes, PropType, provide, watch } from 'vue'
 
 import { useVModel } from '@vueuse/core'
 
@@ -112,10 +112,10 @@ export default defineComponent({
                         props.vertical ? (
                             <Collapse v-model={unfoldItems.value} class="wp-menu-collapse">
                                 {
-                                    props.list.map(item => <MenuItem {...item} />)
+                                    props.list.map(item => <MenuItem {...item} level={0} />)
                                 }
                             </Collapse>
-                        ) : props.list.map(item => <MenuItem {...item} />)
+                        ) : props.list.map(item => <MenuItem {...item} level={0} />)
                     }
                 </div>
             )

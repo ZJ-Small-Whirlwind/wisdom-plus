@@ -61,11 +61,21 @@
     }
     .wp-collapse-item__content {
         padding: 0;
-        padding-left: var(--wp-menu-indent);
+        // padding-left: var(--wp-menu-indent);
     }
 }
 .wp-menu-item {
     color: var(--wp-menu-color);
+    > .wp-collapse-item {
+        .wp-collapse-item__title {
+            padding-left: calc(var(--wp-menu-padding-left-right) + var(--wp-menu-current-indent));
+        }
+        > .wp-collapse-item__content {
+            > .wp-menu-item > .wp-menu-item-title {
+                padding-left: calc(var(--wp-menu-padding-left-right) + var(--wp-menu-current-indent));
+            }
+        }
+    }
     &__icon {
         width: 1em;
         display: inline-flex;
