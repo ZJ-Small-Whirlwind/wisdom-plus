@@ -77,14 +77,6 @@ export default defineComponent({
                                             this.handleRetry?.(file)
                                             return
                                         }
-                                        if (this.preview && (file.url || file.__wp_src__ )) {
-                                            const filesMap = this.uploadFiles?.map(file => file.url || file.__wp_src__) || []
-                                            const filesFilter = filesMap?.filter(file => file)
-                                            Preview(
-                                                filesFilter as string[],
-                                                file.url
-                                            )
-                                        }
                                         this.$emit('itemClick', e, file)
                                     }} key={file.name + file.index}>
                                         {
@@ -112,7 +104,11 @@ export default defineComponent({
                                                 </div>
                                             ) : null
                                         }
-                                        <Image src={file.__wp_src__} contain={'cover'} />
+                                        <Image preview={
+                                            this.preview && (file.url || file.__wp_src__ )
+                                        } previewList={
+                                            (this.uploadFiles?.map(file => file.url || file.__wp_src__) || [])?.filter(file => file) as string[]
+                                        } src={file.__wp_src__} contain={'cover'} />
                                     </div>
                                 )
                             ))

@@ -79,7 +79,7 @@ export default defineComponent({
             immediate: true
         })
         return () => {
-            const imageVNode = (
+            const imageVNode = props.src ? (
                 <img
                     src={ props.src }
                     style={{
@@ -87,7 +87,7 @@ export default defineComponent({
                     }}
                     alt={ props.alt }
                 />
-            )
+            ) : null
             return (
                 <div class="wp-image" style={{
                     width: size.value[0],
@@ -98,7 +98,7 @@ export default defineComponent({
                     color: props.color
                 }}>
                     {
-                        props.preview ? (
+                        props.preview && imageVNode ? (
                             <div class="wp-image-eye" onClick={() => {
                                 if (props.preview && props.src) {
                                     Preview(props.previewList || [props.src], props.previewIndex ?? props.src)
