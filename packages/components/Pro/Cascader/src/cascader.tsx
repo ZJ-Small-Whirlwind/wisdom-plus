@@ -27,6 +27,7 @@ export interface CascaderMenuDisplay {
     menus: CascaderMenu[];
     path: unknown[];
     parent?: CascaderMenu;
+    status: -2 | -1 | 0 | 1;
 }
 
 export interface CascaderItemProps {
@@ -155,12 +156,27 @@ export default defineComponent({
             deep: true
         })
 
+        const getStatus = (model: unknown[], menus?: CascaderMenu[]) => {
+            if (props.disabled || props.useRadio || !props.useCheckbox || !menus) return -2
+            let count = 0
+            for (const menu of menus) {
+                if (model.includes(menu[cascaderProps.value.key])) {
+                    count += 1
+                    continue
+                }
+                if (menus.length - count !== 0 && count > 0) return 0
+            }
+            if (count === 0) return -1
+            return 1
+        }
+
         const menusDisplay = computed(() => {
             const final: CascaderMenuDisplay[] = []
             const path: unknown[] = []
             final.push({
                 menus: menus.value || [],
-                path: []
+                path: [],
+                status: getStatus(model.value, menus.value)
             })
             let lastLevelMenus = menus.value || []
             let level = 0
@@ -176,7 +192,8 @@ export default defineComponent({
                 final.push({
                     menus: lastLevelMenus,
                     path: path.slice(0, level),
-                    parent: findResult
+                    parent: findResult,
+                    status: getStatus(model.value, lastLevelMenus)
                 })
             }
             if (props.editable) {
@@ -185,7 +202,8 @@ export default defineComponent({
                     final.push({
                         menus: [],
                         path: [],
-                        parent: finalIncludes
+                        parent: finalIncludes,
+                        status: -2
                     })
                 }
             }
@@ -241,6 +259,9 @@ export default defineComponent({
         /** 递归设置为 true / false */
         const setTo = (children?: CascaderMenu[], value = true) => {
             if (!children) return
+            if (!model.value) {
+                model.value = []
+            }
             children.forEach(child => {
                 if (child[cascaderProps.value.disabled]) return
                 const index = model.value.indexOf(child[cascaderProps.value.key])
@@ -249,8 +270,22 @@ export default defineComponent({
                 } else if (index === -1 && value) {
                     model.value.push(child[cascaderProps.value.key])
                 }
-                setTo(model.value[cascaderProps.value.children])
+                setTo(child[cascaderProps.value.children] as CascaderMenu[], value)
             })
+        }
+
+        const setToParent = (key) => {
+            for (const item of menusDisplay.value) {
+                if (item.menus.find(menu => menu[cascaderProps.value.key] === key)) break
+                for (const menu of item.menus) {
+                    if (
+                        activeMenus.value.includes(menu[cascaderProps.value.key]) &&
+                        !model.value.includes(menu[cascaderProps.value.key])
+                    ) {
+                        model.value.push(menu[cascaderProps.value.key])
+                    }
+                }
+            }
         }
 
         /** checkbox render */
@@ -269,17 +304,7 @@ export default defineComponent({
                         const index = model.value.indexOf(key)
                         if (value === true) {
                             if (index === -1) model.value.push(key)
-                            for (const item of menusDisplay.value) {
-                                if (item.menus.find(menu => menu[cascaderProps.value.key] === key)) break
-                                for (const menu of item.menus) {
-                                    if (
-                                        activeMenus.value.includes(menu[cascaderProps.value.key]) &&
-                                        !model.value.includes(menu[cascaderProps.value.key])
-                                    ) {
-                                        model.value.push(menu[cascaderProps.value.key])
-                                    }
-                                }
-                            }
+                            setToParent(key)
                         } else {
                             (model.value as unknown[]).splice(index, 1)
                         }
@@ -360,7 +385,9 @@ export default defineComponent({
             model,
             formItem,
             getItems,
-            RenderMenuItem
+            RenderMenuItem,
+            setTo,
+            setToParent
         }
     },
     expose: ['getItems'],
@@ -398,15 +425,36 @@ export default defineComponent({
                             v-slots={{
                                 item: ({ element: menuItem }: { element: CascaderMenu }) => this.RenderMenuItem(menuList, menuItem),
                                 header: () => (
-                                    this.showAdd && this.editable && (
-                                        <div class="wp-pro-cascader--header" key={'header'} onClick={() => this.$emit('add', menuList)}>
-                                            { this.$slots.add?.(menuList) ?? (
-                                                <>
-                                                    <WpIcon><Plus /></WpIcon> 添加 {index + 1} 级菜单
-                                                </>
-                                            ) }
-                                        </div>
-                                    )
+                                    <div class="wp-pro-cascader--header--wrapper" key="header">
+                                        {
+                                            this.showAdd && this.editable && (
+                                                    <div class="wp-pro-cascader--header" key={'header'} onClick={() => this.$emit('add', menuList)}>
+                                                        { this.$slots.add?.(menuList) ?? (
+                                                            <>
+                                                                <WpIcon><Plus /></WpIcon> 添加 {index + 1} 级菜单
+                                                            </>
+                                                        ) }
+                                                    </div>
+                                            )
+                                        }
+                                        {
+                                            this.useCheckbox && (
+                                                <div class="wp-pro-cascader--header wp-pro-cascader--checkbox" key={'select'}>
+                                                    <WpCheckbox
+                                                        modelValue={menuList.status === 1}
+                                                        indeterminate={menuList.status === 0}
+                                                        disabled={menuList.status === -2}
+                                                        onUpdate:modelValue={value => {
+                                                            if (value) {
+                                                                menuList.menus.forEach(menu => this.setToParent(menu))
+                                                            }
+                                                            this.setTo(menuList.menus, value)
+                                                        }}
+                                                    >全选</WpCheckbox>
+                                                </div>
+                                            )
+                                        }
+                                    </div>
                                 )
                             }}
                         />
