@@ -253,6 +253,7 @@ export default defineComponent({
                     formItem?.validate('change')
                 }}
                 onClick={(e: Event) => e.stopPropagation()}
+                size="default"
             />
         )
 
@@ -314,6 +315,7 @@ export default defineComponent({
                         setTo(menuItem[cascaderProps.value.children] as CascaderMenu[], value)
                     }}
                     onClick={(e: Event) => e.stopPropagation()}
+                    size="default"
                 />
             )
         }
@@ -453,6 +455,7 @@ export default defineComponent({
                                                             }
                                                             this.setTo(menuList.menus, value)
                                                         }}
+                                                        size="default"
                                                     >全选</WpCheckbox>
                                                 </div>
                                             )
