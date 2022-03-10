@@ -52,6 +52,7 @@ export default defineComponent({
         const oneDayTimeIndex = 86400000;
 
         const days = computed(()=>cd.returnDate(year.value, month.value))
+        const currentDays = computed(()=>days.value.filter(e=>e.type === "current"))
         const yearList = computed(()=>{
             return new Array(10).fill(0).map((e,k)=>year.value - 5 + k);
         })
@@ -61,7 +62,11 @@ export default defineComponent({
          * 监听日期变化
          */
         watch([year,month, date],(arg) => {
-            emit('change',arg)
+            if(arg[2] > currentDays.value.length){
+                date.value = currentDays.value.length;
+            }else {
+                emit('change',arg)
+            }
         },{deep:true,immediate:true})
 
         const goDay = nb=>{
