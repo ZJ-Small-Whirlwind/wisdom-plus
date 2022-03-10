@@ -28,6 +28,18 @@ app.use(WpCalendar)
 
 :::
 
+#### 显示侧边面板
+
+:::demo
+
+```vue
+<template>
+    <wp-calendar showPanel></wp-calendar>
+</template>
+```
+
+:::
+
 #### 农历模式
 
 :::demo
@@ -46,7 +58,7 @@ app.use(WpCalendar)
 
 ```vue
 <template>
-    <wp-calendar lunar :getIsEvent="getIsEvent"></wp-calendar>
+    <wp-calendar lunar :getIsEvent="getIsEvent" showPanel></wp-calendar>
 </template>
 <script setup lang="ts">
 const getIsEvent = e=>{
@@ -59,3 +71,23 @@ const getIsEvent = e=>{
 ```
 
 :::
+
+## API
+
+### Props
+
+| 参数           | 说明       | 类型                                                                      | 默认值   |
+|--------------|----------|-------------------------------------------------------------------------|-------|
+| getIsEvent      | 获取任务     | _(dayData:object)=>false,{name:string, success:boolean, ...args:any}[]_ | ()=>false |
+| lunar      | 是否启用农历模式 | _boolean_                                                               | false |
+| showPanel      | 是否显示侧方面板 | _boolean_                                                               | false |
+
+### Emits
+
+|  参数   | 说明 | 参数         |
+|-----|--|------------|
+|  change   | 日期变化 | _([year,month, date])=>void_ |
+|  arrow-change   | 月份箭头点击回调 | _(data:{year, month, date,}, type)=>void_ |
+|  arrow-year-change   | 年份箭头点击回调 | _(data:{year, month, date,}, type)=>void_ |
+|  herderTitleClick   | 头部选择回调 | _(data:{year, month, date})=>void_ |
+|  event-click   | 待办任务回调 | _(data:{ev,day,task})=>void_ |

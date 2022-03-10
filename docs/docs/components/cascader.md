@@ -117,7 +117,7 @@ const menu = ref([
 <template>
     <wp-space vertical>
         <wp-cascader :menus="menu" modelValue="test" disabled :showPopoverWhenDisabled="false" size="small"></wp-cascader>
-        <wp-cascader :menus="menu" modelValue="test" disabled></wp-cascader>
+        <wp-cascader :menus="menu" modelValue="test" disabled multiple></wp-cascader>
     </wp-space>
 </template>
 

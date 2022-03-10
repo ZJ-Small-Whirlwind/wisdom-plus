@@ -1,5 +1,5 @@
 import {defineComponent, computed, ref, watch, PropType, ExtractPropTypes} from 'vue'
-import CalendarData from 'lunar-calendar-panel'
+import CalendarData,{returnDate} from 'lunar-calendar-panel'
 import dayjs from 'dayjs'
 import {buildProps} from "@wisdom-plus/utils/props";
 import Icon from "../../Icon";
@@ -24,6 +24,10 @@ export const calendarProps = buildProps({
     lunar:{
         type:Boolean as PropType<boolean>,
         default:false
+    },
+    showPanel:{
+        type:Boolean as PropType<boolean>,
+        default:false
     }
 })
 
@@ -34,33 +38,43 @@ export default defineComponent({
     props:calendarProps,
     setup(props, {emit}) {
         const currentData:dayjs.Dayjs = dayjs()
-        const year = ref(currentData.year())
-        const month = ref(currentData.month() + 1)
-        const date = ref(currentData.date())
+        const today = ref({
+            year:currentData.year(),
+            month:currentData.month()+1,
+            date:currentData.date(),
+        })
+        const year = ref(today.value.year)
+        const month = ref(today.value.month)
+        const date = ref(today.value.date)
         const showYear = ref(false)
         const showMonth = ref(false)
         const cd = new CalendarData();
         const oneDayTimeIndex = 86400000;
 
         const days = computed(()=>cd.returnDate(year.value, month.value))
+        const currentDays = computed(()=>days.value.filter(e=>e.type === "current"))
         const yearList = computed(()=>{
             return new Array(10).fill(0).map((e,k)=>year.value - 5 + k);
         })
         const monthList = ref(new Array(12).fill(0).map((e,k)=> k+1))
-
+        const currentDayObjData = computed<returnDate>(()=>(days.value.find(e=>e.getDayAll === `${year.value}-${month.value}-${date.value}`) || {calendar:{}}) as any);
         /**
          * 监听日期变化
          */
         watch([year,month, date],(arg) => {
-            emit('change',arg)
+            if(arg[2] > currentDays.value.length){
+                date.value = currentDays.value.length;
+            }else {
+                emit('change',arg)
+            }
         },{deep:true,immediate:true})
 
         const goDay = nb=>{
             switch (nb){
                 case 0:
-                    year.value = currentData.year();
-                    month.value = currentData.month() + 1;
-                    date.value = currentData.date();
+                    year.value = today.value.year;
+                    month.value = today.value.month;
+                    date.value = today.value.date;
                     break;
                 default:
                     const nbData = dayjs(Date.now() + oneDayTimeIndex*nb);
@@ -147,7 +161,13 @@ export default defineComponent({
             })
         }
 
+        const eventClick = (ev,day,task)=> {
+            ev.stopPropagation();
+            emit('event-click',{ev,day,task})
+        }
+
         return {
+            eventClick,
             herderTitleClick,
             days,
             clickDays,
@@ -163,6 +183,8 @@ export default defineComponent({
             monthList,
             yearList,
             goDay,
+            currentDayObjData,
+            today,
         }
     },
     render(){
@@ -218,7 +240,7 @@ export default defineComponent({
                             <div class={{
                                 "wp-calendar-content-day-event-cell":true,
                                 "wp-calendar-content-day-event-cell-success":eventObj.success,
-                            }} onClick={(ev)=>(ev.stopPropagation(),this.$emit('event-click',{ev,day:e,eventData:eventObj}))}>
+                            }} onClick={ev=>this.eventClick(ev,e,eventObj)}>
                                 {eventObj.name}
                                 <Icon size={18} class={{
                                     "wp-calendar-content-day-event-cell-icon":true,
@@ -292,6 +314,58 @@ export default defineComponent({
                 </div>
             </div>)
         }
+        const calendarPanelBtnsRender = ()=>(
+            <div class={{
+                "wp-calendar-layout-panel-btns": true,
+            }}>
+                <WpButton size='mini' onClick={() => this.goDay(0)}>返回今天</WpButton>
+                <WpButton size='mini' onClick={() => this.goDay(-1)}>昨天</WpButton>
+                <WpButton size='mini' onClick={() => this.goDay(-7)}>一周前</WpButton>
+                <WpButton size='mini' onClick={() => this.goDay(7)}>一周后</WpButton>
+                <WpButton size='mini' onClick={() => this.goDay(-30)}>一月前</WpButton>
+                <WpButton size='mini' onClick={() => this.goDay(30)}>一月后</WpButton>
+            </div>
+        )
+        const calendarPanelLunarRender = ()=>(
+            <div class={{
+                "wp-calendar-layout-lunar-panel-lunar": true,
+            }}>
+                <div class={{
+                    "wp-calendar-layout-lunar-panel-lunar-day": true,
+                }} title={this.today.year == this.year && this.today.month == this.month && this.today.date == this.date ? '今天' : ''} onClick={()=>this.goDay(0)}>{this.date}</div>
+                <div class={{
+                    "wp-calendar-layout-lunar-panel-lunar-text": true,
+                }}>
+                    <div>{this.currentDayObjData.calendar.IMonthCn} {this.currentDayObjData.calendar.IDayCn}</div>
+                    <div>{this.currentDayObjData.calendar.gzYear}年 {this.currentDayObjData.calendar.Animal}</div>
+                    <div>{this.currentDayObjData.calendar.gzMonth}月 {this.currentDayObjData.calendar.gzDay}日</div>
+                    {[
+                        this.currentDayObjData.calendar.lunarFestival,
+                        this.currentDayObjData.calendar.festival,
+                    ].filter(e=>e).map(e=>(<div class={{
+                        "wp-calendar-layout-lunar-panel-lunar-text-festival": true,
+                    }}>· {e}</div>))}
+                </div>
+
+            </div>
+        )
+        const calendarPanelLunarTaskRender=()=>{
+            const tasks:any = this.$props.getIsEvent(this.currentDayObjData) || [];
+            return (
+                <div class={{
+                    "wp-calendar-layout-lunar-panel-lunar-task": true,
+                }}>
+                    {
+                        tasks.map(task=>(<div  onClick={ev=>this.eventClick(ev,this.currentDayObjData,task)}>
+                            {task.name}
+                            <Icon size={18} class={{
+                                "wp-calendar-content-day-event-cell-icon":true,
+                            }}>{task.success ? <CarryOutFilled></CarryOutFilled> : <CarryOutOutlined></CarryOutOutlined>}</Icon>
+                        </div>))
+                    }
+                </div>
+            )
+        }
         const calendarPanelRender = ()=>(
             <div class={{
                 'wp-calendar-layout-panel': true,
@@ -300,20 +374,10 @@ export default defineComponent({
                 <div class={{
                     "wp-calendar-layout-panel-title":true,
                 }}>{this.year}-{this.month}-{this.date}</div>
-                <div class={{
-                    "wp-calendar-layout-panel-btns":true,
-                }}>
-                    <WpButton size='mini' onClick={()=>this.goDay(0)}>返回今天</WpButton>
-                    <WpButton size='mini' onClick={()=>this.goDay(-1)}>昨天</WpButton>
-                    <WpButton size='mini' onClick={()=>this.goDay(-7)}>一周前</WpButton>
-                    <WpButton size='mini' onClick={()=>this.goDay(7)}>一周后</WpButton>
-                    <WpButton size='mini' onClick={()=>this.goDay(-30)}>一月前</WpButton>
-                    <WpButton size='mini' onClick={()=>this.goDay(30)}>一月后</WpButton>
-                </div>
+                {this.$props.lunar ? [calendarPanelLunarRender(), calendarPanelLunarTaskRender()] : calendarPanelBtnsRender()}
             </div>
         )
-
-        return (
+        return this.$props.showPanel ?  (
             <div class={{
                 'wp-calendar-layout': true,
                 'wp-calendar-layout-lunar': this.$props.lunar,
@@ -321,6 +385,6 @@ export default defineComponent({
                 {calendarRender()}
                 {calendarPanelRender()}
             </div>
-        )
+        ) : calendarRender()
     }
 })

@@ -11,10 +11,7 @@
           39px 39px 500px -22px rgba(0, 0, 0, 0.08)
         ;
         overflow: hidden;
-        &:not(:last-child) {
-            border-right: 1px solid #eee;
-            margin-right: 10px;
-        }
+        margin-right: 10px;
     }
     &--header {
         display: flex;
@@ -27,6 +24,11 @@
         border-bottom: 1px solid #eee;
         .wp-icon {
             margin-right: 6px;
+        }
+    }
+    &--checkbox {
+        .wp-icon {
+            margin: auto;
         }
     }
     &--item {
@@ -76,6 +78,7 @@
             box-shadow: none;
             width: 220px;
             min-height: 100%;
+            border-right: 1px solid #eee;
             &:not(:last-child) {
                 border-right: 1px solid #eee;
                 margin-right: 0;
@@ -84,6 +87,9 @@
         .wp-pro-cascader--item,
         .wp-pro-cascader--header {
             padding: 6px 10px;
+        }
+        .wp-pro-cascader--checkbox {
+            padding: 10px;
         }
     }
 }

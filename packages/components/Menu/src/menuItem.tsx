@@ -1,6 +1,6 @@
 import { defineComponent, PropType, Component, inject, Ref, computed, watch, ComputedRef, ref, provide, h, CSSProperties } from 'vue'
 import { MenuList, MenuRecord } from './typings'
-import MenuItem from './MenuItem'
+import MenuItem from './menuItem'
 import CollapseItem from '../../CollapseItem'
 import type { CollapseSupport } from '../../Collapse'
 import Popover from '../../popover'
@@ -29,6 +29,10 @@ export default defineComponent({
         info: {
             type: Object as PropType<Record<string, any>>,
             default: () => ({})
+        },
+        level: {
+            type: Number,
+            required: true
         }
     },
     setup(props, { slots }) {
@@ -160,7 +164,7 @@ export default defineComponent({
                                     popoverStyle={menuStyle?.value}
                                 >
                                     { props.children?.map(item => (
-                                        <MenuItem {...item} isChild={true} />
+                                        <MenuItem {...item} isChild={true} level={props.level + 1} />
                                     )) || '' }
                                 </Popover>
                             ) : (
@@ -176,9 +180,10 @@ export default defineComponent({
                                     }}
                                     disabled={props.disabled}
                                     showArrow={arrow?.value}
+                                    style={{ '--wp-menu-current-indent': `calc(${props.level} * var(--wp-menu-indent))` }}
                                 >
                                     { props.children?.map(item => (
-                                        <MenuItem {...item} isChild={true} />
+                                        <MenuItem {...item} isChild={true} level={props.level + 1} style={{ '--wp-menu-current-indent': `calc(${props.level + 1} * var(--wp-menu-indent))` }} />
                                     )) }
                                 </CollapseItem>
                             )
