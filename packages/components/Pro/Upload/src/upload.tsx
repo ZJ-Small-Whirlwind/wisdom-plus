@@ -67,6 +67,7 @@ export default defineComponent({
         }
     },
     setup(props, { emit }) {
+        const upload = ref()
         const propsMap = computed(() => {
             const propsTemp: Partial<ProUploadProps> = { ...props }
             delete propsTemp.extra
@@ -121,6 +122,7 @@ export default defineComponent({
         })
         
         return {
+            upload,
             propsMap,
             fileItems,
             handleUpload,
@@ -131,6 +133,7 @@ export default defineComponent({
         return (
             <Upload
                 class="wp-pro-upload"
+                ref="upload"
                 {...this.propsMap}
                 v-model={this.fileItems}
                 upload={this.handleUpload}

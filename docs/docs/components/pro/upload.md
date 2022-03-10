@@ -21,11 +21,12 @@ app.use(WpProUpload)
 :::demo
 ```vue
 <template>
-    <wp-pro-upload v-model="files" auto-upload :delete="handleDelete" :upload="handleUpload" multiple :limit="5" accept=".jpg,.png,.webp">
+    <wp-pro-upload ref="wpProUpload" v-model="files" auto-upload :delete="handleDelete" :upload="handleUpload" multiple :limit="5" accept=".jpg,.png,.webp">
         <template #description>
             允许的文件格式 .jpg,.png,.webp，已上传 {{ files?.length || 0 }} 个文件
         </template>
     </wp-pro-upload>
+    <wp-button type="danger" @click="deleteAllFiles">删除所有文件</wp-button>
 </template>
 
 <script lang="ts" setup>
@@ -56,6 +57,13 @@ const handleUpload = filterFiles => {
             console.log('上传了文件')
             clearInterval(timer)
         }, 1500)
+    })
+}
+
+const wpProUpload = ref()
+const deleteAllFiles = () => {
+    wpProUpload.value.upload.deleteAllFiles().then(() => {
+        console.log('删除成功')
     })
 }
 </script>

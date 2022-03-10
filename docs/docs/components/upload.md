@@ -26,7 +26,7 @@ app.use(WpUpload)
             允许的文件格式 .jpg,.png,.webp，已上传 {{ files?.length || 0 }} 个文件
         </template>
     </wp-upload>
-    <wp-button type="primary" @click="test">click</wp-button>
+    <wp-button type="danger" @click="deleteAllFiles">删除所有文件</wp-button>
 </template>
 
 <script lang="ts" setup>
@@ -59,8 +59,10 @@ const handleUpload = filterFiles => {
         }, 1500)
     })
 }
-const test = () => {
-    console.log(ak.value)
+const deleteAllFiles = () => {
+    ak.value.deleteAllFiles().then(() => {
+        console.log('删除成功');
+    })
 }
 const ak = ref()
 </script>
@@ -244,6 +246,7 @@ const handleUpload = filterFiles => {
 | submit | 手动上传函数 | _() => Promise\<void>_ |
 | addUpload | 手动添加上传文件 | _(files: FileList \| File[]) => Promise\<void>_ |
 | getFileHash | 获取文件唯一Hash， 用于大文件上传 | _(file: File) => Promise\<Hash>_ |
+| deleteAllFiles | 删除所有已上传的文件列表 | _() => Promise\<void>_ |
 
 ## 类型
 

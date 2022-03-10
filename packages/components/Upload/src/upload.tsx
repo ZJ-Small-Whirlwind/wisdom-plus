@@ -248,8 +248,8 @@ export default defineComponent({
             handleAddUpload(files)
         }
 
-        const deleteAllFiles = () => {
-            console.log(11);
+        const deleteAllFiles = async() => {
+            uploadFiles.value = []
         }
         return {
             fileRef,
