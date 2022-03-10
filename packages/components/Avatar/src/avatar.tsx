@@ -28,6 +28,7 @@ export type AvatarProps = ExtractPropTypes<typeof avatarProps>
 
 import { UserOutlined, UserDeleteOutlined } from '@vicons/antd'
 import Icon from '../../Icon'
+import { useConfig } from '@wisdom-plus/utils/config'
 
 export default defineComponent({
     name: 'WpAvatar',

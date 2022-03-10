@@ -1,6 +1,6 @@
 import type { ComponentSize } from './types'
 import { WpConfig } from '../components/ConfigProvider/src/utils'
-import { inject } from 'vue'
+import { inject, reactive } from 'vue'
 
 export interface InstallOptions {
   size: ComponentSize
@@ -21,7 +21,7 @@ const getConfig = (key: keyof InstallOptions): unknown => {
 export const configSymbol = Symbol('config')
 
 const useConfig = () => {
-  const config = inject<WpConfig>(configSymbol)
+  const config = inject<WpConfig>(configSymbol, reactive({}))
   return config
 }
 

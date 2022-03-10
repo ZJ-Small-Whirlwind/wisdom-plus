@@ -7,4 +7,4 @@ export const configProviderProps = buildProps({
 
 export type ConfigProviderProps = ExtractPropTypes<typeof configProviderProps>
 
-export type WpConfig = ToRefs<Readonly<ConfigProviderProps>>
+export type WpConfig = ToRefs<Readonly<Partial<ConfigProviderProps>>>
