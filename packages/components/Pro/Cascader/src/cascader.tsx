@@ -274,7 +274,10 @@ export default defineComponent({
             })
         }
 
-        const setToParent = (key) => {
+        const setToParent = (key: unknown) => {
+            if (!model.value) {
+                model.value = []
+            }
             for (const item of menusDisplay.value) {
                 if (item.menus.find(menu => menu[cascaderProps.value.key] === key)) break
                 for (const menu of item.menus) {
@@ -315,7 +318,7 @@ export default defineComponent({
             )
         }
 
-        const RenderDropdown = (menuItem: CascaderMenu) => {
+        const RenderDropdown = (menuItem: CascaderMenu) => (
             <WpDropdown
                 onClick={(record: DropdownRecord) => {
                     if (record.index === 'modify') {
@@ -329,7 +332,7 @@ export default defineComponent({
             >
                 <WpIcon class="wp-pro-cascader--item--more"><MoreFilled /></WpIcon>
             </WpDropdown>
-        }
+        )
 
         const RenderMenuItem = (menuList: CascaderMenuDisplay, menuItem: CascaderMenu) => (
             <div
