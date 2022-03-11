@@ -44,6 +44,7 @@
         cursor: default;
         align-items: center;
         line-height: 100%;
+        box-sizing: border-box;
     }
     &--active {
         background-color: var(--wp-switch-active-color);
