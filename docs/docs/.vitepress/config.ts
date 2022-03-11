@@ -115,6 +115,10 @@ export default defineConfig({
                             link: '/components/radio'
                         },
                         {
+                            text: 'Switch 开关',
+                            link: '/components/switch'
+                        },
+                        {
                             text: 'Slider 滑块',
                             link: '/components/slider'
                         },

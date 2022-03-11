@@ -61,6 +61,7 @@ export * from './Calendar'
 export * from './BasicSelect'
 export * from './Cascader'
 export * from './DatePicker'
+export * from './Switch'
 
 export * from './Pro/Upload'
 export * from './Pro/Editor'
