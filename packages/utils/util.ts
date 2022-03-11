@@ -209,9 +209,9 @@ export function deduplicate<T>(arr: T[]) {
 }
 
 export function addUnit(value?: string | number) {
-  if (isString(value)) {
+  if (isString(value) && isNaN(Number(value))) {
     return value
-  } else if (isNumber(value)) {
+  } else if (isNumber(value) || !isNaN(Number(value))) {
     return `${value}px`
   }
   return ''

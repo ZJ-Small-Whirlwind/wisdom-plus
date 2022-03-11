@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { WpInput, WpCheckbox, WpInputNumber, WpProCascader } from '@wisdom-plus/components'
+import { WpInput, WpCheckbox, WpInputNumber, WpProCascader, WpSwitch } from '@wisdom-plus/components'
 </script>
 
 # Form 数据表单
@@ -73,6 +73,11 @@ const schemas = [
             span: 12
         },
         required: true
+    },
+    {
+        prop: 'switch',
+        label: '开关',
+        component: WpSwitch
     },
     {
         prop: 'title4',

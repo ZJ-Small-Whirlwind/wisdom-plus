@@ -1,0 +1,38 @@
+:root {
+    --wp-switch-inactive-color: rgb(215, 218, 226);
+    --wp-switch-active-color: var(--wp-color-primary);
+    --wp-switch-width: 40px;
+    --wp-switch-height: 18px;
+    --wp-switch-border-radius: 20px;
+    --wp-switch-border: 4px solid var(--wp-switch-inactive-color);
+    --wp-switch-duration: .3s;
+}
+
+.wp-switch {
+    width: var(--wp-switch-width);
+    height: var(--wp-switch-height);
+    background-color: var(--wp-switch-inactive-color);
+    border-radius: var(--wp-switch-border-radius);
+    border: var(--wp-switch-border);
+    border-color: var(--wp-switch-inactive-color);
+    box-sizing: content-box;
+    transition: all var(--wp-switch-duration);
+    &--button {
+        height: var(--wp-switch-height);
+        width: var(--wp-switch-height);
+        border-radius: var(--wp-switch-border-radius);
+        background-color: #fff;
+        transition: all var(--wp-switch-duration);
+    }
+    &--active {
+        background-color: var(--wp-switch-active-color);
+        border-color: var(--wp-switch-active-color);
+        .wp-switch--button {
+            transform: translateX(calc(var(--wp-switch-width) - var(--wp-switch-height)));
+        }
+    }
+    &--disabled {
+        cursor: not-allowed;
+        opacity: .6;
+    }
+}

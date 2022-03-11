@@ -59,6 +59,10 @@ declare global {
     const WpInput: typeof import('wisdom-plus')['WpInput']
     const WpInputNumber: typeof import('wisdom-plus')['WpInputNumber']
     const WpTable: typeof import('wisdom-plus')['WpTable']
+    const WpSwitch: typeof import('wisdom-plus')['WpSwitch']
+    const WpConfigProvider: typeof import('wisdom-plus')['WpConfigProvider']
+    const WpCalendar: typeof import('wisdom-plus')['WpCalendar']
+    }
 }
 
 export {}

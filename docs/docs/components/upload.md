@@ -111,7 +111,7 @@ const handleUpload = filterFiles => {
 const list = [
     {
         name: 'a.jpg',
-        url: '#'
+        url: 'https://avatars.githubusercontent.com/u/26594629?v=4&.jpg'
     },
     {
         name: 'b.jpg'
@@ -233,6 +233,7 @@ const handleUpload = filterFiles => {
 | chunk | 是否开启大文件切片                                   | _boolean_                                                           | false              |
 | chunkSize | 切片单元大小（字节）                                      | _number_                                                            | 默认2M 即 `1024*1024*2` |
 | chunkFileFilter | 切片过滤                                        | _(file: UploadFile) => boolean_               | - |
+| showImage | 在列表模式下，是否显示图片缩略图 | _boolean_ | true |
 | retry | 失败后是否允许重试 | _boolean_ | true |
 
 ### Methods

@@ -28,6 +28,7 @@
         background: var(--wp-checkbox-background);
         border: 1px solid var(--wp-checkbox-border-color);
         transition: background .2s, border .2s;
+        box-sizing: border-box;
     }
     &--label {
         padding-left: .4em;

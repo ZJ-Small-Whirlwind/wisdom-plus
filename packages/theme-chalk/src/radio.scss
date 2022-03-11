@@ -28,6 +28,7 @@
         background: var(--wp-radio-background);
         border: 1px solid var(--wp-radio-border-color);
         transition: background .2s, border .2s;
+        box-sizing: border-box;
     }
     &--label {
         padding-left: .4em;
