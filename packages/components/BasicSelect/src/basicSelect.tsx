@@ -17,6 +17,7 @@ export type BasicSelectProps = ExtractPropTypes<typeof basicSelectProps>
 export const basicSelectEmits = {
     'update:input': (value: string) => (void value, true),
     clear: () => true,
+    show: () => true,
     ...tagInputEmits
 }
 
@@ -85,6 +86,10 @@ export default defineComponent({
                     </div>
                 </div>
             )
+        })
+
+        watch(show, () => {
+            emit('show')
         })
 
         return {
