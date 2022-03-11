@@ -21,7 +21,7 @@ import { useFormItem } from '@wisdom-plus/hooks'
 
 const DraggableElement = Draggable as any
 
-export type CascaderMenu = Record<any, unknown>
+export type CascaderMenu = Record<any, any>
 
 export interface CascaderMenuDisplay {
     menus: CascaderMenu[];

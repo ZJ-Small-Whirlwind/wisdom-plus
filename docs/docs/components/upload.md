@@ -100,7 +100,7 @@ const handleUpload = filterFiles => {
 :::demo
 ```vue
 <template>
-    <wp-upload :model-value="list" :show-button="false" multiple drop disabled>
+    <wp-upload :model-value="list" :show-button="false" multiple drop disabled show-image>
         <template #description>
             已上传文件：
         </template>
@@ -233,7 +233,7 @@ const handleUpload = filterFiles => {
 | chunk | 是否开启大文件切片                                   | _boolean_                                                           | false              |
 | chunkSize | 切片单元大小（字节）                                      | _number_                                                            | 默认2M 即 `1024*1024*2` |
 | chunkFileFilter | 切片过滤                                        | _(file: UploadFile) => boolean_               | - |
-| showImage | 在列表模式下，是否显示图片缩略图 | _boolean_ | true |
+| showImage | 在列表模式下，是否显示图片缩略图 | _boolean_ | false |
 | retry | 失败后是否允许重试 | _boolean_ | true |
 
 ### Methods

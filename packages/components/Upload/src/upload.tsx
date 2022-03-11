@@ -70,7 +70,7 @@ export const uploadProps = buildProps({
     },
     showImage: {
         type: Boolean,
-        default: true
+        default: false
     }
 })
 

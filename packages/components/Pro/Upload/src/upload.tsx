@@ -98,11 +98,7 @@ export default defineComponent({
                 await Dialog({
                     content: '确定要删除这个文件吗？',
                     confirmProps: {
-                        type: 'danger',
-                        size: 'small'
-                    },
-                    cancelProps: {
-                        size: 'small'
+                        type: 'danger'
                     }
                 })
             }
