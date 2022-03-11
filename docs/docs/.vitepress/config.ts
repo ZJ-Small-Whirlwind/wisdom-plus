@@ -145,6 +145,10 @@ export default defineConfig({
                         {
                             text: 'Cascader 级联选择器',
                             link: '/components/cascader'
+                        },
+                        {
+                            text: 'DatePicker 日期选择器',
+                            link: '/components/date-picker'
                         }
                     ]
                 },

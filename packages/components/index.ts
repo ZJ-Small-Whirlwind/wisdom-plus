@@ -60,6 +60,7 @@ export * from './InputNumber'
 export * from './Calendar'
 export * from './BasicSelect'
 export * from './Cascader'
+export * from './DatePicker'
 
 export * from './Pro/Upload'
 export * from './Pro/Editor'
