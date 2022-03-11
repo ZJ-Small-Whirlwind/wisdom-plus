@@ -94,6 +94,12 @@ export default defineComponent({
             return props.clearable && Boolean(input.value || tags.value.length > 0)
         })
 
+        const expends = ref<unknown[]>([])
+
+        const handleOnShow = () => {
+            if (expends.value.length > 0) return
+        }
+
         return {
             input,
             cascaderProps,
@@ -103,7 +109,9 @@ export default defineComponent({
             updateValue,
             clearable,
             getItems,
-            stringTags
+            expends,
+            stringTags,
+            handleOnShow
         }
     },
     expose: ['getItems'],
@@ -140,11 +148,13 @@ export default defineComponent({
                         if (trustIndex > -1) this.model.splice(trustIndex, 1)
                     }
                 }}
+                onShow={this.handleOnShow}
                 v-slots={this.$slots}
             >
                 <ProCascader
                     ref="cascaderRef"
                     v-model={this.model}
+                    v-model:expends={this.expends}
                     props={this.props}
                     menus={this.menus}
                     useRadio={!this.multiple}
