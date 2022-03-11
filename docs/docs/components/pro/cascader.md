@@ -200,7 +200,8 @@ const handleAdd = ({ menus, path, parent }) => {
 | 参数      | 说明                                          | 类型                                                                  | 默认值                |
 | --------- |---------------------------------------------|---------------------------------------------------------------------|--------------------|
 | modelValue `v-model` | 双向绑定的值，会作为 useRadio 或者 useCheckbox 使用       | _string_                                                      | -                  |
-| menus `v-model`   | 双向绑定的菜单                  | _height_                                                            | 300                  |
+| menus `v-model`   | 双向绑定的菜单                  | _CascaderMenu[]_                                                            | -                  |
+| expends `v-model` | 展开项 | _unknown[]_ | - |
 | props | 自定义使用哪个字段作为 key, title 和 children                                     | _{ key?: string; title?: string; children?: string; }_                                                           | _{ key: 'name', title: 'title', children: 'children' }_                  |
 | dropdownList | 下拉菜单附加的列表 | _DropdownRecord[]_ | - |
 | showModify | 是否显示下拉菜单中的编辑按钮 | _boolean_ | true |

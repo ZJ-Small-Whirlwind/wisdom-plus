@@ -81,6 +81,9 @@ export const proCascaderProps = buildProps({
     disabled: {
         type: Boolean,
         default: false
+    },
+    expends: {
+        type: Array as PropType<unknown[]>
     }
 })
 
@@ -119,6 +122,7 @@ export default defineComponent({
     emits: {
         'update:menus': (menus: CascaderMenu[]) => (void menus, true),
         'update:modelValue': (value: any) => (void value, true),
+        'update:expends': (value: unknown[]) => (void value, true),
         change: (value: unknown | unknown[]) => (void value, true),
         modify: (menuItem: CascaderMenu) => (void menuItem, true),
         delete: (menuItem: CascaderMenu) => (void menuItem, true),
@@ -133,7 +137,8 @@ export default defineComponent({
          */
         const menusRef = ref<CascaderMenu[]>([])
         const menus = useAutoControl(menusRef, props, 'menus', emit)
-        const activeMenus = ref<unknown[]>([])
+        const activeMenusRef = ref<unknown[]>([])
+        const activeMenus = useAutoControl(activeMenusRef, props, 'expends', emit)
 
         /**
         * model
@@ -180,7 +185,7 @@ export default defineComponent({
             })
             let lastLevelMenus = menus.value || []
             let level = 0
-            for (const activeMenu of activeMenus.value) {
+            for (const activeMenu of (activeMenus.value || [])) {
                 const findResult = lastLevelMenus.find(item => item[cascaderProps.value.key] === activeMenu)
                 if (
                     !findResult ||
@@ -197,7 +202,7 @@ export default defineComponent({
                 })
             }
             if (props.editable) {
-                const finalIncludes = final[final.length - 1].menus.find(item => activeMenus.value.includes(item[cascaderProps.value.key]))
+                const finalIncludes = final[final.length - 1].menus.find(item => activeMenus.value?.includes(item[cascaderProps.value.key]))
                 if (finalIncludes) {
                     final.push({
                         menus: [],
@@ -283,7 +288,7 @@ export default defineComponent({
                 if (item.menus.find(menu => menu[cascaderProps.value.key] === key)) break
                 for (const menu of item.menus) {
                     if (
-                        activeMenus.value.includes(menu[cascaderProps.value.key]) &&
+                        activeMenus.value?.includes(menu[cascaderProps.value.key]) &&
                         !model.value.includes(menu[cascaderProps.value.key])
                     ) {
                         model.value.push(menu[cascaderProps.value.key])
@@ -342,7 +347,7 @@ export default defineComponent({
                 class={[
                     'wp-pro-cascader--item',
                     {
-                        'wp-pro-cascader--item--active': activeMenus.value.includes(menuItem[cascaderProps.value.key])
+                        'wp-pro-cascader--item--active': activeMenus.value?.includes(menuItem[cascaderProps.value.key])
                     }
                 ]}
                 onClick={() => {
