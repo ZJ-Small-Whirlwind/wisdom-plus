@@ -26,11 +26,20 @@ export default defineComponent({
             })
         }
         const currentValueParse = computed(()=>{
-            console.log(dayjs(currentValue.value))
+            const d = dayjs(currentValue.value || new Date());
+            return {
+                year:d.year(),
+                month:d.month()+1,
+                date:d.date(),
+            }
         })
         watch(computed(()=>refSelect.value && refSelect.value.show),val=>{
             if(val){
-                console.log(currentValueParse.value)
+                nextTick(()=>{
+                    refCalendar.value.year = currentValueParse.value.year;
+                    refCalendar.value.month = currentValueParse.value.month;
+                    refCalendar.value.date = currentValueParse.value.date;
+                })
             }
         })
         return {
