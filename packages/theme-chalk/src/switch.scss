@@ -49,7 +49,7 @@
         background-color: var(--wp-switch-active-color);
         border-color: var(--wp-switch-active-color);
         .wp-switch--button {
-            transform: translateX(calc(var(--wp-switch-width) - var(--wp-switch-height)));
+            transform: translateX(calc(var(--wp-switch-width) - var(--wp-switch-button-width)));
         }
         .wp-switch--text {
             justify-content: left;

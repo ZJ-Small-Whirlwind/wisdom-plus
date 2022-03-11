@@ -43,12 +43,16 @@ const data = ref(1)
 ```
 :::
 
-#### 调整尺寸、圆角和颜色
+#### 定制
+
+:::tip
+Property 提供了定制选项，除此之外，也可以通过 CSS 变量进行定制。
+:::
 
 :::demo
 ```vue
 <template>
-    <wp-switch v-model="data" :active-value="1" :inactive-value="0" width="200" border-radius="4" active-color="orange" />
+    <wp-switch v-model="data" :active-value="1" :inactive-value="0" width="200" border-radius="4" active-color="orange" style="--wp-switch-button-width: 50px" />
 </template>
 
 <script lang="ts" setup>
