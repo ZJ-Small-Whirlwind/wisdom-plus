@@ -14,6 +14,8 @@ export const switchProps = buildProps({
     },
     activeColor: String,
     inactiveColor: String,
+    activeText: String,
+    inactiveText: String,
     width: {
         type: [String, Number]
     },
@@ -79,8 +81,14 @@ export default defineComponent({
                     }
                 }}
             >
-                <div class="wp-switch--button">
-                </div>
+                <div class="wp-switch--button" />
+                {
+                    (this.activeText || this.inactiveText) ? (
+                        <div class="wp-switch--text">
+                            {this.active ? (this.$slots.activeText?.() ?? this.activeText) : (this.$slots.inactiveText?.() ?? this.inactiveText) }
+                        </div>
+                    ) : null
+                }
             </div>
         )
     }

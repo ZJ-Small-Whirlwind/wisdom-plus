@@ -3,12 +3,17 @@
     --wp-switch-active-color: var(--wp-color-primary);
     --wp-switch-width: 40px;
     --wp-switch-height: 18px;
+    --wp-switch-button-width: var(--wp-switch-height);
     --wp-switch-border-radius: 20px;
     --wp-switch-border: 4px solid var(--wp-switch-inactive-color);
     --wp-switch-duration: .3s;
+    --wp-switch-text-font-size: 12px;
+    --wp-switch-text-padding: 0 5px;
+    --wp-switch-text-color: #fff;
 }
 
 .wp-switch {
+    display: inline-block;
     width: var(--wp-switch-width);
     height: var(--wp-switch-height);
     background-color: var(--wp-switch-inactive-color);
@@ -17,18 +22,37 @@
     border-color: var(--wp-switch-inactive-color);
     box-sizing: content-box;
     transition: all var(--wp-switch-duration);
+    position: relative;
     &--button {
         height: var(--wp-switch-height);
-        width: var(--wp-switch-height);
+        width: var(--wp-switch-button-width);
         border-radius: var(--wp-switch-border-radius);
         background-color: #fff;
         transition: all var(--wp-switch-duration);
+    }
+    &--text {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        padding: var(--wp-switch-text-padding);
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: right;
+        color: var(--wp-switch-text-color);
+        font-size: var(--wp-switch-text-font-size);
+        cursor: default;
+        align-items: center;
+        line-height: 100%;
     }
     &--active {
         background-color: var(--wp-switch-active-color);
         border-color: var(--wp-switch-active-color);
         .wp-switch--button {
             transform: translateX(calc(var(--wp-switch-width) - var(--wp-switch-height)));
+        }
+        .wp-switch--text {
+            justify-content: left;
         }
     }
     &--disabled {
