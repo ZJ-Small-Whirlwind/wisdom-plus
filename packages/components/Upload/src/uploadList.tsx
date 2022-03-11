@@ -18,6 +18,7 @@ import {
 
 import { type UploadFile, UploadFileStatus } from './interface'
 import svgs, { start } from './svgs'
+import Image from "../../Image/src/image"
 
 const WpIcon = Icon as any
 const Icons = {
@@ -51,7 +52,8 @@ export default defineComponent({
         handleDragover: Function as PropType<(e: DragEvent) => void>,
         handleDragleave: Function as PropType<(e: DragEvent) => void>,
         handleRetry: Function as PropType<(file: UploadFile) => void>,
-        retry: Boolean
+        retry: Boolean,
+        showImage: Boolean
     },
     emits: {
         itemClick: (e: Event, value: UploadFile) => {
@@ -103,6 +105,20 @@ export default defineComponent({
             })
         })
 
+        const photoRender = (file: UploadFileExtend | UploadFile) => {
+            if (!file.url) return
+            if (/(\.jpg|\.webp|\.png|\.bmp|\.jpeg)$/i.test(file.url)) {
+                return (
+                    <>
+                        <br />
+                        <Image src={file.url} onClick={() => {
+                            window.open(file.url, '_blank')
+                        }} />
+                    </>
+                )
+            }
+        }
+
         const fileCellRender = (file: UploadFileExtend | UploadFile, index: number) => {
             return (
                 <div class="wp-upload__cell" onClick={e => emit('itemClick', e, file)} key={file.name + index}>
@@ -135,6 +151,9 @@ export default defineComponent({
                                     { file.chunksFinish }/{ file.chunks?.length }
                                 </span>
                             )
+                        }
+                        {
+                            props.showImage && photoRender(file)
                         }
                     </div>
                     <Space class="wp-upload__cell-status" size={5}>

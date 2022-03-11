@@ -26,6 +26,14 @@
         display: flex;
         align-items: center;
         padding: var(--wp-upload-item-padding);
+        .wp-image {
+            max-height: 50px;
+            max-width: 50px;
+            object-fit: cover;
+            margin-top: 5px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
         a {
             color: var(--wp-upload-active-color);
         }

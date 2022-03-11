@@ -67,6 +67,10 @@ export const uploadProps = buildProps({
     retry: {
         type: Boolean,
         default: true
+    },
+    showImage: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -329,6 +333,7 @@ export default defineComponent({
                         handleDelete={this.handleDelete}
                         handleRetry={this.handleRetry}
                         retry={this.retry}
+                        showImage={this.showImage}
                         onHandleIconClick={( file, index, status) => this.$emit('handleIconClick', file, index, status)}
                         onItemClick={(e, file) => this.$emit('itemClick', e, file)}
                         v-slots={{
