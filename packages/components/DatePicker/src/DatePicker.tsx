@@ -39,7 +39,7 @@ export default defineComponent({
             <div class={{
                 "wp-date-picker": true
             }}>
-                <WpSelect v-model={this.currentValue} options={this.options} ref={'refSelect'} PopoverConfig={{
+                <WpSelect clearable filterable v-model={this.currentValue} options={this.options} ref={'refSelect'} PopoverConfig={{
                     popoverClass:"wp-date-picker-panel-popover"
                 }} v-slots={{
                     panel:()=>(
