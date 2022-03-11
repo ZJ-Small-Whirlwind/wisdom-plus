@@ -3,7 +3,7 @@ import {buildProps, definePropType} from "@wisdom-plus/utils/props";
 import {DownOutlined, CheckOutlined} from "@vicons/antd"
 import WpInput from "../../Input"
 import WpIcon from "../../Icon"
-import WpPopover from "../../Popover"
+import WpPopover,{popoverProps, PopoverProps} from "../../Popover"
 import WpTag from "../../Tag"
 import { useFormItem } from "@wisdom-plus/hooks";
 export const selectProps = buildProps({
@@ -51,6 +51,10 @@ export const selectProps = buildProps({
     remote:{
         type:definePropType<(value:null)=>object[]>([Function]),
         default:null,
+    },
+    PopoverConfig:{
+        type:definePropType<PopoverProps>(popoverProps),
+        default:()=>({}),
     }
 })
 export type SelectProps = ExtractPropTypes<typeof selectProps>
@@ -306,38 +310,43 @@ export default defineComponent({
             </WpInput>
         </div>)
         const getActive = item=>this.$props.multiple ? (this.currentValue || []).includes(item[this.$props.valueName]) : item[this.$props.valueName] === this.$props.modelValue;
-        return this.$props.disabled ? inputRender() :  (<WpPopover
-                   v-model={this.show}
-                   arrow={false}
-                   placement={'bottom-start'}
-                   popoverClass={'wp-select-panel-popover'}
-                   v-slots={{
-                        reference:()=>inputRender()
-                   }}
-        >
-            <div class={{
-                'wp-select-panel': true,
-            }}>
-                {this.options.map((item:any,key)=>(
+        const selectPanelRender = ()=>([
+            this.options.map((item:any,key)=>(
                 <div
                     onClick={ev=>{
                         this.optionClick({item,ev})
                     }}
                     class={{
-                    'wp-select-panel-option': true,
-                    'wp-select-panel-option-group':Object.prototype.toString.call(item.options) === '[object Array]',
-                    'wp-select-panel-option-disabled': item.disabled,
-                    'wp-select-panel-option-active': getActive(item),
-                }}>
+                        'wp-select-panel-option': true,
+                        'wp-select-panel-option-group':Object.prototype.toString.call(item.options) === '[object Array]',
+                        'wp-select-panel-option-disabled': item.disabled,
+                        'wp-select-panel-option-active': getActive(item),
+                    }}>
                     {this.$slots.default?.(item) || item[this.$props.labelName] || item[this.$props.valueName]}
                     {this.$props.activeIconShow &&  getActive(item) ? <WpIcon>
                         <CheckOutlined></CheckOutlined>
                     </WpIcon> : null}
-                </div>))}
-                {!this.options || this.options.length === 0 ? <div class={{
-                    'wp-select-panel-option': true,
-                    'wp-select-panel-option-empty': true,
-                }}>{this.inputChangeValue ? '无匹配数据':'暂无数据'}</div> : null}
+                </div>)
+            ),
+            !this.options || this.options.length === 0 ? <div class={{
+                'wp-select-panel-option': true,
+                'wp-select-panel-option-empty': true,
+            }}>{this.inputChangeValue ? '无匹配数据':'暂无数据'}</div> : null
+        ])
+        return this.$props.disabled ? inputRender() :  (<WpPopover
+                   v-model={this.show}
+                   arrow={false}
+                   placement={'bottom-start'}
+                   {...this.$props.PopoverConfig}
+                   popoverClass={`wp-select-panel-popover ${this.$props.PopoverConfig.popoverClass}`}
+                   v-slots={{
+                       reference:()=>inputRender()
+                   }}
+        >
+            <div class={{
+                'wp-select-panel': true,
+            }}>
+                {this.$slots.panel?.(this) || selectPanelRender()}
             </div>
         </WpPopover>)
     }

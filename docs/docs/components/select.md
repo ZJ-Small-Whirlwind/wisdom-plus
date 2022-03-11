@@ -270,6 +270,7 @@ const remote = value=>{
 | multiple | 是否多选 | _boolean_           | false         |
 | collapseTags | 多选时是否将选中值按文字的形式展示 | _boolean_           | false         |
 | remote | 是否为远程搜索， 必须为可搜索模式 | _(searchValue:string)=>Promise<optionItem[]>_           | -         |
+| PopoverConfig | Popover相关配置 | _object_           | -         |
 
 ### optionItem
 
@@ -282,7 +283,8 @@ const remote = value=>{
 
 ### Slots
 
-| 参数  | 说明     | 参数           |
-|-----|--------|--------------|
-|  -  | 默认卡槽   | _optionItem_ |
+| 参数  | 说明 | 参数                  |
+|-----|--|---------------------|
+|  -  | 默认卡槽 | _optionItem_        |
+|  panel  | 面板插槽 | _(vm:object)=>any)_ |
 

@@ -1,5 +1,7 @@
 import {defineComponent, ExtractPropTypes} from "vue"
 import {buildProps} from "@wisdom-plus/utils/props";
+import WpSelect from "../../Select";
+import WpCalendar from "../../Calendar";
 export const datePickerProps = buildProps({
 
 })
@@ -12,7 +14,15 @@ export default defineComponent({
             <div class={{
                 "wp-date-picker": true
             }}>
-                asdas
+                <WpSelect PopoverConfig={{
+                    popoverClass:"asda"
+                }} v-slots={{
+                    panel:()=>(
+                        <WpCalendar>
+                        </WpCalendar>
+                    )
+                }}>
+                </WpSelect>
             </div>
         )
     }

@@ -16,7 +16,7 @@ app.use(WpDatePicker)
 
 ## 代码演示
 
-#### 基础用法
+#### 基础用法，选择日
 
 :::demo
 ```vue
@@ -25,3 +25,11 @@ app.use(WpDatePicker)
 </template>
 ```
 :::
+
+## API
+
+### Props
+
+### Methods
+
+### Slots
