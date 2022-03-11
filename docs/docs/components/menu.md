@@ -113,7 +113,7 @@ const menuList = [
 <script lang="ts" setup>
 import { ref } from 'vue'
 const collapse = ref(true)
-const menuActive = ref('1')
+const menuActive = ref('4')
 const menuList = [
     {
         title: '菜单一',

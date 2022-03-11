@@ -352,7 +352,7 @@ export default defineComponent({
                     }
                 ]}
                 onClick={() => {
-                    if (!props.editable && (!menuItem[cascaderProps.value.children])) return
+                    if (!props.editable && (!menuItem[cascaderProps.value.children] || (menuItem[cascaderProps.value.children] as CascaderMenu[]).length === 0)) return
                     activeMenus.value = [...menuList.path, menuItem[cascaderProps.value.key]]
                 }}
             >
@@ -377,10 +377,44 @@ export default defineComponent({
                 </WpSpace>
                 {/* 箭头 */}
                 {
-                    menuItem[cascaderProps.value.children] && (
+                    menuItem[cascaderProps.value.children] && (menuItem[cascaderProps.value.children] as CascaderMenu[]).length > 0 && (
                         <WpIcon>
                             <ArrowRight />
                         </WpIcon>
+                    )
+                }
+            </div>
+        )
+
+        const RenderHeader = (menuList: CascaderMenuDisplay, index: number) => (
+            <div class="wp-pro-cascader--header--wrapper" key="header">
+                {
+                    props.showAdd && props.editable && (
+                            <div class="wp-pro-cascader--header" key={'header'} onClick={() => emit('add', menuList)}>
+                                { slots.add?.(menuList) ?? (
+                                    <>
+                                        <WpIcon><Plus /></WpIcon> 添加 {index + 1} 级菜单
+                                    </>
+                                ) }
+                            </div>
+                    )
+                }
+                {
+                    props.useCheckbox && (
+                        <div class="wp-pro-cascader--header wp-pro-cascader--checkbox" key={'select'}>
+                            <WpCheckbox
+                                modelValue={menuList.status === 1}
+                                indeterminate={menuList.status === 0}
+                                disabled={menuList.status === -2}
+                                onUpdate:modelValue={value => {
+                                    if (value) {
+                                        menuList.menus.forEach(menu => setToParent(menu))
+                                    }
+                                    setTo(menuList.menus, value)
+                                }}
+                                size="default"
+                            >全选</WpCheckbox>
+                        </div>
                     )
                 }
             </div>
@@ -398,7 +432,8 @@ export default defineComponent({
             getItems,
             RenderMenuItem,
             setTo,
-            setToParent
+            setToParent,
+            RenderHeader
         }
     },
     expose: ['getItems'],
@@ -412,64 +447,43 @@ export default defineComponent({
             >
                 {
                     this.menusDisplay.map((menuList, index) => (
-                        <DraggableElement
-                            modelValue={menuList.menus}
-                            onUpdate:modelValue={(menus: CascaderMenu[]) => {
-                                menuList.menus.length = 0
-                                menus.forEach(menu => menuList.menus.push(menu))
-                            }}
-                            itemKey={this.cascaderProps.key}
-                            tag="transition-group"
-                            componentData={{ tag: 'div', type: 'transition-group', name: !this.drag ? 'flip-list' : null }}
-                            class="wp-pro-cascader--list"
-                            animation={400}
-                            key={index}
-                            onStart={() => {
-                                this.drag = true
-                                this.$emit('dragStart', menuList)
-                            }}
-                            onEnd={() => {
-                                this.drag = false
-                                this.$emit('dragEnd', menuList)
-                            }}
-                            disabled={!this.draggable || !this.editable}
-                            v-slots={{
-                                item: ({ element: menuItem }: { element: CascaderMenu }) => this.RenderMenuItem(menuList, menuItem),
-                                header: () => (
-                                    <div class="wp-pro-cascader--header--wrapper" key="header">
-                                        {
-                                            this.showAdd && this.editable && (
-                                                    <div class="wp-pro-cascader--header" key={'header'} onClick={() => this.$emit('add', menuList)}>
-                                                        { this.$slots.add?.(menuList) ?? (
-                                                            <>
-                                                                <WpIcon><Plus /></WpIcon> 添加 {index + 1} 级菜单
-                                                            </>
-                                                        ) }
-                                                    </div>
-                                            )
-                                        }
-                                        {
-                                            this.useCheckbox && (
-                                                <div class="wp-pro-cascader--header wp-pro-cascader--checkbox" key={'select'}>
-                                                    <WpCheckbox
-                                                        modelValue={menuList.status === 1}
-                                                        indeterminate={menuList.status === 0}
-                                                        disabled={menuList.status === -2}
-                                                        onUpdate:modelValue={value => {
-                                                            if (value) {
-                                                                menuList.menus.forEach(menu => this.setToParent(menu))
-                                                            }
-                                                            this.setTo(menuList.menus, value)
-                                                        }}
-                                                        size="default"
-                                                    >全选</WpCheckbox>
-                                                </div>
-                                            )
-                                        }
-                                    </div>
-                                )
-                            }}
-                        />
+                        (!this.draggable || !this.editable) ? (
+                            <div class="wp-pro-cascader--list">
+                                { this.RenderHeader(menuList, index) }
+                                {
+                                    menuList.menus.map(menuItem => (
+                                        this.RenderMenuItem(menuList, menuItem)
+                                    ))
+                                }
+                            </div>
+                        ) : (
+                            <DraggableElement
+                                modelValue={menuList.menus}
+                                onUpdate:modelValue={(menus: CascaderMenu[]) => {
+                                    menuList.menus.length = 0
+                                    menus.forEach(menu => menuList.menus.push(menu))
+                                }}
+                                itemKey={this.cascaderProps.key}
+                                tag="transition-group"
+                                componentData={{ tag: 'div', type: 'transition-group', name: !this.drag ? 'flip-list' : null }}
+                                class="wp-pro-cascader--list"
+                                animation={400}
+                                key={index}
+                                onStart={() => {
+                                    this.drag = true
+                                    this.$emit('dragStart', menuList)
+                                }}
+                                onEnd={() => {
+                                    this.drag = false
+                                    this.$emit('dragEnd', menuList)
+                                }}
+                                disabled={!this.draggable || !this.editable}
+                                v-slots={{
+                                    item: ({ element: menuItem }: { element: CascaderMenu }) => this.RenderMenuItem(menuList, menuItem),
+                                    header: () => this.RenderHeader(menuList, index)
+                                }}
+                            />
+                        )
                     ))
                 }
             </div>

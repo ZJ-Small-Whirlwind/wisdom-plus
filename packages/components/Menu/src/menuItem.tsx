@@ -54,13 +54,13 @@ export default defineComponent({
          */
         const isActive = (list: MenuRecord) => {
             if (list.children && list.children?.length > 0) {
+                if (list.index === active?.value) return true
                 for (const item of list.children) {
                     if (isActive(item)) return true
                 }
                 return false
             } 
             return list.index === active?.value
-            
         }
         const collapseActive = computed(() => {
             if (props.children?.length > 0) {
