@@ -18,6 +18,7 @@ export default defineComponent({
         const onClickDay = ({year, month, date})=>{
             refSelect.value.show = false;
             const value = dayjs(new Date(year.value,month.value-1,date.value)).format(props.format)
+            console.log(value, props.format)
             options.value = [
                 {label:value,value},
             ];
@@ -26,11 +27,14 @@ export default defineComponent({
             })
         }
         const currentValueParse = computed(()=>{
-            const d = dayjs(currentValue.value || new Date());
+            const d = dayjs(currentValue.value || new Date(), props.format);
             return {
                 year:d.year(),
                 month:d.month()+1,
                 date:d.date(),
+                hour:d.hour(),
+                minute:d.minute(),
+                second:d.second(),
             }
         })
         watch(computed(()=>refSelect.value && refSelect.value.show),val=>{
