@@ -123,7 +123,12 @@ export default defineComponent({
             return (
                 <div class="wp-upload__cell" onClick={e => emit('itemClick', e, file)} key={file.name + index}>
                     <WpIcon class={`wp-upload__cell-icon`} v-html={getFileTypeIcon(file.name)} />
-                    <div class="wp-upload__cell-name">
+                    <div class={[
+                        'wp-upload__cell-name',
+                        {
+                            [`wp-upload__cell-name--fail`]: file.status === 3
+                        }
+                    ]}>
                         {
                             file.url ? (
                                 <a href={file.url} target="_blank" onClick={e => e.stopPropagation()}>{file.name}</a>

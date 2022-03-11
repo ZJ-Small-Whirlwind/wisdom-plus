@@ -42,6 +42,10 @@
             overflow: hidden;
             margin: 0 var(--wp-upload-item-padding);
             text-align: left;
+            &--fail {
+                text-decoration: line-through;
+                opacity: .6;
+            }
         }
         &__chunks {
             &__wrapper {
@@ -57,6 +61,7 @@
         }
         &-status {
             font-size: var(--wp-upload-icon-size);
+            color: #666;
             &-0 {
                 color: var(--wp-upload-success);
             }
@@ -74,6 +79,9 @@
         &-delete,
         &-retry {
             cursor: pointer;
+            &:hover {
+                color: var(--wp-color-primary);
+            }
         }
         &:hover {
             background: var(--wp-upload-item-hover-bg);
