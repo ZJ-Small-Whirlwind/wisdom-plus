@@ -1,2 +1,15 @@
 .wp-date-picker{
 }
+.wp-date-picker-panel-popover{
+    .wp-popover-content{
+        .wp-select-panel{
+            max-height: initial;
+            .wp-calendar{
+                width: 400px;
+                .wp-calendar-content{
+                    padding: 0;
+                }
+            }
+        }
+    }
+}

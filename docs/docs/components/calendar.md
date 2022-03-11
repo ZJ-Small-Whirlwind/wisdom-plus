@@ -91,3 +91,4 @@ const getIsEvent = e=>{
 |  arrow-year-change   | 年份箭头点击回调 | _(data:{year, month, date,}, type)=>void_ |
 |  herderTitleClick   | 头部选择回调 | _(data:{year, month, date})=>void_ |
 |  event-click   | 待办任务回调 | _(data:{ev,day,task})=>void_ |
+|  click-day   | 日期点击回调 | _(data:{year, month, date})=>void_ |

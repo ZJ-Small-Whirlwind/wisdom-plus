@@ -53,7 +53,7 @@ export const selectProps = buildProps({
         default:null,
     },
     PopoverConfig:{
-        type:definePropType<PopoverProps>(popoverProps),
+        type:definePropType<PopoverProps>(null),
         default:()=>({}),
     }
 })

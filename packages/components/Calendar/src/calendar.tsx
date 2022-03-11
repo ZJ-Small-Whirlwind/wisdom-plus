@@ -92,6 +92,11 @@ export default defineComponent({
             year.value = e.dateYear
             month.value = e.dateMonth
             date.value = e.day
+            emit('click-day',{
+                year,
+                month,
+                date,
+            })
         }
 
         /**
