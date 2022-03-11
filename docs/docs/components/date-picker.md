@@ -21,8 +21,14 @@ app.use(WpDatePicker)
 :::demo
 ```vue
 <template>
-    <WpDatePicker></WpDatePicker>
+    {{value}}
+    <WpDatePicker v-model="value"></WpDatePicker>
 </template>
+<script lang="ts" setup>
+import { ref } from 'vue'
+
+const value = ref(null);
+</script>
 ```
 :::
 

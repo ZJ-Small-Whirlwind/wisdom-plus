@@ -1,16 +1,17 @@
-import {defineComponent, ExtractPropTypes, ref, nextTick, watch, computed} from "vue"
+import {defineComponent, ExtractPropTypes, ref, nextTick, watch, computed, onMounted} from "vue"
 import dayjs from "dayjs";
 import {buildProps} from "@wisdom-plus/utils/props";
 import WpSelect from "../../Select";
 import WpCalendar from "../../Calendar";
 export const datePickerProps = buildProps({
-    format:{type:String, default:"YYYY-MM-DD"}
+    modelValue:{type:[String, Array, Date, Number],default:null},
+    format:{type:String, default:"YYYY-MM-DD"},
 })
 export type DatePickerProps = ExtractPropTypes<typeof datePickerProps>
 export default defineComponent({
     name:"WpDatePicker",
     props:datePickerProps,
-    setup(props){
+    setup(props,{emit}){
         const options:any = ref([]);
         const currentValue:any = ref(null);
         const refCalendar:any = ref(null)
@@ -18,31 +19,51 @@ export default defineComponent({
         const onClickDay = ({year, month, date})=>{
             refSelect.value.show = false;
             const value = dayjs(new Date(year.value,month.value-1,date.value)).format(props.format)
-            console.log(value, props.format)
-            options.value = [
-                {label:value,value},
-            ];
-            nextTick(()=>{
-                currentValue.value = value;
-            })
-        }
-        const currentValueParse = computed(()=>{
-            const d = dayjs(currentValue.value || new Date(), props.format);
-            return {
-                year:d.year(),
-                month:d.month()+1,
-                date:d.date(),
-                hour:d.hour(),
-                minute:d.minute(),
-                second:d.second(),
+            if(value === 'Invalid Date'){
+                options.value = [];
+                nextTick(()=>{
+                    currentValue.value = null;
+                })
+            }else {
+                options.value = [
+                    {label:value,value},
+                ];
+                nextTick(()=>{
+                    currentValue.value = value;
+                })
             }
+
+        }
+        const getDate = (date)=>{
+            const d = dayjs(date, props.format);
+            return {
+                year:ref(d.year()),
+                month:ref(d.month()+1),
+                date:ref(d.date()),
+                hour:ref(d.hour()),
+                minute:ref(d.minute()),
+                second:ref(d.second()),
+            }
+        }
+        const currentValueParse = computed(()=>getDate(currentValue.value || new Date()))
+
+        onMounted(()=>{
+            currentValue.value = props.modelValue;
+        })
+        watch(computed(()=>props.modelValue),()=>{
+            onClickDay(getDate(props.modelValue));
+        })
+        watch(currentValue,()=>{
+            nextTick(()=>{
+                emit("update:modelValue", currentValue.value)
+            })
         })
         watch(computed(()=>refSelect.value && refSelect.value.show),val=>{
             if(val){
                 nextTick(()=>{
-                    refCalendar.value.year = currentValueParse.value.year;
-                    refCalendar.value.month = currentValueParse.value.month;
-                    refCalendar.value.date = currentValueParse.value.date;
+                    refCalendar.value.year = currentValueParse.value.year.value;
+                    refCalendar.value.month = currentValueParse.value.month.value;
+                    refCalendar.value.date = currentValueParse.value.date.value;
                 })
             }
         })
