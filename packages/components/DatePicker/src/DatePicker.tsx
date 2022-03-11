@@ -1,23 +1,23 @@
-import {defineComponent, ExtractPropTypes, ref, nextTick} from "vue"
+import {defineComponent, ExtractPropTypes, ref, nextTick, watch, computed} from "vue"
 import dayjs from "dayjs";
 import {buildProps} from "@wisdom-plus/utils/props";
 import WpSelect from "../../Select";
 import WpCalendar from "../../Calendar";
 export const datePickerProps = buildProps({
-
+    format:{type:String, default:"YYYY-MM-DD"}
 })
 export type DatePickerProps = ExtractPropTypes<typeof datePickerProps>
 export default defineComponent({
     name:"WpDatePicker",
     props:datePickerProps,
-    setup(){
+    setup(props){
         const options:any = ref([]);
-        const currentValue = ref("");
+        const currentValue:any = ref(null);
         const refCalendar:any = ref(null)
         const refSelect:any = ref(null)
         const onClickDay = ({year, month, date})=>{
             refSelect.value.show = false;
-            const value = dayjs(new Date(year.value,month.value-1,date.value)).format("YYYY-MM-DD")
+            const value = dayjs(new Date(year.value,month.value-1,date.value)).format(props.format)
             options.value = [
                 {label:value,value},
             ];
@@ -25,6 +25,14 @@ export default defineComponent({
                 currentValue.value = value;
             })
         }
+        const currentValueParse = computed(()=>{
+            console.log(dayjs(currentValue.value))
+        })
+        watch(computed(()=>refSelect.value && refSelect.value.show),val=>{
+            if(val){
+                console.log(currentValueParse.value)
+            }
+        })
         return {
             onClickDay,
             refCalendar,
