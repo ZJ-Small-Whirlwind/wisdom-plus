@@ -189,7 +189,8 @@ export default defineComponent({
                 const findResult = lastLevelMenus.find(item => item[cascaderProps.value.key] === activeMenu)
                 if (
                     !findResult ||
-                    !findResult[cascaderProps.value.children]
+                    !findResult[cascaderProps.value.children] ||
+                    (findResult[cascaderProps.value.children] as CascaderMenu[]).length === 0
                 ) break
                 path.push(findResult[cascaderProps.value.key])
                 level += 1
