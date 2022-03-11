@@ -91,7 +91,7 @@ export default defineComponent({
         })
 
         const clearable = computed(() => {
-            return props.clearable && (input.value || tags.value.length > 0)
+            return props.clearable && Boolean(input.value || tags.value.length > 0)
         })
 
         return {
