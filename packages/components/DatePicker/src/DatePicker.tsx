@@ -72,7 +72,12 @@ export default defineComponent({
                 })
             }
         })
+        const onGoDay = (item)=>{
+            refSelect.value.show = false;
+            onClickDay(item);
+        }
         return {
+            onGoDay,
             onClickDay,
             refCalendar,
             refSelect,
@@ -96,10 +101,13 @@ export default defineComponent({
                             panel:()=>(
                                 <WpCalendar ref={'refCalendar'}
                                             showPanel={this.showPanel}
-                                            onClickDay={this.onClickDay}>
+                                            onClickDay={this.onClickDay}
+                                            onGoDay={this.onGoDay}
+                                >
                                 </WpCalendar>
                             )
-                        }}>
+                        }}
+                >
                 </WpSelect>
             </div>
         )

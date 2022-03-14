@@ -83,6 +83,7 @@ export default defineComponent({
                     date.value = nbData.date();
                     break;
             }
+            emit('go-day',{year, month, date})
 
         }
         /**
