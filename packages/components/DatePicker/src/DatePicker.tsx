@@ -2,13 +2,14 @@ import {defineComponent, ExtractPropTypes, ref, nextTick, watch, computed, onMou
 import dayjs from "dayjs";
 import {buildProps} from "@wisdom-plus/utils/props";
 import WpSelect from "../../Select";
-import WpCalendar from "../../Calendar";
+import WpCalendar, {calendarProps} from "../../Calendar";
 export const datePickerProps = buildProps({
     modelValue:{type:[String, Array, Date, Number],default:null},
     format:{type:String, default:"YYYY-MM-DD"},
     clearable:{type:Boolean as PropType<boolean>, default:false},
     filterable:{type:Boolean as PropType<boolean>, default:false},
     showPanel:{type:Boolean as PropType<boolean>, default:false},
+    calendarProps:{type:Object as PropType<object>, default:()=>({})},
 })
 export type DatePickerProps = ExtractPropTypes<typeof datePickerProps>
 export default defineComponent({
@@ -103,6 +104,7 @@ export default defineComponent({
                                             showPanel={this.showPanel}
                                             onClickDay={this.onClickDay}
                                             onGoDay={this.onGoDay}
+                                            {...this.$props.calendarProps}
                                 >
                                 </WpCalendar>
                             )

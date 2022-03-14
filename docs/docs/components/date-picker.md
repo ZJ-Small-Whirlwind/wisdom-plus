@@ -45,6 +45,8 @@ const value = ref(null);
 | format | 时间格式 | _ string_           | YYYY-MM-DD        |
 | clearable | 可清除 | _boolean_           | false         |
 | filterable | 可输入 | _boolean_           | false         |
+| showPanel | 是否显示日期面板，即快捷选择面板 | _boolean_           | false         |
+| calendarProps | calendarProps | _object_           | -         |
 
 ### Methods
 
