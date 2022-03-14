@@ -22,7 +22,7 @@ app.use(WpDatePicker)
 ```vue
 <template>
     {{value}}
-    <WpDatePicker v-model="value"></WpDatePicker>
+    <WpDatePicker v-model="value" clearable filterable></WpDatePicker>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
@@ -35,6 +35,13 @@ const value = ref(null);
 ## API
 
 ### Props
+
+| 参数      | 说明 | 类型                             | 默认值        |
+|---------|--|--------------------------------|------------|
+| modelValue | 绑定值 | _object[], string , number , boolean_           | -         |
+| format | 时间格式 | _ string_           | YYYY-MM-DD        |
+| clearable | 可清除 | _boolean_           | false         |
+| filterable | 可输入 | _boolean_           | false         |
 
 ### Methods
 

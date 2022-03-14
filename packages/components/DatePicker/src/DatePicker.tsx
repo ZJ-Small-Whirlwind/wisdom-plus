@@ -1,4 +1,4 @@
-import {defineComponent, ExtractPropTypes, ref, nextTick, watch, computed, onMounted, provide} from "vue"
+import {defineComponent, ExtractPropTypes, ref, nextTick, watch, computed, onMounted, provide, PropType} from "vue"
 import dayjs from "dayjs";
 import {buildProps} from "@wisdom-plus/utils/props";
 import WpSelect from "../../Select";
@@ -6,6 +6,8 @@ import WpCalendar from "../../Calendar";
 export const datePickerProps = buildProps({
     modelValue:{type:[String, Array, Date, Number],default:null},
     format:{type:String, default:"YYYY-MM-DD"},
+    clearable:{type:Boolean as PropType<boolean>, default:false},
+    filterable:{type:Boolean as PropType<boolean>, default:false},
 })
 export type DatePickerProps = ExtractPropTypes<typeof datePickerProps>
 export default defineComponent({
@@ -82,7 +84,7 @@ export default defineComponent({
             <div class={{
                 "wp-date-picker": true
             }}>
-                <WpSelect clearable filterable v-model={this.currentValue} options={this.options} ref={'refSelect'} PopoverConfig={{
+                <WpSelect clearable={this.clearable} filterable={this.filterable} v-model={this.currentValue} options={this.options} ref={'refSelect'} PopoverConfig={{
                     popoverClass:"wp-date-picker-panel-popover"
                 }} v-slots={{
                     panel:()=>(
