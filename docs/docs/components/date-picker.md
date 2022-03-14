@@ -16,13 +16,16 @@ app.use(WpDatePicker)
 
 ## 代码演示
 
-#### 基础用法，选择日
+#### 基础用法，选择日,带快捷选项
 
 :::demo
 ```vue
 <template>
     {{value}}
-    <WpDatePicker v-model="value" clearable filterable></WpDatePicker>
+    <wp-space>
+        <WpDatePicker v-model="value" clearable filterable></WpDatePicker>
+        <WpDatePicker v-model="value" clearable filterable showPanel></WpDatePicker>
+    </wp-space>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'

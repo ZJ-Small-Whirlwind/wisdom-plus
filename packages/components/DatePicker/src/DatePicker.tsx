@@ -8,6 +8,7 @@ export const datePickerProps = buildProps({
     format:{type:String, default:"YYYY-MM-DD"},
     clearable:{type:Boolean as PropType<boolean>, default:false},
     filterable:{type:Boolean as PropType<boolean>, default:false},
+    showPanel:{type:Boolean as PropType<boolean>, default:false},
 })
 export type DatePickerProps = ExtractPropTypes<typeof datePickerProps>
 export default defineComponent({
@@ -84,14 +85,21 @@ export default defineComponent({
             <div class={{
                 "wp-date-picker": true
             }}>
-                <WpSelect clearable={this.clearable} filterable={this.filterable} v-model={this.currentValue} options={this.options} ref={'refSelect'} PopoverConfig={{
-                    popoverClass:"wp-date-picker-panel-popover"
-                }} v-slots={{
-                    panel:()=>(
-                        <WpCalendar ref={'refCalendar'} onClickDay={this.onClickDay}>
-                        </WpCalendar>
-                    )
-                }}>
+                <WpSelect clearable={this.clearable}
+                          filterable={this.filterable}
+                          v-model={this.currentValue}
+                          options={this.options}
+                          ref={'refSelect'}
+                          PopoverConfig={{
+                            popoverClass:"wp-date-picker-panel-popover"
+                        }} v-slots={{
+                            panel:()=>(
+                                <WpCalendar ref={'refCalendar'}
+                                            showPanel={this.showPanel}
+                                            onClickDay={this.onClickDay}>
+                                </WpCalendar>
+                            )
+                        }}>
                 </WpSelect>
             </div>
         )
