@@ -117,7 +117,7 @@ const data = ref(1)
 | --wp-switch-height | 18px | 开关的高度 |
 | --wp-switch-button-width | var(--wp-switch-height) | 按钮的宽度 |
 | --wp-switch-border-radius | 20px | 圆角大小 |
-| --wp-switch-border | 4px solid var(--wp-switch-inactive-color) | 边框样式 |
+| --wp-switch-border | 3px solid var(--wp-switch-inactive-color) | 边框样式 |
 | --wp-switch-duration | .3s | 动画的持续时间 |
 | --wp-switch-text-font-size | 12px | 文本的尺寸 |
 | --wp-switch-text-padding | 0 5px | 文本的padding |
