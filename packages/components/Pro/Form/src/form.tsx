@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed, markRaw, h, ExtractPropTypes, Component } from 'vue'
+import { defineComponent, ref, computed, markRaw, h, ExtractPropTypes, Component, nextTick } from 'vue'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
 import type { Schema } from './interface'
@@ -91,7 +91,6 @@ export const proFormGenerate = (name = 'WpProForm',Form: Component = WpForm, For
                 return newRules
             })
             const reset = () => {
-                formRef.value?.resetFields()
                 for (const schema of props.schemas) {
                     if (typeof schema.defaultValue === 'function') {
                         data.value[schema.prop] = schema.defaultValue()
@@ -99,6 +98,10 @@ export const proFormGenerate = (name = 'WpProForm',Form: Component = WpForm, For
                         data.value[schema.prop] = schema.defaultValue
                     }
                 }
+                // formRef.value?.resetFields()
+                nextTick(() => {
+                    formRef.value?.clearValidate()
+                })
             }
             const submit = (isEnter = false, e?: Event) => {
                 if (isEnter && !props.enterToSubmit) return
