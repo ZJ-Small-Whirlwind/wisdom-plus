@@ -1,4 +1,4 @@
-import {defineComponent, ExtractPropTypes, ref, nextTick, watch, computed, onMounted} from "vue"
+import {defineComponent, ExtractPropTypes, ref, nextTick, watch, computed, onMounted, provide} from "vue"
 import dayjs from "dayjs";
 import {buildProps} from "@wisdom-plus/utils/props";
 import WpSelect from "../../Select";
@@ -12,6 +12,8 @@ export default defineComponent({
     name:"WpDatePicker",
     props:datePickerProps,
     setup(props,{emit}){
+        provide("notClearInputValue", true)
+        provide("notClearInputValueFormat", props.format)
         const options:any = ref([]);
         const currentValue:any = ref(null);
         const refCalendar:any = ref(null)

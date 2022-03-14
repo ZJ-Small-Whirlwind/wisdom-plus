@@ -1,4 +1,4 @@
-import {defineComponent, ExtractPropTypes, ref, computed, nextTick, watch} from "vue"
+import {defineComponent, ExtractPropTypes, ref, computed, nextTick, watch, inject} from "vue"
 import {buildProps, definePropType} from "@wisdom-plus/utils/props";
 import {DownOutlined, CheckOutlined} from "@vicons/antd"
 import WpInput from "../../Input"
@@ -6,6 +6,7 @@ import WpIcon from "../../Icon"
 import WpPopover,{popoverProps, PopoverProps} from "../../Popover"
 import WpTag from "../../Tag"
 import { useFormItem } from "@wisdom-plus/hooks";
+import dayjs from "dayjs";
 export const selectProps = buildProps({
     disabled: Boolean,
     options:{
@@ -65,11 +66,14 @@ export default defineComponent({
     setup(props,{emit}){
         const readonly = ref(true);
         const show = ref(false);
-        const input = ref(null);
+        const input:any = ref(null);
         const currentValue:any = ref(null);
         const inputChangeValue:any = ref(null);
         const remoteDatas:any = ref(null);
         const remoteSelectMapDatas:any = ref({});
+        // 时间选择器注入，切勿删除
+        const notClearInputValue = inject("notClearInputValue", false)
+        const notClearInputValueFormat = inject("notClearInputValueFormat", "YYYY-MM-DDTHH:mm:ss")
         /**
          * 扁平化数据
          * @param bodyCellData
@@ -133,6 +137,8 @@ export default defineComponent({
             }
             if(isClear){
                 remoteSelectMapDatas.value = {};
+                input.value.input = '';
+                inputChangeValue.value = null;
             }
             if(props.multiple){
                 value = value || [];
@@ -231,9 +237,10 @@ export default defineComponent({
             setModelValue(null, true);
             ev.stopPropagation();
         }
+
         const onFocus = ()=>{
             if(props.filterable){
-                if(!props.multiple){
+                if(!props.multiple && !notClearInputValue){
                     currentValue.value = null;
                 }
                 if(props.modelValue && !props.multiple){
@@ -245,7 +252,19 @@ export default defineComponent({
         }
         const onBlur = ()=>{
             if(props.filterable) {
-                if (props.modelValue) {
+                if(notClearInputValue && inputChangeValue.value){
+                    const isValid = dayjs(inputChangeValue.value, notClearInputValueFormat).isValid();
+                    placeholder.value = props.placeholder;
+                    if(isValid){
+                        setModelValue(inputChangeValue.value, false);
+                    }else {
+                        if (props.modelValue ) {
+                            setModelValue(props.modelValue, true);
+                        }
+                    }
+                    return;
+                }
+                if (props.modelValue ) {
                     placeholder.value = props.placeholder;
                     currentValue.value = props.modelValue;
                 }
