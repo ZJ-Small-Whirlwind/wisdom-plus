@@ -7,11 +7,9 @@ import { computed, CSSProperties, defineComponent, ExtractPropTypes, ref, watch 
 export const switchProps = buildProps({
     modelValue: null,
     activeValue: {
-        type: null as unknown as PropType<any>,
         default: true
     },
     inactiveValue: {
-        type: null as unknown as PropType<any>,
         default: false
     },
     activeColor: String,
