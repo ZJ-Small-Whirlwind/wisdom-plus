@@ -281,6 +281,9 @@ export default defineComponent({
                         }}>
                             <WpSpace align="center">
                                 {
+                                    this.$slots.formPrefix?.()
+                                }
+                                {
                                     !this.form?.hideInput && (
                                         <WpInput
                                             v-model={this.formData[this.field]}
