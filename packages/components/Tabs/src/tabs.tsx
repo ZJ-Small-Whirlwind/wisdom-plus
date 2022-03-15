@@ -55,6 +55,7 @@ export default defineComponent({
         const transform = computed(() => {
             return `-${activeIndex.value * 100}%`
         })
+        const init = ref(false)
 
         const scrollRef = ref<InstanceType<typeof XScroll> | null>(null)
         const activeTabTitle = ref<null | HTMLDivElement>(null)
@@ -68,6 +69,9 @@ export default defineComponent({
                 if (!activeTabTitle.value) return
                 left.value = activeTabTitle.value.offsetLeft + activeTabTitle.value.offsetWidth / 2
                 width.value = activeTabTitle.value.offsetWidth + 'px'
+                setTimeout(() => {
+                    init.value = true
+                })
             })
         }
 
@@ -96,7 +100,7 @@ export default defineComponent({
         onUpdated(getLeft)
         onMounted(getLeft)
 
-        useResizeObserver(tabsRef, getLeft)
+        useResizeObserver(activeTabTitle, getLeft)
 
         const spaceSize = computed<[string | number, string | number]>(() => {
             if (!props.spaceProps || !props.spaceProps.size) return [props.card ? 0 : 20, 0]
@@ -124,7 +128,8 @@ export default defineComponent({
             spaceSize,
             scrollRef,
             widthComputed,
-            propsHandle
+            propsHandle,
+            init
         }
     },
     render() {
@@ -143,7 +148,7 @@ export default defineComponent({
                     <XScroll ref="scrollRef" {...this.xScrollProps}>
                         <Space {...this.spaceProps} wrap={false} size={this.spaceSize} v-slots={{
                             suffix: this.showLine && !this.card ? () => (
-                                <div class="wp-tabs--line" style={{ left: this.left + 'px', width: this.widthComputed }} />
+                                <div class="wp-tabs--line" style={{ left: this.left + 'px', width: this.widthComputed, transition: this.init ? undefined : 'none' }} />
                             ) : undefined
                         }}>
                             { this.$slots?.prefix?.() }
