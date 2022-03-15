@@ -2,7 +2,7 @@ import { useResizeObserver } from "@vueuse/core"
 import { flatten } from "@wisdom-plus/utils/flatten"
 import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
-import { ref, defineComponent, ExtractPropTypes, VNode, PropType, computed, watch, nextTick, onUpdated, onMounted, Transition, CSSProperties } from "vue"
+import { ref, defineComponent, ExtractPropTypes, VNode, PropType, computed, watch, nextTick, onUpdated, onMounted, Transition, CSSProperties, onActivated } from "vue"
 
 import Space, { SpaceProps } from '../../Space'
 import XScroll, { XScrollProps } from '../../XScroll'
@@ -99,6 +99,12 @@ export default defineComponent({
         })
         onUpdated(getLeft)
         onMounted(getLeft)
+        onActivated(() => {
+            init.value = false
+            setTimeout(() => {
+                init.value = true
+            })
+        })
 
         useResizeObserver(activeTabTitle, getLeft)
 
