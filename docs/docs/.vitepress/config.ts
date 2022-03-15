@@ -42,6 +42,10 @@ export default defineConfig({
                         {
                             text: 'Cascader 级联菜单',
                             link: '/components/pro/cascader'
+                        },
+                        {
+                            text: 'Permission 权限',
+                            link: '/components/pro/permission'
                         }
                     ]
                 },
