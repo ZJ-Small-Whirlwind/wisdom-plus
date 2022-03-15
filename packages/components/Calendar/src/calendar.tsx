@@ -346,7 +346,7 @@ export default defineComponent({
         })
         const daysRender = ()=>{
             return this.daysLayout.map(week=>{
-                return (<div class={{
+                return (<div onClick={()=>this.$emit('week-click', week)} class={{
                     'wp-calendar-content-day-week':true,
                 }}>
                     {daysRenderItem(week)}

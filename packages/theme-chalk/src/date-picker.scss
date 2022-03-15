@@ -19,4 +19,25 @@
             }
         }
     }
+    &-week{
+        .wp-select-panel{
+            .wp-calendar{
+                .wp-calendar-content{
+                    .wp-calendar-content-day-week{
+                        cursor: pointer;
+                        &:hover{
+                            background-color: #f2f6fc;
+                            border-radius: 22px;
+                        }
+                        .wp-calendar-content-day{
+                            min-height: 45px;
+                            margin-bottom: 0;
+                            display: flex;
+                            justify-content: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

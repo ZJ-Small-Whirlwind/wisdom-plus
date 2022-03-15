@@ -36,8 +36,11 @@ export default defineComponent({
         provide("notClearInputValueFormat", currentFormat.value)
 
         const onClickDay = ({year, month, date})=>{
-            if(props.type !== 'dates'){
+            if(!['dates'].includes(props.type)){
                 refSelect.value.show = false;
+            }
+            if(['week'].includes(props.type)){
+                return;
             }
             const value = dayjs(new Date(year.value,month.value-1,date.value)).format(currentFormat.value)
             if(value === 'Invalid Date'){
@@ -117,12 +120,28 @@ export default defineComponent({
             emit("update:modelValue", currentValue.value)
             refSelect.value.show = false;
         }
+        const onWeekClick = (week)=>{
+            if(props.type === 'week'){
+                const values = week.map(e=>e.date.format(currentFormat.value))
+                emit("update:modelValue", values)
+                const value = "2020 第 16 周";
+                const opts = [
+                    {label:value,value},
+                ]
+                options.value = opts;
+                nextTick(()=>{
+                    currentValue.value = value;
+                })
+            }
+        }
         watch(computed(()=>props.modelValue),()=>{
             init()
         })
         watch(currentValue,()=>{
             nextTick(()=>{
-                emit("update:modelValue", currentValue.value)
+                if(props.type !== 'week'){
+                    emit("update:modelValue", currentValue.value)
+                }
             })
         })
         watch(computed(()=>refSelect.value && refSelect.value.show),val=>{
@@ -163,6 +182,7 @@ export default defineComponent({
         return {
             onGoDay,
             onClickDay,
+            onWeekClick,
             refCalendar,
             refSelect,
             currentValue,
@@ -182,7 +202,7 @@ export default defineComponent({
                           options={this.options}
                           ref={'refSelect'}
                           PopoverConfig={{
-                                popoverClass:"wp-date-picker-panel-popover"
+                                popoverClass:`wp-date-picker-panel-popover wp-date-picker-panel-popover-${this.$props.type}`
                           }}
                           {...this.$props.selectProps}
                           placeholder={this.$props.placeholder}
@@ -192,16 +212,17 @@ export default defineComponent({
                                 <WpCalendar ref={'refCalendar'}
                                             showPanel={this.showPanel}
                                             onClickDay={this.onClickDay}
+                                            onWeekClick={this.onWeekClick}
                                             onGoDay={this.onGoDay}
                                             {...this.$props.calendarProps}
                                             type={this.$props.type}
                                 >
                                 </WpCalendar>,
-                                <div class={{
+                                this.isMultiple ?  <div class={{
                                     'wp-date-picker-footer':true
                                 }}>
                                     <WpButton size={'mini'} onClick={this.onConfirm}>确定</WpButton>
-                                </div>
+                                </div> : null
                             ]
                         }}
                 >

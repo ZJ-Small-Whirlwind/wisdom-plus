@@ -94,3 +94,4 @@ const getIsEvent = e=>{
 |  event-click   | 待办任务回调 | _(data:{ev,day,task})=>void_ |
 |  click-day   | 日期点击回调 | _(data:{year, month, date})=>void_ |
 |  go-day   | 快捷按钮回调 | _(data:{year, month, date})=>void_ |
+|  week-click   | 周点击回调 | _(week)=>void_ |
