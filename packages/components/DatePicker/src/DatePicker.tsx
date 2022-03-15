@@ -87,11 +87,14 @@ export default defineComponent({
             if(isMultiple.value){
                 return (currentValue.value || []).map(e=>getDate(e || new Date()))
             }else {
-                return getDate(currentValue.value || new Date())
+                return getDate((props.type === 'week' ? (currentValue.value || [])[0] : currentValue.value) || new Date())
             }
         })
-
+        const WpCalendarWeekMaps = computed(()=>{
+            return props.type === 'week' ? (currentValue.value || []).map(e=>getDate(e)) : null;
+        })
         provide("WpCalendarActiveMaps", currentValueParse)
+        provide("WpCalendarWeekMaps", WpCalendarWeekMaps)
 
 
         const onGoDay = (item)=>{
@@ -120,18 +123,37 @@ export default defineComponent({
             emit("update:modelValue", currentValue.value)
             refSelect.value.show = false;
         }
+        const getYearWeek = (a, b, c)=> {
+            /*
+            date1是当前日期
+            date2是当年第一天
+            d是当前日期是今年第多少天
+            用d + 当前年的第一天的周差距的和在除以7就是本年第几周
+            */
+            var date1 = new Date(a, parseInt(b) - 1, c),
+                date2 = new Date(a, 0, 1),
+                d = Math.round((date1.valueOf() - date2.valueOf()) / 86400000);
+            return Math.ceil((d + ((date2.getDay() + 1) - 1)) / 7);
+        };
         const onWeekClick = (week)=>{
             if(props.type === 'week'){
-                const values = week.map(e=>e.date.format(currentFormat.value))
+                const values = week.map(e=>{
+                    if(Object.prototype.toString.call(e) === '[object Object]'){
+                        return e.date.format(currentFormat.value);
+                    }else {
+                        return dayjs(e).format(currentFormat.value);
+                    }
+                })
                 emit("update:modelValue", values)
-                const value = "2020 第 16 周";
+                const date = week[0];
+                const value = `${date.dateYear} 第 ${getYearWeek(date.dateYear,date.dateMonth, date.day)} 周`;
                 const opts = [
-                    {label:value,value},
+                    {label:value,value:values},
                 ]
                 options.value = opts;
                 nextTick(()=>{
-                    currentValue.value = value;
-                })
+                    currentValue.value = values;
+                });
             }
         }
         watch(computed(()=>props.modelValue),()=>{
@@ -139,9 +161,7 @@ export default defineComponent({
         })
         watch(currentValue,()=>{
             nextTick(()=>{
-                if(props.type !== 'week'){
-                    emit("update:modelValue", currentValue.value)
-                }
+                emit("update:modelValue", currentValue.value)
             })
         })
         watch(computed(()=>refSelect.value && refSelect.value.show),val=>{

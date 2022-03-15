@@ -46,10 +46,26 @@ export default defineComponent({
     props:calendarProps,
     setup(props, {emit}) {
         const WpCalendarActiveMaps:any = inject("WpCalendarActiveMaps", ref(null))
+        const WpCalendarWeekMaps:any = inject("WpCalendarWeekMaps", ref(null))
         const activeMaps = computed(()=>{
             try {
                 if(Object.prototype.toString.call(WpCalendarActiveMaps.value) === '[object Array]'){
                     return WpCalendarActiveMaps.value.reduce((a,b)=>{
+                        const keyname = `${b.year.value}-${b.month.value}-${b.date.value}`;
+                        a[keyname] = true;
+                        return a;
+                    },{})
+                }else {
+                    return {}
+                }
+            }catch (e) {
+                return {};
+            }
+        })
+        const weekMaps = computed(()=>{
+            try {
+                if(Object.prototype.toString.call(WpCalendarWeekMaps.value) === '[object Array]'){
+                    return WpCalendarWeekMaps.value.reduce((a,b)=>{
                         const keyname = `${b.year.value}-${b.month.value}-${b.date.value}`;
                         a[keyname] = true;
                         return a;
@@ -276,6 +292,7 @@ export default defineComponent({
             currentDayObjData,
             today,
             activeMaps,
+            weekMaps,
         }
     },
     render(){
@@ -315,6 +332,7 @@ export default defineComponent({
                     [e.type]:true,
                     "wp-calendar-content-day-disabled":this.$props.disabledDate(e),
                     "wp-calendar-content-day-active-map":this.activeMaps[e.getDayAll],
+                    "wp-calendar-content-day-week-map":this.weekMaps[e.getDayAll],
                 }}>
                     <span onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{
                         isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,

@@ -56,7 +56,7 @@ const calendarProps = ref({
             <WpDatePicker v-model="value2" type="month" placeholder="选择月"></WpDatePicker>
         </div>
         <div>
-            周{{value4}}
+            周
             <WpDatePicker clearable v-model="value4" type="week" placeholder="选择周"></WpDatePicker>
         </div>
         <div>

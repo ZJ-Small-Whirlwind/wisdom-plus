@@ -34,6 +34,9 @@
                             margin-bottom: 0;
                             display: flex;
                             justify-content: center;
+                            &.wp-calendar-content-day-week-map{
+                                background-color: #f00;
+                            }
                         }
                     }
                 }
