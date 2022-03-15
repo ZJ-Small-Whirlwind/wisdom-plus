@@ -198,7 +198,8 @@ export default defineComponent({
                 {
                     !this.titleOnly && (
                         <div class="wp-tabs--content" style={{
-                            transform: `translateX(${this.transform})`
+                            transform: `translateX(${this.transform})`,
+                            transition: this.init ? undefined : 'none'
                         }}>
                             {
                                 tabs.map((tab, index) => (
