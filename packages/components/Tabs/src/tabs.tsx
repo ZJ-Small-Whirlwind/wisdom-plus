@@ -208,9 +208,11 @@ export default defineComponent({
                                                     ) : null }
                                                 </Transition>
                                             ): (
-                                                <div class="wp-tabs--tab--content">
-                                                    {(tab.children as Record<string, () => VNode>)?.default?.() }
-                                                </div>
+                                                <Transition name="wp-tabs-fade">
+                                                    <div class="wp-tabs--tab--content" v-show={index === this.activeIndex}>
+                                                        {(tab.children as Record<string, () => VNode>)?.default?.() }
+                                                    </div>
+                                                </Transition>
                                             )
                                         }
                                     </div>
