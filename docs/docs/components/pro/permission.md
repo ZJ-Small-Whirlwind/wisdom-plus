@@ -46,4 +46,4 @@ const { route, has, hasAll, permissions } = usePermission()
 | --------- |---------------------------------------------|---------------------------------------------------------------------|--------------------|
 | useRoute | useRoute 方法       | _() => RouteLocationNormalizedLoaded_                                                      | -                  |
 | has | 拥有其中的一个权限就会显示组件 | _string \| string[]_ | - |
-| getData | 拥有所有的权限才会显示组件 | _string \| string[]_ | - |
+| hasAll | 拥有所有的权限才会显示组件 | _string \| string[]_ | - |
