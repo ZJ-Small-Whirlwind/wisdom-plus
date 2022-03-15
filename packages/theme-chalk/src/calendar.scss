@@ -54,13 +54,26 @@ $unit15: 15px;
         font-size: 14px;
         padding: $unit15 0;
 
-        & > * {
+        .wp-calendar-content-day-header{
             flex-shrink: 0;
             width: calc(100% / 7);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 30px;
+        }
+        .wp-calendar-content-day-week{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            .wp-calendar-content-day{
+                flex: 1;
+                width: calc(100% / 7);
+                display: flex;
+                align-items: center;
+                min-height: 30px;
+            }
         }
 
         &-day {
@@ -203,6 +216,9 @@ $unit15: 15px;
         &-year {
             width: calc(100% / 4);
             min-height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
             span {
                 &:hover {
@@ -220,6 +236,9 @@ $unit15: 15px;
         &-month {
             width: calc(100% / 4);
             min-height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
             span {
                 &:hover {
@@ -237,10 +256,13 @@ $unit15: 15px;
     &-lunar{
         border:2px solid #5e67ef;
         .wp-calendar-content{
+            //gap: 5px;
+            //& > *{
+            //    width: calc((100%  - 5px * 6) / 7);
+            //}
+        }
+        .wp-calendar-content-day-week{
             gap: 5px;
-            & > *{
-                width: calc((100%  - 5px * 6) / 7);
-            }
         }
         .wp-calendar-content-day{
             min-height: 80px;

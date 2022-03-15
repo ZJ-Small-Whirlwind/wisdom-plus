@@ -82,6 +82,16 @@ export default defineComponent({
                 return e;
             });
         })
+
+        const daysLayout = computed(()=>{
+            const index = 7;
+            return days.value.reduce((a:any,b,k,d:any)=>{
+                if(!(k % index)){
+                    a.push(d.slice(k,k+index))
+                }
+                return a;
+            },[])
+        })
         const currentDays = computed(()=>days.value.filter(e=>e.type === "current"))
         const yearList = computed(()=>{
             return new Array(10).fill(0).map((e,k)=>year.value - 5 + k);
@@ -249,6 +259,7 @@ export default defineComponent({
             eventClick,
             herderTitleClick,
             days,
+            daysLayout,
             clickDays,
             prevMonth,
             nextMonth,
@@ -294,7 +305,7 @@ export default defineComponent({
         /**
          * 具体日期
          */
-        const daysRender = ()=> this.days.map((e:any) => {
+        const daysRenderItem = (week:any)=> week.map((e:any) => {
             const EventList:any = this.$props.getIsEvent(e);
             return (
                 <div  onClick={() => this.$props.lunar ? this.clickDays(e) : null} class={{
@@ -333,6 +344,15 @@ export default defineComponent({
                 </div>
             )
         })
+        const daysRender = ()=>{
+            return this.daysLayout.map(week=>{
+                return (<div class={{
+                    'wp-calendar-content-day-week':true,
+                }}>
+                    {daysRenderItem(week)}
+                </div>)
+            })
+        }
         /**
          * 星期头
          */
@@ -391,7 +411,7 @@ export default defineComponent({
                         this.showMonth ? monthRender() :
                             [
                                 daysHeaderRender(),
-                                daysRender()
+                                daysRender(),
                             ]}
                 </div>
             </div>)

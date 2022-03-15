@@ -57,7 +57,7 @@ const calendarProps = ref({
         </div>
         <div>
             周
-            <WpDatePicker type="week" placeholder="选择周"></WpDatePicker>
+            <WpDatePicker v-model="value4" type="week" placeholder="选择周"></WpDatePicker>
         </div>
         <div>
             多个日期
@@ -70,6 +70,7 @@ import { ref } from 'vue'
 const value = ref()
 const value2 = ref()
 const value3 = ref()
+const value4 = ref()
 // const value3 = ref([ "2022-03-30", "2022-03-23", "2022-03-16", "2022-03-17" ])
 setTimeout(()=>{
     // value3.value = [];

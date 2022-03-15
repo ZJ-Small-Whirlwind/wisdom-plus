@@ -22,7 +22,7 @@ app.use(WpCalendar)
 
 ```vue
 <template>
-    <wp-calendar></wp-calendar>
+    <wp-calendar :getIsEvent="getIsEvent"></wp-calendar>
 </template>
 ```
 
