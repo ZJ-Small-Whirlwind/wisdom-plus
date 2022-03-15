@@ -32,6 +32,7 @@ export default defineComponent({
         const currentValue:any = ref(null);
         const refCalendar:any = ref(null)
         const refSelect:any = ref(null)
+        const isMultiple = computed(()=> props.type === 'dates');
         const onClickDay = ({year, month, date})=>{
             if(props.type !== 'dates'){
                 refSelect.value.show = false;
@@ -43,12 +44,21 @@ export default defineComponent({
                     currentValue.value = null;
                 })
             }else {
-                options.value = [
+                const opts = [
                     {label:value,value},
-                ];
-                nextTick(()=>{
-                    currentValue.value = value;
-                })
+                ]
+                if(isMultiple.value){
+                    options.value = (options.value || []).concat(opts);
+                    nextTick(()=>{
+                        currentValue.value = (currentValue.value || []).concat([value]);
+                    })
+                }else {
+                    options.value = opts;
+                    nextTick(()=>{
+                        currentValue.value = value;
+                    })
+                }
+
             }
         }
         const getDate = (date)=>{
@@ -112,6 +122,7 @@ export default defineComponent({
             refSelect,
             currentValue,
             options,
+            isMultiple,
         }
     },
     render(){
@@ -129,7 +140,7 @@ export default defineComponent({
                           }}
                           {...this.$props.selectProps}
                           placeholder={this.$props.placeholder}
-                          multiple={this.$props.type === 'dates'}
+                          multiple={this.isMultiple}
                           v-slots={{
                             panel:()=>[
                                 <WpCalendar ref={'refCalendar'}
