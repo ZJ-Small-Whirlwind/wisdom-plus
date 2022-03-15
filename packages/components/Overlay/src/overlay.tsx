@@ -2,6 +2,7 @@ import { defineComponent, ExtractPropTypes, PropType, watch, ref, Teleport, Rend
 import { buildProps } from '@wisdom-plus/utils/props'
 
 import { getMaxZIndex } from '@wisdom-plus/utils/get-max-zindex'
+import { activeOverlay } from './utils'
 
 export const overlayProps = buildProps({
     modelValue: {
@@ -63,14 +64,23 @@ export default defineComponent({
          * 处理 overlay 嵌套
          */
         provide('wp-overlay', true)
-        const isSubWpOverlay = inject<boolean>('wp-overlay', false)
+        const overlaySymbol = Symbol('wp-overlay')
         watch(() => props.modelValue, () => {
             getZIndex()
-            if (!props.preventScroll || isSubWpOverlay || !props.to) return
+            if (!props.preventScroll || !props.to) {
+                const index = activeOverlay.value.indexOf(overlaySymbol)
+                if (index > -1) {
+                    activeOverlay.value.splice(index, 1)
+                }
+                return
+            }
             if (props.modelValue) {
-                document.body.style.overflowY = 'hidden'
+                activeOverlay.value.push(overlaySymbol)
             } else {
-                document.body.style.overflowY = ''
+                const index = activeOverlay.value.indexOf(overlaySymbol)
+                if (index > -1) {
+                    activeOverlay.value.splice(index, 1)
+                }
             }
         }, {
             immediate: true
