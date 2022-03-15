@@ -56,7 +56,7 @@ importers:
       vdirs: ^0.1.7
       vue: ^3.2.23
       vue-jest: 5.0.0-alpha.10
-      vue-router: 4.0.12
+      vue-router: ^4.0.0
       vue-tsc: 0.29.6
       vueuc: ^0.4.19
       wangeditor: ^4.7.12
@@ -85,6 +85,7 @@ importers:
       sortablejs: 1.14.0
       spark-md5: 3.0.2
       vdirs: 0.1.7_vue@3.2.23
+      vue-router: 4.0.12_vue@3.2.23
       vueuc: 0.4.19_89e7ec3258896f4bc2944cafca047175
       wangeditor: 4.7.12
     devDependencies:
@@ -116,7 +117,6 @@ importers:
       unplugin-vue-components: 0.17.11_rollup@2.60.1+vue@3.2.23
       vue: 3.2.23
       vue-jest: 5.0.0-alpha.10_typescript@4.5.2+vue@3.2.23
-      vue-router: 4.0.12_vue@3.2.23
       vue-tsc: 0.29.6_typescript@4.5.2
 
   docs:
@@ -1526,7 +1526,6 @@ packages:
 
   /@vue/devtools-api/6.0.0-beta.20.1:
     resolution: {integrity: sha512-R2rfiRY+kZugzWh9ZyITaovx+jpU4vgivAEAiz80kvh3yviiTU3CBuGuyWpSwGz9/C7TkSWVM/FtQRGlZ16n8Q==}
-    dev: true
 
   /@vue/reactivity-transform/3.2.26:
     resolution: {integrity: sha512-XKMyuCmzNA7nvFlYhdKwD78rcnmPb7q46uoR00zkX6yZrUmcCQ5OikiwUEVbvNhL5hBJuvbSO95jB5zkUon+eQ==}
@@ -7630,7 +7629,6 @@ packages:
     dependencies:
       '@vue/devtools-api': 6.0.0-beta.20.1
       vue: 3.2.23
-    dev: true
 
   /vue-tsc/0.29.6_typescript@4.5.2:
     resolution: {integrity: sha512-P0vBtyS19vacn97qJtx+ZaJzPq/vNA42D8oe+FT9dhCeiey3+nvuyzHVzYGK1/AQYaMGq6FAP+scK1hQtSQk7g==}
