@@ -10,6 +10,7 @@
     position: relative;
     > .wp-badge-value {
         position: absolute;
+        z-index: 1;
         top: calc(0px - var(--wp-badge-size) / 2);
         right: calc(0px - var(--wp-badge-size) / 2);
     }
