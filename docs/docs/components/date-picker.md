@@ -70,6 +70,10 @@ import { ref } from 'vue'
 const value = ref()
 const value2 = ref()
 const value3 = ref()
+// const value3 = ref([ "2022-03-30", "2022-03-23", "2022-03-16", "2022-03-17" ])
+setTimeout(()=>{
+    // value3.value = [];
+},3000)
 </script>
 ```
 :::

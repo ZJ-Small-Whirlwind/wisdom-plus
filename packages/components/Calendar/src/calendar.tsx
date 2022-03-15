@@ -1,4 +1,4 @@
-import {defineComponent, computed, ref, watch, PropType, ExtractPropTypes, onMounted, nextTick} from 'vue'
+import {defineComponent, computed, ref, watch, PropType, ExtractPropTypes, onMounted, nextTick, inject} from 'vue'
 import CalendarData,{returnDate} from 'lunar-calendar-panel'
 import dayjs from 'dayjs'
 import {buildProps} from "@wisdom-plus/utils/props";
@@ -45,6 +45,22 @@ export default defineComponent({
     name:"WpCalendar",
     props:calendarProps,
     setup(props, {emit}) {
+        const WpCalendarActiveMaps:any = inject("WpCalendarActiveMaps", ref(null))
+        const activeMaps = computed(()=>{
+            try {
+                if(Object.prototype.toString.call(WpCalendarActiveMaps.value) === '[object Array]'){
+                    return WpCalendarActiveMaps.value.reduce((a,b)=>{
+                        const keyname = `${b.year.value}-${b.month.value}-${b.date.value}`;
+                        a[keyname] = true;
+                        return a;
+                    },{})
+                }else {
+                    return {}
+                }
+            }catch (e) {
+                return {};
+            }
+        })
         const currentData:dayjs.Dayjs = dayjs()
         const today = ref({
             year:currentData.year(),
@@ -248,6 +264,7 @@ export default defineComponent({
             goDay,
             currentDayObjData,
             today,
+            activeMaps,
         }
     },
     render(){
@@ -286,6 +303,7 @@ export default defineComponent({
                     isWeek:[0,6].includes(e.week),
                     [e.type]:true,
                     "wp-calendar-content-day-disabled":this.$props.disabledDate(e),
+                    "wp-calendar-content-day-active-map":this.activeMaps[e.getDayAll],
                 }}>
                     <span onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{
                         isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
@@ -414,7 +432,10 @@ export default defineComponent({
             </div>
         )
         const calendarPanelLunarTaskRender=()=>{
-            const tasks:any = this.$props.getIsEvent(this.currentDayObjData) || [];
+            let tasks:any = this.$props.getIsEvent(this.currentDayObjData);
+            if(Object.prototype.toString.call(tasks) !== '[object Array]'){
+                return [];
+            }
             return (
                 <div class={{
                     "wp-calendar-layout-lunar-panel-lunar-task": true,
