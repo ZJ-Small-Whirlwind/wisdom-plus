@@ -78,45 +78,7 @@ app.use(WpTab)
 :::demo
 ```vue
 <template>
-    <wp-tabs closable lazy line-width="20">
-        <wp-tab title="test">
-            <template #title>
-                插槽
-            </template>
-            sddsds
-        </wp-tab>
-        <wp-tab title="test2">
-            内容2
-        </wp-tab>
-        <wp-tab title="test">
-            <template #title>
-                插槽
-            </template>
-            sddsds
-        </wp-tab>
-        <wp-tab title="test">
-            <template #title>
-                插槽大叔大婶大所阿斯达撒大萨达阿萨斯阿斯达阿斗
-            </template>
-            sddsds
-        </wp-tab>
-        <wp-tab title="test">
-            <template #title>
-                插槽asdasadsdssssssssssssss
-            </template>
-            sddsds
-        </wp-tab>
-    </wp-tabs>
-</template>
-```
-:::
-
-#### 仅输出标题
-
-:::demo
-```vue
-<template>
-    <wp-tabs closable lazy title-only>
+    <wp-tabs closable lazy>
         <wp-tab>
             <template #title>
                 只要热烈，都好过温存
@@ -128,6 +90,36 @@ app.use(WpTab)
         <wp-tab title="那个剧本，没有分生" />
     </wp-tabs>
 </template>
+```
+:::
+
+#### 仅输出标题
+
+:::tip
+如果设置仅输出标题，不会设置任何默认激活项
+:::
+
+:::demo
+```vue
+<template>
+    <wp-tabs closable lazy title-only v-model="active">
+        <wp-tab>
+            <template #title>
+                只要热烈，都好过温存
+            </template>
+            1
+        </wp-tab>
+        <wp-tab title="几经冷漠，也不屑容忍" />
+        <wp-tab title="清风徐来，水波不兴" />
+        <wp-tab title="那个剧本，没有分生" />
+    </wp-tabs>
+</template>
+
+<script lang="ts" setup>
+import { ref } from 'vue'
+
+const active = ref(0)
+</script>
 ```
 :::
 

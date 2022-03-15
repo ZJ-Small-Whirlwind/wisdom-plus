@@ -130,7 +130,7 @@ export default defineComponent({
     render() {
         const tabs = flatten(this.$slots.default?.() || []).filter(tab => (tab.type as { name?: string }).name === 'WpTab')
         const activeIndex = tabs.findIndex((tab, index) => (tab.props?.key || index) === this.active)
-        this.activeIndex = activeIndex > -1 ? activeIndex : 0
+        this.activeIndex = this.titleOnly ? activeIndex : (activeIndex > -1 ? activeIndex : 0)
         return (
             <div class={
                 ['wp-tabs', {
