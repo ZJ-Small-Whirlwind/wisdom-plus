@@ -1,4 +1,11 @@
 .wp-date-picker{
+    &-footer{
+        border-top: 1px solid #eeeeee;
+        padding: 15px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
 }
 .wp-date-picker-panel-popover{
     .wp-popover-content{

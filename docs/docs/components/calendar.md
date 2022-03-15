@@ -81,6 +81,7 @@ const getIsEvent = e=>{
 | getIsEvent      | 获取任务     | _(dayData:object)=>false,{name:string, success:boolean, ...args:any}[]_ | ()=>false |
 | lunar      | 是否启用农历模式 | _boolean_                                                               | false |
 | showPanel      | 是否显示侧方面板 | _boolean_                                                               | false |
+| disabledDate      | 是否禁止具体日期 | _(dayData:object)=>boolean_                                                               | ()=>false |
 
 ### Emits
 

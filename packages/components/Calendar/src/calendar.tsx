@@ -1,4 +1,4 @@
-import {defineComponent, computed, ref, watch, PropType, ExtractPropTypes} from 'vue'
+import {defineComponent, computed, ref, watch, PropType, ExtractPropTypes, onMounted, nextTick} from 'vue'
 import CalendarData,{returnDate} from 'lunar-calendar-panel'
 import dayjs from 'dayjs'
 import {buildProps} from "@wisdom-plus/utils/props";
@@ -28,6 +28,14 @@ export const calendarProps = buildProps({
     showPanel:{
         type:Boolean as PropType<boolean>,
         default:false
+    },
+    disabledDate:{
+        type:Function as PropType<(day:any) => boolean>,
+        default:()=>false
+    },
+    type:{
+        type:String as PropType<string>,
+        default:null
     }
 })
 
@@ -51,7 +59,13 @@ export default defineComponent({
         const cd = new CalendarData();
         const oneDayTimeIndex = 86400000;
 
-        const days = computed(()=>cd.returnDate(year.value, month.value))
+        const days = computed(()=>{
+            const d = cd.returnDate(year.value, month.value);
+            return d.map(e=>{
+                e.date = dayjs(e.getDayAll);
+                return e;
+            });
+        })
         const currentDays = computed(()=>days.value.filter(e=>e.type === "current"))
         const yearList = computed(()=>{
             return new Array(10).fill(0).map((e,k)=>year.value - 5 + k);
@@ -83,21 +97,24 @@ export default defineComponent({
                     date.value = nbData.date();
                     break;
             }
-            emit('go-day',{year, month, date})
-
+            if(!props.disabledDate(currentDayObjData.value)) {
+                emit('go-day', {year, month, date})
+            }
         }
         /**
          * 日期点击
          */
         const clickDays = (e:any) => {
-            year.value = e.dateYear
-            month.value = e.dateMonth
-            date.value = e.day
-            emit('click-day',{
-                year,
-                month,
-                date,
-            })
+            if(!props.disabledDate(e)){
+                year.value = e.dateYear
+                month.value = e.dateMonth
+                date.value = e.day
+                emit('click-day',{
+                    year,
+                    month,
+                    date,
+                })
+            }
         }
 
         /**
@@ -171,8 +188,48 @@ export default defineComponent({
             ev.stopPropagation();
             emit('event-click',{ev,day,task})
         }
-
+        const watchTypeInit = ()=>{
+            switch (props.type){
+                case "year":
+                    showYear.value = true;
+                    break;
+                case "month":
+                    showMonth.value = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+        const yearClick = (newYear)=>{
+            year.value = newYear;
+            if(props.type === 'year'){
+                clickDays(currentDayObjData.value)
+            }else {
+                showYear.value = false
+                showMonth.value = true
+            }
+        }
+        const monthClick = (newMonth)=>{
+            month.value = newMonth;
+            if(props.type === 'month'){
+                clickDays(currentDayObjData.value)
+            }else {
+                showMonth.value = false
+            }
+        }
+        watch(computed(()=> props.type),()=>{
+            nextTick(()=>{
+                watchTypeInit();
+            })
+        })
+        onMounted(()=>{
+            nextTick(()=>{
+                watchTypeInit();
+            })
+        })
         return {
+            monthClick,
+            yearClick,
             eventClick,
             herderTitleClick,
             days,
@@ -228,6 +285,7 @@ export default defineComponent({
                     isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
                     isWeek:[0,6].includes(e.week),
                     [e.type]:true,
+                    "wp-calendar-content-day-disabled":this.$props.disabledDate(e),
                 }}>
                     <span onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{
                         isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
@@ -271,7 +329,7 @@ export default defineComponent({
             }}>
                 <span class={{
                     active:this.year === year
-                }} onClick={()=>(this.year = year, this.showYear = false, this.showMonth = true)}>{year}</span>
+                }} onClick={()=>this.yearClick(year)}>{year}</span>
             </div>
         ))
 
@@ -281,7 +339,7 @@ export default defineComponent({
             }}>
                 <span class={{
                     active:this.month === month
-                }} onClick={()=>(this.month = month, this.showMonth = false)}>{toChinesNum(month, true)}月</span>
+                }} onClick={()=>this.monthClick(month)}>{toChinesNum(month, true)}月</span>
             </div>
         ))
 
@@ -290,7 +348,7 @@ export default defineComponent({
          */
         const titleRender = ()=>[
             <span onClick={()=>this.showYear = true}>{this.year}年</span>,
-            <span onClick={()=>(this.showYear = false, this.showMonth = true)}>{this.month}月</span>,
+            this.$props.type !== 'year' ? <span onClick={()=>(this.showYear = false, this.showMonth = true)}>{this.month}月</span> : null,
         ]
 
         const calendarRender = ()=>{
@@ -301,12 +359,12 @@ export default defineComponent({
                 <div class={'wp-calendar-header'}>
                     <Icon class={'wp-calendar-header-icon'} name={'arrow-left'}
                           onClick={this.prevYear}><DoubleLeftOutlined></DoubleLeftOutlined></Icon>
-                    <Icon class={'wp-calendar-header-icon'} name={'arrow-left'}
-                          onClick={this.prevMonth}><LeftOutlined></LeftOutlined></Icon>
+                    {this.$props.type !== 'year' ? <Icon class={'wp-calendar-header-icon'} name={'arrow-left'}
+                          onClick={this.prevMonth}><LeftOutlined></LeftOutlined></Icon>: null}
                     <div class={'wp-calendar-header-title'}
                          onClick={this.herderTitleClick}>{titleRender()}</div>
-                    <Icon class={'wp-calendar-header-icon'} name={'arrow'}
-                          onClick={this.nextMonth}><RightOutlined></RightOutlined></Icon>
+                    {this.$props.type !== 'year' ? <Icon class={'wp-calendar-header-icon'} name={'arrow'}
+                          onClick={this.nextMonth}><RightOutlined></RightOutlined></Icon> : null}
                     <Icon class={'wp-calendar-header-icon'} name={'arrow'}
                           onClick={this.nextYear}><DoubleRightOutlined></DoubleRightOutlined></Icon>
                 </div>

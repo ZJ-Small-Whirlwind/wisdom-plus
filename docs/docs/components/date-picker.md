@@ -21,16 +21,55 @@ app.use(WpDatePicker)
 :::demo
 ```vue
 <template>
-    {{value}}
     <wp-space>
         <WpDatePicker v-model="value" clearable filterable></WpDatePicker>
-        <WpDatePicker v-model="value" clearable filterable showPanel></WpDatePicker>
+        <WpDatePicker v-model="value" clearable filterable showPanel :calendarProps="calendarProps"></WpDatePicker>
     </wp-space>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-const value = ref(null);
+const value = ref();
+const calendarProps = ref({
+    disabledDate({date}) {
+        return date.toDate().getTime() > Date.now();
+    },
+})
+</script>
+```
+:::
+
+#### 其他日期单位
+
+通过扩展基础的日期选择，可以选择周、月、年或多个日期
+
+:::demo
+```vue
+<template>
+    <wp-space>
+        <div>
+            年
+            <WpDatePicker v-model="value" type="year" placeholder="选择年"></WpDatePicker>
+        </div>
+        <div>
+            月
+            <WpDatePicker v-model="value2" type="month" placeholder="选择月"></WpDatePicker>
+        </div>
+        <div>
+            周
+            <WpDatePicker type="week" placeholder="选择周"></WpDatePicker>
+        </div>
+        <div>
+            多个日期
+            <WpDatePicker v-model="value3" type="dates" placeholder="选择多个日期"></WpDatePicker>
+        </div>
+    </wp-space>
+</template>
+<script lang="ts" setup>
+import { ref } from 'vue'
+const value = ref()
+const value2 = ref()
+const value3 = ref()
 </script>
 ```
 :::
@@ -47,6 +86,9 @@ const value = ref(null);
 | filterable | 可输入 | _boolean_           | false         |
 | showPanel | 是否显示日期面板，即快捷选择面板 | _boolean_           | false         |
 | calendarProps | calendarProps | _object_           | -         |
+| selectProps | selectProps | _object_           | -         |
+| type | 显示类型 | _[string] (year、month、dates、 week、datetime、datetimerange、daterange、monthrange)_           | -         |
+| placeholder | 选择提示语 | _string_           | -         |
 
 ### Methods
 

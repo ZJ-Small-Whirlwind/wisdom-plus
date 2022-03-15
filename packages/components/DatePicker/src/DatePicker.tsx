@@ -3,28 +3,40 @@ import dayjs from "dayjs";
 import {buildProps} from "@wisdom-plus/utils/props";
 import WpSelect from "../../Select";
 import WpCalendar, {calendarProps} from "../../Calendar";
+import WpButton from "../../Button";
 export const datePickerProps = buildProps({
     modelValue:{type:[String, Array, Date, Number],default:null},
-    format:{type:String, default:"YYYY-MM-DD"},
+    format:{type:String, default:null},
     clearable:{type:Boolean as PropType<boolean>, default:false},
     filterable:{type:Boolean as PropType<boolean>, default:false},
     showPanel:{type:Boolean as PropType<boolean>, default:false},
     calendarProps:{type:Object as PropType<object>, default:()=>({})},
+    selectProps:{type:Object as PropType<object>, default:()=>({})},
+    type:{type:String as PropType<string>, default:null},
+    placeholder:{type:String as PropType<string>, default:null},
 })
 export type DatePickerProps = ExtractPropTypes<typeof datePickerProps>
 export default defineComponent({
     name:"WpDatePicker",
     props:datePickerProps,
     setup(props,{emit}){
+        const currentFormat = computed(()=>{
+            return props.format || {
+                year:"YYYY",
+                month:"YYYY-MM",
+            }[props.type] || "YYYY-MM-DD";
+        })
         provide("notClearInputValue", true)
-        provide("notClearInputValueFormat", props.format)
+        provide("notClearInputValueFormat", currentFormat.value)
         const options:any = ref([]);
         const currentValue:any = ref(null);
         const refCalendar:any = ref(null)
         const refSelect:any = ref(null)
         const onClickDay = ({year, month, date})=>{
-            refSelect.value.show = false;
-            const value = dayjs(new Date(year.value,month.value-1,date.value)).format(props.format)
+            if(props.type !== 'dates'){
+                refSelect.value.show = false;
+            }
+            const value = dayjs(new Date(year.value,month.value-1,date.value)).format(currentFormat.value)
             if(value === 'Invalid Date'){
                 options.value = [];
                 nextTick(()=>{
@@ -38,10 +50,9 @@ export default defineComponent({
                     currentValue.value = value;
                 })
             }
-
         }
         const getDate = (date)=>{
-            const d = dayjs(date, props.format);
+            const d = dayjs(date, currentFormat.value);
             return {
                 year:ref(d.year()),
                 month:ref(d.month()+1),
@@ -53,9 +64,19 @@ export default defineComponent({
         }
         const currentValueParse = computed(()=>getDate(currentValue.value || new Date()))
 
-        onMounted(()=>{
-            currentValue.value = props.modelValue;
-        })
+
+        const onGoDay = (item)=>{
+            refSelect.value.show = false;
+            onClickDay(item);
+        }
+
+        const watchTypeInit = ()=>{
+            switch (props.type){
+                default:
+                    break;
+            }
+        }
+
         watch(computed(()=>props.modelValue),()=>{
             onClickDay(getDate(props.modelValue));
         })
@@ -73,10 +94,17 @@ export default defineComponent({
                 })
             }
         })
-        const onGoDay = (item)=>{
-            refSelect.value.show = false;
-            onClickDay(item);
-        }
+        watch(computed(()=> props.type),()=>{
+            nextTick(()=>{
+                watchTypeInit();
+            })
+        })
+        onMounted(()=>{
+            currentValue.value = props.modelValue;
+            nextTick(()=>{
+                watchTypeInit();
+            })
+        })
         return {
             onGoDay,
             onClickDay,
@@ -97,17 +125,27 @@ export default defineComponent({
                           options={this.options}
                           ref={'refSelect'}
                           PopoverConfig={{
-                            popoverClass:"wp-date-picker-panel-popover"
-                        }} v-slots={{
-                            panel:()=>(
+                                popoverClass:"wp-date-picker-panel-popover"
+                          }}
+                          {...this.$props.selectProps}
+                          placeholder={this.$props.placeholder}
+                          multiple={this.$props.type === 'dates'}
+                          v-slots={{
+                            panel:()=>[
                                 <WpCalendar ref={'refCalendar'}
                                             showPanel={this.showPanel}
                                             onClickDay={this.onClickDay}
                                             onGoDay={this.onGoDay}
                                             {...this.$props.calendarProps}
+                                            type={this.$props.type}
                                 >
-                                </WpCalendar>
-                            )
+                                </WpCalendar>,
+                                <div class={{
+                                    'wp-date-picker-footer':true
+                                }}>
+                                    <WpButton size={'mini'}>确定</WpButton>
+                                </div>
+                            ]
                         }}
                 >
                 </WpSelect>
