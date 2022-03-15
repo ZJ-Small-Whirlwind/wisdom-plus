@@ -1,4 +1,4 @@
-## 代码演示
+# Permission 权限
 
 ### 介绍
 
@@ -20,6 +20,9 @@ permissionConfig.useRoute = useRoute
 // setup()
 const { route, has, hasAll, permissions } = usePermission()
 ```
+
+## 代码演示
+
 
 #### 基础用法
 
