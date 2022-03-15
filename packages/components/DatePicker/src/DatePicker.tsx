@@ -26,16 +26,21 @@ export default defineComponent({
                 month:"YYYY-MM",
             }[props.type] || "YYYY-MM-DD";
         })
-        provide("notClearInputValue", true)
-        provide("notClearInputValueFormat", currentFormat.value)
         const options:any = ref([]);
         const currentValue:any = ref(null);
         const refCalendar:any = ref(null)
         const refSelect:any = ref(null)
         const isMultiple = computed(()=> props.type === 'dates');
+        const currentValueCopy = ref(null);
+        provide("notClearInputValue", true)
+        provide("notClearInputValueFormat", currentFormat.value)
+
         const onClickDay = ({year, month, date})=>{
-            if(props.type !== 'dates'){
+            if(!['dates'].includes(props.type)){
                 refSelect.value.show = false;
+            }
+            if(['week'].includes(props.type)){
+                return;
             }
             const value = dayjs(new Date(year.value,month.value-1,date.value)).format(currentFormat.value)
             if(value === 'Invalid Date'){
@@ -48,9 +53,16 @@ export default defineComponent({
                     {label:value,value},
                 ]
                 if(isMultiple.value){
+                    const currentValueOld = (currentValue.value || []);
                     options.value = (options.value || []).concat(opts);
                     nextTick(()=>{
-                        currentValue.value = (currentValue.value || []).concat([value]);
+                        const index = currentValueOld.indexOf(value);
+                        if(index === -1){
+                            currentValueOld.push(value)
+                        }else {
+                            currentValueOld.splice(index,1);
+                        }
+                        currentValue.value = currentValueOld;
                     })
                 }else {
                     options.value = opts;
@@ -58,7 +70,6 @@ export default defineComponent({
                         currentValue.value = value;
                     })
                 }
-
             }
         }
         const getDate = (date)=>{
@@ -72,12 +83,20 @@ export default defineComponent({
                 second:ref(d.second()),
             }
         }
-        const currentValueParse = computed(()=>getDate(currentValue.value || new Date()))
+        const currentValueParse = computed(()=>{
+            if(isMultiple.value){
+                return (currentValue.value || []).map(e=>getDate(e || new Date()))
+            }else {
+                return getDate(currentValue.value || new Date())
+            }
+        })
+
+        provide("WpCalendarActiveMaps", currentValueParse)
 
 
         const onGoDay = (item)=>{
-            refSelect.value.show = false;
             onClickDay(item);
+            refSelect.value.show = false;
         }
 
         const watchTypeInit = ()=>{
@@ -86,22 +105,66 @@ export default defineComponent({
                     break;
             }
         }
-
+        const init = ()=>{
+            if(isMultiple.value){
+                options.value = (props.modelValue || []).map(value=>({label:value,value}));
+                nextTick(()=>{
+                    currentValue.value = props.modelValue;
+                })
+            }else {
+                onClickDay(getDate(props.modelValue));
+            }
+        }
+        const onConfirm = ()=>{
+            currentValueCopy.value = JSON.parse(JSON.stringify(currentValue.value));
+            emit("update:modelValue", currentValue.value)
+            refSelect.value.show = false;
+        }
+        const onWeekClick = (week)=>{
+            if(props.type === 'week'){
+                const values = week.map(e=>e.date.format(currentFormat.value))
+                emit("update:modelValue", values)
+                const value = "2020 第 16 周";
+                const opts = [
+                    {label:value,value},
+                ]
+                options.value = opts;
+                nextTick(()=>{
+                    currentValue.value = value;
+                })
+            }
+        }
         watch(computed(()=>props.modelValue),()=>{
-            onClickDay(getDate(props.modelValue));
+            init()
         })
         watch(currentValue,()=>{
             nextTick(()=>{
-                emit("update:modelValue", currentValue.value)
+                if(props.type !== 'week'){
+                    emit("update:modelValue", currentValue.value)
+                }
             })
         })
         watch(computed(()=>refSelect.value && refSelect.value.show),val=>{
             if(val){
+                currentValueCopy.value = JSON.parse(JSON.stringify(currentValue.value));
                 nextTick(()=>{
-                    refCalendar.value.year = currentValueParse.value.year.value;
-                    refCalendar.value.month = currentValueParse.value.month.value;
-                    refCalendar.value.date = currentValueParse.value.date.value;
+                    if(isMultiple.value){
+                        const date = currentValueParse.value[currentValueParse.value.length - 1];
+                        if(date){
+                            refCalendar.value.year = date.year.value;
+                            refCalendar.value.month = date.month.value;
+                            refCalendar.value.date = date.date.value;
+                        }
+                    }else {
+                        refCalendar.value.year = currentValueParse.value.year.value;
+                        refCalendar.value.month = currentValueParse.value.month.value;
+                        refCalendar.value.date = currentValueParse.value.date.value;
+                    }
                 })
+            }else {
+                if(isMultiple.value){
+                    emit("update:modelValue", currentValueCopy.value)
+                }
             }
         })
         watch(computed(()=> props.type),()=>{
@@ -113,16 +176,19 @@ export default defineComponent({
             currentValue.value = props.modelValue;
             nextTick(()=>{
                 watchTypeInit();
+                init();
             })
         })
         return {
             onGoDay,
             onClickDay,
+            onWeekClick,
             refCalendar,
             refSelect,
             currentValue,
             options,
             isMultiple,
+            onConfirm,
         }
     },
     render(){
@@ -136,7 +202,7 @@ export default defineComponent({
                           options={this.options}
                           ref={'refSelect'}
                           PopoverConfig={{
-                                popoverClass:"wp-date-picker-panel-popover"
+                                popoverClass:`wp-date-picker-panel-popover wp-date-picker-panel-popover-${this.$props.type}`
                           }}
                           {...this.$props.selectProps}
                           placeholder={this.$props.placeholder}
@@ -146,16 +212,17 @@ export default defineComponent({
                                 <WpCalendar ref={'refCalendar'}
                                             showPanel={this.showPanel}
                                             onClickDay={this.onClickDay}
+                                            onWeekClick={this.onWeekClick}
                                             onGoDay={this.onGoDay}
                                             {...this.$props.calendarProps}
                                             type={this.$props.type}
                                 >
                                 </WpCalendar>,
-                                <div class={{
+                                this.isMultiple ?  <div class={{
                                     'wp-date-picker-footer':true
                                 }}>
-                                    <WpButton size={'mini'}>确定</WpButton>
-                                </div>
+                                    <WpButton size={'mini'} onClick={this.onConfirm}>确定</WpButton>
+                                </div> : null
                             ]
                         }}
                 >

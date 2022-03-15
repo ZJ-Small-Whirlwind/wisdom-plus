@@ -1,4 +1,4 @@
-import {defineComponent, computed, ref, watch, PropType, ExtractPropTypes, onMounted, nextTick} from 'vue'
+import {defineComponent, computed, ref, watch, PropType, ExtractPropTypes, onMounted, nextTick, inject} from 'vue'
 import CalendarData,{returnDate} from 'lunar-calendar-panel'
 import dayjs from 'dayjs'
 import {buildProps} from "@wisdom-plus/utils/props";
@@ -45,6 +45,22 @@ export default defineComponent({
     name:"WpCalendar",
     props:calendarProps,
     setup(props, {emit}) {
+        const WpCalendarActiveMaps:any = inject("WpCalendarActiveMaps", ref(null))
+        const activeMaps = computed(()=>{
+            try {
+                if(Object.prototype.toString.call(WpCalendarActiveMaps.value) === '[object Array]'){
+                    return WpCalendarActiveMaps.value.reduce((a,b)=>{
+                        const keyname = `${b.year.value}-${b.month.value}-${b.date.value}`;
+                        a[keyname] = true;
+                        return a;
+                    },{})
+                }else {
+                    return {}
+                }
+            }catch (e) {
+                return {};
+            }
+        })
         const currentData:dayjs.Dayjs = dayjs()
         const today = ref({
             year:currentData.year(),
@@ -65,6 +81,16 @@ export default defineComponent({
                 e.date = dayjs(e.getDayAll);
                 return e;
             });
+        })
+
+        const daysLayout = computed(()=>{
+            const index = 7;
+            return days.value.reduce((a:any,b,k,d:any)=>{
+                if(!(k % index)){
+                    a.push(d.slice(k,k+index))
+                }
+                return a;
+            },[])
         })
         const currentDays = computed(()=>days.value.filter(e=>e.type === "current"))
         const yearList = computed(()=>{
@@ -233,6 +259,7 @@ export default defineComponent({
             eventClick,
             herderTitleClick,
             days,
+            daysLayout,
             clickDays,
             prevMonth,
             nextMonth,
@@ -248,6 +275,7 @@ export default defineComponent({
             goDay,
             currentDayObjData,
             today,
+            activeMaps,
         }
     },
     render(){
@@ -277,7 +305,7 @@ export default defineComponent({
         /**
          * 具体日期
          */
-        const daysRender = ()=> this.days.map((e:any) => {
+        const daysRenderItem = (week:any)=> week.map((e:any) => {
             const EventList:any = this.$props.getIsEvent(e);
             return (
                 <div  onClick={() => this.$props.lunar ? this.clickDays(e) : null} class={{
@@ -286,6 +314,7 @@ export default defineComponent({
                     isWeek:[0,6].includes(e.week),
                     [e.type]:true,
                     "wp-calendar-content-day-disabled":this.$props.disabledDate(e),
+                    "wp-calendar-content-day-active-map":this.activeMaps[e.getDayAll],
                 }}>
                     <span onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{
                         isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
@@ -315,6 +344,15 @@ export default defineComponent({
                 </div>
             )
         })
+        const daysRender = ()=>{
+            return this.daysLayout.map(week=>{
+                return (<div onClick={()=>this.$emit('week-click', week)} class={{
+                    'wp-calendar-content-day-week':true,
+                }}>
+                    {daysRenderItem(week)}
+                </div>)
+            })
+        }
         /**
          * 星期头
          */
@@ -373,7 +411,7 @@ export default defineComponent({
                         this.showMonth ? monthRender() :
                             [
                                 daysHeaderRender(),
-                                daysRender()
+                                daysRender(),
                             ]}
                 </div>
             </div>)
@@ -414,7 +452,10 @@ export default defineComponent({
             </div>
         )
         const calendarPanelLunarTaskRender=()=>{
-            const tasks:any = this.$props.getIsEvent(this.currentDayObjData) || [];
+            let tasks:any = this.$props.getIsEvent(this.currentDayObjData);
+            if(Object.prototype.toString.call(tasks) !== '[object Array]'){
+                return [];
+            }
             return (
                 <div class={{
                     "wp-calendar-layout-lunar-panel-lunar-task": true,
