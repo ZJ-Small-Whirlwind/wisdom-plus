@@ -63,16 +63,19 @@ export default defineComponent({
 
         const left = ref(0)
         const width = ref('0px')
-        const getLeft = () => {
-            if (!activeTabTitle.value || !props.showLine || props.card) return
-            nextTick(() => {
-                if (!activeTabTitle.value) return
-                left.value = activeTabTitle.value.offsetLeft + activeTabTitle.value.offsetWidth / 2
-                width.value = activeTabTitle.value.offsetWidth + 'px'
-                setTimeout(() => {
-                    init.value = true
-                })
+        const getLeft = async() => {
+            setTimeout(() => {
+                init.value = true
             })
+            if (!activeTabTitle.value || !props.showLine || props.card) return
+            await nextTick()
+            if (!activeTabTitle.value) return
+            const leftValue = activeTabTitle.value.offsetLeft + activeTabTitle.value.offsetWidth / 2
+            const widthValue = activeTabTitle.value.offsetWidth
+            if (leftValue && widthValue) {
+                left.value = leftValue
+                width.value = widthValue + 'px'
+            }
         }
 
         const widthComputed = computed(() => {
