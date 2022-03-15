@@ -63,6 +63,7 @@ export * from './Cascader'
 export * from './DatePicker'
 export * from './Switch'
 export * from './ConfigProvider'
+export * from './Tabs'
 
 export * from './Pro/Upload'
 export * from './Pro/Editor'

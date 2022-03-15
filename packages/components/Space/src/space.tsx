@@ -94,6 +94,7 @@ export default defineComponent({
                     alignItems: parentAlignItems.value,
                     justifyContent: parentJustifyContent.value
                 }}>
+                    { context.slots.prefix?.() }
                     {
                         slotElements.map((vNode, index) => (
                             <div class={{
@@ -110,6 +111,7 @@ export default defineComponent({
                             </div>
                         ))
                     }
+                    { context.slots.suffix?.() }
                 </div>
             )
         }
