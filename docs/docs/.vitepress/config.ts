@@ -262,6 +262,10 @@ export default defineConfig({
                         {
                             text: 'Calendar 日历',
                             link: '/components/calendar'
+                        },
+                        {
+                            text: 'Tabs 标签页',
+                            link: '/components/tabs'
                         }
                     ]
                 }

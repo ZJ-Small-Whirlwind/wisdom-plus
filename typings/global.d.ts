@@ -65,6 +65,8 @@ declare module 'vue' {
     WpConfigProvider: typeof import('wisdom-plus')['WpConfigProvider']
     WpCalendar: typeof import('wisdom-plus')['WpCalendar']
     WpProPermission: typeof import('wisdom-plus')['WpProPermission']
+    WpTabs: typeof import('wisdom-plus')['WpTabs']
+    WpTab: typeof import('wisdom-plus')['WpTab']
   }
 }
 
