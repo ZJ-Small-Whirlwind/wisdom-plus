@@ -7,7 +7,8 @@ export const tabProps = buildProps({
         type: [String, Symbol, Number, Boolean] as PropType<string | symbol | number | boolean>,
         default: Symbol()
     },
-    closeable: Boolean
+    closeable: Boolean,
+    disabled: Boolean
 })
 
 export type TabProps = ExtractPropTypes<typeof tabProps>

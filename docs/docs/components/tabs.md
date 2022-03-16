@@ -40,6 +40,59 @@ app.use(WpTab)
 ```
 :::
 
+#### 标题位置
+
+:::demo
+```vue
+<template>
+    <wp-space vertical>
+        <wp-tabs position="bottom">
+            <wp-tab title="test">
+                内容
+            </wp-tab>
+            <wp-tab title="test2">
+                内容2
+            </wp-tab>
+            <wp-tab title="test">
+                <template #title>
+                    插槽
+                </template>
+                内容3
+            </wp-tab>
+        </wp-tabs>
+        <wp-tabs position="left">
+            <wp-tab title="test">
+                内容
+            </wp-tab>
+            <wp-tab title="test2" disabled>
+                内容2
+            </wp-tab>
+            <wp-tab title="test">
+                <template #title>
+                    插槽
+                </template>
+                内容3
+            </wp-tab>
+        </wp-tabs>
+        <wp-tabs position="right">
+            <wp-tab title="test">
+                内容
+            </wp-tab>
+            <wp-tab title="test2">
+                内容2
+            </wp-tab>
+            <wp-tab title="test">
+                <template #title>
+                    插槽
+                </template>
+                内容3
+            </wp-tab>
+        </wp-tabs>
+    </wp-space>
+</template>
+```
+:::
+
 #### 可关闭，卡片式
 
 :::tip
@@ -175,6 +228,7 @@ WpTab 上组件的 attrs 会被集成到 标题对应的 dom 上
 | title      | 标题       | _string_          | -     |
 | index     | 唯一识别码，如果不设置，则为组件的索引   | _string \| symbol \| number \| boolean_           | -      |
 | closeable   | 是否可关闭 | _boolean_ | -      |
+| disabled | 是否禁用 | _boolean_ | - |
 
 ### Slots
 
@@ -206,3 +260,5 @@ WpTab 上组件的 attrs 会被集成到 标题对应的 dom 上
 | --wp-tabs-card-title-cell-padding | 10px 15px | 卡片模式下的标题每项内边距 |
 | --wp-tabs-card-title-font-size | 13px | 卡片模式下的标题字号 |
 | --wp-tabs-card-title-color | #333 | 卡片模式下的标题颜色 |
+| --wp-tabs-title-vertical-padding | 10px 0 | 竖直模式下的内边距 |
+| --wp-tabs-title-vertical-cell-padding | 0 10px | 竖直模式下的单项内边距 |
