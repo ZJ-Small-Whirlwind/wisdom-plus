@@ -1,5 +1,19 @@
 # Carousel 轮播图
 
+### 介绍
+
+前端入门测试组件
+
+### 引入
+
+```js
+import { createApp } from 'vue'
+import { WpCarousel } from 'wisdom-plus'
+
+const app = createApp()
+app.use(WpCarousel)
+```
+
 ## 代码演示
 
 #### 基础用法
