@@ -76,6 +76,7 @@
         padding: var(--wp-tabs-tab-padding);
         font-size: var(--wp-tabs-tab-font-size);
         box-sizing: border-box;
+        white-space: initial;
     }
     &--line {
         position: absolute;
