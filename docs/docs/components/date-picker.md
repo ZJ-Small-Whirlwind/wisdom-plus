@@ -60,7 +60,7 @@ const calendarProps = ref({
             <WpDatePicker clearable v-model="value4" type="week" placeholder="选择周"></WpDatePicker>
         </div>
         <div>
-            多个日期
+            多个日期{{value3}}
             <WpDatePicker v-model="value3" type="dates" placeholder="选择多个日期"></WpDatePicker>
         </div>
     </wp-space>

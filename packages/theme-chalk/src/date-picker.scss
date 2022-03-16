@@ -10,13 +10,26 @@
         color: #d9d9d9;
         font-size: 16px;
     }
-    .wp-input--focused{
+    .wp-select-show{
         .wp-date-picker-prefix-icon{
             color: #4b98fc;
         }
     }
-    .wp-select-input-multiple .wp-input--element{
-        flex-wrap: initial;
+    .wp-select-input-multiple {
+        .wp-input--element{
+            //flex-wrap: initial;
+            max-height: 150px;
+            overflow-x: hidden;
+        }
+        .wp-input--element-content{
+            overflow: hidden;
+        }
+        .wp-tag--text{
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            word-break: break-all;
+        }
     }
 }
 .wp-date-picker-panel-popover{
