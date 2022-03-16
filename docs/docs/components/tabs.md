@@ -209,6 +209,7 @@ WpTab 上组件的 attrs 会被集成到 标题对应的 dom 上
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | close      | tab 关闭的回调       | _(index: string \| symbol \| number \| boolean) => void_          | -     |
+| change      | 手动点击 tab 切换的回调       | _(index: string \| symbol \| number \| boolean) => void_          | -     |
 
 ### Slots
 

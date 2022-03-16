@@ -266,6 +266,10 @@ export default defineConfig({
                         {
                             text: 'Tabs 标签页',
                             link: '/components/tabs'
+                        },
+                        {
+                            text: 'Carousel 轮播图',
+                            link: '/components/carousel'
                         }
                     ]
                 }

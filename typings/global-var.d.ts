@@ -65,6 +65,7 @@ declare global {
     const WpProPermission: typeof import('wisdom-plus')['WpProPermission']
     const WpTabs: typeof import('wisdom-plus')['WpTabs']
     const WpTab: typeof import('wisdom-plus')['WpTab']
+    const WpCarousel: typeof import('wisdom-plus')['WpCarousel']
 }
 
 export {}
