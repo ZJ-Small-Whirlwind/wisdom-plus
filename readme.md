@@ -12,13 +12,13 @@
     🔥<a href="https://wisdom-plus.zhijiasoft.com/static/" target="_block">文档地址</a>
 </p>
 
-##✨ Features
+## ✨ Features
 - 🚀 Written in TypeScript
 - 🚄 Support H5 & PC
 - 🚗 80%+ Unit test coverage
 - 🚴‍♀️ Vue 3 Composition API
 
-##🔧 Install
+## 🔧 Install
 Using `npm` to install:
 
 ```bash
@@ -30,7 +30,7 @@ Using `yarn` to install:
 yarn add wisdom-plus
 ```
 
-##🧰 Usage
+## 🧰 Usage
 
 ```js
 import 'wisdom-plus/dist/index.css'
@@ -41,11 +41,11 @@ app.use(WisdomPlus)
 <wp-button type="primary">按钮</wp-button>
 ```
 
-##🏠 Core Team
+## 🏠 Core Team
 | [![mamorial](https://avatars.githubusercontent.com/u/26594629?v=4&s=80)](https://github.com/mamorial/) | [![zys8119](https://avatars.githubusercontent.com/u/19203342?v=4&s=80)](https://github.com/zys8119/) | [![joo1es](https://avatars.githubusercontent.com/u/76929557?v=4&s=80)](https://github.com/joo1es/) |
 | :-: | :-: | :-: |
 | [mamorial](https://github.com/mamorial/) | [zys8119](https://github.com/zys8119/) | [joo1es](https://github.com/joo1es/) |
 
 ##🤝 Contributing
 
-##📖 LICENSE
+## 📖 LICENSE
