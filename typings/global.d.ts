@@ -67,6 +67,7 @@ declare module 'vue' {
     WpProPermission: typeof import('wisdom-plus')['WpProPermission']
     WpTabs: typeof import('wisdom-plus')['WpTabs']
     WpTab: typeof import('wisdom-plus')['WpTab']
+    WpCarousel: typeof import('wisdom-plus')['WpCarousel']
   }
 }
 

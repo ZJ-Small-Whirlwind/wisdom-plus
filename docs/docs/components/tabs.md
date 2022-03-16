@@ -64,7 +64,7 @@ app.use(WpTab)
             <wp-tab title="test">
                 内容
             </wp-tab>
-            <wp-tab title="test2">
+            <wp-tab title="test2" disabled>
                 内容2
             </wp-tab>
             <wp-tab title="test">
@@ -209,6 +209,7 @@ WpTab 上组件的 attrs 会被集成到 标题对应的 dom 上
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | close      | tab 关闭的回调       | _(index: string \| symbol \| number \| boolean) => void_          | -     |
+| change      | 手动点击 tab 切换的回调       | _(index: string \| symbol \| number \| boolean) => void_          | -     |
 
 ### Slots
 
@@ -228,6 +229,7 @@ WpTab 上组件的 attrs 会被集成到 标题对应的 dom 上
 | title      | 标题       | _string_          | -     |
 | index     | 唯一识别码，如果不设置，则为组件的索引   | _string \| symbol \| number \| boolean_           | -      |
 | closeable   | 是否可关闭 | _boolean_ | -      |
+| disabled | 是否禁用 | _boolean_ | - |
 
 ### Slots
 

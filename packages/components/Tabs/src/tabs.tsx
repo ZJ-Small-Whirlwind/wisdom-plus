@@ -53,7 +53,8 @@ export default defineComponent({
     props: tabsProps,
     emits: {
         'update:modelValue': (value: string | symbol | number | boolean) => (void value, true),
-        'close': (index: string | symbol | number | boolean) => (void index, true)
+        'close': (index: string | symbol | number | boolean) => (void index, true),
+        'change': (index: string | symbol | number | boolean) => (void index, true)
     },
     setup(props, { emit }) {
         const activeRef = ref<string | symbol | number | boolean>()
@@ -125,8 +126,6 @@ export default defineComponent({
                 init.value = true
             })
         })
-        watch(() => props.spaceProps, getLeft, { deep: true })
-        watch(() => props.position, getLeft)
 
         useResizeObserver(activeTabTitle, getLeft)
 
@@ -148,6 +147,7 @@ export default defineComponent({
             delete propsMap.index
             delete propsMap.closable
             delete propsMap.title
+            delete propsMap.disabled
             return propsMap
         }
 
@@ -186,12 +186,15 @@ export default defineComponent({
                             class={[
                                 'wp-tabs--title--cell',
                                 {
-                                    'wp-tabs--title--cell--active': index === this.activeIndex
+                                    'wp-tabs--title--cell--active': index === this.activeIndex,
+                                    'wp-tabs--title--cell--disabled': tab.props?.disabled || tab.props?.disabled === ''
                                 }
                             ]}
                             key={tab.props?.key || index}
                             onClick={() => {
+                                if (tab.props?.disabled || tab.props?.disabled === '') return
                                 this.active = tab.props?.key || index
+                                this.$emit('change', this.active)
                             }}
                             onMousedown={e => {
                                 if (typeof tab.props?.closable === 'boolean' ? tab.props?.closable : this.closable) {
@@ -205,7 +208,7 @@ export default defineComponent({
                             {...this.propsHandle(tab.props)}
                             ref={index === this.activeIndex ? 'activeTabTitle' : undefined}
                         >
-                            {(tab.children as Record<string, ({ active: boolean }) => VNode>)?.title?.({ active: index === this.activeIndex }) ?? tab.props?.title }
+                            {(tab.children as Record<string, ({ active }: { active: boolean }) => VNode>)?.title?.({ active: index === this.activeIndex }) ?? tab.props?.title }
                             {(typeof tab.props?.closable === 'boolean' ? tab.props?.closable : this.closable) && (
                                 this.$slots.close?.() ?? (
                                     <Icon class="wp-tabs--title--cell--close" onClick={e => {
