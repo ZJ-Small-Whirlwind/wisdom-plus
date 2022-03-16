@@ -199,6 +199,7 @@ $unit15: 15px;
                     }
                 }
             }
+
             &-active-map{
                 .wp-calendar-content-day-cell{
                     background-color: #ff724b;
@@ -442,3 +443,23 @@ $unit15: 15px;
         }
     }
 }
+.wp-calendar-content-day-available{
+    .wp-calendar-content-day-disabled{
+        background-color: transparent !important;
+        cursor: pointer;
+        .wp-calendar-content-day-cell{
+            cursor: pointer;
+            &:hover{
+                background-color: #fd7653;
+                color: #ffffff;
+            }
+        }
+    }
+    .wp-calendar-content-day-not-disabled-available{
+        background-color: #fed4cb;
+        &.wp-calendar-content-day-active-map{
+            //border-radius: 100%;
+        }
+    }
+}
+

@@ -42,17 +42,24 @@ export default defineComponent({
         }
         const options:any = ref([]);
         const currentValue:any = ref(null);
+        const daterangeValueCache:any = ref([]);
+        const daterangeDayHoverValueCache:any = ref([]);
         const refCalendar:any = ref(null)
         const refSelect:any = ref(null)
         const refCalendarEnd:any = ref(null)
         const refSelectEnd:any = ref(null)
         const isMultiple = computed(()=> props.type === 'dates');
         const currentValueCopy = ref(null);
+        const currentDaterangeValues = computed(()=>daterangeValueCache.value.concat(daterangeDayHoverValueCache.value))
         const currentValueParse = computed(()=>{
-            if(isMultiple.value){
-                return (currentValue.value || []).map(e=>getDate(e || new Date()))
+            let dates = currentValue.value;
+            if(isDaterange.value){
+                dates = currentDaterangeValues.value;
+            }
+            if(isMultiple.value || isDaterange.value){
+                return (dates || []).map(e=>getDate(e || new Date())).slice(0,2)
             }else {
-                return getDate((props.type === 'week' ? (currentValue.value || [])[0] : currentValue.value) || new Date())
+                return getDate((props.type === 'week' ? (dates || [])[0] : dates) || new Date())
             }
         })
         const WpCalendarWeekMaps = computed(()=>{
@@ -66,10 +73,29 @@ export default defineComponent({
         provide("WpCalendarActiveMaps", currentValueParse)
         provide("WpCalendarWeekMaps", WpCalendarWeekMaps)
 
-        const onClickDay = ({year, month, date}, bool = true)=>{
-            console.log(bool)
+        const daterangeClickDay = ({year, month, date})=>{
+            const value = dayjs(new Date(year.value,month.value-1,date.value)).format(currentFormat.value)
+            if(value === 'Invalid Date'){
+                daterangeValueCache.value = [];
+            }else {
+                daterangeValueCache.value = (daterangeValueCache.value || []);
+                daterangeValueCache.value.push(value);
+                if(daterangeValueCache.value.length > 2){
+                    daterangeValueCache.value = [daterangeValueCache.value.at(-1)];
+                }
+                if(daterangeValueCache.value.length === 2){
+                    refSelect.value.show = false;
+                    currentValue.value = daterangeValueCache.value;
+                }
+            }
+        }
+        const onClickDay = ({year, month, date})=>{
+
             if(!['dates','daterange'].includes(props.type)){
                 refSelect.value.show = false;
+            }
+            if(['daterange'].includes(props.type)){
+                daterangeClickDay({year, month, date});
             }
             if(['week','daterange'].includes(props.type)){
                 return;
@@ -168,8 +194,30 @@ export default defineComponent({
         }
         const onDayMousemove = (d)=>{
             if(isDaterange.value){
-                console.log(d)
+                daterangeDayHoverValueCache.value = [dayjs(d.getDayAll).format(currentFormat.value)];
             }
+        }
+        const onDayMouseleave = (d)=>{
+            if(isDaterange.value){
+                // daterangeDayHoverValueCache.value = [];
+            }
+        }
+        const disabledDate = (dayData)=>{
+            let resUlt = false;
+            const customDisabledDate = (props.calendarProps as any).disabledDate;
+            if(Object.prototype.toString.call(customDisabledDate) === "[object Function]"){
+                resUlt = customDisabledDate(dayData);
+            }
+            if(!resUlt && currentDaterangeValues.value.length >= 2 && isDaterange.value){
+                try {
+                    const times = (currentDaterangeValues.value || []).slice(0,2).map(e=>dayjs(e).toDate().getTime()).sort((a,b)=>a-b);
+                    const curTime = dayData.date.toDate().getTime();
+                    return  curTime < times[0]  || curTime > times[1];
+                }catch (e) {
+                    return resUlt
+                }
+            }
+            return resUlt;
         }
         watch(computed(()=>props.modelValue),()=>{
             init()
@@ -184,12 +232,16 @@ export default defineComponent({
                 currentValueCopy.value = JSON.parse(JSON.stringify(currentValue.value));
                 nextTick(()=>{
                     if(isDaterange.value){
-                        refCalendar.value.year = currentValueParse.value.year.value;
-                        refCalendar.value.month = currentValueParse.value.month.value;
-                        refCalendar.value.date = currentValueParse.value.date.value;
-                        refCalendarEnd.value.year = currentValueParse.value.year.value;
-                        refCalendarEnd.value.month = currentValueParse.value.month.value+1;
-                        refCalendarEnd.value.date = currentValueParse.value.date.value;
+                        daterangeValueCache.value = (currentValue.value || [])
+                        // const times = (currentValue.value || []).map(e=>dayjs(e).toDate().getTime()).sort((a,b)=>a-b).map(e=>dayjs(e).format(currentFormat.value));
+                        // console.log(times)
+
+                        // refCalendar.value.year = currentValueParse.value.year.value;
+                        // refCalendar.value.month = currentValueParse.value.month.value;
+                        // refCalendar.value.date = currentValueParse.value.date.value;
+                        // refCalendarEnd.value.year = currentValueParse.value.year.value;
+                        // refCalendarEnd.value.month = currentValueParse.value.month.value+1;
+                        // refCalendarEnd.value.date = currentValueParse.value.date.value;
                         return;
                     }
                     if(isMultiple.value){
@@ -221,6 +273,8 @@ export default defineComponent({
             refSelectEnd.value && refSelectEnd.value.show,
         ]),val=>{
             if(isDaterange.value){
+                daterangeValueCache.value = [];
+                daterangeDayHoverValueCache.value = [];
                 if(val.includes(true)){
                     showInputClass.value = true;
                     refSelect.value.show = true;
@@ -243,6 +297,7 @@ export default defineComponent({
             onClickDay,
             onWeekClick,
             onDayMousemove,
+            onDayMouseleave,
             refCalendar,
             refSelect,
             refCalendarEnd,
@@ -252,19 +307,24 @@ export default defineComponent({
             isMultiple,
             onConfirm,
             isDaterange,
+            disabledDate,
+            currentDaterangeValues,
         }
     },
     render(){
         const WpCalendarRender = (bool)=>(
             <WpCalendar ref={bool ? 'refCalendar' : 'refCalendarEnd'}
                 showPanel={this.showPanel}
-                onClickDay={(d)=>this.onClickDay(d,bool)}
+                onClickDay={(d)=>this.onClickDay(d)}
                 onWeekClick={this.onWeekClick}
                 onGoDay={this.onGoDay}
                 onDayMousemove={this.onDayMousemove}
+                onDayMouseleave={this.onDayMouseleave}
                 {...this.$props.calendarProps}
                 type={this.$props.type}
                 isActiveShow={bool}
+                disabledDate={this.disabledDate}
+                showAvailableStyle={(this.currentDaterangeValues || []).length >= 2 && this.isDaterange}
             >
         </WpCalendar>);
         const WpSelectRender = (bool)=>(

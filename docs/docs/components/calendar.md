@@ -84,6 +84,7 @@ const getIsEvent = e=>{
 | disabledDate      | 是否禁止具体日期   | _(dayData:object)=>boolean_                                             | ()=>false |
 | type      | 显示类型       | _string, (year、month)_                                                       | -         |
 | isActiveShow      | 是否暂时今日选中状态 | _boolean_                                                       | true      |
+| showAvailableStyle      | 是否显示有效日期样式 | _boolean_                                                       | false     |
 
 ### Emits
 
@@ -98,3 +99,4 @@ const getIsEvent = e=>{
 |  go-day   | 快捷按钮回调 | _(data:{year, month, date})=>void_ |
 |  week-click   | 周点击回调 | _(week)=>void_ |
 |  day-mousemove   | 鼠标经过具体日期 | _(day:any, ev:any)=>void_ |
+|  day-mouseleave   | 鼠标离开具体日期 | _(day:any, ev:any)=>void_ |

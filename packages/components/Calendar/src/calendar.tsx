@@ -40,6 +40,10 @@ export const calendarProps = buildProps({
     isActiveShow:{
         type:Boolean as PropType<boolean>,
         default:true
+    },
+    showAvailableStyle:{
+        type:Boolean as PropType<boolean>,
+        default:false
     }
 })
 
@@ -151,7 +155,7 @@ export default defineComponent({
          * 日期点击
          */
         const clickDays = (e:any) => {
-            if(!props.disabledDate(e)){
+            if(!props.disabledDate(e) || props.showAvailableStyle){
                 year.value = e.dateYear
                 month.value = e.dateMonth
                 date.value = e.day
@@ -328,13 +332,19 @@ export default defineComponent({
          */
         const daysRenderItem = (week:any)=> week.map((e:any) => {
             const EventList:any = this.$props.getIsEvent(e);
+            const isDisabled:boolean = this.$props.disabledDate(e);
             return (
-                <div onMousemove={(ev)=>this.$emit('day-mousemove', e, ev)}  onClick={() => this.$props.lunar ? this.clickDays(e) : null} class={{
+                <div onMousemove={(ev)=>this.$emit('day-mousemove', e, ev)}
+                     onMouseleave={(ev)=>this.$emit('day-mouseleave', e, ev)}
+                     onClick={() => this.$props.lunar ? this.clickDays(e) : null}
+                     class={{
                     'wp-calendar-content-day':true,
                     isActive:this.$props.isActiveShow && e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
                     isWeek:[0,6].includes(e.week),
                     [e.type]:true,
-                    "wp-calendar-content-day-disabled":this.$props.disabledDate(e),
+                    "wp-calendar-content-day-disabled":isDisabled,
+                    "wp-calendar-content-day-not-disabled":!isDisabled,
+                    "wp-calendar-content-day-not-disabled-available":this.$props.showAvailableStyle,
                     "wp-calendar-content-day-active-map":this.activeMaps[e.getDayAll],
                     "wp-calendar-content-day-week-map":this.weekMaps[e.getDayAll],
                 }}>
@@ -414,7 +424,8 @@ export default defineComponent({
         const calendarRender = ()=>{
             return (<div class={{
                 'wp-calendar': true,
-                "wp-calendar-lunar": this.$props.lunar
+                "wp-calendar-lunar": this.$props.lunar,
+                "wp-calendar-content-day-available":this.$props.showAvailableStyle,
             }}>
                 <div class={'wp-calendar-header'}>
                     <Icon class={'wp-calendar-header-icon'} name={'arrow-left'}
