@@ -60,8 +60,8 @@ const calendarProps = ref({
             <WpDatePicker clearable v-model="value4" type="week" placeholder="选择周"></WpDatePicker>
         </div>
         <div>
-            多个日期{{value3}}
-            <WpDatePicker v-model="value3" type="dates" placeholder="选择多个日期"></WpDatePicker>
+            多个日期
+            <WpDatePicker filterable clearable v-model="value3" type="dates" placeholder="选择多个日期"></WpDatePicker>
         </div>
     </wp-space>
 </template>
@@ -71,6 +71,32 @@ const value = ref()
 const value2 = ref()
 const value3 = ref()
 const value4 = ref()
+</script>
+```
+:::
+
+#### 选择日期范围
+
+可在一个选择器中便捷地选择一个时间范围
+
+:::demo
+```vue
+<template>
+    <wp-space>
+        <div>
+            默认
+            <WpDatePicker v-model="value" type="daterange" placeholder="选择年"></WpDatePicker>
+        </div>
+        <div>
+            带快捷选项
+            <WpDatePicker v-model="value2" type="daterange" placeholder="选择月"></WpDatePicker>
+        </div>
+    </wp-space>
+</template>
+<script lang="ts" setup>
+import { ref } from 'vue'
+const value = ref()
+const value2 = ref()
 </script>
 ```
 :::
@@ -90,6 +116,7 @@ const value4 = ref()
 | selectProps | selectProps | _object_           | -         |
 | type | 显示类型 | _[string] (year、month、dates、 week、datetime、datetimerange、daterange、monthrange)_           | -         |
 | placeholder | 选择提示语 | _string_           | -         |
+| disabled | 是否禁用 | _boolean_           | false         |
 
 ### Methods
 

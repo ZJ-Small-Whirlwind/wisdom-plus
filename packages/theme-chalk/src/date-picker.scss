@@ -17,7 +17,6 @@
     }
     .wp-select-input-multiple {
         .wp-input--element{
-            //flex-wrap: initial;
             max-height: 150px;
             overflow-x: hidden;
         }
@@ -29,6 +28,15 @@
             text-overflow: ellipsis;
             overflow: hidden;
             word-break: break-all;
+        }
+    }
+    &-daterange{
+        display: inline-flex;
+        justify-items: center;
+        align-items: center;
+        &-symbol{
+            margin: 0 15px;
+            font-size: 14px;
         }
     }
 }

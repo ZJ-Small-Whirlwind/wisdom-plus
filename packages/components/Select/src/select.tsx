@@ -301,7 +301,7 @@ export default defineComponent({
         const inputMultiplePrefixRender = ()=>this.$props.multiple ? [
             inputPrefixIconRender(),
             (this.currentValueMultipleTags || []).map((value, k)=>(
-                <WpTag closable={!this.$props.collapseTags || (this.$props.collapseTags && k === 0)} onClose={()=>this.onTagsClose(value, k)}>{value}</WpTag>
+                <WpTag closable={!this.$props.disabled && (!this.$props.collapseTags || (this.$props.collapseTags && k === 0))} onClose={()=>this.onTagsClose(value, k)}>{value}</WpTag>
             ))
         ] : inputPrefixIconRender();
         const inputRender = ()=>(<div class={{
