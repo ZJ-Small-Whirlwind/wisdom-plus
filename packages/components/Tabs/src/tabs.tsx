@@ -2,7 +2,7 @@ import { useResizeObserver } from "@vueuse/core"
 import { flatten } from "@wisdom-plus/utils/flatten"
 import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
-import { ref, defineComponent, ExtractPropTypes, VNode, PropType, computed, watch, nextTick, onUpdated, onMounted, Transition, CSSProperties } from "vue"
+import { ref, defineComponent, ExtractPropTypes, VNode, PropType, computed, watch, nextTick, onUpdated, onMounted, Transition, CSSProperties, onActivated } from "vue"
 
 import Space, { SpaceProps } from '../../Space'
 import XScroll, { XScrollProps } from '../../XScroll'
@@ -55,6 +55,7 @@ export default defineComponent({
         const transform = computed(() => {
             return `-${activeIndex.value * 100}%`
         })
+        const init = ref(false)
 
         const scrollRef = ref<InstanceType<typeof XScroll> | null>(null)
         const activeTabTitle = ref<null | HTMLDivElement>(null)
@@ -62,13 +63,19 @@ export default defineComponent({
 
         const left = ref(0)
         const width = ref('0px')
-        const getLeft = () => {
-            if (!activeTabTitle.value || !props.showLine || props.card) return
-            nextTick(() => {
-                if (!activeTabTitle.value) return
-                left.value = activeTabTitle.value.offsetLeft + activeTabTitle.value.offsetWidth / 2
-                width.value = activeTabTitle.value.offsetWidth + 'px'
+        const getLeft = async() => {
+            setTimeout(() => {
+                init.value = true
             })
+            if (!activeTabTitle.value || !props.showLine || props.card) return
+            await nextTick()
+            if (!activeTabTitle.value) return
+            const leftValue = activeTabTitle.value.offsetLeft + activeTabTitle.value.offsetWidth / 2
+            const widthValue = activeTabTitle.value.offsetWidth
+            if (leftValue && widthValue) {
+                left.value = leftValue
+                width.value = widthValue + 'px'
+            }
         }
 
         const widthComputed = computed(() => {
@@ -95,8 +102,14 @@ export default defineComponent({
         })
         onUpdated(getLeft)
         onMounted(getLeft)
+        onActivated(() => {
+            init.value = false
+            setTimeout(() => {
+                init.value = true
+            })
+        })
 
-        useResizeObserver(tabsRef, getLeft)
+        useResizeObserver(activeTabTitle, getLeft)
 
         const spaceSize = computed<[string | number, string | number]>(() => {
             if (!props.spaceProps || !props.spaceProps.size) return [props.card ? 0 : 20, 0]
@@ -124,7 +137,8 @@ export default defineComponent({
             spaceSize,
             scrollRef,
             widthComputed,
-            propsHandle
+            propsHandle,
+            init
         }
     },
     render() {
@@ -143,7 +157,7 @@ export default defineComponent({
                     <XScroll ref="scrollRef" {...this.xScrollProps}>
                         <Space {...this.spaceProps} wrap={false} size={this.spaceSize} v-slots={{
                             suffix: this.showLine && !this.card ? () => (
-                                <div class="wp-tabs--line" style={{ left: this.left + 'px', width: this.widthComputed }} />
+                                <div class="wp-tabs--line" style={{ left: this.left + 'px', width: this.widthComputed, transition: this.init ? undefined : 'none' }} />
                             ) : undefined
                         }}>
                             { this.$slots?.prefix?.() }
@@ -193,7 +207,8 @@ export default defineComponent({
                 {
                     !this.titleOnly && (
                         <div class="wp-tabs--content" style={{
-                            transform: `translateX(${this.transform})`
+                            transform: `translateX(${this.transform})`,
+                            transition: this.init ? undefined : 'none'
                         }}>
                             {
                                 tabs.map((tab, index) => (
