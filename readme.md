@@ -46,6 +46,6 @@ app.use(WisdomPlus)
 | :-: | :-: | :-: |
 | [mamorial](https://github.com/mamorial/) | [zys8119](https://github.com/zys8119/) | [joo1es](https://github.com/joo1es/) |
 
-##🤝 Contributing
+## 🤝 Contributing
 
 ## 📖 LICENSE
