@@ -35,7 +35,17 @@
                             display: flex;
                             justify-content: center;
                             &.wp-calendar-content-day-week-map{
-                                background-color: #f00;
+                                background-color: #f2f6fc;
+                                &:first-child{
+                                    border-radius: 100% 0 0 100%;
+                                }
+                                &:last-child{
+                                    border-radius: 0 100%  100% 0;
+                                    .wp-calendar-content-day-cell{
+                                        background-color: #3875f9;
+                                        color: #ffffff;
+                                    }
+                                }
                             }
                         }
                     }
