@@ -16,6 +16,7 @@ export const datePickerProps = buildProps({
     selectProps:{type:Object as PropType<object>, default:()=>({})},
     type:{type:String as PropType<string>, default:null},
     placeholder:{type:String as PropType<string>, default:null},
+    disabled:{type:Boolean as PropType<boolean>, default:false},
 })
 export type DatePickerProps = ExtractPropTypes<typeof datePickerProps>
 export default defineComponent({
@@ -28,14 +29,40 @@ export default defineComponent({
                 month:"YYYY-MM",
             }[props.type] || "YYYY-MM-DD";
         })
+        const getDate = (date)=>{
+            const d = dayjs(date, currentFormat.value);
+            return {
+                year:ref(d.year()),
+                month:ref(d.month()+1),
+                date:ref(d.date()),
+                hour:ref(d.hour()),
+                minute:ref(d.minute()),
+                second:ref(d.second()),
+            }
+        }
         const options:any = ref([]);
         const currentValue:any = ref(null);
         const refCalendar:any = ref(null)
         const refSelect:any = ref(null)
+        const refCalendarEnd:any = ref(null)
+        const refSelectEnd:any = ref(null)
         const isMultiple = computed(()=> props.type === 'dates');
         const currentValueCopy = ref(null);
+        const currentValueParse = computed(()=>{
+            if(isMultiple.value){
+                return (currentValue.value || []).map(e=>getDate(e || new Date()))
+            }else {
+                return getDate((props.type === 'week' ? (currentValue.value || [])[0] : currentValue.value) || new Date())
+            }
+        })
+        const WpCalendarWeekMaps = computed(()=>{
+            return props.type === 'week' ? (currentValue.value || []).map(e=>getDate(e)) : null;
+        })
         provide("notClearInputValue", true)
         provide("notClearInputValueFormat", currentFormat.value)
+        provide("WpCalendarActiveMaps", currentValueParse)
+        provide("WpCalendarWeekMaps", WpCalendarWeekMaps)
+        const isDaterange = computed(()=>["daterange"].includes(props.type))
 
         const onClickDay = ({year, month, date})=>{
             if(!['dates'].includes(props.type)){
@@ -74,29 +101,7 @@ export default defineComponent({
                 }
             }
         }
-        const getDate = (date)=>{
-            const d = dayjs(date, currentFormat.value);
-            return {
-                year:ref(d.year()),
-                month:ref(d.month()+1),
-                date:ref(d.date()),
-                hour:ref(d.hour()),
-                minute:ref(d.minute()),
-                second:ref(d.second()),
-            }
-        }
-        const currentValueParse = computed(()=>{
-            if(isMultiple.value){
-                return (currentValue.value || []).map(e=>getDate(e || new Date()))
-            }else {
-                return getDate((props.type === 'week' ? (currentValue.value || [])[0] : currentValue.value) || new Date())
-            }
-        })
-        const WpCalendarWeekMaps = computed(()=>{
-            return props.type === 'week' ? (currentValue.value || []).map(e=>getDate(e)) : null;
-        })
-        provide("WpCalendarActiveMaps", currentValueParse)
-        provide("WpCalendarWeekMaps", WpCalendarWeekMaps)
+
 
 
         const onGoDay = (item)=>{
@@ -194,6 +199,20 @@ export default defineComponent({
                 watchTypeInit();
             })
         })
+        watch(computed(()=>[
+            refSelect.value && refSelect.value.show,
+            refSelectEnd.value && refSelectEnd.value.show,
+        ]),val=>{
+            if(isDaterange.value){
+                if(val.includes(true)){
+                    console.log(val)
+                    refSelect.value.show = true;
+                }else {
+                    refSelect.value.show = false;
+                }
+                refSelectEnd.value.show = false;
+            }
+        })
         onMounted(()=>{
             currentValue.value = props.modelValue;
             nextTick(()=>{
@@ -207,53 +226,72 @@ export default defineComponent({
             onWeekClick,
             refCalendar,
             refSelect,
+            refCalendarEnd,
+            refSelectEnd,
             currentValue,
             options,
             isMultiple,
             onConfirm,
+            isDaterange,
         }
     },
     render(){
+        const WpSelectRender = (bool)=>(
+            <WpSelect clearable={this.clearable}
+                      filterable={this.filterable}
+                      v-model={this.currentValue}
+                      options={this.options}
+                      ref={bool ? 'refSelect' : 'refSelectEnd'}
+                      PopoverConfig={{
+                          popoverClass:`wp-date-picker-panel-popover wp-date-picker-panel-popover-${this.$props.type}`
+                      }}
+                      {...this.$props.selectProps}
+                      placeholder={this.$props.placeholder}
+                      multiple={this.isMultiple}
+                      disabled={this.$props.disabled}
+                      v-slots={{
+                          prefixIcon:()=>(<WpIcon class={{
+                              "wp-date-picker-prefix-icon":true,
+                          }}>
+                              <DateRangeOutlined></DateRangeOutlined>
+                          </WpIcon>),
+                          panel:()=>bool ? [
+                              <WpCalendar ref={bool ? 'refCalendar' : 'refCalendarEnd'}
+                                          showPanel={this.showPanel}
+                                          onClickDay={this.onClickDay}
+                                          onWeekClick={this.onWeekClick}
+                                          onGoDay={this.onGoDay}
+                                          {...this.$props.calendarProps}
+                                          type={this.$props.type}
+                              >
+                              </WpCalendar>,
+                              this.isMultiple ?  <div class={{
+                                  'wp-date-picker-footer':true
+                              }}>
+                                  <WpButton size={'mini'} onClick={this.onConfirm}>确定</WpButton>
+                              </div> : null
+                          ] : null
+                      }}
+            >
+            </WpSelect>
+        )
         return (
             <div class={{
                 "wp-date-picker": true
             }}>
-                <WpSelect clearable={this.clearable}
-                          filterable={this.filterable}
-                          v-model={this.currentValue}
-                          options={this.options}
-                          ref={'refSelect'}
-                          PopoverConfig={{
-                                popoverClass:`wp-date-picker-panel-popover wp-date-picker-panel-popover-${this.$props.type}`
-                          }}
-                          {...this.$props.selectProps}
-                          placeholder={this.$props.placeholder}
-                          multiple={this.isMultiple}
-                          v-slots={{
-                                prefixIcon:()=>(<WpIcon class={{
-                                    "wp-date-picker-prefix-icon":true,
-                                }}>
-                                    <DateRangeOutlined></DateRangeOutlined>
-                                </WpIcon>),
-                                panel:()=>[
-                                    <WpCalendar ref={'refCalendar'}
-                                                showPanel={this.showPanel}
-                                                onClickDay={this.onClickDay}
-                                                onWeekClick={this.onWeekClick}
-                                                onGoDay={this.onGoDay}
-                                                {...this.$props.calendarProps}
-                                                type={this.$props.type}
-                                    >
-                                    </WpCalendar>,
-                                    this.isMultiple ?  <div class={{
-                                        'wp-date-picker-footer':true
-                                    }}>
-                                        <WpButton size={'mini'} onClick={this.onConfirm}>确定</WpButton>
-                                    </div> : null
-                                ]
-                        }}
-                >
-                </WpSelect>
+                { this.isDaterange ? (
+                    <div class={{
+                        'wp-date-picker-daterange':true,
+                    }}>
+                        {WpSelectRender(true)}
+                        <span class={{
+                            'wp-date-picker-daterange-symbol':true,
+                        }}>至</span>
+                        {WpSelectRender(false)}
+                    </div>
+                ) :
+                    WpSelectRender(true)
+                }
             </div>
         )
     }
