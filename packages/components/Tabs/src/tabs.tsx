@@ -35,6 +35,10 @@ export const tabsProps = buildProps({
     card: Boolean,
     lineWidth: {
         type: [String, Number]
+    },
+    swipeAnimation: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -138,9 +142,11 @@ export default defineComponent({
             scrollRef,
             widthComputed,
             propsHandle,
-            init
+            init,
+            update: getLeft
         }
     },
+    expose: ['update'],
     render() {
         const tabs = flatten(this.$slots.default?.() || []).filter(tab => (tab.type as { name?: string }).name === 'WpTab')
         const activeIndex = tabs.findIndex((tab, index) => (tab.props?.key || index) === this.active)
@@ -208,14 +214,14 @@ export default defineComponent({
                     !this.titleOnly && (
                         <div class="wp-tabs--content" style={{
                             transform: `translateX(${this.transform})`,
-                            transition: this.init ? undefined : 'none'
+                            transition: this.init && this.swipeAnimation ? undefined : 'none'
                         }}>
                             {
                                 tabs.map((tab, index) => (
                                     <div class="wp-tabs--tab" key={tab.props?.key || index}>
                                         {
                                             this.lazy ? (
-                                                <Transition name="wp-tabs-fade">
+                                                <Transition name={this.swipeAnimation ? 'wp-tabs-fade' : undefined}>
                                                     { index === this.activeIndex ? (
                                                         <div class="wp-tabs--tab--content">
                                                             {(tab.children as Record<string, () => VNode>)?.default?.() }
@@ -223,7 +229,7 @@ export default defineComponent({
                                                     ) : null }
                                                 </Transition>
                                             ): (
-                                                <Transition name="wp-tabs-fade">
+                                                    <Transition name={this.swipeAnimation ? 'wp-tabs-fade' : undefined}>
                                                     <div class="wp-tabs--tab--content" v-show={index === this.activeIndex}>
                                                         {(tab.children as Record<string, () => VNode>)?.default?.() }
                                                     </div>

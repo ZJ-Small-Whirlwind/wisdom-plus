@@ -73,12 +73,12 @@ app.use(WpTab)
 ```
 :::
 
-#### 惰性渲染
+#### 惰性渲染，关闭切换动画
 
 :::demo
 ```vue
 <template>
-    <wp-tabs closable lazy>
+    <wp-tabs closable lazy :swipe-animation="false">
         <wp-tab>
             <template #title>
                 只要热烈，都好过温存
@@ -141,6 +141,15 @@ WpTab 上组件的 attrs 会被集成到 标题对应的 dom 上
 | titleOnly | 是否仅显示标题 | _boolean_ | false |
 | lazy | 是否惰性渲染（使用 v-if）| _boolean_ | false |
 | card | 是否使用卡片模式 | _boolean_ | false |
+| swipeAnimation | 是否使用切换动画 | _boolean_ | false |
+
+### Expose
+
+有时候无法实时检测指示线的位置变化，需要手动更新指示线的位置
+
+| 参数      | 说明           | 类型                                                                | 默认值 |
+| --------- | -------------- | ------------------------------------------------------------------- | ------ |
+| update      | 更新指示线的位置       | _() => void_          | -     |
 
 ### Methods
 
