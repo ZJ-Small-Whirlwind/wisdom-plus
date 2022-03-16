@@ -1,7 +1,7 @@
 import { flatten } from "@wisdom-plus/utils/flatten"
 import { buildProps } from "@wisdom-plus/utils/props"
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
-import { defineComponent, ExtractPropTypes, PropType, ref, watch } from "vue"
+import { defineComponent, ExtractPropTypes, PropType, ref, watch, onBeforeUnmount } from "vue"
 
 import Icon from '../../Icon'
 import { LeftOutlined, RightOutlined } from '@vicons/antd'
@@ -25,6 +25,10 @@ export const carouselProps = buildProps({
     arrow: {
         type: String as PropType<'none' | 'always' | 'hover'>,
         default: 'hover'
+    },
+    hoverToStop: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -78,12 +82,31 @@ export default defineComponent({
             immediate: true
         })
 
+        /**
+         * 解决 chrome 浏览器返回页面时动画加速的问题
+         */
+        const stopWhileHidden = () => {
+            if (!props.autoPlay) return
+            if (document.visibilityState === 'visible') {
+                setPlay(props.autoPlay)
+            } else {
+                setPlay(false)
+            }
+        }
+
+        window.addEventListener('visibilitychange', stopWhileHidden)
+        onBeforeUnmount(() => {
+            setPlay(false)
+            window.removeEventListener('visibilitychange', stopWhileHidden)
+        })
+
         return {
             index,
             max,
             setPlay,
             next,
-            prev
+            prev,
+            timer
         }
     },
     render() {
@@ -95,7 +118,13 @@ export default defineComponent({
                 {
                     'wp-carousel-vertical': this.vertical
                 }
-            ]}>
+            ]} onMouseenter={() => {
+                if (!this.hoverToStop || !this.autoPlay) return
+                this.setPlay(false)
+            }} onMouseleave={() => {
+                if (!this.hoverToStop || !this.autoPlay) return
+                this.setPlay(this.autoPlay)
+            }}>
                 <div class="wp-carousel--wrapper" style={{
                     transform: this.vertical ? `translateY(-${(this.index || 0) * 100}%)` : `translateX(-${(this.index || 0) * 100}%)`
                 }}>

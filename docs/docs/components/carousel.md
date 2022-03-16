@@ -47,6 +47,7 @@
 | indicator | 指示器选项 | _'inside' \| 'none'_ | inside |
 | trigger      | 指示器触发方式 | _'click' \| 'hover'_                                                               | hover |
 | arrow | 箭头显示方式，仅横向模式下有效 | _'none' \| 'always' \| 'hover'_ | hover |
+| hoverToStop | 鼠标 hover 时停止自动播放 | _boolean_ | true |
 
 ### Slots
 
