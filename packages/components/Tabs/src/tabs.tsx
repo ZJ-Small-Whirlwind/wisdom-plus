@@ -100,26 +100,31 @@ export default defineComponent({
             return props.lineWidth ? addUnit(props.lineWidth) : width.value
         })
 
+        const scrollToView = () => {
+            if (!scrollRef.value || !activeTabTitle.value) return
+            const boundingRect = activeTabTitle.value.getBoundingClientRect()
+            const deltaX = boundingRect.x - scrollRef.value.$el.offsetLeft
+            if (
+                deltaX < 0 ||
+                scrollRef.value.$el.offsetWidth - deltaX < boundingRect.width
+            ) {
+                scrollRef.value?.scrollTo({
+                    left: activeTabTitle.value.offsetLeft - scrollRef.value.$el.offsetWidth / 2 + boundingRect.width / 2,
+                    behavior: 'smooth'
+                })
+            }
+        }
+
         watch(() => props.lineWidth, getLeft)
         watch(activeIndex, () => {
             getLeft()
-            nextTick(() => {
-                if (!scrollRef.value || !activeTabTitle.value) return
-                const boundingRect = activeTabTitle.value.getBoundingClientRect()
-                const deltaX = boundingRect.x - scrollRef.value.$el.offsetLeft
-                if (
-                    deltaX < 0 ||
-                    scrollRef.value.$el.offsetWidth - deltaX < boundingRect.width
-                ) {
-                    scrollRef.value?.scrollTo({
-                        left: activeTabTitle.value.offsetLeft - scrollRef.value.$el.offsetWidth / 2 + boundingRect.width / 2,
-                        behavior: 'smooth'
-                    })
-                }
-            })
+            nextTick(scrollToView)
         })
         onUpdated(getLeft)
-        onMounted(getLeft)
+        onMounted(() => {
+            getLeft()
+            scrollToView()
+        })
         onActivated(() => {
             init.value = false
             setTimeout(() => {
@@ -164,10 +169,11 @@ export default defineComponent({
             widthComputed,
             propsHandle,
             init,
-            update: getLeft
+            update: getLeft,
+            scrollToView
         }
     },
-    expose: ['update'],
+    expose: ['update', 'scrollToView'],
     render() {
         const tabs = flatten(this.$slots.default?.() || []).filter(tab => (tab.type as { name?: string }).name === 'WpTab')
         const activeIndex = tabs.findIndex((tab, index) => (tab.props?.key || index) === this.active)
