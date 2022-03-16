@@ -36,6 +36,10 @@ export const calendarProps = buildProps({
     type:{
         type:String as PropType<string>,
         default:null
+    },
+    isActiveShow:{
+        type:Boolean as PropType<boolean>,
+        default:true
     }
 })
 
@@ -325,9 +329,9 @@ export default defineComponent({
         const daysRenderItem = (week:any)=> week.map((e:any) => {
             const EventList:any = this.$props.getIsEvent(e);
             return (
-                <div  onClick={() => this.$props.lunar ? this.clickDays(e) : null} class={{
+                <div onMousemove={(ev)=>this.$emit('day-mousemove', e, ev)}  onClick={() => this.$props.lunar ? this.clickDays(e) : null} class={{
                     'wp-calendar-content-day':true,
-                    isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
+                    isActive:this.$props.isActiveShow && e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
                     isWeek:[0,6].includes(e.week),
                     [e.type]:true,
                     "wp-calendar-content-day-disabled":this.$props.disabledDate(e),
@@ -335,7 +339,7 @@ export default defineComponent({
                     "wp-calendar-content-day-week-map":this.weekMaps[e.getDayAll],
                 }}>
                     <span onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{
-                        isActive:e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
+                        isActive:this.$props.isActiveShow && e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
                         isEvent:EventList,
                         'wp-calendar-content-day-cell':true,
                     }}>{e.day}</span>

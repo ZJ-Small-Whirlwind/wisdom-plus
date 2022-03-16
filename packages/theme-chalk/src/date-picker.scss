@@ -17,8 +17,8 @@
     }
     .wp-select-input-multiple {
         .wp-input--element{
-            max-height: 150px;
-            overflow-x: hidden;
+            //max-height: 150px;
+            //overflow-x: hidden;
         }
         .wp-input--element-content{
             overflow: hidden;
@@ -37,6 +37,11 @@
         &-symbol{
             margin: 0 15px;
             font-size: 14px;
+        }
+    }
+    &-multiple{
+        .wp-select{
+            width: 300px;
         }
     }
 }
@@ -83,6 +88,15 @@
                         }
                     }
                 }
+            }
+        }
+    }
+    &-daterange{
+        display: flex;
+        .wp-calendar{
+            border-radius: 0;
+            &+.wp-calendar{
+                border-left: 1px solid #eeeeee;
             }
         }
     }

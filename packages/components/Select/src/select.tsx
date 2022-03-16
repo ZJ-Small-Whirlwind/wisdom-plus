@@ -74,6 +74,7 @@ export default defineComponent({
         // 时间选择器注入，切勿删除
         const notClearInputValue = inject("notClearInputValue", false)
         const notClearInputValueFormat = inject("notClearInputValueFormat", "YYYY-MM-DDTHH:mm:ss")
+        const showInputClass = inject("showInputClass", false)
         /**
          * 扁平化数据
          * @param bodyCellData
@@ -288,6 +289,7 @@ export default defineComponent({
             inputChangeValue,
             currentValueMultipleTags,
             onTagsClose,
+            showInputClass,
         }
     },
     render(){
@@ -321,7 +323,7 @@ export default defineComponent({
                      placeholder={this.placeholder || this.$props.placeholder || '请选择'}
                      class={{
                          'wp-select-input': true,
-                         'wp-select-show-input': this.show,
+                         'wp-select-show-input': this.show || this.showInputClass,
                          'wp-select-input-multiple': this.$props.multiple,
                          'wp-select-input-multiple-collapse-tags': this.$props.collapseTags,
                          'wp-select-input-multiple-not-tags': (this.currentValueMultipleTags || []).length === 0,
