@@ -22,7 +22,7 @@ app.use(WpCalendar)
 
 ```vue
 <template>
-    <wp-calendar :getIsEvent="getIsEvent"></wp-calendar>
+    <wp-calendar></wp-calendar>
 </template>
 ```
 
@@ -76,12 +76,14 @@ const getIsEvent = e=>{
 
 ### Props
 
-| 参数           | 说明       | 类型                                                                      | 默认值   |
-|--------------|----------|-------------------------------------------------------------------------|-------|
-| getIsEvent      | 获取任务     | _(dayData:object)=>false,{name:string, success:boolean, ...args:any}[]_ | ()=>false |
-| lunar      | 是否启用农历模式 | _boolean_                                                               | false |
-| showPanel      | 是否显示侧方面板 | _boolean_                                                               | false |
-| disabledDate      | 是否禁止具体日期 | _(dayData:object)=>boolean_                                                               | ()=>false |
+| 参数           | 说明         | 类型                                                                      | 默认值       |
+|--------------|------------|-------------------------------------------------------------------------|-----------|
+| getIsEvent      | 获取任务       | _(dayData:object)=>false,{name:string, success:boolean, ...args:any}[]_ | ()=>false |
+| lunar      | 是否启用农历模式   | _boolean_                                                               | false     |
+| showPanel      | 是否显示侧方面板   | _boolean_                                                               | false     |
+| disabledDate      | 是否禁止具体日期   | _(dayData:object)=>boolean_                                             | ()=>false |
+| type      | 显示类型       | _string, (year、month)_                                                       | -         |
+| isActiveShow      | 是否暂时今日选中状态 | _boolean_                                                       | true      |
 
 ### Emits
 
@@ -95,3 +97,4 @@ const getIsEvent = e=>{
 |  click-day   | 日期点击回调 | _(data:{year, month, date})=>void_ |
 |  go-day   | 快捷按钮回调 | _(data:{year, month, date})=>void_ |
 |  week-click   | 周点击回调 | _(week)=>void_ |
+|  day-mousemove   | 鼠标经过具体日期 | _(day:any, ev:any)=>void_ |
