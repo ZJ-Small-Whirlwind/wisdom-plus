@@ -16,6 +16,8 @@
     --wp-tabs-card-title-padding: 0;
     --wp-tabs-card-title-font-size: 13px;
     --wp-tabs-card-title-color: #333;
+    --wp-tabs-title-vertical-padding: 10px 0;
+    --wp-tabs-title-vertical-cell-padding: 0 10px;
 }
 
 .wp-tabs {
@@ -95,6 +97,65 @@
             .wp-tabs--title--cell--active {
                 background-color: var(--wp-tabs-card-title-active-background);
             }
+        }
+    }
+    &--bottom {
+        .wp-tabs--title {
+            &::after {
+                bottom: initial;
+                top: 0;
+            }
+        }
+        .wp-tabs--line {
+            bottom: inherit;
+            top: 0;
+        }
+    }
+    &--left,
+    &--right {
+        display: flex;
+        width: 100%;
+        .wp-tabs--wrapper {
+            flex: 1;
+            overflow: hidden;
+        }
+        .wp-tabs--title {
+            &::after {
+                bottom: initial;
+                top: 0;
+                right: 0;
+                border-bottom: 0;
+                height: 100%;
+                border-right: var(--wp-tabs-title-border);
+                width: auto;
+                left: initial
+            }
+        }
+        .wp-tabs--line {
+            bottom: initial;
+            left: initial;
+            width: var(--wp-tabs-line-height);
+            right: 0;
+            top: 0;
+            transform: translateY(-50%);
+        }
+        .wp-tabs--title {
+            padding: var(--wp-tabs-title-vertical-padding-padding);
+            &--cell {
+                padding: var(--wp-tabs-title-vertical-cell-padding);
+            }
+        }
+    }
+    &--right {
+        .wp-tabs--title {
+            &::after {
+                right: initial;
+                left: 0;
+            }
+        }
+        .wp-tabs--line {
+            right: initial;
+            left: 0;
         }
     }
 }

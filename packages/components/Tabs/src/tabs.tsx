@@ -39,6 +39,10 @@ export const tabsProps = buildProps({
     swipeAnimation: {
         type: Boolean,
         default: true
+    },
+    position: {
+        type: String as PropType<'top' | 'left' | 'bottom' | 'right' | 'none'>,
+        default: 'top'
     }
 })
 
@@ -74,11 +78,20 @@ export default defineComponent({
             if (!activeTabTitle.value || !props.showLine || props.card) return
             await nextTick()
             if (!activeTabTitle.value) return
-            const leftValue = activeTabTitle.value.offsetLeft + activeTabTitle.value.offsetWidth / 2
-            const widthValue = activeTabTitle.value.offsetWidth
-            if (leftValue && widthValue) {
-                left.value = leftValue
-                width.value = widthValue + 'px'
+            if (props.position === 'top' || props.position === 'bottom') {
+                const leftValue = activeTabTitle.value.offsetLeft + activeTabTitle.value.offsetWidth / 2
+                const widthValue = activeTabTitle.value.offsetWidth
+                if (leftValue && widthValue) {
+                    left.value = leftValue
+                    width.value = widthValue + 'px'
+                }
+            } else {
+                const leftValue = activeTabTitle.value.offsetTop + activeTabTitle.value.offsetHeight / 2
+                const widthValue = activeTabTitle.value.offsetHeight
+                if (leftValue && widthValue) {
+                    left.value = leftValue
+                    width.value = widthValue + 'px'
+                }
             }
         }
 
@@ -112,13 +125,21 @@ export default defineComponent({
                 init.value = true
             })
         })
+        watch(() => props.spaceProps, getLeft, { deep: true })
+        watch(() => props.position, getLeft)
 
         useResizeObserver(activeTabTitle, getLeft)
 
         const spaceSize = computed<[string | number, string | number]>(() => {
-            if (!props.spaceProps || !props.spaceProps.size) return [props.card ? 0 : 20, 0]
-            if (!Array.isArray(props.spaceProps.size)) return [props.spaceProps.size, 0]
-            return [props.spaceProps.size[0], 0]
+            if (props.position === 'top' || props.position === 'bottom') {
+                if (!props.spaceProps || !props.spaceProps.size) return [props.card ? 0 : 20, 0]
+                if (!Array.isArray(props.spaceProps.size)) return [props.spaceProps.size, 0]
+                return [props.spaceProps.size[0], 0]
+            } else {
+                if (!props.spaceProps || !props.spaceProps.size) return [0, props.card ? 0 : 15]
+                if (!Array.isArray(props.spaceProps.size)) return [0, props.spaceProps.size]
+                return [0, props.spaceProps.size[1]]
+            }
         })
 
         const propsHandle = (props?: Record<any, any> | null) => {
@@ -151,97 +172,121 @@ export default defineComponent({
         const tabs = flatten(this.$slots.default?.() || []).filter(tab => (tab.type as { name?: string }).name === 'WpTab')
         const activeIndex = tabs.findIndex((tab, index) => (tab.props?.key || index) === this.active)
         this.activeIndex = this.titleOnly ? activeIndex : (activeIndex > -1 ? activeIndex : 0)
+
+        const TitleCellsRender = (vertical = false) => (
+            <Space {...this.spaceProps} wrap={false} size={this.spaceSize} vertical={vertical} v-slots={{
+                suffix: this.showLine && !this.card ? () => (
+                    <div class="wp-tabs--line" style={{ [vertical ? `top` : `left`]: this.left + 'px', [vertical ? `height` : `width`]: this.widthComputed, transition: this.init ? undefined : 'none' }} />
+                ) : undefined
+            }}>
+                { this.$slots?.prefix?.() }
+                {
+                    tabs.map((tab, index) => (
+                        <div
+                            class={[
+                                'wp-tabs--title--cell',
+                                {
+                                    'wp-tabs--title--cell--active': index === this.activeIndex
+                                }
+                            ]}
+                            key={tab.props?.key || index}
+                            onClick={() => {
+                                this.active = tab.props?.key || index
+                            }}
+                            onMousedown={e => {
+                                if (typeof tab.props?.closable === 'boolean' ? tab.props?.closable : this.closable) {
+                                    if (e.button === 1) {
+                                        e.stopPropagation()
+                                        e.preventDefault()
+                                        this.$emit('close', tab.props?.key || index)
+                                    }
+                                }
+                            }}
+                            {...this.propsHandle(tab.props)}
+                            ref={index === this.activeIndex ? 'activeTabTitle' : undefined}
+                        >
+                            {(tab.children as Record<string, ({ active: boolean }) => VNode>)?.title?.({ active: index === this.activeIndex }) ?? tab.props?.title }
+                            {(typeof tab.props?.closable === 'boolean' ? tab.props?.closable : this.closable) && (
+                                this.$slots.close?.() ?? (
+                                    <Icon class="wp-tabs--title--cell--close" onClick={e => {
+                                        e.stopPropagation()
+                                        this.$emit('close', tab.props?.key || index)
+                                    }}>
+                                        <CloseOutlined />
+                                    </Icon>
+                                )
+                            ) }
+                        </div>
+                    ))
+                }
+                { this.$slots?.suffix?.()}
+            </Space>
+        )
+
+        const TitleRender = (
+            <div class="wp-tabs--title">
+                <XScroll ref="scrollRef" {...this.xScrollProps}>
+                    { TitleCellsRender() }
+                </XScroll>
+            </div>
+        )
+
+        const TitleVerticalRender = (
+            <div class="wp-tabs--title">
+                {TitleCellsRender(true)}
+            </div>
+        )
+
         return (
             <div class={
-                ['wp-tabs', {
-                    'wp-tabs--card': this.card
-                }]
+                [
+                    'wp-tabs',
+                    `wp-tabs--${this.position}`,
+                    {
+                        'wp-tabs--card': this.card
+                    }
+                ]
             } ref="tabsRef" style={{
                 '--wp-tabs-durtation': `${this.duration / 1000}s`
             } as CSSProperties}>
-                <div class="wp-tabs--title">
-                    <XScroll ref="scrollRef" {...this.xScrollProps}>
-                        <Space {...this.spaceProps} wrap={false} size={this.spaceSize} v-slots={{
-                            suffix: this.showLine && !this.card ? () => (
-                                <div class="wp-tabs--line" style={{ left: this.left + 'px', width: this.widthComputed, transition: this.init ? undefined : 'none' }} />
-                            ) : undefined
-                        }}>
-                            { this.$slots?.prefix?.() }
-                            {
-                                tabs.map((tab, index) => (
-                                    <div
-                                        class={[
-                                            'wp-tabs--title--cell',
+                { this.position === 'top' && TitleRender }
+                { this.position === 'left' && TitleVerticalRender }
+                <div class="wp-tabs--wrapper">
+                    {
+                        !this.titleOnly && (
+                            <div class="wp-tabs--content" style={{
+                                transform: `translateX(${this.transform})`,
+                                transition: this.init && this.swipeAnimation ? undefined : 'none'
+                            }}>
+                                {
+                                    tabs.map((tab, index) => (
+                                        <div class="wp-tabs--tab" key={tab.props?.key || index}>
                                             {
-                                                'wp-tabs--title--cell--active': index === this.activeIndex
-                                            }
-                                        ]}
-                                        key={tab.props?.key || index}
-                                        onClick={() => {
-                                            this.active = tab.props?.key || index
-                                        }}
-                                        onMousedown={e => {
-                                            if (typeof tab.props?.closable === 'boolean' ? tab.props?.closable : this.closable) {
-                                                if (e.button === 1) {
-                                                    e.stopPropagation()
-                                                    e.preventDefault()
-                                                    this.$emit('close', tab.props?.key || index)
-                                                }
-                                            }
-                                        }}
-                                        {...this.propsHandle(tab.props)}
-                                        ref={index === this.activeIndex ? 'activeTabTitle' : undefined}
-                                    >
-                                        {(tab.children as Record<string, ({ active: boolean }) => VNode>)?.title?.({ active: index === this.activeIndex }) ?? tab.props?.title }
-                                        {(typeof tab.props?.closable === 'boolean' ? tab.props?.closable : this.closable) && (
-                                            this.$slots.close?.() ?? (
-                                                <Icon class="wp-tabs--title--cell--close" onClick={e => {
-                                                    e.stopPropagation()
-                                                    this.$emit('close', tab.props?.key || index)
-                                                }}>
-                                                    <CloseOutlined />
-                                                </Icon>
-                                            )
-                                        ) }
-                                    </div>
-                                ))
-                            }
-                            { this.$slots?.suffix?.()}
-                        </Space>
-                    </XScroll>
-                </div>
-                {
-                    !this.titleOnly && (
-                        <div class="wp-tabs--content" style={{
-                            transform: `translateX(${this.transform})`,
-                            transition: this.init && this.swipeAnimation ? undefined : 'none'
-                        }}>
-                            {
-                                tabs.map((tab, index) => (
-                                    <div class="wp-tabs--tab" key={tab.props?.key || index}>
-                                        {
-                                            this.lazy ? (
-                                                <Transition name={this.swipeAnimation ? 'wp-tabs-fade' : undefined}>
-                                                    { index === this.activeIndex ? (
-                                                        <div class="wp-tabs--tab--content">
+                                                this.lazy ? (
+                                                    <Transition name={this.swipeAnimation ? 'wp-tabs-fade' : undefined}>
+                                                        { index === this.activeIndex ? (
+                                                            <div class="wp-tabs--tab--content">
+                                                                {(tab.children as Record<string, () => VNode>)?.default?.() }
+                                                            </div>
+                                                        ) : null }
+                                                    </Transition>
+                                                ): (
+                                                        <Transition name={this.swipeAnimation ? 'wp-tabs-fade' : undefined}>
+                                                        <div class="wp-tabs--tab--content" v-show={index === this.activeIndex}>
                                                             {(tab.children as Record<string, () => VNode>)?.default?.() }
                                                         </div>
-                                                    ) : null }
-                                                </Transition>
-                                            ): (
-                                                    <Transition name={this.swipeAnimation ? 'wp-tabs-fade' : undefined}>
-                                                    <div class="wp-tabs--tab--content" v-show={index === this.activeIndex}>
-                                                        {(tab.children as Record<string, () => VNode>)?.default?.() }
-                                                    </div>
-                                                </Transition>
-                                            )
-                                        }
-                                    </div>
-                                ))
-                            }
-                        </div>
-                    )
-                }
+                                                    </Transition>
+                                                )
+                                            }
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        )
+                    }
+                </div>
+                {this.position === 'bottom' && TitleRender}
+                {this.position === 'right' && TitleVerticalRender}
             </div>
         )
     }
