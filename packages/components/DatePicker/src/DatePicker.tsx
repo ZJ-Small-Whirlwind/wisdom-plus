@@ -49,6 +49,7 @@ export default defineComponent({
         const refCalendarEnd:any = ref(null)
         const refSelectEnd:any = ref(null)
         const isMultiple = computed(()=> props.type === 'dates');
+        const isDaterange = computed(()=>["daterange"].includes(props.type))
         const currentValueCopy = ref(null);
         const currentDaterangeValues = computed(()=>daterangeValueCache.value.concat(daterangeDayHoverValueCache.value))
         const currentValueParse = computed(()=>{
@@ -57,7 +58,8 @@ export default defineComponent({
                 dates = currentDaterangeValues.value;
             }
             if(isMultiple.value || isDaterange.value){
-                return (dates || []).map(e=>getDate(e || new Date())).slice(0,2)
+                const result = (dates || []).map(e=>getDate(e || new Date()));
+                return isDaterange.value ? result.slice(0,2) : result;
             }else {
                 return getDate((props.type === 'week' ? (dates || [])[0] : dates) || new Date())
             }
@@ -66,7 +68,6 @@ export default defineComponent({
             return props.type === 'week' ? (currentValue.value || []).map(e=>getDate(e)) : null;
         })
         const showInputClass = ref(false);
-        const isDaterange = computed(()=>["daterange"].includes(props.type))
         provide("showInputClass", showInputClass)
         provide("notClearInputValue", true)
         provide("notClearInputValueFormat", currentFormat.value)
@@ -80,12 +81,13 @@ export default defineComponent({
             }else {
                 daterangeValueCache.value = (daterangeValueCache.value || []);
                 daterangeValueCache.value.push(value);
+
                 if(daterangeValueCache.value.length > 2){
                     daterangeValueCache.value = [daterangeValueCache.value.at(-1)];
                 }
                 if(daterangeValueCache.value.length === 2){
                     refSelect.value.show = false;
-                    currentValue.value = daterangeValueCache.value;
+                    currentValue.value = daterangeValueCache.value.slice(0,2);
                 }
             }
         }
