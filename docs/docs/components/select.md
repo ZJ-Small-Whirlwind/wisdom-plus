@@ -287,4 +287,5 @@ const remote = value=>{
 |-----|--|---------------------|
 |  -  | 默认卡槽 | _optionItem_        |
 |  panel  | 面板插槽 | _(vm:object)=>any)_ |
+|  prefixIcon  | 前缀图标 | _ |
 

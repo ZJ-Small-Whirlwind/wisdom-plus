@@ -6,6 +6,18 @@
         justify-content: flex-end;
         align-items: center;
     }
+    &-prefix-icon{
+        color: #d9d9d9;
+        font-size: 16px;
+    }
+    .wp-input--focused{
+        .wp-date-picker-prefix-icon{
+            color: #4b98fc;
+        }
+    }
+    .wp-select-input-multiple .wp-input--element{
+        flex-wrap: initial;
+    }
 }
 .wp-date-picker-panel-popover{
     .wp-popover-content{

@@ -17,6 +17,7 @@ importers:
       '@types/sass': ^1.43.1
       '@types/spark-md5': ^3.0.2
       '@vicons/antd': ^0.11.0
+      '@vicons/material': ^0.12.0
       '@vitejs/plugin-vue-jsx': ^1.3.1
       '@vueuse/core': ^7.1.2
       '@wisdom-plus/components': workspace:*
@@ -67,6 +68,7 @@ importers:
       '@types/lodash': 4.14.178
       '@types/spark-md5': 3.0.2
       '@vicons/antd': 0.11.0
+      '@vicons/material': 0.12.0
       '@vueuse/core': 7.1.2_vue@3.2.23
       '@wisdom-plus/components': link:packages/components
       '@wisdom-plus/directives': link:packages/directives
@@ -1284,6 +1286,10 @@ packages:
 
   /@vicons/antd/0.11.0:
     resolution: {integrity: sha512-XRkUMJzfjr3Q5S6xbAg4ALI90DIGNhZdbVW6SejFi6EgxB5bts3YMMcM4HbF77vdQX5bhxgju3Hd3uP97OgvAQ==}
+    dev: false
+
+  /@vicons/material/0.12.0:
+    resolution: {integrity: sha512-chv1CYAl8P32P3Ycwgd5+vw/OFNc2mtkKdb1Rw4T5IJmKy6GVDsoUKV3N2l208HATn7CCQphZtuPDdsm7K2kmA==}
     dev: false
 
   /@vitejs/plugin-vue-jsx/1.3.1:

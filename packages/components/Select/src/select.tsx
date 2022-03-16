@@ -295,11 +295,15 @@ export default defineComponent({
             'wp-select-icon': true,
             'wp-select-show-icon-active': this.show,
         }}><DownOutlined></DownOutlined></WpIcon>);
-        const inputMultiplePrefixRender = ()=>this.$props.multiple ? (
+        const inputPrefixIconRender = ()=>this.$slots.prefixIcon?.() ? (<div class={{
+            'wp-select-input-prefix-icon': true,
+        }}>{this.$slots.prefixIcon?.()}</div>): null
+        const inputMultiplePrefixRender = ()=>this.$props.multiple ? [
+            inputPrefixIconRender(),
             (this.currentValueMultipleTags || []).map((value, k)=>(
                 <WpTag closable={!this.$props.collapseTags || (this.$props.collapseTags && k === 0)} onClose={()=>this.onTagsClose(value, k)}>{value}</WpTag>
             ))
-        ) : null;
+        ] : inputPrefixIconRender();
         const inputRender = ()=>(<div class={{
             'wp-select': true,
             'wp-select-show': this.show,
@@ -323,7 +327,7 @@ export default defineComponent({
                          'wp-select-input-multiple-not-tags': (this.currentValueMultipleTags || []).length === 0,
                      }}
                      v-slots={{
-                         inputPrefix:this.$props.multiple ? inputMultiplePrefixRender : null,
+                         inputPrefix:inputMultiplePrefixRender,
                          suffix: () => inputSuffixRender(),
                      }}>
             </WpInput>

@@ -4,6 +4,8 @@ import {buildProps} from "@wisdom-plus/utils/props";
 import WpSelect from "../../Select";
 import WpCalendar, {calendarProps} from "../../Calendar";
 import WpButton from "../../Button";
+import WpIcon from "../../Icon";
+import {DateRangeOutlined} from "@vicons/material";
 export const datePickerProps = buildProps({
     modelValue:{type:[String, Array, Date, Number],default:null},
     format:{type:String, default:null},
@@ -228,22 +230,27 @@ export default defineComponent({
                           placeholder={this.$props.placeholder}
                           multiple={this.isMultiple}
                           v-slots={{
-                            panel:()=>[
-                                <WpCalendar ref={'refCalendar'}
-                                            showPanel={this.showPanel}
-                                            onClickDay={this.onClickDay}
-                                            onWeekClick={this.onWeekClick}
-                                            onGoDay={this.onGoDay}
-                                            {...this.$props.calendarProps}
-                                            type={this.$props.type}
-                                >
-                                </WpCalendar>,
-                                this.isMultiple ?  <div class={{
-                                    'wp-date-picker-footer':true
+                                prefixIcon:()=>(<WpIcon class={{
+                                    "wp-date-picker-prefix-icon":true,
                                 }}>
-                                    <WpButton size={'mini'} onClick={this.onConfirm}>确定</WpButton>
-                                </div> : null
-                            ]
+                                    <DateRangeOutlined></DateRangeOutlined>
+                                </WpIcon>),
+                                panel:()=>[
+                                    <WpCalendar ref={'refCalendar'}
+                                                showPanel={this.showPanel}
+                                                onClickDay={this.onClickDay}
+                                                onWeekClick={this.onWeekClick}
+                                                onGoDay={this.onGoDay}
+                                                {...this.$props.calendarProps}
+                                                type={this.$props.type}
+                                    >
+                                    </WpCalendar>,
+                                    this.isMultiple ?  <div class={{
+                                        'wp-date-picker-footer':true
+                                    }}>
+                                        <WpButton size={'mini'} onClick={this.onConfirm}>确定</WpButton>
+                                    </div> : null
+                                ]
                         }}
                 >
                 </WpSelect>
