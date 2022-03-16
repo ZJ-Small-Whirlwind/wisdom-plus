@@ -40,9 +40,15 @@
             padding: var(--wp-tabs-title-cell-padding);
             display: flex;
             align-items: center;
-            &:hover,
             &--active {
                 color: var(--wp-tabs-active-color);
+            }
+            &:not(.wp-tabs--title--cell--disabled):hover {
+                color: var(--wp-tabs-active-color);
+            }
+            &--disabled {
+                opacity: .6;
+                cursor: not-allowed;
             }
             &--close {
                 font-size: var(--wp-tabs-title-close-font-size);

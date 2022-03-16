@@ -148,6 +148,7 @@ export default defineComponent({
             delete propsMap.index
             delete propsMap.closable
             delete propsMap.title
+            delete propsMap.disabled
             return propsMap
         }
 
@@ -186,11 +187,13 @@ export default defineComponent({
                             class={[
                                 'wp-tabs--title--cell',
                                 {
-                                    'wp-tabs--title--cell--active': index === this.activeIndex
+                                    'wp-tabs--title--cell--active': index === this.activeIndex,
+                                    'wp-tabs--title--cell--disabled': tab.props?.disabled || tab.props?.disabled === ''
                                 }
                             ]}
                             key={tab.props?.key || index}
                             onClick={() => {
+                                if (tab.props?.disabled || tab.props?.disabled === '') return
                                 this.active = tab.props?.key || index
                             }}
                             onMousedown={e => {
