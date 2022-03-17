@@ -56,6 +56,12 @@ export default defineComponent({
         const WpCalendarActiveMaps:any = inject("WpCalendarActiveMaps", ref(null))
         const WpCalendarWeekMaps:any = inject("WpCalendarWeekMaps", ref(null))
         const WpCalendarIsDaterange:any = inject("WpCalendarIsDaterange", ref(false))
+        const WpCalendarIsDaterangeCanSwitchYear:any = inject("WpCalendarIsDaterangeCanSwitchYear", ref(true))
+        const WpCalendarIsDaterangeCanSwitchMonth:any = inject("WpCalendarIsDaterangeCanSwitchMonth", ref(true))
+        const leftYearBtnShow = computed(()=>props.isActiveShow || (!props.isActiveShow && WpCalendarIsDaterangeCanSwitchYear.value));
+        const leftMonthBtnShow = computed(()=>props.isActiveShow || (!props.isActiveShow && (WpCalendarIsDaterangeCanSwitchYear.value || WpCalendarIsDaterangeCanSwitchMonth.value)));
+        const rightYearBtnShow = computed(()=>!WpCalendarIsDaterange.value || !props.isActiveShow  || (WpCalendarIsDaterange.value && WpCalendarIsDaterangeCanSwitchYear.value));
+        const rightMonthBtnShow = computed(()=>!WpCalendarIsDaterange.value || !props.isActiveShow  || (WpCalendarIsDaterange.value && (WpCalendarIsDaterangeCanSwitchYear.value || WpCalendarIsDaterangeCanSwitchMonth.value)));
         const activeMaps = computed(()=>{
             try {
                 if(Object.prototype.toString.call(WpCalendarActiveMaps.value) === '[object Array]'){
@@ -197,7 +203,8 @@ export default defineComponent({
         /**
          * 上一月
          */
-        const prevMonth = () => {
+        const prevMonth = (bool) => {
+            if(!bool) return;
             month.value -= 1
             if (month.value < 1) {
                 month.value = 12
@@ -213,7 +220,8 @@ export default defineComponent({
         /**
          * 下一月
          */
-        const nextMonth = () => {
+        const nextMonth = (bool) => {
+            if(!bool) return;
             month.value += 1
             if (month.value > 12) {
                 month.value = 1
@@ -229,7 +237,8 @@ export default defineComponent({
         /**
          * 上一年
          */
-        const prevYear = ()=>{
+        const prevYear = (bool)=>{
+            if(!bool) return;
             year.value -= 1;
             emit('arrow-year-change',{
                 year,
@@ -241,7 +250,8 @@ export default defineComponent({
         /**
          * 下一年
          */
-        const nextYear = ()=>{
+        const nextYear = (bool)=>{
+            if(!bool) return;
             year.value += 1;
             emit('arrow-year-change',{
                 year,
@@ -304,6 +314,7 @@ export default defineComponent({
                 watchTypeInit();
             })
         })
+
         return {
             monthClick,
             yearClick,
@@ -329,6 +340,10 @@ export default defineComponent({
             activeMaps,
             weekMaps,
             WpCalendarIsDaterange,
+            leftYearBtnShow,
+            leftMonthBtnShow,
+            rightYearBtnShow,
+            rightMonthBtnShow,
         }
     },
     render(){
@@ -452,22 +467,18 @@ export default defineComponent({
         ]
 
         const calendarRender = ()=>{
+
             return (<div class={{
                 'wp-calendar': true,
                 "wp-calendar-lunar": this.$props.lunar,
                 "wp-calendar-content-day-available":this.$props.showAvailableStyle,
             }}>
                 <div class={'wp-calendar-header'}>
-                    <Icon class={'wp-calendar-header-icon'} name={'arrow-left'}
-                          onClick={this.prevYear}><DoubleLeftOutlined></DoubleLeftOutlined></Icon>
-                    {this.$props.type !== 'year' ? <Icon class={'wp-calendar-header-icon'} name={'arrow-left'}
-                          onClick={this.prevMonth}><LeftOutlined></LeftOutlined></Icon>: null}
-                    <div class={'wp-calendar-header-title'}
-                         onClick={this.herderTitleClick}>{titleRender()}</div>
-                    {this.$props.type !== 'year' ? <Icon class={'wp-calendar-header-icon'} name={'arrow'}
-                          onClick={this.nextMonth}><RightOutlined></RightOutlined></Icon> : null}
-                    <Icon class={'wp-calendar-header-icon'} name={'arrow'}
-                          onClick={this.nextYear}><DoubleRightOutlined></DoubleRightOutlined></Icon>
+                    <Icon class={{'wp-calendar-header-icon':true, 'wp-calendar-header-icon-disabled':!this.leftYearBtnShow}} name={'arrow-left'} onClick={()=>this.prevYear(this.leftYearBtnShow)}><DoubleLeftOutlined></DoubleLeftOutlined></Icon>
+                    {this.$props.type !== 'year' ? <Icon class={{'wp-calendar-header-icon':true, 'wp-calendar-header-icon-disabled':!this.leftMonthBtnShow}} name={'arrow-left'} onClick={()=>this.prevMonth(this.leftMonthBtnShow)}><LeftOutlined></LeftOutlined></Icon>: null}
+                    <div class={'wp-calendar-header-title'} onClick={this.herderTitleClick}>{titleRender()}</div>
+                    {this.$props.type !== 'year' ? <Icon class={{'wp-calendar-header-icon':true, 'wp-calendar-header-icon-disabled':!this.rightMonthBtnShow}} name={'arrow'} onClick={()=>this.nextMonth(this.rightMonthBtnShow)}><RightOutlined></RightOutlined></Icon> : null}
+                    <Icon class={{'wp-calendar-header-icon':true, 'wp-calendar-header-icon-disabled':!this.rightYearBtnShow}} name={'arrow'} onClick={()=>this.nextYear(this.rightYearBtnShow)}><DoubleRightOutlined></DoubleRightOutlined></Icon>
                 </div>
                 <div class={'wp-calendar-content'}>
                     {this.showYear ? yearRender() :

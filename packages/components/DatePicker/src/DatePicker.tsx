@@ -56,6 +56,8 @@ export default defineComponent({
         const isMultiple = computed(()=> props.type === 'dates');
         const isDaterange = computed(()=>["daterange"].includes(props.type))
         const currentValueCopy = ref(null);
+        const isDaterangeCanSwitchYear = ref(false);
+        const isDaterangeCanSwitchMonth = ref(false);
         const currentDaterangeValues = computed(()=>daterangeValueCache.value.concat(daterangeDayHoverValueCache.value))
         const currentValueParse = computed(()=>{
             let dates = currentValue.value;
@@ -79,6 +81,8 @@ export default defineComponent({
         provide("WpCalendarActiveMaps", currentValueParse)
         provide("WpCalendarWeekMaps", WpCalendarWeekMaps)
         provide("WpCalendarIsDaterange", isDaterange)
+        provide("WpCalendarIsDaterangeCanSwitchYear", isDaterangeCanSwitchYear)
+        provide("WpCalendarIsDaterangeCanSwitchMonth", isDaterangeCanSwitchMonth)
 
         const daterangeClickDay = ({year, month, date})=>{
             const value = dayjs(new Date(year.value,month.value-1,date.value)).format(currentFormat.value)
@@ -250,6 +254,16 @@ export default defineComponent({
             }
             emit('clear')
         }
+        const onCalendarChange = ()=>{
+            if(isDaterange.value){
+                nextTick(()=>{
+                    try {
+                        isDaterangeCanSwitchYear.value  = refCalendar.value.year < refCalendarEnd.value.year;
+                        isDaterangeCanSwitchMonth.value = isDaterangeCanSwitchYear.value ||  (refCalendar.value.year <= refCalendarEnd.value.year && refCalendar.value.month+1 < refCalendarEnd.value.month);
+                    }catch (e){}
+                })
+            }
+        }
         watch(computed(()=>props.modelValue),()=>{
             init()
         })
@@ -347,6 +361,7 @@ export default defineComponent({
             disabledDate,
             currentDaterangeValues,
             onClear,
+            onCalendarChange,
         }
     },
     render(){
@@ -358,6 +373,7 @@ export default defineComponent({
                 onGoDay={this.onGoDay}
                 onDayMousemove={this.onDayMousemove}
                 onDayMouseleave={this.onDayMouseleave}
+                onChange={(d)=>this.onCalendarChange(d, bool)}
                 {...this.$props.calendarProps}
                 type={this.$props.type}
                 isActiveShow={bool}

@@ -17,7 +17,7 @@ $unit15: 15px;
         &-icon {
             width: 22px;
             height: 22px;
-            color: #999999;
+            color: #666666;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,6 +26,13 @@ $unit15: 15px;
 
             &:hover {
                 color: #0088FF;
+            }
+            &-disabled{
+                color: #cccccc;
+                cursor: not-allowed;
+                &:hover{
+                    color: #cccccc;
+                }
             }
         }
 
