@@ -1,7 +1,6 @@
-import { Component, computed, VNode } from 'vue'
+import { Component, VNode } from 'vue'
 import type { GridItemProps } from '../../../GridItem'
 import type { FormItemProps } from '../../../Form'
-import Form from './form'
 
 type ExtractProps<T extends abstract new (...args: any) => any, P extends boolean = true> = P extends true ? Partial<(InstanceType<T>)['$props']> : (InstanceType<T>)['$props']
 
