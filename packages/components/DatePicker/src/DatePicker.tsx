@@ -265,9 +265,13 @@ export default defineComponent({
                     if(isDaterange.value){
                         daterangeValueCache.value = (currentValue.value || []);
                         if(Object.prototype.toString.call(daterangeValueCache.value) === '[object Array]' && daterangeValueCache.value.length === 2){
-                            refCalendar.value.year = currentValueParse.value.year.value;
-                            refCalendar.value.month = currentValueParse.value.month.value;
-                            refCalendar.value.date = currentValueParse.value.date.value;
+                            const InitData = daterangeValueCache.value.map(e=>getDate(e))
+                            refCalendar.value.year = InitData[0].year.value;
+                            refCalendar.value.month = InitData[0].month.value;
+                            refCalendar.value.date = InitData[0].date.value;
+                            refCalendarEnd.value.year = InitData[1].year.value;
+                            refCalendarEnd.value.month = InitData[1].month.value;
+                            refCalendarEnd.value.date = InitData[1].date.value;
                         }else {
                             refCalendarEnd.value.month += 1;
                         }
