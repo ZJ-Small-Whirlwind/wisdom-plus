@@ -75,7 +75,7 @@ const value4 = ref()
 ```
 :::
 
-#### 选择日期范围
+#### 选择范围
 
 可在一个选择器中便捷地选择一个时间范围
 
@@ -84,12 +84,12 @@ const value4 = ref()
 <template>
     <wp-space>
         <div>
-            默认 {{value}}
+            选择日期范围
             <WpDatePicker v-model="value" type="daterange" placeholder="选择年" format="YYYY-MM-DD HH:mm:ss" clearable filterable></WpDatePicker>
         </div>
         <div>
-            带快捷选项
-            <WpDatePicker v-model="value2" type="daterange" placeholder="选择月"></WpDatePicker>
+            选择月份范围
+            <WpDatePicker v-model="value2" type="monthrange" placeholder="选择月"></WpDatePicker>
         </div>
     </wp-space>
 </template>

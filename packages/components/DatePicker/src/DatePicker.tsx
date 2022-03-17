@@ -55,7 +55,7 @@ export default defineComponent({
         const refCalendarEnd:any = ref(null)
         const refSelectEnd:any = ref(null)
         const isMultiple = computed(()=> props.type === 'dates');
-        const isDaterange = computed(()=>["daterange"].includes(props.type))
+        const isDaterange = computed(()=>["daterange","monthrange"].includes(props.type))
         const currentValueCopy = ref(null);
         const isDaterangeCanSwitchYear = ref(false);
         const isDaterangeCanSwitchMonth = ref(false);
@@ -118,6 +118,14 @@ export default defineComponent({
                 }
             }
             updateDaterangeCurrentValue(currentValue.value);
+            nextTick(()=>{
+                // 点击非本月月份纠正
+                try {
+                    if(refCalendar.value.year === refCalendarEnd.value.year && refCalendar.value.month === refCalendarEnd.value.month){
+                        refCalendarEnd.value.month += 1;
+                    }
+                }catch (e){}
+            })
         }
         const onClickDay = ({year, month, date})=>{
             if(!['dates','daterange'].includes(props.type)){
@@ -327,7 +335,9 @@ export default defineComponent({
                 }
                 if(isDaterange.value){
                     if(dayjs(currentValueStart.value,currentFormat.value).isValid() &&  dayjs(currentValueStart.value,currentFormat.value).isValid()){
-                        updateDaterangeCurrentValue([currentValueStart.value, currentValueEnd.value]);
+                        nextTick(()=>{
+                            updateDaterangeCurrentValue([currentValueStart.value, currentValueEnd.value]);
+                        })
                     }
                 }
             }
