@@ -39,6 +39,7 @@ export default defineComponent({
                 minute:ref(d.minute()),
                 second:ref(d.second()),
                 time:ref(d.toDate().getTime()),
+                getYearMonth:ref(d.format("YYYY-MM"))
             }
         }
         const options:any = ref([]);
@@ -83,7 +84,23 @@ export default defineComponent({
         provide("WpCalendarIsDaterange", isDaterange)
         provide("WpCalendarIsDaterangeCanSwitchYear", isDaterangeCanSwitchYear)
         provide("WpCalendarIsDaterangeCanSwitchMonth", isDaterangeCanSwitchMonth)
-
+        const updateDaterangeCurrentValue = (value)=>{
+            const time = (value || [])
+            const start = time[0] || null;
+            const end = time[1] || null;
+            currentValue.value = value;
+            if(start && start){
+                optionsStart.value = [{label:start,value:start}];
+                optionsEnd.value = [{label:end,value:end}];
+            }else {
+                optionsStart.value = [];
+                optionsEnd.value = [];
+            }
+            nextTick(()=>{
+                currentValueStart.value = start;
+                currentValueEnd.value = end;
+            })
+        }
         const daterangeClickDay = ({year, month, date})=>{
             const value = dayjs(new Date(year.value,month.value-1,date.value)).format(currentFormat.value)
             if(value === 'Invalid Date'){
@@ -100,20 +117,7 @@ export default defineComponent({
                     refSelect.value.show = false;
                 }
             }
-            const time = (currentValue.value || [])
-            const start = time[0] || null;
-            const end = time[1] || null;
-            if(start && start){
-                optionsStart.value = [{label:start,value:start}];
-                optionsEnd.value = [{label:end,value:end}];
-            }else {
-                optionsStart.value = [];
-                optionsEnd.value = [];
-            }
-            nextTick(()=>{
-                currentValueStart.value = start;
-                currentValueEnd.value = end;
-            })
+            updateDaterangeCurrentValue(currentValue.value);
         }
         const onClickDay = ({year, month, date})=>{
             if(!['dates','daterange'].includes(props.type)){
@@ -244,7 +248,7 @@ export default defineComponent({
             }
             return resUlt;
         }
-        const onClear = ()=>{
+        const onClear = (isEmit)=>{
             if(isDaterange.value){
                 currentValue.value = null;
                 currentValueStart.value = null;
@@ -252,7 +256,9 @@ export default defineComponent({
                 optionsStart.value = [];
                 optionsEnd.value = [];
             }
-            emit('clear')
+            if(isEmit){
+                emit('clear')
+            }
         }
         const onCalendarChange = ()=>{
             if(isDaterange.value){
@@ -272,6 +278,14 @@ export default defineComponent({
                 emit("update:modelValue", currentValue.value)
             })
         })
+        watch([currentValueStart, currentValueEnd],([start,end])=>{
+            nextTick(()=>{
+                if(isDaterange.value && dayjs(start,currentFormat.value).isValid() && dayjs(end,currentFormat.value).isValid()){
+                    // onClear(false);
+                    // emit("update:modelValue", [start,end])
+                }
+            })
+        })
         watch(computed(()=>refSelect.value && refSelect.value.show),val=>{
             if(val){
                 currentValueCopy.value = JSON.parse(JSON.stringify(currentValue.value));
@@ -286,6 +300,9 @@ export default defineComponent({
                             refCalendarEnd.value.year = InitData[1].year.value;
                             refCalendarEnd.value.month = InitData[1].month.value;
                             refCalendarEnd.value.date = InitData[1].date.value;
+                            if(InitData[0].getYearMonth.value === InitData[1].getYearMonth.value){
+                                refCalendarEnd.value.month += 1;
+                            }
                         }else {
                             refCalendarEnd.value.month += 1;
                         }
@@ -307,6 +324,11 @@ export default defineComponent({
             }else {
                 if(isMultiple.value){
                     emit("update:modelValue", currentValueCopy.value)
+                }
+                if(isDaterange.value){
+                    if(dayjs(currentValueStart.value,currentFormat.value).isValid() &&  dayjs(currentValueStart.value,currentFormat.value).isValid()){
+                        updateDaterangeCurrentValue([currentValueStart.value, currentValueEnd.value]);
+                    }
                 }
             }
         })
@@ -373,7 +395,7 @@ export default defineComponent({
                 onGoDay={this.onGoDay}
                 onDayMousemove={this.onDayMousemove}
                 onDayMouseleave={this.onDayMouseleave}
-                onChange={(d)=>this.onCalendarChange(d, bool)}
+                onChange={()=>this.onCalendarChange()}
                 {...this.$props.calendarProps}
                 type={this.$props.type}
                 isActiveShow={bool}
@@ -395,7 +417,7 @@ export default defineComponent({
                       multiple={this.isMultiple}
                       disabled={this.$props.disabled}
                       collapseTags={this.isMultiple}
-                      onClear={this.onClear}
+                      onClear={()=>this.onClear(true)}
                       v-slots={{
                           prefixIcon:()=>bool ? (<WpIcon class={{
                               "wp-date-picker-prefix-icon":true,

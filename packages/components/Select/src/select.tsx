@@ -251,6 +251,9 @@ export default defineComponent({
                     })
                 }
             }
+            nextTick(()=>{
+                emit('focus', currentValue.value)
+            })
         }
         const onBlur = ()=>{
             if(props.filterable) {
@@ -271,6 +274,9 @@ export default defineComponent({
                     currentValue.value = props.modelValue;
                 }
             }
+            nextTick(()=>{
+                emit('blur', currentValue.value)
+            })
         }
         const onTagsClose = (value, k)=>{
             setModelValue(value, false, false, false, k);
