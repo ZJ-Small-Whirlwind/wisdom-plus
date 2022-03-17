@@ -482,7 +482,7 @@ export default defineComponent({
                 }}>
                     {/*<span>{this.type === 'monthrange' ? day.getDayAll : null}</span>*/}
                 <span class={{
-                    active:this.type !== 'monthrange'  &&  (this.month === month) || bool && (activeMapsObj.isStart || activeMapsObj.isEnd)
+                    active:this.type !== 'monthrange'  &&  (this.month === month)
                 }} onClick={()=>this.type === 'monthrange' ? this.clickDays(day) : this.monthClick(month)}>{toChinesNum(month, true)}月</span>
                 </div>
             )
