@@ -344,8 +344,8 @@ export default defineComponent({
                     [e.type]:true,
                     "wp-calendar-content-day-disabled":isDisabled,
                     "wp-calendar-content-day-not-disabled":!isDisabled,
-                    "wp-calendar-content-day-not-disabled-available":this.$props.showAvailableStyle,
-                    "wp-calendar-content-day-active-map":this.activeMaps[e.getDayAll],
+                    "wp-calendar-content-day-not-disabled-available":e.type === 'current' && this.$props.showAvailableStyle,
+                    "wp-calendar-content-day-active-map":e.type === 'current' && this.activeMaps[e.getDayAll],
                     "wp-calendar-content-day-week-map":this.weekMaps[e.getDayAll],
                 }}>
                     <span onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{

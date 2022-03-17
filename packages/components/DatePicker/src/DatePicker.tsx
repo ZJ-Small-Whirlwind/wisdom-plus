@@ -41,7 +41,11 @@ export default defineComponent({
             }
         }
         const options:any = ref([]);
+        const optionsStart:any = ref(null);
+        const optionsEnd:any = ref(null);
         const currentValue:any = ref(null);
+        const currentValueStart:any = ref(null);
+        const currentValueEnd:any = ref(null);
         const daterangeValueCache:any = ref([]);
         const daterangeDayHoverValueCache:any = ref([]);
         const refCalendar:any = ref(null)
@@ -79,20 +83,33 @@ export default defineComponent({
             if(value === 'Invalid Date'){
                 daterangeValueCache.value = [];
             }else {
-                daterangeValueCache.value = (daterangeValueCache.value || []);
-                daterangeValueCache.value.push(value);
-
+                daterangeValueCache.value = (daterangeValueCache.value || []).concat([value]);
                 if(daterangeValueCache.value.length > 2){
                     daterangeValueCache.value = [daterangeValueCache.value.at(-1)];
                 }
                 if(daterangeValueCache.value.length === 2){
+                    currentValue.value = daterangeValueCache.value.map(e=>dayjs(e).toDate().getTime()).sort((a,b)=>a-b).map((time,k)=>{
+                        return dayjs(k === 0  ? time : (time + 82800000 + 3540000 + 59000 + 900)).format(currentFormat.value);
+                    });
                     refSelect.value.show = false;
-                    currentValue.value = daterangeValueCache.value.slice(0,2);
                 }
             }
+            const time = (currentValue.value || [])
+            const start = time[0] || null;
+            const end = time[1] || null;
+            if(start && start){
+                optionsStart.value = [{label:start,value:start}];
+                optionsEnd.value = [{label:end,value:end}];
+            }else {
+                optionsStart.value = [];
+                optionsEnd.value = [];
+            }
+            nextTick(()=>{
+                currentValueStart.value = start;
+                currentValueEnd.value = end;
+            })
         }
         const onClickDay = ({year, month, date})=>{
-
             if(!['dates','daterange'].includes(props.type)){
                 refSelect.value.show = false;
             }
@@ -234,16 +251,8 @@ export default defineComponent({
                 currentValueCopy.value = JSON.parse(JSON.stringify(currentValue.value));
                 nextTick(()=>{
                     if(isDaterange.value){
-                        daterangeValueCache.value = (currentValue.value || [])
-                        // const times = (currentValue.value || []).map(e=>dayjs(e).toDate().getTime()).sort((a,b)=>a-b).map(e=>dayjs(e).format(currentFormat.value));
-                        // console.log(times)
-
-                        // refCalendar.value.year = currentValueParse.value.year.value;
-                        // refCalendar.value.month = currentValueParse.value.month.value;
-                        // refCalendar.value.date = currentValueParse.value.date.value;
-                        // refCalendarEnd.value.year = currentValueParse.value.year.value;
-                        // refCalendarEnd.value.month = currentValueParse.value.month.value+1;
-                        // refCalendarEnd.value.date = currentValueParse.value.date.value;
+                        daterangeValueCache.value = (currentValue.value || []);
+                        refCalendarEnd.value.month += 1;
                         return;
                     }
                     if(isMultiple.value){
@@ -305,7 +314,11 @@ export default defineComponent({
             refCalendarEnd,
             refSelectEnd,
             currentValue,
+            currentValueStart,
+            currentValueEnd,
             options,
+            optionsStart,
+            optionsEnd,
             isMultiple,
             onConfirm,
             isDaterange,
@@ -332,8 +345,8 @@ export default defineComponent({
         const WpSelectRender = (bool)=>(
             <WpSelect clearable={this.clearable}
                       filterable={!this.isMultiple && this.filterable}
-                      v-model={this.currentValue}
-                      options={this.options}
+                      v-model={this[this.isDaterange ? (bool ? 'currentValueStart' : 'currentValueEnd'): 'currentValue']}
+                      options={this[this.isDaterange ? (bool ? 'optionsStart' : 'optionsEnd'): 'options']}
                       ref={bool ? 'refSelect' : 'refSelectEnd'}
                       PopoverConfig={{
                           popoverClass:`wp-date-picker-panel-popover wp-date-picker-panel-popover-${this.$props.type}`
@@ -344,11 +357,11 @@ export default defineComponent({
                       disabled={this.$props.disabled}
                       collapseTags={this.isMultiple}
                       v-slots={{
-                          prefixIcon:()=>(<WpIcon class={{
+                          prefixIcon:()=>bool ? (<WpIcon class={{
                               "wp-date-picker-prefix-icon":true,
                           }}>
                               <DateRangeOutlined></DateRangeOutlined>
-                          </WpIcon>),
+                          </WpIcon>) : null,
                           panel:()=>bool ? [
                               this.isDaterange ? (<div class={{
                                   "wp-date-picker-panel-popover-daterange":true,

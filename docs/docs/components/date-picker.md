@@ -85,7 +85,7 @@ const value4 = ref()
     <wp-space>
         <div>
             默认 {{value}}
-            <WpDatePicker v-model="value" type="daterange" placeholder="选择年"></WpDatePicker>
+            <WpDatePicker v-model="value" type="daterange" placeholder="选择年" format="YYYY-MM-DD HH:mm:ss"></WpDatePicker>
         </div>
         <div>
             带快捷选项
