@@ -82,9 +82,9 @@ const getIsEvent = e=>{
 | lunar      | 是否启用农历模式   | _boolean_                                                               | false     |
 | showPanel      | 是否显示侧方面板   | _boolean_                                                               | false     |
 | disabledDate      | 是否禁止具体日期   | _(dayData:object)=>boolean_                                             | ()=>false |
-| type      | 显示类型       | _string, (year、month)_                                                       | -         |
-| isActiveShow      | 是否暂时今日选中状态 | _boolean_                                                       | true      |
-| showAvailableStyle      | 是否显示有效日期样式 | _boolean_                                                       | false     |
+| type      | 显示类型       | _string, (year、month、monthrange)_                                                 | -         |
+| isActiveShow      | 是否暂时今日选中状态 | _boolean_                                                               | true      |
+| showAvailableStyle      | 是否显示有效日期样式 | _boolean_                                                               | false     |
 
 ### Emits
 
