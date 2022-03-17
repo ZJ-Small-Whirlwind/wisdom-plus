@@ -38,6 +38,7 @@ export default defineComponent({
                 hour:ref(d.hour()),
                 minute:ref(d.minute()),
                 second:ref(d.second()),
+                time:ref(d.toDate().getTime()),
             }
         }
         const options:any = ref([]);
@@ -77,6 +78,7 @@ export default defineComponent({
         provide("notClearInputValueFormat", currentFormat.value)
         provide("WpCalendarActiveMaps", currentValueParse)
         provide("WpCalendarWeekMaps", WpCalendarWeekMaps)
+        provide("WpCalendarIsDaterange", isDaterange)
 
         const daterangeClickDay = ({year, month, date})=>{
             const value = dayjs(new Date(year.value,month.value-1,date.value)).format(currentFormat.value)
@@ -238,6 +240,16 @@ export default defineComponent({
             }
             return resUlt;
         }
+        const onClear = ()=>{
+            if(isDaterange.value){
+                currentValue.value = null;
+                currentValueStart.value = null;
+                currentValueEnd.value = null;
+                optionsStart.value = [];
+                optionsEnd.value = [];
+            }
+            emit('clear')
+        }
         watch(computed(()=>props.modelValue),()=>{
             init()
         })
@@ -252,7 +264,13 @@ export default defineComponent({
                 nextTick(()=>{
                     if(isDaterange.value){
                         daterangeValueCache.value = (currentValue.value || []);
-                        refCalendarEnd.value.month += 1;
+                        if(Object.prototype.toString.call(daterangeValueCache.value) === '[object Array]' && daterangeValueCache.value.length === 2){
+                            refCalendar.value.year = currentValueParse.value.year.value;
+                            refCalendar.value.month = currentValueParse.value.month.value;
+                            refCalendar.value.date = currentValueParse.value.date.value;
+                        }else {
+                            refCalendarEnd.value.month += 1;
+                        }
                         return;
                     }
                     if(isMultiple.value){
@@ -324,6 +342,7 @@ export default defineComponent({
             isDaterange,
             disabledDate,
             currentDaterangeValues,
+            onClear,
         }
     },
     render(){
@@ -356,6 +375,7 @@ export default defineComponent({
                       multiple={this.isMultiple}
                       disabled={this.$props.disabled}
                       collapseTags={this.isMultiple}
+                      onClear={this.onClear}
                       v-slots={{
                           prefixIcon:()=>bool ? (<WpIcon class={{
                               "wp-date-picker-prefix-icon":true,

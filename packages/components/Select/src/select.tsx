@@ -237,6 +237,7 @@ export default defineComponent({
             show.value = false;
             setModelValue(null, true);
             ev.stopPropagation();
+            emit('clear', null)
         }
 
         const onFocus = ()=>{

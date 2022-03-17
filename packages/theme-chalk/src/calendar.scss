@@ -461,5 +461,16 @@ $unit15: 15px;
             //border-radius: 100%;
         }
     }
+    .wp-calendar-content-day-is-daterange-start{
+        border-radius: 17px 0 0 17px;
+    }
+    .wp-calendar-content-day-is-daterange-end{
+        border-radius: 0 17px 17px 0;
+    }
+    .wp-calendar-content-day-is-daterange-start{
+        &.wp-calendar-content-day-is-daterange-end{
+            border-radius:17px;
+        }
+    }
 }
 

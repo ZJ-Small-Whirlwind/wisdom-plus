@@ -281,6 +281,12 @@ const remote = value=>{
 | disabled | 禁用 | _boolean_           | _boolean_         |
 | options | 分组 | _optionItem[]_           | -        |
 
+### Emits
+
+| 参数  | 说明 | 参数                  |
+|-----|--|---------------------|
+|  clear  | 清除结果 | _        |
+
 ### Slots
 
 | 参数  | 说明 | 参数                  |

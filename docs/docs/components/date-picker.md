@@ -85,7 +85,7 @@ const value4 = ref()
     <wp-space>
         <div>
             默认 {{value}}
-            <WpDatePicker v-model="value" type="daterange" placeholder="选择年" format="YYYY-MM-DD HH:mm:ss"></WpDatePicker>
+            <WpDatePicker v-model="value" type="daterange" placeholder="选择年" format="YYYY-MM-DD HH:mm:ss" clearable filterable></WpDatePicker>
         </div>
         <div>
             带快捷选项
@@ -95,7 +95,7 @@ const value4 = ref()
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
-const value = ref()
+const value = ref( [ "2022-02-08 00:00:00", "2022-10-19 23:59:59" ])
 const value2 = ref()
 </script>
 ```
@@ -119,5 +119,11 @@ const value2 = ref()
 | disabled | 是否禁用 | _boolean_           | false         |
 
 ### Methods
+
+### Emits
+
+| 参数  | 说明 | 参数                  |
+|-----|--|---------------------|
+|  clear  | 清除结果 | _        |
 
 ### Slots

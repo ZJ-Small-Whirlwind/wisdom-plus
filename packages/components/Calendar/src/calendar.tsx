@@ -55,12 +55,39 @@ export default defineComponent({
     setup(props, {emit}) {
         const WpCalendarActiveMaps:any = inject("WpCalendarActiveMaps", ref(null))
         const WpCalendarWeekMaps:any = inject("WpCalendarWeekMaps", ref(null))
+        const WpCalendarIsDaterange:any = inject("WpCalendarIsDaterange", ref(false))
         const activeMaps = computed(()=>{
             try {
                 if(Object.prototype.toString.call(WpCalendarActiveMaps.value) === '[object Array]'){
-                    return WpCalendarActiveMaps.value.reduce((a,b)=>{
-                        const keyname = `${b.year.value}-${b.month.value}-${b.date.value}`;
-                        a[keyname] = true;
+                    let dates = WpCalendarActiveMaps.value;
+                    if(WpCalendarIsDaterange.value){
+                        dates = dates.sort((a,b)=>a.time.value - b.time.value)
+                    }
+                    return dates.reduce((a,b, k, arr)=>{
+                        const keyName = `${b.year.value}-${b.month.value}-${b.date.value}`;
+                        a[keyName] = true;
+                        if(WpCalendarIsDaterange.value){
+                            try {
+                                if(arr[0] && arr[1]){
+                                    const k1 = `${arr[0].year.value}-${arr[0].month.value}-${arr[0].date.value}`
+                                    const k2 = `${arr[1].year.value}-${arr[1].month.value}-${arr[1].date.value}`
+                                    a[keyName] = {
+                                        isStart:k1 === k2 || (k === 0 ? b.time.value <= arr[1].time.value : false),
+                                        isEnd:k1 === k2 || (k === 1 ? b.time.value >= arr[0].time.value : false),
+                                    };
+                                }else {
+                                    a[keyName] = {
+                                        isStart:false,
+                                        isEnd:false,
+                                    }
+                                }
+                            }catch (e){
+                                a[keyName] = {
+                                    isStart:false,
+                                    isEnd:false,
+                                }
+                            }
+                        }
                         return a;
                     },{})
                 }else {
@@ -301,6 +328,7 @@ export default defineComponent({
             today,
             activeMaps,
             weekMaps,
+            WpCalendarIsDaterange,
         }
     },
     render(){
@@ -346,6 +374,8 @@ export default defineComponent({
                     "wp-calendar-content-day-not-disabled":!isDisabled,
                     "wp-calendar-content-day-not-disabled-available":e.type === 'current' && this.$props.showAvailableStyle,
                     "wp-calendar-content-day-active-map":e.type === 'current' && this.activeMaps[e.getDayAll],
+                    "wp-calendar-content-day-is-daterange-start":this.WpCalendarIsDaterange && (this.activeMaps[e.getDayAll] || {}).isStart,
+                    "wp-calendar-content-day-is-daterange-end":this.WpCalendarIsDaterange && (this.activeMaps[e.getDayAll] || {}).isEnd,
                     "wp-calendar-content-day-week-map":this.weekMaps[e.getDayAll],
                 }}>
                     <span onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{
