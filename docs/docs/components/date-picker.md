@@ -101,7 +101,7 @@ const value4 = ref()
 import { ref } from 'vue'
 const value = ref()
 const value2 = ref()
-const value3 = ref()
+const value3 = ref([ "1964", "2041" ])
 </script>
 ```
 :::

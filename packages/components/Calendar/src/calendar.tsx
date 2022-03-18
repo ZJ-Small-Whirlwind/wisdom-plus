@@ -152,7 +152,17 @@ export default defineComponent({
         })
         const currentDays = computed(()=>days.value.filter(e=>e.type === "current"))
         const yearList = computed(()=>{
-            return new Array(10).fill(0).map((e,k)=>year.value - 5 + k);
+            const maxRange = 10;
+            const list = new Array(maxRange).fill(0);
+            if(props.type === 'yearrange'){
+                // console.log(Object.keys(activeMaps.value).length > 1)
+                if(props.isActiveShow){
+                    return list.map((e,k)=>year.value + k)
+                }else {
+                    return list.map((e,k)=>year.value + k + maxRange - 1)
+                }
+            }
+            return list.map((e,k)=>year.value - 6 + k);
         })
         const monthList = ref(new Array(12).fill(0).map((e,k)=> k+1))
         const currentDayObjData = computed<returnDate>(()=>(days.value.find(e=>e.getDayAll === `${year.value}-${month.value}-${date.value}`) || {calendar:{}}) as any);
@@ -453,8 +463,9 @@ export default defineComponent({
             if(this.WpCalendarIsDaterange && this.type === 'yearrange'){
                 day = new CalendarData().returnDate(this.year, this.month).find(e=>e.day === 1);
                 day.date = dayjs(day.getDayAll);
-                day.day = 1;
                 day.dateYear = year;
+                day.day = 1;
+                day.dateMonth = 1;
                 day.getDayAll = `${day.dateYear}-${day.dateMonth}-${day.day}`;
                 time = dayjs(day.getDayAll).toDate().getTime()
                 bool = true;
@@ -524,7 +535,7 @@ export default defineComponent({
          * 年月
          */
         const titleRender = ()=>[
-            <span onClick={()=>this.showYear = true}>{this.year}年</span>,
+            this.$props.type !== 'yearrange' ?<span onClick={()=>this.showYear = true}>{this.year}年</span> : `${this.yearList[0]}年-${this.yearList.at(-1)}年`,
             this.isYearOrMonthrange ? <span onClick={()=>(this.showYear = false, this.showMonth = true)}>{this.month}月</span> : null,
         ]
 

@@ -315,8 +315,10 @@ export default defineComponent({
                             refCalendarEnd.value.date = InitData[1].date.value;
                             if(['monthrange', 'yearrange'].includes(props.type) && InitData[0].year.value === InitData[1].year.value){
                                 refCalendarEnd.value.year += 1;
-                            }else if(InitData[0].getYearMonth.value === InitData[1].getYearMonth.value){
-
+                            } else if(['yearrange'].includes(props.type)){
+                                refCalendarEnd.value.year -= 1;
+                                console.log(refCalendarEnd.value.year)
+                            } else if(InitData[0].getYearMonth.value === InitData[1].getYearMonth.value){
                                 refCalendarEnd.value.month += 1;
                             }
                         }else {
