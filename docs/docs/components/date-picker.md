@@ -101,7 +101,7 @@ const value4 = ref()
 import { ref } from 'vue'
 const value = ref()
 const value2 = ref()
-const value3 = ref([ "1964", "2041" ])
+const value3 = ref()
 </script>
 ```
 :::
@@ -122,6 +122,7 @@ const value3 = ref([ "1964", "2041" ])
 | type | 显示类型 | _[string] (year、month、dates、 week、daterange、monthrange、yearrange)_           | -         |
 | placeholder | 选择提示语 | _string_           | -         |
 | disabled | 是否禁用 | _boolean_           | false         |
+| maxYearRange | 展示最大年份区间， 默认间隔12年 | _number_    | 12        |
 
 ### Methods
 

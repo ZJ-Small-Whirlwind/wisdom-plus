@@ -44,6 +44,10 @@ export const calendarProps = buildProps({
     showAvailableStyle:{
         type:Boolean as PropType<boolean>,
         default:false
+    },
+    maxYearRange:{
+        type:Number as PropType<number>,
+        default:12
     }
 })
 
@@ -152,17 +156,17 @@ export default defineComponent({
         })
         const currentDays = computed(()=>days.value.filter(e=>e.type === "current"))
         const yearList = computed(()=>{
-            const maxRange = 12;
-            const list = new Array(maxRange).fill(0);
+            const maxYearRange = props.maxYearRange;
+            const list = new Array(maxYearRange).fill(0);
             if(props.type === 'yearrange'){
                 // console.log(Object.keys(activeMaps.value).length > 1)
                 if(props.isActiveShow){
                     return list.map((e,k)=>year.value + k)
                 }else {
-                    return list.map((e,k)=>year.value + k + maxRange - 1)
+                    return list.map((e,k)=>year.value + k + maxYearRange - 1)
                 }
             }
-            return list.map((e,k)=>year.value - maxRange/2 + k);
+            return list.map((e,k)=>year.value - maxYearRange/2 + k);
         })
         const monthList = ref(new Array(12).fill(0).map((e,k)=> k+1))
         const currentDayObjData = computed<returnDate>(()=>(days.value.find(e=>e.getDayAll === `${year.value}-${month.value}-${date.value}`) || {calendar:{}}) as any);

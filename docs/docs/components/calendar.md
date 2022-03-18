@@ -76,15 +76,16 @@ const getIsEvent = e=>{
 
 ### Props
 
-| 参数           | 说明         | 类型                                                                      | 默认值       |
-|--------------|------------|-------------------------------------------------------------------------|-----------|
-| getIsEvent      | 获取任务       | _(dayData:object)=>false,{name:string, success:boolean, ...args:any}[]_ | ()=>false |
-| lunar      | 是否启用农历模式   | _boolean_                                                               | false     |
-| showPanel      | 是否显示侧方面板   | _boolean_                                                               | false     |
-| disabledDate      | 是否禁止具体日期   | _(dayData:object)=>boolean_                                             | ()=>false |
-| type      | 显示类型       | _string, (year、month、monthrange)_                                                 | -         |
-| isActiveShow      | 是否暂时今日选中状态 | _boolean_                                                               | true      |
-| showAvailableStyle      | 是否显示有效日期样式 | _boolean_                                                               | false     |
+| 参数           | 说明                | 类型                                                                      | 默认值       |
+|--------------|-------------------|-------------------------------------------------------------------------|-----------|
+| getIsEvent      | 获取任务              | _(dayData:object)=>false,{name:string, success:boolean, ...args:any}[]_ | ()=>false |
+| lunar      | 是否启用农历模式          | _boolean_                                                               | false     |
+| showPanel      | 是否显示侧方面板          | _boolean_                                                               | false     |
+| disabledDate      | 是否禁止具体日期          | _(dayData:object)=>boolean_                                             | ()=>false |
+| type      | 显示类型              | _string, (year、month、monthrange)_                                       | -         |
+| isActiveShow      | 是否暂时今日选中状态        | _boolean_                                                               | true      |
+| showAvailableStyle      | 是否显示有效日期样式        | _boolean_                                                               | false     |
+| maxYearRange      | 展示最大年份区间， 默认间隔12年 | _number_                                                                | 12        |
 
 ### Emits
 
