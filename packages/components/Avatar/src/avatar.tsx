@@ -28,33 +28,35 @@ export type AvatarProps = ExtractPropTypes<typeof avatarProps>
 
 import { UserOutlined, UserDeleteOutlined } from '@vicons/antd'
 import Icon from '../../Icon'
-import { useConfig } from '@wisdom-plus/utils/config'
 
 export default defineComponent({
     name: 'WpAvatar',
     props: avatarProps,
     setup(props, { slots }) {
+        const deleteIconRender = () => (
+            <Icon>
+                <UserDeleteOutlined />
+            </Icon>
+        )
+        const loadingIconRender = () => (
+            <Icon>
+                <UserOutlined />
+            </Icon>
+        )
+        const emptyIconRender = () => (
+            <Icon>
+                <UserOutlined />
+            </Icon>
+        )
         return () => (
             <ImageElement
                 class="wp-avatar"
                 { ...props }
                 v-slots={{
-                    default: slots.default?.(),
-                    error: slots.error?.() || (
-                        <Icon>
-                            <UserDeleteOutlined />
-                        </Icon>
-                    ),
-                    loading: slots.loading?.() || (
-                        <Icon>
-                            <UserOutlined />
-                        </Icon>
-                    ),
-                    empty: slots.empty?.() || (
-                        <Icon>
-                            <UserOutlined />
-                        </Icon>
-                    )
+                    default: slots.default,
+                    error: slots.error ?? deleteIconRender,
+                    loading: slots.loading ?? loadingIconRender,
+                    empty: slots.empty ?? emptyIconRender
                 }}
             />
         )
