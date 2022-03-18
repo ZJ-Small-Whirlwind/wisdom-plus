@@ -37,8 +37,8 @@ export default defineComponent({
     name: 'WpRate',
     props: rateProps,
     emits: {
-        'update:modelValue': (value: number) => (void value, 0),
-        'change': (value: number) => (void value, 0)
+        'update:modelValue': (value: number) => (void value, true),
+        'change': (value: number) => (void value, true)
     },
     setup(props, { emit }) {
         const { basic, is, of } = useNamespace('rate')
