@@ -28,6 +28,7 @@ export default defineComponent({
                 year:"YYYY",
                 month:"YYYY-MM",
                 monthrange:"YYYY-MM",
+                yearrange:"YYYY",
             }[props.type] || "YYYY-MM-DD";
         })
         const getDate = (date)=>{
@@ -56,7 +57,7 @@ export default defineComponent({
         const refCalendarEnd:any = ref(null)
         const refSelectEnd:any = ref(null)
         const isMultiple = computed(()=> props.type === 'dates');
-        const isDaterange = computed(()=>["daterange","monthrange"].includes(props.type))
+        const isDaterange = computed(()=>["daterange","monthrange", 'yearrange'].includes(props.type))
         const currentValueCopy = ref(null);
         const isDaterangeCanSwitchYear = ref(false);
         const isDaterangeCanSwitchMonth = ref(false);
@@ -129,13 +130,13 @@ export default defineComponent({
             })
         }
         const onClickDay = ({year, month, date})=>{
-            if(!['dates','daterange','monthrange'].includes(props.type)){
+            if(!['dates','daterange','monthrange','yearrange'].includes(props.type)){
                 refSelect.value.show = false;
             }
-            if(['daterange','monthrange'].includes(props.type)){
+            if(['daterange','monthrange','yearrange'].includes(props.type)){
                 daterangeClickDay({year, month, date});
             }
-            if(['week','daterange','monthrange'].includes(props.type)){
+            if(['week','daterange','monthrange','yearrange'].includes(props.type)){
                 return;
             }
             const value = dayjs(new Date(year.value,month.value-1,date.value)).format(currentFormat.value)
@@ -274,6 +275,9 @@ export default defineComponent({
                 nextTick(()=>{
                     try {
                         isDaterangeCanSwitchYear.value  = refCalendar.value.year < refCalendarEnd.value.year;
+                        if(['monthrange', 'yearrange'].includes(props.type)){
+                            isDaterangeCanSwitchYear.value  = refCalendar.value.year < refCalendarEnd.value.year-1;
+                        }
                         isDaterangeCanSwitchMonth.value = isDaterangeCanSwitchYear.value ||  (refCalendar.value.year <= refCalendarEnd.value.year && refCalendar.value.month+1 < refCalendarEnd.value.month);
                     }catch (e){}
                 })
@@ -309,11 +313,18 @@ export default defineComponent({
                             refCalendarEnd.value.year = InitData[1].year.value;
                             refCalendarEnd.value.month = InitData[1].month.value;
                             refCalendarEnd.value.date = InitData[1].date.value;
-                            if(InitData[0].getYearMonth.value === InitData[1].getYearMonth.value){
+                            if(['monthrange', 'yearrange'].includes(props.type) && InitData[0].year.value === InitData[1].year.value){
+                                refCalendarEnd.value.year += 1;
+                            }else if(InitData[0].getYearMonth.value === InitData[1].getYearMonth.value){
+
                                 refCalendarEnd.value.month += 1;
                             }
                         }else {
-                            refCalendarEnd.value.month += 1;
+                            if(['monthrange', 'yearrange'].includes(props.type)){
+                                refCalendarEnd.value.year += 1;
+                            }else {
+                                refCalendarEnd.value.month += 1;
+                            }
                         }
                         return;
                     }

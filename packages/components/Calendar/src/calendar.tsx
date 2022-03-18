@@ -118,6 +118,7 @@ export default defineComponent({
                 return {};
             }
         })
+        const isYearOrMonthrange = computed(()=>!['year','monthrange','yearrange'].includes(props.type));
         const currentData:dayjs.Dayjs = dayjs()
         const today = ref({
             year:currentData.year(),
@@ -278,6 +279,7 @@ export default defineComponent({
         const watchTypeInit = ()=>{
             switch (props.type){
                 case "year":
+                case "yearrange":
                     showYear.value = true;
                     break;
                 case "month":
@@ -340,11 +342,13 @@ export default defineComponent({
             today,
             activeMaps,
             weekMaps,
+            WpCalendarActiveMaps,
             WpCalendarIsDaterange,
             leftYearBtnShow,
             leftMonthBtnShow,
             rightYearBtnShow,
             rightMonthBtnShow,
+            isYearOrMonthrange,
         }
     },
     render(){
@@ -439,15 +443,43 @@ export default defineComponent({
                 <span>{e}</span>
             </div>
         ))
-        const yearRender = ()=> this.yearList.map(year => (
-            <div class={{
-                "wp-calendar-content-year":true
-            }}>
-                <span class={{
-                    active:this.year === year
-                }} onClick={()=>this.yearClick(year)}>{year}</span>
-            </div>
-        ))
+        const yearRender = ()=> this.yearList.map(year => {
+            let bool:any = false;
+            let isDisabled:boolean = false;
+            let day:any = year;
+            let activeMapsObj:any = {};
+            let time:any = null;
+            let rangeTime:any = null
+            if(this.WpCalendarIsDaterange && this.type === 'yearrange'){
+                day = new CalendarData().returnDate(this.year, this.month).find(e=>e.day === 1);
+                day.date = dayjs(day.getDayAll);
+                day.day = 1;
+                day.dateYear = year;
+                day.getDayAll = `${day.dateYear}-${day.dateMonth}-${day.day}`;
+                time = dayjs(day.getDayAll).toDate().getTime()
+                bool = true;
+                isDisabled = this.$props.disabledDate(day);
+                activeMapsObj = (this.activeMaps[day.getDayAll] || {});
+                rangeTime = Object.keys(this.activeMaps).map(e=>dayjs(e).toDate().getTime()).sort((a,b)=>a-b)
+            }
+            return (
+                <div
+                    onMousemove={(ev)=>this.$emit('day-mousemove', day, ev)}
+                    onMouseleave={(ev)=>this.$emit('day-mouseleave', day, ev)}
+                    class={{
+                    "wp-calendar-content-year":true,
+                    "wp-calendar-content-day-not-disabled":!isDisabled,
+                    "wp-calendar-content-day-not-disabled-available":bool && time && rangeTime && time >= rangeTime[0] &&  time <= rangeTime[1],
+                    "wp-calendar-content-day-is-daterange-start":bool && activeMapsObj.isStart,
+                    "wp-calendar-content-day-is-daterange-end":bool && activeMapsObj.isEnd,
+                }}>
+                    {/*<span>{this.type === 'yearrange' ? day.getDayAll : null}</span>*/}
+                    <span class={{
+                        active:this.type !== 'yearrange'  &&  this.year === year
+                    }} onClick={()=>this.type === 'yearrange' ? this.clickDays(day) : this.yearClick(year)}>{year}</span>
+                </div>
+            )
+        })
 
         const monthRender = ()=> this.monthList.map(month => {
             let bool:any = false;
@@ -474,16 +506,16 @@ export default defineComponent({
                     onMousemove={(ev)=>this.$emit('day-mousemove', day, ev)}
                     onMouseleave={(ev)=>this.$emit('day-mouseleave', day, ev)}
                     class={{
-                    "wp-calendar-content-day-not-disabled":!isDisabled,
                     "wp-calendar-content-month":true,
+                    "wp-calendar-content-day-not-disabled":!isDisabled,
                     "wp-calendar-content-day-not-disabled-available":bool && time && rangeTime && time >= rangeTime[0] &&  time <= rangeTime[1],
                     "wp-calendar-content-day-is-daterange-start":bool && activeMapsObj.isStart,
                     "wp-calendar-content-day-is-daterange-end":bool && activeMapsObj.isEnd,
                 }}>
                     {/*<span>{this.type === 'monthrange' ? day.getDayAll : null}</span>*/}
-                <span class={{
-                    active:this.type !== 'monthrange'  &&  (this.month === month)
-                }} onClick={()=>this.type === 'monthrange' ? this.clickDays(day) : this.monthClick(month)}>{toChinesNum(month, true)}月</span>
+                    <span class={{
+                        active:this.type !== 'monthrange'  &&  (this.month === month)
+                    }} onClick={()=>this.type === 'monthrange' ? this.clickDays(day) : this.monthClick(month)}>{toChinesNum(month, true)}月</span>
                 </div>
             )
         })
@@ -493,7 +525,7 @@ export default defineComponent({
          */
         const titleRender = ()=>[
             <span onClick={()=>this.showYear = true}>{this.year}年</span>,
-            this.$props.type !== 'year' ? <span onClick={()=>(this.showYear = false, this.showMonth = true)}>{this.month}月</span> : null,
+            this.isYearOrMonthrange ? <span onClick={()=>(this.showYear = false, this.showMonth = true)}>{this.month}月</span> : null,
         ]
 
         const calendarRender = ()=>{
@@ -505,9 +537,9 @@ export default defineComponent({
             }}>
                 <div class={'wp-calendar-header'}>
                     <Icon class={{'wp-calendar-header-icon':true, 'wp-calendar-header-icon-disabled':!this.leftYearBtnShow}} name={'arrow-left'} onClick={()=>this.prevYear(this.leftYearBtnShow)}><DoubleLeftOutlined></DoubleLeftOutlined></Icon>
-                    {this.$props.type !== 'year' ? <Icon class={{'wp-calendar-header-icon':true, 'wp-calendar-header-icon-disabled':!this.leftMonthBtnShow}} name={'arrow-left'} onClick={()=>this.prevMonth(this.leftMonthBtnShow)}><LeftOutlined></LeftOutlined></Icon>: null}
+                    {this.isYearOrMonthrange ? <Icon class={{'wp-calendar-header-icon':true, 'wp-calendar-header-icon-disabled':!this.leftMonthBtnShow}} name={'arrow-left'} onClick={()=>this.prevMonth(this.leftMonthBtnShow)}><LeftOutlined></LeftOutlined></Icon>: null}
                     <div class={'wp-calendar-header-title'} onClick={this.herderTitleClick}>{titleRender()}</div>
-                    {this.$props.type !== 'year' ? <Icon class={{'wp-calendar-header-icon':true, 'wp-calendar-header-icon-disabled':!this.rightMonthBtnShow}} name={'arrow'} onClick={()=>this.nextMonth(this.rightMonthBtnShow)}><RightOutlined></RightOutlined></Icon> : null}
+                    {this.isYearOrMonthrange ? <Icon class={{'wp-calendar-header-icon':true, 'wp-calendar-header-icon-disabled':!this.rightMonthBtnShow}} name={'arrow'} onClick={()=>this.nextMonth(this.rightMonthBtnShow)}><RightOutlined></RightOutlined></Icon> : null}
                     <Icon class={{'wp-calendar-header-icon':true, 'wp-calendar-header-icon-disabled':!this.rightYearBtnShow}} name={'arrow'} onClick={()=>this.nextYear(this.rightYearBtnShow)}><DoubleRightOutlined></DoubleRightOutlined></Icon>
                 </div>
                 <div class={'wp-calendar-content'}>

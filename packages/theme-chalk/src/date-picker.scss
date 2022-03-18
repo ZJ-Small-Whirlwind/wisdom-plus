@@ -104,3 +104,13 @@
         }
     }
 }
+.wp-date-picker-panel-popover-monthrange,.wp-date-picker-panel-popover-yearrange{
+    .wp-calendar-content-day-available{
+        .wp-calendar-content-day-is-daterange-start,.wp-calendar-content-day-is-daterange-end{
+            color: #0088FF;
+            font-weight: bold;
+            background-color: #fd7653;
+            color: #ffffff;
+        }
+    }
+}
