@@ -73,10 +73,18 @@
     &-compact {
         border-radius: 4px;
         border: 1px solid #dcdfe6;
-        overflow: auto;
         line-height: 1.5;
-        height: 200px;
         background-color: #fff;
+        height: 200px;
+        .wp-pro-cascader--list {
+            height: 100%;
+            overflow: auto;
+            position: relative;
+        }
+        .wp-pro-cascader--header--wrapper {
+            position: sticky;
+            top: 0;
+        }
         .wp-pro-cascader--list {
             box-shadow: none;
             width: 220px;
