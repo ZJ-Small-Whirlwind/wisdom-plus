@@ -152,7 +152,7 @@ export default defineComponent({
         })
         const currentDays = computed(()=>days.value.filter(e=>e.type === "current"))
         const yearList = computed(()=>{
-            const maxRange = 10;
+            const maxRange = 12;
             const list = new Array(maxRange).fill(0);
             if(props.type === 'yearrange'){
                 // console.log(Object.keys(activeMaps.value).length > 1)
@@ -162,7 +162,7 @@ export default defineComponent({
                     return list.map((e,k)=>year.value + k + maxRange - 1)
                 }
             }
-            return list.map((e,k)=>year.value - 6 + k);
+            return list.map((e,k)=>year.value - maxRange/2 + k);
         })
         const monthList = ref(new Array(12).fill(0).map((e,k)=> k+1))
         const currentDayObjData = computed<returnDate>(()=>(days.value.find(e=>e.getDayAll === `${year.value}-${month.value}-${date.value}`) || {calendar:{}}) as any);
