@@ -93,7 +93,7 @@ const value4 = ref()
         </div>
         <div>
             选择年份范围{{value3}}
-            <WpDatePicker v-model="value3" type="yearrange" placeholder="选择年" clearable :maxYearRange="30"></WpDatePicker>
+            <WpDatePicker v-model="value3" type="yearrange" placeholder="选择年" clearable filterable></WpDatePicker>
         </div>
     </wp-space>
 </template>
@@ -101,7 +101,7 @@ const value4 = ref()
 import { ref } from 'vue'
 const value = ref()
 const value2 = ref()
-const value3 = ref()
+const value3 = ref(["2010","2000"])
 </script>
 ```
 :::

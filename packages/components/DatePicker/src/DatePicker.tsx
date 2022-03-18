@@ -284,8 +284,20 @@ export default defineComponent({
                 })
             }
         }
+        const rangeSortingInit = ()=>{
+            if(isDaterange.value && Object.prototype.toString.call(currentValue.value) === '[object Array]'){
+                nextTick(()=>{
+                    const times = currentValue.value.map(e=>dayjs(e).toDate().getTime())
+                    if(times[0] > times[1]){
+                        currentValue.value = currentValue.value.reverse();
+                        updateDaterangeCurrentValue(currentValue.value)
+                    }
+                })
+            }
+        }
         watch(computed(()=>props.modelValue),()=>{
             init()
+            rangeSortingInit();
         })
         watch(currentValue,()=>{
             nextTick(()=>{
@@ -388,6 +400,7 @@ export default defineComponent({
             nextTick(()=>{
                 watchTypeInit();
                 init();
+                rangeSortingInit();
             })
         })
         return {
