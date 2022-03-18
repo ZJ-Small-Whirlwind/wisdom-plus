@@ -17,6 +17,7 @@ export const datePickerProps = buildProps({
     type:{type:String as PropType<string>, default:null},
     placeholder:{type:String as PropType<string>, default:null},
     disabled:{type:Boolean as PropType<boolean>, default:false},
+    maxYearRange:{type:Number as PropType<number>, default:12},
 })
 export type DatePickerProps = ExtractPropTypes<typeof datePickerProps>
 export default defineComponent({
@@ -316,8 +317,12 @@ export default defineComponent({
                             if(['monthrange', 'yearrange'].includes(props.type) && InitData[0].year.value === InitData[1].year.value){
                                 refCalendarEnd.value.year += 1;
                             } else if(['yearrange'].includes(props.type)){
-                                refCalendarEnd.value.year -= 1;
-                                console.log(refCalendarEnd.value.year)
+                                const maxYearRange = props.maxYearRange*2;
+                                if(refCalendarEnd.value.year - refCalendar.value.year < maxYearRange){
+                                    refCalendarEnd.value.year = refCalendar.value.year+1
+                                }else {
+                                    refCalendarEnd.value.year = refCalendarEnd.value.year + 2 - maxYearRange;
+                                }
                             } else if(InitData[0].getYearMonth.value === InitData[1].getYearMonth.value){
                                 refCalendarEnd.value.month += 1;
                             }
@@ -424,6 +429,7 @@ export default defineComponent({
                 type={this.$props.type}
                 isActiveShow={bool}
                 disabledDate={this.disabledDate}
+                maxYearRange={this.$props.maxYearRange}
                 showAvailableStyle={this.isDaterange && (this.currentDaterangeValues || []).length >= 2}
             >
         </WpCalendar>);
