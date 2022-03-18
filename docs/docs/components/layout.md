@@ -316,6 +316,20 @@ import { ref } from 'vue'
 ```
 :::
 
+
+#### 背景占位布局
+
+适用于大数据场景快速分割布局
+
+:::demo
+```vue
+<template>
+    <wp-layout-big-data></wp-layout-big-data>
+</template>
+```
+:::
+
+
 ## Layout API
 
 ### Props
