@@ -157,6 +157,10 @@ export default defineConfig({
                         {
                             text: 'DatePicker 日期选择器',
                             link: '/components/date-picker'
+                        },
+                        {
+                            text: 'Rate 评分',
+                            link: '/components/rate'
                         }
                     ]
                 },

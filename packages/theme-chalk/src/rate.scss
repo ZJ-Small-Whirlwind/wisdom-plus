@@ -1,0 +1,37 @@
+:root {
+    --wp-rate-color: #cdd0d6;
+    --wp-rate-active-color: rgb(243, 181, 51);
+    --wp-rate-size: 18px;
+    --wp-rate-gap: 5px;
+    --wp-rate-text-size: 14px;
+}
+
+.wp-rate {
+    display: inline-flex;
+    align-items: center;
+    &-rate {
+        display: inline-flex;
+        &:not(:first-child) {
+            margin-left: var(--wp-rate-gap);
+        }
+        &-icon {
+            font-size: var(--wp-rate-size);
+            color: var(--wp-rate-color);
+            transition: .2s;
+        }
+        &--active {
+            .wp-rate-rate-icon {
+                color: var(--wp-rate-active-color);
+            }
+        }
+        &--hover {
+            .wp-rate-rate-icon {
+                transform: scale(1.2);
+            }
+        }
+    }
+    &-text {
+        margin-left: calc(var(--wp-rate-gap) * 1.5);
+        font-size: var(--wp-rate-text-size);
+    }
+}

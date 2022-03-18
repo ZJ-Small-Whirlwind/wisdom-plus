@@ -65,6 +65,7 @@ export * from './Switch'
 export * from './ConfigProvider'
 export * from './Tabs'
 export * from './Carousel'
+export * from './Rate'
 
 export * from './Pro/Upload'
 export * from './Pro/Editor'
