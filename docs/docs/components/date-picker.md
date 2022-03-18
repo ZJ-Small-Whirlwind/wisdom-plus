@@ -85,14 +85,14 @@ const value4 = ref()
     <wp-space>
         <div>
             选择日期范围
-            <WpDatePicker v-model="value" type="daterange" placeholder="选择年" format="YYYY-MM-DD HH:mm:ss" clearable filterable></WpDatePicker>
+            <WpDatePicker v-model="value" type="daterange" :placeholder="['请选择开始开始','-','请选择结束时间']" clearable filterable></WpDatePicker>
         </div>
         <div>
             选择月份范围
             <WpDatePicker v-model="value2" type="monthrange" placeholder="选择月" clearable></WpDatePicker>
         </div>
         <div>
-            选择年份范围{{value3}}
+            选择年份范围
             <WpDatePicker v-model="value3" type="yearrange" placeholder="选择年" clearable filterable></WpDatePicker>
         </div>
     </wp-space>
@@ -101,7 +101,7 @@ const value4 = ref()
 import { ref } from 'vue'
 const value = ref()
 const value2 = ref()
-const value3 = ref(["2010","2000"])
+const value3 = ref()
 </script>
 ```
 :::
@@ -120,7 +120,7 @@ const value3 = ref(["2010","2000"])
 | calendarProps | calendarProps | _object_           | -         |
 | selectProps | selectProps | _object_           | -         |
 | type | 显示类型 | _[string] (year、month、dates、 week、daterange、monthrange、yearrange)_           | -         |
-| placeholder | 选择提示语 | _string_           | -         |
+| placeholder | 选择提示语 | _string/string[]_           | -         |
 | disabled | 是否禁用 | _boolean_           | false         |
 | maxYearRange | 展示最大年份区间， 默认间隔12年，必须为正偶数存在 | _number_    | 12        |
 

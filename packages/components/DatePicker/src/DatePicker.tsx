@@ -15,13 +15,14 @@ export const datePickerProps = buildProps({
     calendarProps:{type:Object as PropType<object>, default:()=>({})},
     selectProps:{type:Object as PropType<object>, default:()=>({})},
     type:{type:String as PropType<string>, default:null},
-    placeholder:{type:String as PropType<string>, default:null},
+    placeholder:{type:[String, Array], default:null},
     disabled:{type:Boolean as PropType<boolean>, default:false},
     maxYearRange:{type:Number as PropType<number>, default:12},
 })
 export type DatePickerProps = ExtractPropTypes<typeof datePickerProps>
 export default defineComponent({
     name:"WpDatePicker",
+    inheritAttrs:false,
     props:datePickerProps,
     setup(props,{emit}){
         const currentFormat = computed(()=>{
@@ -87,6 +88,20 @@ export default defineComponent({
         provide("WpCalendarIsDaterange", isDaterange)
         provide("WpCalendarIsDaterangeCanSwitchYear", isDaterangeCanSwitchYear)
         provide("WpCalendarIsDaterangeCanSwitchMonth", isDaterangeCanSwitchMonth)
+        const currentPlaceholder:any = computed(()=>{
+            let placeholder = ["选择日期", "至"];
+            switch (Object.prototype.toString.call(props.placeholder)) {
+                case "[object Array]":
+                    props.placeholder.forEach((p,k)=>{
+                        if(p) placeholder[k] = p;
+                    })
+                    break;
+                case "[object String]":
+                    placeholder[0] = props.placeholder;
+                    break;
+            }
+            return placeholder;
+        });
         const updateDaterangeCurrentValue = (value)=>{
             const time = (value || [])
             const start = time[0] || null;
@@ -413,6 +428,7 @@ export default defineComponent({
             refSelect,
             refCalendarEnd,
             refSelectEnd,
+            currentPlaceholder,
             currentValue,
             currentValueStart,
             currentValueEnd,
@@ -456,7 +472,7 @@ export default defineComponent({
                           popoverClass:`wp-date-picker-panel-popover wp-date-picker-panel-popover-${this.$props.type}`
                       }}
                       {...this.$props.selectProps}
-                      placeholder={this.$props.placeholder}
+                      placeholder={bool ? this.currentPlaceholder[0] : (this.currentPlaceholder[2] || this.currentPlaceholder[0])}
                       multiple={this.isMultiple}
                       disabled={this.$props.disabled}
                       collapseTags={this.isMultiple}
@@ -496,7 +512,7 @@ export default defineComponent({
                         {WpSelectRender(true)}
                         <span class={{
                             'wp-date-picker-daterange-symbol':true,
-                        }}>至</span>
+                        }}>{this.currentPlaceholder[1]}</span>
                         {WpSelectRender(false)}
                     </div>
                 ) :
