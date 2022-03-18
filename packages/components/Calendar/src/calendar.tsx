@@ -281,6 +281,7 @@ export default defineComponent({
                     showYear.value = true;
                     break;
                 case "month":
+                case "monthrange":
                     showMonth.value = true;
                     break;
                 default:
@@ -298,7 +299,7 @@ export default defineComponent({
         }
         const monthClick = (newMonth)=>{
             month.value = newMonth;
-            if(props.type === 'month'){
+            if(['month','monthrange'].includes(props.type)){
                 clickDays(currentDayObjData.value)
             }else {
                 showMonth.value = false
@@ -448,15 +449,44 @@ export default defineComponent({
             </div>
         ))
 
-        const monthRender = ()=> this.monthList.map(month => (
-            <div class={{
-                "wp-calendar-content-month":true
-            }}>
+        const monthRender = ()=> this.monthList.map(month => {
+            let bool:any = false;
+            let isDisabled:boolean = false;
+            let day:any = month;
+            let activeMapsObj:any = {};
+            let time:any = null;
+            let rangeTime:any = null
+            if(this.WpCalendarIsDaterange && this.type === 'monthrange'){
+                day = new CalendarData().returnDate(this.year, this.month).find(e=>e.day === 1);
+                day.date = dayjs(day.getDayAll);
+                day.day = 1;
+                day.dateMonth = month;
+                day.getDayAll = `${day.dateYear}-${day.dateMonth}-${day.day}`;
+                time = dayjs(day.getDayAll).toDate().getTime()
+                bool = true;
+                isDisabled = this.$props.disabledDate(day);
+                activeMapsObj = (this.activeMaps[day.getDayAll] || {});
+                rangeTime = Object.keys(this.activeMaps).map(e=>dayjs(e).toDate().getTime()).sort((a,b)=>a-b)
+            }
+
+            return (
+                <div
+                    onMousemove={(ev)=>this.$emit('day-mousemove', day, ev)}
+                    onMouseleave={(ev)=>this.$emit('day-mouseleave', day, ev)}
+                    class={{
+                    "wp-calendar-content-day-not-disabled":!isDisabled,
+                    "wp-calendar-content-month":true,
+                    "wp-calendar-content-day-not-disabled-available":bool && time && rangeTime && time >= rangeTime[0] &&  time <= rangeTime[1],
+                    "wp-calendar-content-day-is-daterange-start":bool && activeMapsObj.isStart,
+                    "wp-calendar-content-day-is-daterange-end":bool && activeMapsObj.isEnd,
+                }}>
+                    {/*<span>{this.type === 'monthrange' ? day.getDayAll : null}</span>*/}
                 <span class={{
-                    active:this.month === month
-                }} onClick={()=>this.monthClick(month)}>{toChinesNum(month, true)}月</span>
-            </div>
-        ))
+                    active:this.type !== 'monthrange'  &&  (this.month === month)
+                }} onClick={()=>this.type === 'monthrange' ? this.clickDays(day) : this.monthClick(month)}>{toChinesNum(month, true)}月</span>
+                </div>
+            )
+        })
 
         /**
          * 年月

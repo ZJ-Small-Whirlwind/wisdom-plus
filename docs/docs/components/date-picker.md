@@ -88,7 +88,7 @@ const value4 = ref()
             <WpDatePicker v-model="value" type="daterange" placeholder="选择年" format="YYYY-MM-DD HH:mm:ss" clearable filterable></WpDatePicker>
         </div>
         <div>
-            选择月份范围
+            选择月份范围{{value2}}
             <WpDatePicker v-model="value2" type="monthrange" placeholder="选择月"></WpDatePicker>
         </div>
     </wp-space>
@@ -96,7 +96,7 @@ const value4 = ref()
 <script lang="ts" setup>
 import { ref } from 'vue'
 const value = ref( [ "2022-02-08 00:00:00", "2022-10-19 23:59:59" ])
-const value2 = ref()
+const value2 = ref([ "2022-03", "2023-07" ])
 </script>
 ```
 :::
@@ -114,7 +114,7 @@ const value2 = ref()
 | showPanel | 是否显示日期面板，即快捷选择面板 | _boolean_           | false         |
 | calendarProps | calendarProps | _object_           | -         |
 | selectProps | selectProps | _object_           | -         |
-| type | 显示类型 | _[string] (year、month、dates、 week、datetime、datetimerange、daterange、monthrange)_           | -         |
+| type | 显示类型 | _[string] (year、month、dates、 week、daterange、monthrange)_           | -         |
 | placeholder | 选择提示语 | _string_           | -         |
 | disabled | 是否禁用 | _boolean_           | false         |
 

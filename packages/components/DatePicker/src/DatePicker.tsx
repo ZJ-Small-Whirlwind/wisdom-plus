@@ -27,6 +27,7 @@ export default defineComponent({
             return props.format || {
                 year:"YYYY",
                 month:"YYYY-MM",
+                monthrange:"YYYY-MM",
             }[props.type] || "YYYY-MM-DD";
         })
         const getDate = (date)=>{
@@ -128,13 +129,13 @@ export default defineComponent({
             })
         }
         const onClickDay = ({year, month, date})=>{
-            if(!['dates','daterange'].includes(props.type)){
+            if(!['dates','daterange','monthrange'].includes(props.type)){
                 refSelect.value.show = false;
             }
-            if(['daterange'].includes(props.type)){
+            if(['daterange','monthrange'].includes(props.type)){
                 daterangeClickDay({year, month, date});
             }
-            if(['week','daterange'].includes(props.type)){
+            if(['week','daterange','monthrange'].includes(props.type)){
                 return;
             }
             const value = dayjs(new Date(year.value,month.value-1,date.value)).format(currentFormat.value)
@@ -410,7 +411,7 @@ export default defineComponent({
                 type={this.$props.type}
                 isActiveShow={bool}
                 disabledDate={this.disabledDate}
-                showAvailableStyle={(this.currentDaterangeValues || []).length >= 2 && this.isDaterange}
+                showAvailableStyle={this.isDaterange && (this.currentDaterangeValues || []).length >= 2}
             >
         </WpCalendar>);
         const WpSelectRender = (bool)=>(
