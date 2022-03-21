@@ -130,15 +130,15 @@ const showPopover = (e) => {
     <template #reference>
       <wp-button> 点我 </wp-button>
     </template>
-    <wp-popover :to="false">
+    <wp-popover>
       <template #reference>
         <wp-button> 点我 </wp-button>
       </template>
-      <wp-popover :to="false">
+      <wp-popover>
         <template #reference>
           <wp-button> 点我 </wp-button>
         </template>
-        <wp-popover :to="false">
+        <wp-popover>
           <template #reference>
             <wp-button> 点我 </wp-button>
           </template>

@@ -1,4 +1,4 @@
-import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref, computed, createTextVNode, CSSProperties, watch } from 'vue'
+import { defineComponent, h, Transition, PropType, cloneVNode, mergeProps, ref, computed, createTextVNode, CSSProperties, watch, provide, inject } from 'vue'
 import { VBinder, VTarget, VFollower } from 'vueuc'
 
 import { definePropType, buildProps } from '@wisdom-plus/utils/props'
@@ -177,6 +177,9 @@ export default defineComponent({
         })
         const leaving = ref(false)
         const zIndexRef = computed(() => props.zIndex || zIndex.value)
+
+        provide('wpPopover', popoverId)
+        const isChild = inject<string | false>('wpPopover', false)
         return () => (
             <VBinder>
                 <VTarget>
@@ -190,7 +193,7 @@ export default defineComponent({
                     to={props.to === false ? undefined : props.to}
                     width={props.width === 'trigger' || props.width === 'target' ? 'target' : undefined}
                     flip={props.flip}
-                    teleportDisabled={props.to === false}
+                    teleportDisabled={Boolean(props.to === false || isChild)}
                     x={props.x}
                     y={props.y}
                 >
