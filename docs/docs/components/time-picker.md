@@ -25,8 +25,8 @@ app.use(WpTimePanel)
     <wp-space vertical>
         {{ time }}
         <wp-space>
-            <wp-time-panel v-model="time" />
-            <wp-time-panel use-12-hours v-model="time" />
+            <wp-time-panel v-model="time" format="HH:mm:ss" />
+            <wp-time-panel use-12-hours v-model="time" format="HH:mm:ss" />
         </wp-space>
     </wp-space>
 </template>
@@ -34,7 +34,7 @@ app.use(WpTimePanel)
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-const time = ref(new Date())
+const time = ref('10:27:30')
 </script>
 ```
 :::

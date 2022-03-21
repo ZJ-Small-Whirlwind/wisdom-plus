@@ -11,13 +11,14 @@ export const timePanelProps = buildProps({
         default: false
     },
     modelValue: {
-        type: Object as PropType<Date>,
+        type: [Object, String] as PropType<Date | string>,
         default: undefined
     },
     layout: {
         type: Array as PropType<('hours' | 'minutes' | 'seconds')[]>,
         default: () => ['hours', 'minutes', 'seconds']
-    }
+    },
+    format: String
 })
 
 export type TimePanelProps = ExtractPropTypes<typeof timePanelProps>
@@ -34,6 +35,9 @@ const seconds = numbersGen(60)
 export default defineComponent({
     name: 'WpTimePanel',
     props: timePanelProps,
+    emits: {
+        'update:modelValue': (value: Date | string) => (void 0, true)
+    },
     setup(props, { emit }) {
         const { basic, is, of } = useNamespace('time-panel')
 
@@ -48,8 +52,12 @@ export default defineComponent({
             a: 0
         })
 
+        const getFormatDayjs = () => {
+            return props.format && typeof time.value === 'string' ? dayjs(`${dayjs().format('YYYY-MM-DD')} ${time.value}`, `YYYY-MM-DD ${props.format}`) : dayjs(time.value)
+        }
+
         const getValue = () => {
-            const date = dayjs(time.value)
+            const date = getFormatDayjs()
             const hour = date.hour()
             if (props.use12Hours) {
                 if (hour >= 12) {
@@ -57,6 +65,7 @@ export default defineComponent({
                     active.a = 1
                 } else {
                     active.hours = hour
+                    active.a = 0
                 }
                 active.minutes = date.minute()
                 active.seconds = date.second()
@@ -124,7 +133,7 @@ export default defineComponent({
                                 onClick={() => {
                                     if (element === 'blank') return
                                     active[name] = index
-                                    let dayjsMap = dayjs(time.value)
+                                    let dayjsMap = getFormatDayjs()
                                     if (name !== 'a') {
                                         dayjsMap = dayjsMap.set(name, index)
                                     } else {
@@ -134,7 +143,11 @@ export default defineComponent({
                                             dayjsMap = dayjsMap.set('hours', active.hours)
                                         }
                                     }
-                                    time.value = dayjsMap.toDate()
+                                    if (props.format) {
+                                        time.value = dayjsMap.format(props.format)
+                                    } else {
+                                        time.value = dayjsMap.toDate()
+                                    }
                                 }}>
                                     { element === 'blank' ? '' : element }
                                 </div>
