@@ -322,10 +322,42 @@ import { ref } from 'vue'
 适用于大数据场景快速分割布局
 
 :::demo
+
 ```vue
+
 <template>
-    <wp-layout-big-data></wp-layout-big-data>
+    <div>插槽布局</div>
+    <div style="width:300px; height: 300px; position: relative;border: 1px solid #571cff">
+        <wp-layout-big-data :width="300" :height="300" isDev src="https://t7.baidu.com/it/u=4162611394,4275913936&fm=193&f=GIF">
+            <template #default="getStyle">
+                <div :style="getStyle({
+                left:0,
+                top:0,
+                height:100,
+                width:100,
+            })"></div>
+                <div :style="getStyle({
+                left:200,
+                top:200,
+                height:100,
+                width:100,
+            })"></div>
+            </template>
+        </wp-layout-big-data>
+    </div>
+    <div style="margin-top: 15px">配置布局，配置模式下插槽内容将失效</div>
+    <div style="width:300px; height: 300px; position: relative;border: 1px solid #571cff">
+        <wp-layout-big-data :width="300" :height="300" isDev :layout="layout"></wp-layout-big-data>
+    </div>
 </template>
+<script setup>
+import {ref, h} from 'vue'
+
+const layout = ref([
+    {left:0, top:0, width:100, height:300, content:h("div","我是内容")},
+    {left:200, top:200, width:100, height:100, content:[h("div","我是内容"),h("div","我是内容")]},
+])
+</script>
 ```
 :::
 
@@ -351,3 +383,37 @@ import { ref } from 'vue'
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | padding | 内边距 | _string_ | - |
+
+
+## LayoutBigData 
+
+### Props
+
+非指定情况下 width、height 默认使用当前布局相对所属父级，只有开启fixed模式，才会相对window
+
+| 参数      | 说明   | 类型             | 默认值   |
+| --------- |------|----------------|-------|
+| src      | 背景图地址 | _string_       | -     |
+| width      | 宽度   | _number_       | -     |
+| height      | 高度   | _number_       | -     |
+| fixed      | 是否全局定位模式 | _boolean_      | false |
+| isDev      | 是否开发模式，手动指定 | _boolean_      | false     |
+| layout      | 布局配置 | _layoutItem[]_ | -     |
+
+#### layoutItem
+
+| 参数      | 说明         | 类型       | 默认值 |
+|---------|------------|----------|-----|
+| left    | offsetLeft | _number_ | 0   |
+| top     | offsetTop  | _number_ | 0   |
+| width   | 宽度         | _number_ | 0   |
+| height  | 高度         | _number_ | 0   |
+| content | 对应区域显示的内容  | _any_    | -   |
+
+
+
+### Slots
+
+| 参数  | 说明                             | 类型                   | 默认值   |
+|-----|--------------------------------|----------------------|-------|
+| -   | 默认插槽, getStyle参数建议指定，不指定即默认为 0 | _(getStyle:{left, top, width, height})=>any_ | -     |

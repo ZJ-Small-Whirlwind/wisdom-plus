@@ -12,3 +12,41 @@
         overflow: auto;
     }
 }
+.wp-layout-big-data {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    &-bj{
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+    }
+    &-content{
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 2;
+        display: flex;
+        &>*{
+            cursor: pointer;
+            position: absolute;
+        }
+    }
+
+    &-is-dev{
+        &>*{
+            border:1px dashed #c23030;
+        }
+    }
+    &-fixed{
+        position: fixed;
+        z-index: 100000000;
+    }
+}
