@@ -141,6 +141,7 @@ const value = ref('2022-03-29 11:39:50 am')
 | placeholder | 选择提示语 | _string/string[]_           | -         |
 | disabled | 是否禁用 | _boolean_           | false         |
 | maxYearRange | 展示最大年份区间， 默认间隔12年，必须为正偶数存在 | _number_    | 12        |
+| timePickerProps | timePickerProps | _object_    | -        |
 
 ### Methods
 
