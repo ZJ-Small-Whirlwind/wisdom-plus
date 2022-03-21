@@ -142,7 +142,11 @@ export default defineComponent({
                                     if (element === 'blank') return
                                     let dayjsMap = getFormatDayjs()
                                     if (name !== 'a') {
-                                        dayjsMap = dayjsMap.set(name, index)
+                                        if (name === 'hours' && props.use12Hours) {
+                                            dayjsMap = dayjsMap.set(name, active.a ? index + 12 : index)
+                                        } else {
+                                            dayjsMap = dayjsMap.set(name, index)
+                                        }
                                     } else {
                                         if (index === 1) {
                                             dayjsMap = dayjsMap.set('hours', active.hours + 12)
