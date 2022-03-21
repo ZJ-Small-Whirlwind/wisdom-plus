@@ -2,8 +2,8 @@
     --wp-x-scroll-arrow-width: 30px;
     --wp-x-scroll-arrow-color: #333;
     --wp-x-scroll-arrow-color-hover: var(--wp-color-primary);
-    --wp-x-scroll-arrow-left-bg: linear-gradient(to right, #fff, transparent);
-    --wp-x-scroll-arrow-right-bg: linear-gradient(to left, #fff, transparent);
+    --wp-x-scroll-arrow-left-bg: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    --wp-x-scroll-arrow-right-bg: linear-gradient(to left, #fff, rgba(255, 255, 255, 0));
     --wp-x-scroll-duration: .2s;
 }
 .wp-x-scroll {
