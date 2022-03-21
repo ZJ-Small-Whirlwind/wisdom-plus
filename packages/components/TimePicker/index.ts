@@ -4,7 +4,7 @@ import TimePicker from './src/timePicker'
 
 export const WpTimePanel = withInstall(TimePanel)
 export const WpTimePicker = withInstall(TimePicker)
-export default WpTimePanel
+export default WpTimePicker
 
 export * from './src/timePanel'
 export * from './src/timePicker'

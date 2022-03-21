@@ -5,6 +5,7 @@ import WpSelect from "../../Select";
 import WpCalendar, {calendarProps} from "../../Calendar";
 import WpButton from "../../Button";
 import WpIcon from "../../Icon";
+import WpTimePicker from "../../TimePicker";
 import {DateRangeOutlined} from "@vicons/material";
 export const datePickerProps = buildProps({
     modelValue:{type:[String, Array, Date, Number],default:null},
@@ -25,12 +26,14 @@ export default defineComponent({
     inheritAttrs:false,
     props:datePickerProps,
     setup(props,{emit}){
+        const timeFormat = ref('hh:mm:ss a')
         const currentFormat = computed(()=>{
             return props.format || {
                 year:"YYYY",
                 month:"YYYY-MM",
                 monthrange:"YYYY-MM",
                 yearrange:"YYYY",
+                dateTime:"YYYY-MM-DD "+timeFormat.value,
             }[props.type] || "YYYY-MM-DD";
         })
         const getDate = (date)=>{
@@ -46,6 +49,8 @@ export default defineComponent({
                 getYearMonth:ref(d.format("YYYY-MM"))
             }
         }
+        const timeError = ref(false)
+        const timeModel:any = ref(dayjs().format(timeFormat.value.replace(/a/img,'')));
         const options:any = ref([]);
         const optionsStart:any = ref(null);
         const optionsEnd:any = ref(null);
@@ -54,12 +59,15 @@ export default defineComponent({
         const currentValueEnd:any = ref(null);
         const daterangeValueCache:any = ref([]);
         const daterangeDayHoverValueCache:any = ref([]);
+        const refTimePicker:any = ref(null)
         const refCalendar:any = ref(null)
         const refSelect:any = ref(null)
+        const refTimePickerEnd:any = ref(null)
         const refCalendarEnd:any = ref(null)
         const refSelectEnd:any = ref(null)
         const isMultiple = computed(()=> props.type === 'dates');
         const isDaterange = computed(()=>["daterange","monthrange", 'yearrange'].includes(props.type))
+        const isDateTime = computed(()=>["datetime"].includes(props.type))
         const currentValueCopy = ref(null);
         const isDaterangeCanSwitchYear = ref(false);
         const isDaterangeCanSwitchMonth = ref(false);
@@ -146,7 +154,8 @@ export default defineComponent({
             })
         }
         const onClickDay = ({year, month, date})=>{
-            if(!['dates','daterange','monthrange','yearrange'].includes(props.type)){
+            timeError.value = false;
+            if(!['dates','daterange','monthrange','yearrange', 'datetime'].includes(props.type)){
                 refSelect.value.show = false;
             }
             if(['daterange','monthrange','yearrange'].includes(props.type)){
@@ -155,8 +164,30 @@ export default defineComponent({
             if(['week','daterange','monthrange','yearrange'].includes(props.type)){
                 return;
             }
-            const value = dayjs(new Date(year.value,month.value-1,date.value)).format(currentFormat.value)
+            let value = dayjs(new Date(year.value,month.value-1,date.value)).format(currentFormat.value)
+            if(isDateTime.value){
+                if(refTimePicker.value){
+                    value = value+' ' + timeModel.value;
+                    if(!dayjs(value,currentFormat.value).isValid()){
+                        timeError.value = true;
+                        return;
+                    }
+                }else {
+                    const time = dayjs(props.modelValue).format(timeFormat.value)
+                    if(time === 'Invalid Date'){
+                        timeModel.value = null;
+                        options.value = [];
+                        nextTick(()=>{
+                            currentValue.value = null;
+                        })
+                    }else {
+                        value = value+' ' + time;
+                        timeModel.value = time;
+                    }
+                }
+            }
             if(value === 'Invalid Date'){
+                timeModel.value = null;
                 options.value = [];
                 nextTick(()=>{
                     currentValue.value = null;
@@ -276,6 +307,7 @@ export default defineComponent({
         }
         const onClear = (isEmit)=>{
             if(isDaterange.value){
+                timeModel.value = null;
                 currentValue.value = null;
                 currentValueStart.value = null;
                 currentValueEnd.value = null;
@@ -424,8 +456,10 @@ export default defineComponent({
             onWeekClick,
             onDayMousemove,
             onDayMouseleave,
+            refTimePicker,
             refCalendar,
             refSelect,
+            refTimePickerEnd,
             refCalendarEnd,
             refSelectEnd,
             currentPlaceholder,
@@ -442,6 +476,10 @@ export default defineComponent({
             currentDaterangeValues,
             onClear,
             onCalendarChange,
+            timeModel,
+            isDateTime,
+            timeFormat,
+            timeError,
         }
     },
     render(){
@@ -460,6 +498,26 @@ export default defineComponent({
                 disabledDate={this.disabledDate}
                 maxYearRange={this.$props.maxYearRange}
                 showAvailableStyle={this.isDaterange && (this.currentDaterangeValues || []).length >= 2}
+                v-slots={{
+                    title:this.isDateTime ? ()=>([
+                        <WpTimePicker
+                            class={{
+                                timeError:this.timeError
+                            }}
+                            ref={bool ? 'refTimePicker' : 'refTimePickerEnd'}
+                            v-model={this.timeModel}
+                            format={this.timeFormat}
+                            showFormat={this.timeFormat}
+                            clearable
+                            use-12-hours
+
+                        >
+                        </WpTimePicker>,
+                        this.timeError ? <div class={{
+                            timeErrorText:true
+                        }}>请选择正确时间格式</div>:null
+                    ]) : null
+                }}
             >
         </WpCalendar>);
         const WpSelectRender = (bool)=>(

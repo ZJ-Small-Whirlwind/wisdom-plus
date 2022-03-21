@@ -101,3 +101,9 @@ const getIsEvent = e=>{
 |  week-click   | 周点击回调 | _(week)=>void_ |
 |  day-mousemove   | 鼠标经过具体日期 | _(day:any, ev:any)=>void_ |
 |  day-mouseleave   | 鼠标离开具体日期 | _(day:any, ev:any)=>void_ |
+
+### Slots
+
+|  参数   | 说明 | 参数         |
+|-----|--|------------|
+|  title   | 标题插槽 | _()=>void_ |

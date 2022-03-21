@@ -550,6 +550,7 @@ export default defineComponent({
                 "wp-calendar-lunar": this.$props.lunar,
                 "wp-calendar-content-day-available":this.$props.showAvailableStyle,
             }}>
+                {this.$slots.title?.()}
                 <div class={'wp-calendar-header'}>
                     <Icon class={{'wp-calendar-header-icon':true, 'wp-calendar-header-icon-disabled':!this.leftYearBtnShow}} name={'arrow-left'} onClick={()=>this.prevYear(this.leftYearBtnShow)}><DoubleLeftOutlined></DoubleLeftOutlined></Icon>
                     {this.isYearOrMonthrange ? <Icon class={{'wp-calendar-header-icon':true, 'wp-calendar-header-icon-disabled':!this.leftMonthBtnShow}} name={'arrow-left'} onClick={()=>this.prevMonth(this.leftMonthBtnShow)}><LeftOutlined></LeftOutlined></Icon>: null}
