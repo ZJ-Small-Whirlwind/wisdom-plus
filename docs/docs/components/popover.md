@@ -98,7 +98,7 @@ const show = ref(false)
     <wp-popover v-model="show" trigger="none" :x="x" :y="y" use-v-show>
       你好
     </wp-popover>
-    <div @click="showPopover" style="height: 200px; width: 200px; background: #eee;" />
+    <div @click="showPopover" style="height: 200px; width: 200px; background: #eee;" data-wp-popover-wrapper />
   </wp-space>
 </template>
 
@@ -109,10 +109,10 @@ const show = ref(false)
 const x = ref(0)
 const y = ref(0)
 const showPopover = (e) => {
+  x.value = e.x
+  y.value = e.y
   if (!show.value) {
     show.value = true
-    x.value = e.x
-    y.value = e.y
   }
 }
 </script>

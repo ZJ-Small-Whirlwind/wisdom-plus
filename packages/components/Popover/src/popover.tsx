@@ -112,6 +112,7 @@ export default defineComponent({
             if (!props.closeOnClickOutside) return
             const path = (event as PointerEvent & { path: HTMLElement[] })?.path || (event as PointerEvent & { composedPath: () => HTMLElement[] })?.composedPath() || []
             for (const el of path) {
+                if (el.dataset && 'wpPopoverWrapper' in el.dataset) return
                 const wpPopover = el.getAttribute?.('_wp_popover_')
                 if (wpPopover === popoverId) return
             }
