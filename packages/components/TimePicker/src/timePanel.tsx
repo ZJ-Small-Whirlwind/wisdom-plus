@@ -11,7 +11,7 @@ export const timePanelProps = buildProps({
         default: false
     },
     modelValue: {
-        type: [Object, String] as PropType<Date | string>,
+        type: [Object, String, Number] as PropType<Date | string | number | dayjs.Dayjs>,
         default: undefined
     },
     layout: {
@@ -132,7 +132,6 @@ export default defineComponent({
                                 key={element}
                                 onClick={() => {
                                     if (element === 'blank') return
-                                    active[name] = index
                                     let dayjsMap = getFormatDayjs()
                                     if (name !== 'a') {
                                         dayjsMap = dayjsMap.set(name, index)
@@ -175,9 +174,11 @@ export default defineComponent({
             hoursRef,
             minutesRef,
             secondsRef,
-            aRef
+            aRef,
+            getDayjs: getFormatDayjs
         }
     },
+    expose: ['getDayjs'],
     render() {
         return (
             <div class={[this.basic]}>
