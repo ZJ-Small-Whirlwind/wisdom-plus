@@ -26,7 +26,7 @@ export default defineComponent({
     inheritAttrs:false,
     props:datePickerProps,
     setup(props,{emit}){
-        const timeFormat = ref('hh:mm:ss a')
+        const timeFormat = ref('hh:mm:ss')
         const currentFormat = computed(()=>{
             return props.format || {
                 year:"YYYY",
