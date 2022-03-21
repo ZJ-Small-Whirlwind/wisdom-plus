@@ -57,6 +57,7 @@
     .wp-space-item:last-child {
         display: flex;
         align-items: center;
+        line-height: var(--wp-taginput-line-height);
     }
     .wp-taginput__content-input {
         display: block;

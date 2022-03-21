@@ -1,4 +1,4 @@
-import { computed, defineComponent, ExtractPropTypes, PropType, ref, watch } from "vue"
+import { computed, defineComponent, ExtractPropTypes, PropType, ref, watch, Component, h } from "vue"
 
 import { CloseOutlined, DownOutlined } from '@vicons/antd'
 import Icon from '../../Icon'
@@ -9,7 +9,11 @@ export const basicSelectProps = {
     ...tagInputProps,
     input: String,
     popoverProps: Object as PropType<Partial<PopoverProps> & Record<any, any>>,
-    showPopoverWhenDisabled: Boolean
+    showPopoverWhenDisabled: Boolean,
+    arrowIcon: {
+        type: Object as PropType<Component>,
+        default: () => DownOutlined
+    }
 }
 
 export type BasicSelectProps = ExtractPropTypes<typeof basicSelectProps>
@@ -21,6 +25,8 @@ export const basicSelectEmits = {
     ...tagInputEmits
 }
 
+const focusNow = ref<symbol>()
+
 export default defineComponent({
     name: 'WpBasicSelect',
     props: basicSelectProps,
@@ -29,6 +35,7 @@ export default defineComponent({
     setup(props, { emit }) {
         /** if popover show */
         const show = ref(false)
+        const id = Symbol()
 
         /** extends props and remove some no need */
         const propsMap = computed(() => {
@@ -77,18 +84,27 @@ export default defineComponent({
                     <div class="wp-taginput__clear-icon" onClick={clear}>
                         <Icon
                             style={{
-                                transform: show.value && !showCloseIcon ? 'rotate(180deg)' : '',
+                                transform: show.value && !showCloseIcon && DownOutlined === props.arrowIcon ? 'rotate(180deg)' : '',
                                 transition: '.2s'
                             }}
                         >
-                            { showCloseIcon ? <CloseOutlined /> : <DownOutlined /> }
+                            { showCloseIcon && !props.disabled ? <CloseOutlined /> : h(props.arrowIcon) }
                         </Icon>
                     </div>
                 </div>
             )
         })
 
+        watch(focusNow, () => {
+            if (focusNow.value !== id) {
+                show.value = false
+            }
+        })
+
         watch(show, () => {
+            if (show.value) {
+                focusNow.value = id
+            }
             emit('show')
         })
 
@@ -119,6 +135,11 @@ export default defineComponent({
                             {...this.$attrs}
                             onClick={this.showPopover}
                             onFocus={this.showPopover}
+                            onBlur={e => {
+                                this.$emit('blur', e)
+                                if (!this.tagInputRef) return
+                                this.tagInputRef.toInput(this.input)
+                            }}
                             onInput={e => this.$emit('update:input', e)}
                             onClose={index => this.$emit('close', index)}
                             onMouseenter={() => this.hover = true}

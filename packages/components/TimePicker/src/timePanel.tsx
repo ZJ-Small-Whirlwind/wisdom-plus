@@ -36,7 +36,7 @@ export default defineComponent({
     name: 'WpTimePanel',
     props: timePanelProps,
     emits: {
-        'update:modelValue': (value: Date | string) => (void 0, true)
+        'update:modelValue': (value: Date | string) => (void value, true)
     },
     setup(props, { emit }) {
         const { basic, is, of } = useNamespace('time-panel')
@@ -46,10 +46,10 @@ export default defineComponent({
         const time = useAutoControl(timeRef, props, 'modelValue', emit)
 
         const active = reactive({
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-            a: 0
+            hours: -1,
+            minutes: -1,
+            seconds: -1,
+            a: -1
         })
 
         const getFormatDayjs = () => {
@@ -78,7 +78,15 @@ export default defineComponent({
 
         getValue()
         watch(time, () => {
-            getValue()
+            if (time.value === 'Invalid Date') {
+                time.value = props.format ?
+                    dayjs().set('hours', 0).set('minutes', 0).set('seconds', 0).format(props.format) :
+                    dayjs().set('hours', 0).set('minutes', 0).set('seconds', 0).toDate()
+            } else {
+                getValue()
+            }
+        }, {
+            immediate: true
         })
 
         // auto scroll
