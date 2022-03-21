@@ -361,15 +361,49 @@ const layout = ref([
 ```
 :::
 
-#### 快速分栏、分割布局
+#### 快速分栏、分割布局，可以无限嵌套
 
-适用于分屏等功能
+适用于分屏等功能, 分隔线可拖拽
 
 :::demo
 
 ```vue
 <template>
-    <WpLayoutSplit></WpLayoutSplit>
+    <div style="height: 300px; position: relative;border: 1px solid #571cff">
+        <WpLayoutSplit>
+            <template #left>
+                <div v-for="i in 30" :key="i">left{{i}}</div>
+            </template>
+            <template #right>
+                <WpLayoutSplit horizontally>
+                    <template #left>
+                        <div v-for="i in 30" :key="i">right-top-{{i}}</div>
+                    </template>
+                    <template #right>
+                        <div v-for="i in 30" :key="i">right-bottom-{{i}}</div>
+                    </template>
+                </WpLayoutSplit>
+            </template>
+        </WpLayoutSplit>
+    </div>
+    <div>可拖拽、可滚动、边缘检测、调整拖拽线width、边缘检测</div>
+    <div style="height: 300px; position: relative;border: 1px solid #571cff">
+        <WpLayoutSplit :index="50" :lineWidth="10" autoScroll dragLine :span="[0.4]" lineMsg="可拖拽">
+            <template #left>
+                <div v-for="i in 30" :key="i">left{{i}}</div>
+            </template>
+            <template #right>
+                <WpLayoutSplit horizontally  :index="50" :lineWidth="10" autoScroll dragLine lineMsg="可拖拽">
+                    <template #left>
+                        <div v-for="i in 30" :key="i">right-top-{{i}}</div>
+                    </template>
+                    <template #right>
+                        <div v-for="i in 30" :key="i">right-bottom-{{i}}</div>
+                    </template>
+                </WpLayoutSplit>
+            </template>
+        </WpLayoutSplit>
+    </div>
 </template>
 ```
 :::
@@ -430,3 +464,25 @@ const layout = ref([
 | 参数  | 说明                             | 类型                   | 默认值   |
 |-----|--------------------------------|----------------------|-------|
 | -   | 默认插槽, getStyle参数建议指定，不指定即默认为 0 | _(getStyle:{left, top, width, height})=>any_ | -     |
+
+
+## LayoutSplit
+
+### Props
+
+| 参数      | 说明         | 类型        | 默认值 |
+| --------- |------------|-----------|--|
+| index    | 边界检测阈值     | _number_  | - |
+| lineWidth    | 拖拽线宽       | _number_  | - |
+| horizontally    | 是否水平布局     | _boolean_ | - |
+| autoScroll    | 是否自动滚动条    | _boolean_ | - |
+| dragLine    | 是否显示拖拽线    | _boolean_ | - |
+| span    | 删格化, 范围0-1 | _number[]_  | [0.5,0.5] |
+| lineMsg    | 拖拽线描述 | _string_  | - |
+
+### Slots
+
+| 参数 | 说明                             | 类型                   | 默认值   |
+|--|--------------------------------|----------------------|-------|
+| left | 左侧或上侧插槽 | _()=>any_ | -     |
+| right | 右侧或下侧插槽 | _()=>any_ | -     |

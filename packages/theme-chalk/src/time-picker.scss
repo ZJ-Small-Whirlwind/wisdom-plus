@@ -1,0 +1,16 @@
+.wp-time-picker {
+    &--popover {
+        .wp-popover-content {
+            padding: 0;
+        }
+    }
+    &--footer {
+        border-top: 1px solid #eee;
+        padding: 8px 10px;
+        font-size: 12px;
+        a {
+            color: var(--wp-color-primary);
+            cursor: pointer;
+        }
+    }
+}

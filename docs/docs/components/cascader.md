@@ -171,7 +171,6 @@ const menu = ref([
 | disabled | 是否禁用 | _boolean_ | false |
 | showPopoverWhenDisabled | 禁用时是否显示 Popover | _boolean_ | true |
 | clearable | 是否可清空 | _boolean_ | false |
-| size | 尺寸 | _'small' \| 'default' \| 'medium' \| 'large'_ | 'default' |
 | max | 最多显示的 tag 数量 | _number_ | - |
 | tagProps   | 标签的 Props | _Partial\<TagProps\> & Record\<string, any\>_ | {}      |
 | size | 尺寸 | _'small' \| 'default' \| 'medium' \| 'large'_ | 'default' |

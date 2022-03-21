@@ -163,7 +163,7 @@ export default defineComponent({
 
         const toInput = (value: string) => {
             if (inputRef.value) {
-                inputRef.value.innerText = value || ''
+                if (!focused.value) inputRef.value.innerText = value || ''
                 inputingTag.value = value || ''
             }
         }
