@@ -67,8 +67,8 @@ export default defineComponent({
         const refCalendarEnd:any = ref(null)
         const refSelectEnd:any = ref(null)
         const isMultiple = computed(()=> props.type === 'dates');
-        const isDaterange = computed(()=>["daterange","monthrange", 'yearrange'].includes(props.type))
-        const isDateTime = computed(()=>["datetime"].includes(props.type))
+        const isDaterange = computed(()=>["daterange","monthrange", 'yearrange', 'datetimerange'].includes(props.type))
+        const isDateTime = computed(()=>["datetime", 'datetimerange'].includes(props.type))
         const currentValueCopy = ref(null);
         const isDaterangeCanSwitchYear = ref(false);
         const isDaterangeCanSwitchMonth = ref(false);

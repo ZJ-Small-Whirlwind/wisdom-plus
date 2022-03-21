@@ -124,6 +124,22 @@ const value = ref('2022-03-29 11:39:50 am')
 ```
 :::
 
+#### 日期和时间范围
+
+:::demo
+```vue
+<template>
+    <wp-space>
+        <WpDatePicker v-model="value" type="datetime" clearable filterable></WpDatePicker>
+    </wp-space>
+</template>
+<script lang="ts" setup>
+import { ref } from 'vue'
+const value = ref()
+</script>
+```
+:::
+
 ## API
 
 ### Props
@@ -137,7 +153,7 @@ const value = ref('2022-03-29 11:39:50 am')
 | showPanel | 是否显示日期面板，即快捷选择面板 | _boolean_           | false         |
 | calendarProps | calendarProps | _object_           | -         |
 | selectProps | selectProps | _object_           | -         |
-| type | 显示类型 | _[string] (year、month、dates、 week、daterange、monthrange、yearrange、datetime)_           | -         |
+| type | 显示类型 | _[string] (year、month、dates、 week、datetime、daterange、monthrange、yearrang、datetimerange)_           | -         |
 | placeholder | 选择提示语 | _string/string[]_           | -         |
 | disabled | 是否禁用 | _boolean_           | false         |
 | maxYearRange | 展示最大年份区间， 默认间隔12年，必须为正偶数存在 | _number_    | 12        |
