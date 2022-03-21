@@ -361,6 +361,19 @@ const layout = ref([
 ```
 :::
 
+#### 快速分栏、分割布局
+
+适用于分屏等功能
+
+:::demo
+
+```vue
+<template>
+    <WpLayoutSplit></WpLayoutSplit>
+</template>
+```
+:::
+
 
 ## Layout API
 
