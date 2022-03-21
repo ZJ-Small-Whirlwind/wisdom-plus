@@ -159,6 +159,10 @@ export default defineConfig({
                             link: '/components/date-picker'
                         },
                         {
+                            text: 'TimePicker 时间选择器',
+                            link: '/components/time-picker'
+                        },
+                        {
                             text: 'Rate 评分',
                             link: '/components/rate'
                         }

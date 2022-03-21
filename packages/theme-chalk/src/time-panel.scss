@@ -1,0 +1,32 @@
+.wp-time-panel {
+    display: flex;
+    font-size: 14px;
+    &--cells {
+        height: 210px;
+        overflow: auto;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+    }
+    &--cell {
+        height: 30px;
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        position: relative;
+        &:not(.wp-time-panel--cell-blank) {
+            &:hover {
+                background: rgb(244, 244, 244);
+            }
+        }
+        &-active {
+            background: rgb(227, 245, 255) !important;
+        }
+        &-blank {
+            cursor: default;
+        }
+    }
+}
