@@ -74,6 +74,7 @@ const time = ref('10:27:30')
 | clearable | 是否可清空 | _boolean_ | false |
 | size | 尺寸 | _'small' \| 'default' \| 'medium' \| 'large'_ | 'default' |
 | placeholder | 占位文本 | _string_ | '请选择时间' |
+| validateEvent | 是否需要表单验证行为 | _boolean_ | true |
 
 ### Expose
 

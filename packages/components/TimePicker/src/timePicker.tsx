@@ -21,6 +21,10 @@ const timePickerPropsMap = buildProps({
     placeholder: {
         type: String,
         default: '请输入时间'
+    },
+    validateEvent: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -69,7 +73,7 @@ export default defineComponent({
         })
 
         watch(time, () => {
-            formItem.formItem?.validate('change')
+            if (props.validateEvent) formItem.formItem?.validate('change')
         })
 
         return {
