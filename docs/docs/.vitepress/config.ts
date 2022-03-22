@@ -172,6 +172,10 @@ export default defineConfig({
                     text: '展示组件',
                     children: [
                         {
+                            text: 'Watermark 水印',
+                            link: '/components/watermark'
+                        },
+                        {
                             text: 'ActionSheet 动作菜单',
                             link: '/components/action-sheet'
                         },

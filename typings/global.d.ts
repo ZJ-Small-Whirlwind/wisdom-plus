@@ -68,6 +68,10 @@ declare module 'vue' {
     WpTabs: typeof import('wisdom-plus')['WpTabs']
     WpTab: typeof import('wisdom-plus')['WpTab']
     WpCarousel: typeof import('wisdom-plus')['WpCarousel']
+    WpTimePanel: typeof import('wisdom-plus')['WpTimePanel']
+    WpTimePicker: typeof import('wisdom-plus')['WpTimePicker']
+    WpDatePicker: typeof import('wisdom-plus')['WpDatePicker']
+    WpWatermark: typeof import('wisdom-plus')['WpWatermark']
   }
 }
 

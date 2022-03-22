@@ -66,6 +66,10 @@ declare global {
     const WpTabs: typeof import('wisdom-plus')['WpTabs']
     const WpTab: typeof import('wisdom-plus')['WpTab']
     const WpCarousel: typeof import('wisdom-plus')['WpCarousel']
+    const WpTimePanel: typeof import('wisdom-plus')['WpTimePanel']
+    const WpTimePicker: typeof import('wisdom-plus')['WpTimePicker']
+    const WpDatePicker: typeof import('wisdom-plus')['WpDatePicker']
+    const WpWatermark: typeof import('wisdom-plus')['WpWatermark']
 }
 
 export {}
