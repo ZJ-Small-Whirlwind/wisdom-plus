@@ -1,4 +1,4 @@
-import {defineComponent, computed, ref, watch, PropType, ExtractPropTypes, onMounted, nextTick, inject} from 'vue'
+import {defineComponent, computed, ref, watch, PropType, ExtractPropTypes, onMounted, nextTick, inject, isRef} from 'vue'
 import CalendarData,{returnDate} from 'lunar-calendar-panel'
 import dayjs from 'dayjs'
 import {buildProps} from "@wisdom-plus/utils/props";
@@ -132,18 +132,22 @@ export default defineComponent({
         const year = ref(today.value.year)
         const month = ref(today.value.month)
         const date = ref(today.value.date)
+        const year_copy = ref(year.value)
+        const month_copy = ref(month.value)
+        const date_copy = ref(date.value)
         const showYear = ref(false)
         const showMonth = ref(false)
         const cd = new CalendarData();
         const oneDayTimeIndex = 86400000;
-
-        const days = computed(()=>{
-            const d = cd.returnDate(year.value, month.value);
+        const getDays = (year, month)=>{
+            const d = cd.returnDate(year, month);
             return d.map(e=>{
                 e.date = dayjs(e.getDayAll);
                 return e;
             });
-        })
+        }
+        const days = computed(()=>getDays(year.value, month.value))
+        const currentDayObjData = computed<returnDate>(()=>(days.value.find(e=>e.getDayAll === `${year.value}-${month.value}-${date.value}`) || {calendar:{}}) as any);
 
         const daysLayout = computed(()=>{
             const index = 7;
@@ -169,7 +173,6 @@ export default defineComponent({
             return list.map((e,k)=>year.value - maxYearRange/2 + k);
         })
         const monthList = ref(new Array(12).fill(0).map((e,k)=> k+1))
-        const currentDayObjData = computed<returnDate>(()=>(days.value.find(e=>e.getDayAll === `${year.value}-${month.value}-${date.value}`) || {calendar:{}}) as any);
         /**
          * 监听日期变化
          */
@@ -195,18 +198,29 @@ export default defineComponent({
                     date.value = nbData.date();
                     break;
             }
+            setValue({year, month, date})
             if(!props.disabledDate(currentDayObjData.value)) {
                 emit('go-day', {year, month, date})
             }
+        }
+        const setValue = (newdate)=>{
+            year.value = isRef(newdate.year) ? newdate.year.value : newdate.year
+            month.value = isRef(newdate.month) ? newdate.month.value : newdate.month
+            date.value = isRef(newdate.date) ? newdate.date.value : newdate.date
+            year_copy.value = year.value
+            month_copy.value = month.value
+            date_copy.value = date.value
         }
         /**
          * 日期点击
          */
         const clickDays = (e:any) => {
             if(!props.disabledDate(e) || props.showAvailableStyle){
-                year.value = e.dateYear
-                month.value = e.dateMonth
-                date.value = e.day
+                setValue({
+                    year:e.dateYear,
+                    month:e.dateMonth,
+                    date:e.day,
+                })
                 emit('click-day',{
                     year,
                     month,
@@ -333,6 +347,7 @@ export default defineComponent({
         })
 
         return {
+            setValue,
             monthClick,
             yearClick,
             eventClick,
@@ -347,6 +362,9 @@ export default defineComponent({
             year,
             month,
             date,
+            year_copy,
+            month_copy,
+            date_copy,
             showYear,
             showMonth,
             monthList,
@@ -401,7 +419,7 @@ export default defineComponent({
                      onClick={() => this.$props.lunar ? this.clickDays(e) : null}
                      class={{
                     'wp-calendar-content-day':true,
-                    isActive:this.$props.isActiveShow && e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
+                    isActive:this.$props.isActiveShow && e.dateYear == this.year_copy && e.dateMonth == this.month_copy && e.day == this.date_copy,
                     isWeek:[0,6].includes(e.week),
                     [e.type]:true,
                     "wp-calendar-content-day-disabled":isDisabled,
@@ -413,7 +431,7 @@ export default defineComponent({
                     "wp-calendar-content-day-week-map":this.weekMaps[e.getDayAll],
                 }}>
                     <span onClick={() => !this.$props.lunar ? this.clickDays(e) : null} class={{
-                        isActive:this.$props.isActiveShow && e.dateYear == this.year && e.dateMonth == this.month && e.day == this.date,
+                        isActive:this.$props.isActiveShow && e.dateYear == this.year_copy && e.dateMonth == this.month_copy && e.day == this.date_copy,
                         isEvent:EventList,
                         'wp-calendar-content-day-cell':true,
                     }}>{e.day}</span>

@@ -166,12 +166,8 @@ export default defineComponent({
                     if(Object.prototype.toString.call(daterangeValueCache.value) === '[object Array]' && daterangeValueCache.value.length === 2){
                         const InitData = daterangeValueCache.value.map(e=>getDate(e))
                         if(refCalendar.value){
-                            refCalendar.value.year = InitData[0].year.value;
-                            refCalendar.value.month = InitData[0].month.value;
-                            refCalendar.value.date = InitData[0].date.value;
-                            refCalendarEnd.value.year = InitData[1].year.value;
-                            refCalendarEnd.value.month = InitData[1].month.value;
-                            refCalendarEnd.value.date = InitData[1].date.value;
+                            refCalendar.value.setValue(InitData[0]);
+                            refCalendarEnd.value.setValue(InitData[1]);
                             if(['monthrange', 'yearrange'].includes(props.type) && InitData[0].year.value === InitData[1].year.value){
                                 refCalendarEnd.value.year += 1;
                             } else if(['yearrange'].includes(props.type)){
@@ -204,14 +200,10 @@ export default defineComponent({
                     if(isMultiple.value){
                         const date = currentValueParse.value[currentValueParse.value.length - 1];
                         if(date){
-                            refCalendar.value.year = date.year.value;
-                            refCalendar.value.month = date.month.value;
-                            refCalendar.value.date = date.date.value;
+                            refCalendar.value.setValue(date);
                         }
                     }else {
-                        refCalendar.value.year = currentValueParse.value.year.value;
-                        refCalendar.value.month = currentValueParse.value.month.value;
-                        refCalendar.value.date = currentValueParse.value.date.value;
+                        refCalendar.value.setValue(currentValueParse.value);
                     }
                 }
             })
