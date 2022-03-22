@@ -37,8 +37,6 @@ export default defineComponent({
                 month:"YYYY-MM",
                 monthrange:"YYYY-MM",
                 yearrange:"YYYY",
-                // dateTime:"YYYY-MM-DD "+timeFormat.value,
-                // datetimerange:"YYYY-MM-DD "+timeFormat.value,
             }[props.type] || "YYYY-MM-DD";
         })
         const getDate = (date)=>{
@@ -90,15 +88,15 @@ export default defineComponent({
         const refTimePickerEnd:any = ref(null)
         const refCalendarEnd:any = ref(null)
         const refSelectEnd:any = ref(null)
+        const currentValueCopy = ref(null);
+        const isDaterangeCanSwitchYear = ref(false);
+        const isDaterangeCanSwitchMonth = ref(false);
         const isMultiple = computed(()=> props.type === 'dates');
         const isDaterange = computed(()=>["daterange","monthrange", "yearrange", "datetimerange"].includes(props.type))
         const isDateTime = computed(()=>["datetime", 'datetimerange'].includes(props.type))
         const currentTimeFormat = computed(()=>{
             return isDateTime.value ? (currentFormat.value +" "+ timeFormat.value) : currentFormat.value;
         })
-        const currentValueCopy = ref(null);
-        const isDaterangeCanSwitchYear = ref(false);
-        const isDaterangeCanSwitchMonth = ref(false);
         const currentDaterangeValues = computed(()=>daterangeValueCache.value.concat(daterangeDayHoverValueCache.value))
         const currentValueParse = computed(()=>{
             let dates = currentValue.value;
@@ -116,6 +114,7 @@ export default defineComponent({
             return props.type === 'week' ? (currentValue.value || []).map(e=>getDate(e)) : null;
         })
         const showInputClass = ref(false);
+        // 为日历、下拉、输入框等注入数据，禁止删除
         provide("showInputClass", showInputClass)
         provide("notClearInputValue", true)
         provide("notClearInputValueFormat", currentFormat.value)
