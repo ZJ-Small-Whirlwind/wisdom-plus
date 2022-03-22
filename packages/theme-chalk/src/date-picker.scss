@@ -5,6 +5,11 @@
         display: flex;
         justify-content: flex-end;
         align-items: center;
+        &-error{
+            color: #ff0000;
+            font-size: 12px;
+            margin-right: 15px;
+        }
     }
     &-prefix-icon{
         color: #d9d9d9;
@@ -125,6 +130,8 @@
 }
 .wp-date-picker-panel-popover-datetimerange{
     .wp-calendar-content-day-is-daterange-start,.wp-calendar-content-day-is-daterange-end{
-        background-color: #fed4cb !important;
+        &.current{
+            background-color: #fed4cb !important;
+        }
     }
 }
