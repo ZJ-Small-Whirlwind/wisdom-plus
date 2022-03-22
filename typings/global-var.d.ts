@@ -70,6 +70,8 @@ declare global {
     const WpTimePicker: typeof import('wisdom-plus')['WpTimePicker']
     const WpDatePicker: typeof import('wisdom-plus')['WpDatePicker']
     const WpWatermark: typeof import('wisdom-plus')['WpWatermark']
+    const WpDebug: typeof import('wisdom-plus')['WpDebug']
+    const WpAwait: typeof import('wisdom-plus')['WpAwait']
 }
 
 export {}
