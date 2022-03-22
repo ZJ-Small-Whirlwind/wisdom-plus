@@ -94,6 +94,7 @@ export default defineComponent({
         const isMultiple = computed(()=> props.type === 'dates');
         const isDaterange = computed(()=>["daterange","monthrange", "yearrange", "datetimerange"].includes(props.type))
         const isDateTime = computed(()=>["datetime", 'datetimerange'].includes(props.type))
+        const isValidDateTime = computed(()=>!["datetime"].includes(props.type) || (["datetime"].includes(props.type) && dayjs(currentValue.value, currentFormat.value).isValid()) )
         const currentTimeFormat = computed(()=>{
             return isDateTime.value ? (currentFormat.value +" "+ timeFormat.value) : currentFormat.value;
         })
@@ -360,7 +361,7 @@ export default defineComponent({
                 timeError.value = isValidTime.call(timeModel.value);
                 footerError.value = false;
                 if(!timeError.value) {
-                    if(dayjs(currentValue.value, currentFormat.value).isValid()){
+                    if(isValidDateTime.value){
                         refSelect.value.show = false;
                     }else {
                         footerError.value = true;
@@ -592,6 +593,7 @@ export default defineComponent({
             timeModelEnd,
             timeModel,
             isDateTime,
+            isValidDateTime,
             timeFormat,
             timeErrorAll,
             timeErrorStart,
@@ -612,7 +614,7 @@ export default defineComponent({
                 onChange={()=>this.onCalendarChange()}
                 {...this.$props.calendarProps}
                 type={this.$props.type}
-                isActiveShow={bool}
+                isActiveShow={bool && this.isValidDateTime}
                 disabledDate={this.disabledDate}
                 maxYearRange={this.$props.maxYearRange}
                 showAvailableStyle={this.isDaterange && (this.currentDaterangeValues || []).length >= 2}
