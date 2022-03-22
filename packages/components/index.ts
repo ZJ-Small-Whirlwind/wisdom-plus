@@ -68,6 +68,7 @@ export * from './Carousel'
 export * from './Rate'
 export * from './TimePicker'
 export * from './Watermark'
+export * from './Await'
 
 export * from './Pro/Upload'
 export * from './Pro/Editor'

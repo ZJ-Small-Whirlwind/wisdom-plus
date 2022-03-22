@@ -96,6 +96,10 @@ export default defineConfig({
                         {
                             text: 'PullRefresh 下拉刷新',
                             link: '/components/pull-refresh'
+                        },
+                        {
+                            text: 'Await 等待',
+                            link: '/components/await'
                         }
                     ]
                 },
