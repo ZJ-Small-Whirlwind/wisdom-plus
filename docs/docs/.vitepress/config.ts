@@ -290,6 +290,10 @@ export default defineConfig({
                         {
                             text: 'Carousel 轮播图',
                             link: '/components/carousel'
+                        },
+                        {
+                            text: 'Maps 地图',
+                            link: '/components/maps'
                         }
                     ]
                 }

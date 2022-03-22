@@ -70,6 +70,7 @@ export * from './TimePicker'
 export * from './Watermark'
 export * from './Await'
 export * from './Debug'
+export * from './Maps'
 
 export * from './Pro/Upload'
 export * from './Pro/Editor'
