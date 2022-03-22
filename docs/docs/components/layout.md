@@ -388,7 +388,7 @@ const layout = ref([
     </div>
     <div>可拖拽、可滚动、边缘检测、调整拖拽线width、边缘检测</div>
     <div style="height: 300px; position: relative;border: 1px solid #571cff">
-        <WpLayoutSplit :index="50" :lineWidth="10" autoScroll dragLine :span="[0.4]" lineMsg="可拖拽">
+        <WpLayoutSplit :index="50" :lineWidth="10" autoScroll dragLine :span="[0.2]" lineMsg="可拖拽">
             <template #left>
                 <div v-for="i in 30" :key="i">left{{i}}</div>
             </template>
