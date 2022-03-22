@@ -298,9 +298,6 @@ export default defineComponent({
                         currentValue.value = value;
                     })
                 }
-                if(['datetime'].includes(props.type) && refSelect.value && refSelect.value.show) {
-                    refSelect.value.show = false;
-                }
             }
         }
 
@@ -355,6 +352,16 @@ export default defineComponent({
                             updateRangeReset()
                             refSelect.value.show = false;
                         })
+                    }else {
+                        footerError.value = true;
+                    }
+                }
+            } else if(props.type === 'datetime'){
+                timeError.value = isValidTime.call(timeModel.value);
+                footerError.value = false;
+                if(!timeError.value) {
+                    if(dayjs(currentValue.value, currentFormat.value).isValid()){
+                        refSelect.value.show = false;
                     }else {
                         footerError.value = true;
                     }
@@ -464,7 +471,11 @@ export default defineComponent({
             }
         }
         watch(timeModel,()=>{
-            timeError.value = isValidTime.call(timeModel.value);
+            if(timeModel.value){
+                timeError.value = isValidTime.call(timeModel.value);
+            }else {
+                timeError.value = false;
+            }
         })
         watch(timeModelStart,()=>{
             timeErrorStart.value = isValidTime.call(timeModelStart.value);
@@ -654,10 +665,10 @@ export default defineComponent({
                                   {WpCalendarRender(true)}
                                   {WpCalendarRender(false)}
                               </div>) : WpCalendarRender(true),
-                              this.isMultiple || this.$props.type === 'datetimerange' ?  <div class={{
+                              this.isMultiple || this.isDateTime ?  <div class={{
                                   'wp-date-picker-footer':true
                               }}>
-                                  {this.$props.type === 'datetimerange' && this.footerError ? <div class={{
+                                  {this.isDateTime && this.footerError ? <div class={{
                                       'wp-date-picker-footer-error': true
                                   }}>请选择日期</div> : null}
                                   <WpButton size={'mini'} onClick={this.onConfirm}>确定</WpButton>
