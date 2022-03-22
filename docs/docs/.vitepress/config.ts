@@ -294,6 +294,10 @@ export default defineConfig({
                         {
                             text: 'Maps 地图',
                             link: '/components/maps'
+                        },
+                        {
+                            text: 'BackTop 回到顶部',
+                            link: '/components/back-top'
                         }
                     ]
                 }

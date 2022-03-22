@@ -33,7 +33,7 @@ export function getScrollParent(
 
 export function useScrollParent(
     el: Ref<HTMLElement | HTMLBodyElement | undefined>,
-    root: ScrollElement | undefined
+    root?: ScrollElement | undefined
 ) {
     const scrollParent = ref<HTMLElement | HTMLBodyElement>()
     if (!root) root = document.body || undefined
