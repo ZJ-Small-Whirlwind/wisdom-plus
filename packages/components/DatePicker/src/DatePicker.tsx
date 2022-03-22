@@ -15,6 +15,7 @@ export const datePickerProps = buildProps({
     showPanel:{type:Boolean as PropType<boolean>, default:false},
     calendarProps:{type:Object as PropType<object>, default:()=>({})},
     selectProps:{type:Object as PropType<object>, default:()=>({})},
+    timePickerProps:{type:Object as PropType<object>, default:()=>({})},
     type:{type:String as PropType<string>, default:null},
     placeholder:{type:[String, Array], default:null},
     disabled:{type:Boolean as PropType<boolean>, default:false},
@@ -66,8 +67,8 @@ export default defineComponent({
         const refCalendarEnd:any = ref(null)
         const refSelectEnd:any = ref(null)
         const isMultiple = computed(()=> props.type === 'dates');
-        const isDaterange = computed(()=>["daterange","monthrange", 'yearrange'].includes(props.type))
-        const isDateTime = computed(()=>["datetime"].includes(props.type))
+        const isDaterange = computed(()=>["daterange","monthrange", 'yearrange', 'datetimerange'].includes(props.type))
+        const isDateTime = computed(()=>["datetime", 'datetimerange'].includes(props.type))
         const currentValueCopy = ref(null);
         const isDaterangeCanSwitchYear = ref(false);
         const isDaterangeCanSwitchMonth = ref(false);
@@ -510,7 +511,7 @@ export default defineComponent({
                             showFormat={this.timeFormat}
                             clearable
                             use-12-hours
-
+                            {...this.$props.timePickerProps}
                         >
                         </WpTimePicker>,
                         this.timeError ? <div class={{
