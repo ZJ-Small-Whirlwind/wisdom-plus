@@ -27,7 +27,7 @@ export default defineComponent({
     inheritAttrs:false,
     props:datePickerProps,
     setup(props,{emit}){
-        const timeFormat = ref('hh:mm:ss')
+        const timeFormat = ref('HH:mm:ss')
         const currentFormat = computed(()=>{
             return props.format || {
                 year:"YYYY",
@@ -64,6 +64,7 @@ export default defineComponent({
                 return  true;
             }
         }
+        const footerError = ref(false)
         const timeError = ref(false)
         const timeErrorStart = ref(false)
         const timeErrorEnd = ref(false)
@@ -72,6 +73,7 @@ export default defineComponent({
         const options:any = ref([]);
         const optionsStart:any = ref(null);
         const optionsEnd:any = ref(null);
+        const newValue:any = ref(null);
         const currentValue:any = ref(null);
         const currentValueStart:any = ref(null);
         const currentValueEnd:any = ref(null);
@@ -151,55 +153,64 @@ export default defineComponent({
             })
         }
 
-        const updateRangeReset = ()=>{
-            currentValueCopy.value = JSON.parse(JSON.stringify(currentValue.value));
+        const updateRangeReset = (newDate?:any)=>{
+            currentValue.value = newDate || currentValue.value;
+            newValue.value = null;
+            footerError.value = false;
+            currentValueCopy.value = JSON.parse(JSON.stringify(currentValue.value || []));
             nextTick(()=>{
                 if(isDaterange.value){
-                    daterangeValueCache.value = (currentValue.value || []);
+                    daterangeValueCache.value = currentValueCopy.value;
                     if(Object.prototype.toString.call(daterangeValueCache.value) === '[object Array]' && daterangeValueCache.value.length === 2){
                         const InitData = daterangeValueCache.value.map(e=>getDate(e))
-                        refCalendar.value.year = InitData[0].year.value;
-                        refCalendar.value.month = InitData[0].month.value;
-                        refCalendar.value.date = InitData[0].date.value;
-                        refCalendarEnd.value.year = InitData[1].year.value;
-                        refCalendarEnd.value.month = InitData[1].month.value;
-                        refCalendarEnd.value.date = InitData[1].date.value;
-                        if(['monthrange', 'yearrange'].includes(props.type) && InitData[0].year.value === InitData[1].year.value){
-                            refCalendarEnd.value.year += 1;
-                        } else if(['yearrange'].includes(props.type)){
-                            const maxYearRange = props.maxYearRange*2;
-                            if(refCalendarEnd.value.year - refCalendar.value.year < maxYearRange){
-                                refCalendarEnd.value.year = refCalendar.value.year+1
-                            }else {
-                                refCalendarEnd.value.year = refCalendarEnd.value.year + 2 - maxYearRange;
+                        if(refCalendar.value){
+                            refCalendar.value.year = InitData[0].year.value;
+                            refCalendar.value.month = InitData[0].month.value;
+                            refCalendar.value.date = InitData[0].date.value;
+                            refCalendarEnd.value.year = InitData[1].year.value;
+                            refCalendarEnd.value.month = InitData[1].month.value;
+                            refCalendarEnd.value.date = InitData[1].date.value;
+                            if(['monthrange', 'yearrange'].includes(props.type) && InitData[0].year.value === InitData[1].year.value){
+                                refCalendarEnd.value.year += 1;
+                            } else if(['yearrange'].includes(props.type)){
+                                const maxYearRange = props.maxYearRange*2;
+                                if(refCalendarEnd.value.year - refCalendar.value.year < maxYearRange){
+                                    refCalendarEnd.value.year = refCalendar.value.year+1
+                                }else {
+                                    refCalendarEnd.value.year = refCalendarEnd.value.year + 2 - maxYearRange;
+                                }
+                            } else if(InitData[0].getYearMonth.value === InitData[1].getYearMonth.value){
+                                refCalendarEnd.value.month += 1;
                             }
-                        } else if(InitData[0].getYearMonth.value === InitData[1].getYearMonth.value){
-                            refCalendarEnd.value.month += 1;
                         }
                         if(['datetimerange'].includes(props.type)){
                             timeModelStart.value = dayjs(InitData[0].time.value).format(timeFormat.value);
                             timeModelEnd.value = dayjs(InitData[1].time.value).format(timeFormat.value);
                         }
                     }else {
-                        if(['monthrange', 'yearrange'].includes(props.type)){
-                            refCalendarEnd.value.year += 1;
-                        }else {
-                            refCalendarEnd.value.month += 1;
+                        if(refCalendarEnd.value){
+                            if(['monthrange', 'yearrange'].includes(props.type)){
+                                refCalendarEnd.value.year += 1;
+                            }else {
+                                refCalendarEnd.value.month += 1;
+                            }
                         }
                     }
                     return;
                 }
-                if(isMultiple.value){
-                    const date = currentValueParse.value[currentValueParse.value.length - 1];
-                    if(date){
-                        refCalendar.value.year = date.year.value;
-                        refCalendar.value.month = date.month.value;
-                        refCalendar.value.date = date.date.value;
+                if(refCalendar.value){
+                    if(isMultiple.value){
+                        const date = currentValueParse.value[currentValueParse.value.length - 1];
+                        if(date){
+                            refCalendar.value.year = date.year.value;
+                            refCalendar.value.month = date.month.value;
+                            refCalendar.value.date = date.date.value;
+                        }
+                    }else {
+                        refCalendar.value.year = currentValueParse.value.year.value;
+                        refCalendar.value.month = currentValueParse.value.month.value;
+                        refCalendar.value.date = currentValueParse.value.date.value;
                     }
-                }else {
-                    refCalendar.value.year = currentValueParse.value.year.value;
-                    refCalendar.value.month = currentValueParse.value.month.value;
-                    refCalendar.value.date = currentValueParse.value.date.value;
                 }
             })
         }
@@ -213,14 +224,11 @@ export default defineComponent({
                     daterangeValueCache.value = [daterangeValueCache.value.at(-1)];
                 }
                 if(daterangeValueCache.value.length === 2){
-                    currentValue.value = daterangeValueCache.value.map(e=>dayjs(e).toDate().getTime()).sort((a,b)=>a-b).map((time,k)=>{
+                    newValue.value = daterangeValueCache.value.map(e=>dayjs(e).toDate().getTime()).sort((a,b)=>a-b).map((time,k)=>{
                         return dayjs(k === 0  ? time : (time + 82800000 + 3540000 + 59000 + 900)).format(currentTimeFormat.value);
                     });
-                    if(isDateTime.value){
-                        setTimeout(()=>{
-                            updateRangeReset();
-                        })
-                    }else {
+                    if(!isDateTime.value){
+                        currentValue.value = newValue.value;
                         refSelect.value.show = false;
                     }
                 }
@@ -322,12 +330,16 @@ export default defineComponent({
                     currentValue.value = props.modelValue;
                 })
             }else {
-                onClickDay(getDate(props.modelValue));
+                if(isDaterange.value){
+                    updateRangeReset(props.modelValue || []);
+                }else {
+                    onClickDay(getDate(props.modelValue));
+                }
             }
         }
         const onConfirm = ()=>{
             if(props.type === 'datetimerange'){
-                // timeRangeError.value = false;
+                footerError.value = false;
                 timeErrorAll.value = false;
                 timeErrorStart.value = isValidTime.call(timeModelStart.value)
                 timeErrorEnd.value = isValidTime.call(timeModelEnd.value)
@@ -339,12 +351,18 @@ export default defineComponent({
                     timeErrorEnd.value = true;
                 }
                 if(!timeErrorStart.value && !timeErrorEnd.value && startTime <= startEnd){
-                    if(Object.prototype.toString.call(currentValue.value) === '[object Array]' && currentValue.value.length === 2){
-                        currentValueCopy.value = JSON.parse(JSON.stringify(currentValue.value));
-                        emit("update:modelValue", currentValue.value)
-                        refSelect.value.show = false;
+                    newValue.value = (newValue.value || currentValue.value || []).map((e,k)=>{
+                        const day = dayjs(e).format(currentFormat.value);
+                        return day + ' '+ (k === 0 ? timeModelStart.value : timeModelEnd.value)
+                    })
+                    if(Object.prototype.toString.call(newValue.value) === '[object Array]' && newValue.value.length === 2){
+                        currentValue.value = newValue.value;
+                        setTimeout(()=>{
+                            updateRangeReset()
+                            refSelect.value.show = false;
+                        })
                     }else {
-
+                        footerError.value = true;
                     }
                 }
             }else {
@@ -446,8 +464,8 @@ export default defineComponent({
                     const times = currentValue.value.map(e=>dayjs(e).toDate().getTime())
                     if(times[0] > times[1]){
                         currentValue.value = currentValue.value.reverse();
-                        updateDaterangeCurrentValue(currentValue.value)
                     }
+                    updateDaterangeCurrentValue(currentValue.value)
                 })
             }
         }
@@ -573,6 +591,7 @@ export default defineComponent({
             timeErrorStart,
             timeErrorEnd,
             timeError,
+            footerError,
         }
     },
     render(){
@@ -602,7 +621,6 @@ export default defineComponent({
                             format={this.timeFormat}
                             showFormat={this.timeFormat}
                             clearable
-                            use-12-hours
                             {...this.$props.timePickerProps}
                         >
                         </WpTimePicker>,
@@ -644,6 +662,9 @@ export default defineComponent({
                               this.isMultiple || this.$props.type === 'datetimerange' ?  <div class={{
                                   'wp-date-picker-footer':true
                               }}>
+                                  {this.$props.type === 'datetimerange' && this.footerError ? <div class={{
+                                      'wp-date-picker-footer-error': true
+                                  }}>请选择日期</div> : null}
                                   <WpButton size={'mini'} onClick={this.onConfirm}>确定</WpButton>
                               </div> : null
                           ] : null
