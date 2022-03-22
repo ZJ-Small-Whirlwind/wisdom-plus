@@ -282,6 +282,10 @@ export default defineConfig({
                         {
                             text: 'Carousel 轮播图',
                             link: '/components/carousel'
+                        },
+                        {
+                            text: 'BackTop 回到顶部',
+                            link: '/components/back-top'
                         }
                     ]
                 }

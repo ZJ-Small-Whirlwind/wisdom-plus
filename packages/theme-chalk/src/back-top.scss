@@ -1,0 +1,61 @@
+:root {
+  --wp-bezier: cubic-bezier(0.4, 0, 0.2, 1);
+  --wp-border-radius: 22px;
+  --wp-height: 44px;
+  --wp-width: 44px;
+  --wp-box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.12);
+  --wp-box-shadow-hover: 0 2px 12px 0px rgba(0, 0, 0, 0.18);
+  --wp-box-shadow-pressed: 0 2px 12px 0px rgba(0, 0, 0, 0.18);
+  --wp-color: #fff;
+  --wp-color-blue: #6ab2e0;
+  --wp-icon-size: 26px;
+  --wp-icon-color: rgb(51, 54, 57);
+  --wp-icon-color-hover: #36ad6a;
+  --wp-icon-color-pressed: #0c7a43;
+  --wp-text-color: rgb(51, 54, 57);
+  --wp-text-color-white: rgb(255, 255, 255);
+  --wp-back-top-duration: 0.3s
+}
+
+.wp-back-view {
+  width: 100%;
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: right;
+  padding-right: 40px;
+  pointer-events: none;
+}
+
+.wp-back-top {
+  position: absolute;
+  bottom: 40px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--wp-text-color-white);
+  pointer-events: all;
+  transition: color .3s var(--wp-bezier),
+  box-shadow .3s var(--wp-bezier),
+  background-color .3s var(--wp-bezier);
+  border-radius: var(--wp-border-radius);
+  height: var(--wp-height);
+  min-width: var(--wp-width);
+  box-shadow: var(--wp-box-shadow);
+  background-color: var(--wp-color-blue);
+
+}
+
+.wp-back-top-fade-enter-active,
+.wp-back-top-fade-leave-active, {
+  transition: var(--wp-back-top-duration);
+}
+
+.wp-back-top-fade-enter-from,
+.wp-back-top-fade-leave-to {
+  transform: scale(.8);
+  opacity: 0;
+}
+
+
