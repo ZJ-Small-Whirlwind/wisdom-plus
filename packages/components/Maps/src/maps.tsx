@@ -32,6 +32,7 @@ export default defineComponent({
             <div class={{
                 'wp-maps-container': true
             }} ref="container"/>
+            <div class="wp-maps-copyright">© 版权所有： Wisdom Plus</div>
         </div>)
     }
 })

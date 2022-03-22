@@ -1,5 +1,15 @@
 .wp-maps{
+    position: relative;
     &-container{
         min-height: 500px;
+    }
+    &-copyright{
+        position: absolute;
+        left: 15px;
+        bottom: 5px;
+        font-size: 12px;
+    }
+    .amap-logo,.amap-copyright{
+        display: none !important;
     }
 }
