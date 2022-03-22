@@ -114,12 +114,12 @@ const value3 = ref()
 ```vue
 <template>
     <wp-space>
-        <WpDatePicker v-model="value" type="datetime" clearable filterable></WpDatePicker>
+        <WpDatePicker v-model="value" type="datetime" clearable></WpDatePicker>
     </wp-space>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
-const value = ref('2022-03-29 11:39:50 am')
+const value = ref()
 </script>
 ```
 :::
@@ -130,7 +130,7 @@ const value = ref('2022-03-29 11:39:50 am')
 ```vue
 <template>
     <wp-space>
-        <WpDatePicker v-model="value" type="datetime" clearable filterable></WpDatePicker>
+        <WpDatePicker v-model="value" type="datetimerange" clearable></WpDatePicker>
     </wp-space>
 </template>
 <script lang="ts" setup>
@@ -147,7 +147,8 @@ const value = ref()
 | 参数      | 说明 | 类型                             | 默认值        |
 |---------|--|--------------------------------|------------|
 | modelValue | 绑定值 | _object[], string , number , boolean_           | -         |
-| format | 时间格式 | _ string_           | YYYY-MM-DD        |
+| format | 日期格式 | _ string_           | YYYY-MM-DD        |
+| timeFormat | 时间格式，为time类型时生效 | _ string_           | HH:mm:ss        |
 | clearable | 可清除 | _boolean_           | false         |
 | filterable | 可输入 | _boolean_           | false         |
 | showPanel | 是否显示日期面板，即快捷选择面板 | _boolean_           | false         |
@@ -166,5 +167,6 @@ const value = ref()
 | 参数  | 说明 | 参数                  |
 |-----|--|---------------------|
 |  clear  | 清除结果 | _        |
+|  change  | 内容变更 | _(value:any)=>void(0)_        |
 
 ### Slots
