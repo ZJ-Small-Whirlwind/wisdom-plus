@@ -10,6 +10,7 @@ import {DateRangeOutlined} from "@vicons/material";
 export const datePickerProps = buildProps({
     modelValue:{type:[String, Array, Date, Number],default:null},
     format:{type:String, default:null},
+    timeFormat:{type:String, default:null},
     clearable:{type:Boolean as PropType<boolean>, default:false},
     filterable:{type:Boolean as PropType<boolean>, default:false},
     showPanel:{type:Boolean as PropType<boolean>, default:false},
@@ -27,7 +28,9 @@ export default defineComponent({
     inheritAttrs:false,
     props:datePickerProps,
     setup(props,{emit}){
-        const timeFormat = ref('HH:mm:ss')
+        const timeFormat = computed(()=>{
+            return props.timeFormat || 'HH:mm:ss';
+        })
         const currentFormat = computed(()=>{
             return props.format || {
                 year:"YYYY",
@@ -500,6 +503,7 @@ export default defineComponent({
         watch(currentValue,()=>{
             nextTick(()=>{
                 emit("update:modelValue", currentValue.value)
+                emit("change", currentValue.value)
             })
         })
         watch([currentValueStart, currentValueEnd],([start,end])=>{
