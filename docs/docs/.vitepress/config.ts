@@ -100,6 +100,10 @@ export default defineConfig({
                         {
                             text: 'Await 等待',
                             link: '/components/await'
+                        },
+                        {
+                            text: 'Debug 调试',
+                            link: '/components/debug'
                         }
                     ]
                 },
