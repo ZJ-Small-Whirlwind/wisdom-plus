@@ -34,7 +34,8 @@ export default defineComponent({
                 month:"YYYY-MM",
                 monthrange:"YYYY-MM",
                 yearrange:"YYYY",
-                dateTime:"YYYY-MM-DD "+timeFormat.value,
+                // dateTime:"YYYY-MM-DD "+timeFormat.value,
+                // datetimerange:"YYYY-MM-DD "+timeFormat.value,
             }[props.type] || "YYYY-MM-DD";
         })
         const getDate = (date)=>{
@@ -50,7 +51,23 @@ export default defineComponent({
                 getYearMonth:ref(d.format("YYYY-MM"))
             }
         }
+        const isValidTime = function (getTime = false):any{
+            // @ts-ignore
+            let value:any = this;
+            const date = dayjs(dayjs().format("YYYY-MM-DD ")+value, timeFormat.value);
+            if(getTime){
+                return date.toDate().getTime()
+            }
+            if(value && date.isValid()){
+                return  false;
+            }else {
+                return  true;
+            }
+        }
         const timeError = ref(false)
+        const timeErrorStart = ref(false)
+        const timeErrorEnd = ref(false)
+        const timeErrorAll = ref(false)
         const timeModel:any = ref(dayjs().format(timeFormat.value.replace(/a/img,'')));
         const options:any = ref([]);
         const optionsStart:any = ref(null);
@@ -58,6 +75,8 @@ export default defineComponent({
         const currentValue:any = ref(null);
         const currentValueStart:any = ref(null);
         const currentValueEnd:any = ref(null);
+        const timeModelStart:any = ref(null);
+        const timeModelEnd:any = ref(null);
         const daterangeValueCache:any = ref([]);
         const daterangeDayHoverValueCache:any = ref([]);
         const refTimePicker:any = ref(null)
@@ -67,8 +86,11 @@ export default defineComponent({
         const refCalendarEnd:any = ref(null)
         const refSelectEnd:any = ref(null)
         const isMultiple = computed(()=> props.type === 'dates');
-        const isDaterange = computed(()=>["daterange","monthrange", 'yearrange', 'datetimerange'].includes(props.type))
+        const isDaterange = computed(()=>["daterange","monthrange", "yearrange", "datetimerange"].includes(props.type))
         const isDateTime = computed(()=>["datetime", 'datetimerange'].includes(props.type))
+        const currentTimeFormat = computed(()=>{
+            return isDateTime.value ? (currentFormat.value +" "+ timeFormat.value) : currentFormat.value;
+        })
         const currentValueCopy = ref(null);
         const isDaterangeCanSwitchYear = ref(false);
         const isDaterangeCanSwitchMonth = ref(false);
@@ -128,6 +150,59 @@ export default defineComponent({
                 currentValueEnd.value = end;
             })
         }
+
+        const updateRangeReset = ()=>{
+            currentValueCopy.value = JSON.parse(JSON.stringify(currentValue.value));
+            nextTick(()=>{
+                if(isDaterange.value){
+                    daterangeValueCache.value = (currentValue.value || []);
+                    if(Object.prototype.toString.call(daterangeValueCache.value) === '[object Array]' && daterangeValueCache.value.length === 2){
+                        const InitData = daterangeValueCache.value.map(e=>getDate(e))
+                        refCalendar.value.year = InitData[0].year.value;
+                        refCalendar.value.month = InitData[0].month.value;
+                        refCalendar.value.date = InitData[0].date.value;
+                        refCalendarEnd.value.year = InitData[1].year.value;
+                        refCalendarEnd.value.month = InitData[1].month.value;
+                        refCalendarEnd.value.date = InitData[1].date.value;
+                        if(['monthrange', 'yearrange'].includes(props.type) && InitData[0].year.value === InitData[1].year.value){
+                            refCalendarEnd.value.year += 1;
+                        } else if(['yearrange'].includes(props.type)){
+                            const maxYearRange = props.maxYearRange*2;
+                            if(refCalendarEnd.value.year - refCalendar.value.year < maxYearRange){
+                                refCalendarEnd.value.year = refCalendar.value.year+1
+                            }else {
+                                refCalendarEnd.value.year = refCalendarEnd.value.year + 2 - maxYearRange;
+                            }
+                        } else if(InitData[0].getYearMonth.value === InitData[1].getYearMonth.value){
+                            refCalendarEnd.value.month += 1;
+                        }
+                        if(['datetimerange'].includes(props.type)){
+                            timeModelStart.value = dayjs(InitData[0].time.value).format(timeFormat.value);
+                            timeModelEnd.value = dayjs(InitData[1].time.value).format(timeFormat.value);
+                        }
+                    }else {
+                        if(['monthrange', 'yearrange'].includes(props.type)){
+                            refCalendarEnd.value.year += 1;
+                        }else {
+                            refCalendarEnd.value.month += 1;
+                        }
+                    }
+                    return;
+                }
+                if(isMultiple.value){
+                    const date = currentValueParse.value[currentValueParse.value.length - 1];
+                    if(date){
+                        refCalendar.value.year = date.year.value;
+                        refCalendar.value.month = date.month.value;
+                        refCalendar.value.date = date.date.value;
+                    }
+                }else {
+                    refCalendar.value.year = currentValueParse.value.year.value;
+                    refCalendar.value.month = currentValueParse.value.month.value;
+                    refCalendar.value.date = currentValueParse.value.date.value;
+                }
+            })
+        }
         const daterangeClickDay = ({year, month, date})=>{
             const value = dayjs(new Date(year.value,month.value-1,date.value)).format(currentFormat.value)
             if(value === 'Invalid Date'){
@@ -139,9 +214,15 @@ export default defineComponent({
                 }
                 if(daterangeValueCache.value.length === 2){
                     currentValue.value = daterangeValueCache.value.map(e=>dayjs(e).toDate().getTime()).sort((a,b)=>a-b).map((time,k)=>{
-                        return dayjs(k === 0  ? time : (time + 82800000 + 3540000 + 59000 + 900)).format(currentFormat.value);
+                        return dayjs(k === 0  ? time : (time + 82800000 + 3540000 + 59000 + 900)).format(currentTimeFormat.value);
                     });
-                    refSelect.value.show = false;
+                    if(isDateTime.value){
+                        setTimeout(()=>{
+                            updateRangeReset();
+                        })
+                    }else {
+                        refSelect.value.show = false;
+                    }
                 }
             }
             updateDaterangeCurrentValue(currentValue.value);
@@ -156,21 +237,21 @@ export default defineComponent({
         }
         const onClickDay = ({year, month, date})=>{
             timeError.value = false;
-            if(!['dates','daterange','monthrange','yearrange', 'datetime'].includes(props.type)){
+            if(!['dates','daterange','monthrange','yearrange', 'datetime','datetimerange'].includes(props.type)){
                 refSelect.value.show = false;
             }
-            if(['daterange','monthrange','yearrange'].includes(props.type)){
+            if(['daterange','monthrange','yearrange','datetimerange'].includes(props.type)){
                 daterangeClickDay({year, month, date});
             }
-            if(['week','daterange','monthrange','yearrange'].includes(props.type)){
+            if(['week','daterange','monthrange','yearrange', 'datetimerange'].includes(props.type)){
                 return;
             }
             let value = dayjs(new Date(year.value,month.value-1,date.value)).format(currentFormat.value)
             if(isDateTime.value){
                 if(refTimePicker.value){
                     value = value+' ' + timeModel.value;
-                    if(!dayjs(value,currentFormat.value).isValid()){
-                        timeError.value = true;
+                    if(isValidTime.call(timeModel.value)){
+                        timeError.value = isValidTime.call(timeModel.value);
                         return;
                     }
                 }else {
@@ -215,6 +296,9 @@ export default defineComponent({
                         currentValue.value = value;
                     })
                 }
+                if(['datetime'].includes(props.type) && refSelect.value && refSelect.value.show) {
+                    refSelect.value.show = false;
+                }
             }
         }
 
@@ -242,9 +326,33 @@ export default defineComponent({
             }
         }
         const onConfirm = ()=>{
-            currentValueCopy.value = JSON.parse(JSON.stringify(currentValue.value));
-            emit("update:modelValue", currentValue.value)
-            refSelect.value.show = false;
+            if(props.type === 'datetimerange'){
+                // timeRangeError.value = false;
+                timeErrorAll.value = false;
+                timeErrorStart.value = isValidTime.call(timeModelStart.value)
+                timeErrorEnd.value = isValidTime.call(timeModelEnd.value)
+                const startTime = isValidTime.call(timeModelStart.value, true);
+                const startEnd = isValidTime.call(timeModelEnd.value, true);
+                if(!!startTime && !!startEnd && startTime > startEnd){
+                    timeErrorAll.value = true;
+                    timeErrorStart.value = true;
+                    timeErrorEnd.value = true;
+                }
+                if(!timeErrorStart.value && !timeErrorEnd.value && startTime <= startEnd){
+                    if(Object.prototype.toString.call(currentValue.value) === '[object Array]' && currentValue.value.length === 2){
+                        currentValueCopy.value = JSON.parse(JSON.stringify(currentValue.value));
+                        emit("update:modelValue", currentValue.value)
+                        refSelect.value.show = false;
+                    }else {
+
+                    }
+                }
+            }else {
+                currentValueCopy.value = JSON.parse(JSON.stringify(currentValue.value));
+                emit("update:modelValue", currentValue.value)
+                refSelect.value.show = false;
+            }
+
         }
         const getYearWeek = (a, b, c)=> {
             /*
@@ -343,6 +451,30 @@ export default defineComponent({
                 })
             }
         }
+        watch(timeModel,()=>{
+            timeError.value = isValidTime.call(timeModel.value);
+        })
+        watch(timeModelStart,()=>{
+            timeErrorStart.value = isValidTime.call(timeModelStart.value);
+        })
+        watch(timeModelEnd,()=>{
+            timeErrorEnd.value = isValidTime.call(timeModelEnd.value);
+        })
+        watch([timeModelStart, timeModelEnd],([start, end])=>{
+            const startTime = isValidTime.call(start, true);
+            const startEnd = isValidTime.call(end, true);
+            if(startTime > startEnd){
+                nextTick(()=>{
+                    timeErrorStart.value = true;
+                    timeErrorEnd.value = true;
+                    timeErrorAll.value = true;
+                })
+            }else {
+                timeErrorStart.value = false;
+                timeErrorEnd.value = false;
+                timeErrorAll.value = false;
+            }
+        })
         watch(computed(()=>props.modelValue),()=>{
             init()
             rangeSortingInit();
@@ -362,52 +494,7 @@ export default defineComponent({
         })
         watch(computed(()=>refSelect.value && refSelect.value.show),val=>{
             if(val){
-                currentValueCopy.value = JSON.parse(JSON.stringify(currentValue.value));
-                nextTick(()=>{
-                    if(isDaterange.value){
-                        daterangeValueCache.value = (currentValue.value || []);
-                        if(Object.prototype.toString.call(daterangeValueCache.value) === '[object Array]' && daterangeValueCache.value.length === 2){
-                            const InitData = daterangeValueCache.value.map(e=>getDate(e))
-                            refCalendar.value.year = InitData[0].year.value;
-                            refCalendar.value.month = InitData[0].month.value;
-                            refCalendar.value.date = InitData[0].date.value;
-                            refCalendarEnd.value.year = InitData[1].year.value;
-                            refCalendarEnd.value.month = InitData[1].month.value;
-                            refCalendarEnd.value.date = InitData[1].date.value;
-                            if(['monthrange', 'yearrange'].includes(props.type) && InitData[0].year.value === InitData[1].year.value){
-                                refCalendarEnd.value.year += 1;
-                            } else if(['yearrange'].includes(props.type)){
-                                const maxYearRange = props.maxYearRange*2;
-                                if(refCalendarEnd.value.year - refCalendar.value.year < maxYearRange){
-                                    refCalendarEnd.value.year = refCalendar.value.year+1
-                                }else {
-                                    refCalendarEnd.value.year = refCalendarEnd.value.year + 2 - maxYearRange;
-                                }
-                            } else if(InitData[0].getYearMonth.value === InitData[1].getYearMonth.value){
-                                refCalendarEnd.value.month += 1;
-                            }
-                        }else {
-                            if(['monthrange', 'yearrange'].includes(props.type)){
-                                refCalendarEnd.value.year += 1;
-                            }else {
-                                refCalendarEnd.value.month += 1;
-                            }
-                        }
-                        return;
-                    }
-                    if(isMultiple.value){
-                        const date = currentValueParse.value[currentValueParse.value.length - 1];
-                        if(date){
-                            refCalendar.value.year = date.year.value;
-                            refCalendar.value.month = date.month.value;
-                            refCalendar.value.date = date.date.value;
-                        }
-                    }else {
-                        refCalendar.value.year = currentValueParse.value.year.value;
-                        refCalendar.value.month = currentValueParse.value.month.value;
-                        refCalendar.value.date = currentValueParse.value.date.value;
-                    }
-                })
+                updateRangeReset()
             }else {
                 if(isMultiple.value){
                     emit("update:modelValue", currentValueCopy.value)
@@ -477,9 +564,14 @@ export default defineComponent({
             currentDaterangeValues,
             onClear,
             onCalendarChange,
+            timeModelStart,
+            timeModelEnd,
             timeModel,
             isDateTime,
             timeFormat,
+            timeErrorAll,
+            timeErrorStart,
+            timeErrorEnd,
             timeError,
         }
     },
@@ -503,10 +595,10 @@ export default defineComponent({
                     title:this.isDateTime ? ()=>([
                         <WpTimePicker
                             class={{
-                                timeError:this.timeError
+                                timeError:this[this.isDaterange ? (bool ? 'timeErrorStart' : 'timeErrorEnd'): 'timeError']
                             }}
                             ref={bool ? 'refTimePicker' : 'refTimePickerEnd'}
-                            v-model={this.timeModel}
+                            v-model={this[this.isDaterange ? (bool ? 'timeModelStart' : 'timeModelEnd'): 'timeModel']}
                             format={this.timeFormat}
                             showFormat={this.timeFormat}
                             clearable
@@ -514,9 +606,9 @@ export default defineComponent({
                             {...this.$props.timePickerProps}
                         >
                         </WpTimePicker>,
-                        this.timeError ? <div class={{
+                        this[this.isDaterange ? (bool ? 'timeErrorStart' : 'timeErrorEnd'): 'timeError'] ? <div class={{
                             timeErrorText:true
-                        }}>请选择正确时间格式</div>:null
+                        }}>{this.timeErrorAll ? "开始时间不能大于结束时间":"请选择正确时间格式"}</div>:null
                     ]) : null
                 }}
             >
@@ -549,7 +641,7 @@ export default defineComponent({
                                   {WpCalendarRender(true)}
                                   {WpCalendarRender(false)}
                               </div>) : WpCalendarRender(true),
-                              this.isMultiple ?  <div class={{
+                              this.isMultiple || this.$props.type === 'datetimerange' ?  <div class={{
                                   'wp-date-picker-footer':true
                               }}>
                                   <WpButton size={'mini'} onClick={this.onConfirm}>确定</WpButton>

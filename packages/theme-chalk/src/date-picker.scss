@@ -123,3 +123,8 @@
         }
     }
 }
+.wp-date-picker-panel-popover-datetimerange{
+    .wp-calendar-content-day-is-daterange-start,.wp-calendar-content-day-is-daterange-end{
+        background-color: #fed4cb !important;
+    }
+}

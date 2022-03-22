@@ -129,8 +129,8 @@ const value = ref('2022-03-29 11:39:50 am')
 :::demo
 ```vue
 <template>
-    <wp-space>
-        <WpDatePicker v-model="value" type="datetime" clearable filterable></WpDatePicker>
+    <wp-space>{{value}}
+        <WpDatePicker v-model="value" type="datetimerange" clearable filterable></WpDatePicker>
     </wp-space>
 </template>
 <script lang="ts" setup>
