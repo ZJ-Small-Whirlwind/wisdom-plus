@@ -4,6 +4,7 @@ importers:
 
   .:
     specifiers:
+      '@amap/amap-jsapi-loader': ^1.0.1
       '@css-render/vue3-ssr': ^0.15.6
       '@element-plus/icons': ^0.0.11
       '@pnpm/find-workspace-packages': ^3.1.26
@@ -62,6 +63,7 @@ importers:
       vueuc: ^0.4.19
       wangeditor: ^4.7.12
     dependencies:
+      '@amap/amap-jsapi-loader': 1.0.1
       '@css-render/vue3-ssr': 0.15.6_vue@3.2.23
       '@element-plus/icons': 0.0.11
       '@popperjs/core': 2.11.0
@@ -328,6 +330,10 @@ packages:
       '@algolia/logger-common': 4.11.0
       '@algolia/requester-common': 4.11.0
     dev: true
+
+  /@amap/amap-jsapi-loader/1.0.1:
+    resolution: {integrity: sha512-nPyLKt7Ow/ThHLkSvn2etQlUzqxmTVgK7bIgwdBRTg2HK5668oN7xVxkaiRe3YZEzGzfV2XgH5Jmu2T73ljejw==}
+    dev: false
 
   /@antfu/utils/0.3.0:
     resolution: {integrity: sha512-UU8TLr/EoXdg7OjMp0h9oDoIAVr+Z/oW9cpOxQQyrsz6Qzd2ms/1CdWx8fl2OQdFpxGmq5Vc4TwfLHId6nAZjA==}
