@@ -1,4 +1,4 @@
-import { createApp, defineComponent, ref, VNode, Transition, Teleport, App, CSSProperties } from 'vue'
+import { createApp, defineComponent, ref, VNode, Transition, Teleport, App, CSSProperties, RendererElement } from 'vue'
 
 import { getMaxZIndex } from '@wisdom-plus/utils/get-max-zindex'
 export interface ToastOptions {
@@ -7,13 +7,15 @@ export interface ToastOptions {
     duration?: number;
     placement?: 'top' | 'bottom' | 'center',
     style?: string | CSSProperties,
-    transition?: string
+    transition?: string,
+    to?: string | RendererElement | null | undefined
 }
 
 const Toast = (options: ToastOptions) => {
     const defaltOptions: ToastOptions = {
         duration: 3000,
-        placement: 'bottom'
+        placement: 'bottom',
+        to: 'body'
     }
     options = Object.assign(defaltOptions, options)
     const newDiv = document.createElement('div')
@@ -25,10 +27,11 @@ const Toast = (options: ToastOptions) => {
                 show.value = false
             }, options.duration)
             return () => (
-                <Teleport to="body">
+                <Teleport to={options.to}>
                     <div class={{
                         'wp-toast': true,
-                        [`wp-toast__${options.placement}`]: true
+                        [`wp-toast__${options.placement}`]: true,
+                        [`wp-toast__absolute`]: options.to !== 'body' && options.to !== document.body
                     }} style={{
                         zIndex: getMaxZIndex()
                     }}>

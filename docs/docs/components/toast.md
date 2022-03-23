@@ -79,6 +79,33 @@ const tip3 = () => Toast({
 ```
 :::
 
+### 指定容器
+
+:::demo
+```vue
+<template>
+    <wp-space vertical>
+        <div ref="divRef" style="height: 300px; position: relative; background: #eee" />
+        <wp-button @click="tip(false)">
+            提示
+        </wp-button>
+    </wp-space>
+</template>
+
+<script lang="ts" setup>
+import { ref, h } from 'vue'
+
+const divRef = ref()
+const tip = (dark = false) => Toast({
+    dark,
+    message: '这是一个提示',
+    to: divRef.value,
+    placement: 'center'
+})
+</script>
+```
+:::
+
 ## API
 
 ### ToastOptions
