@@ -40,6 +40,29 @@ app.use(WpTab)
 ```
 :::
 
+#### 调整标签的对齐模式
+
+:::demo
+```vue
+<template>
+    <wp-tabs :space-props="{ justify: 'space-around' }">
+        <wp-tab title="test">
+            内容
+        </wp-tab>
+        <wp-tab title="test2">
+            内容2
+        </wp-tab>
+        <wp-tab title="test">
+            <template #title>
+                插槽
+            </template>
+            内容3
+        </wp-tab>
+    </wp-tabs>
+</template>
+```
+:::
+
 #### 标题位置
 
 :::demo
