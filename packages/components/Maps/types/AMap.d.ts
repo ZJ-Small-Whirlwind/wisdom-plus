@@ -1,20 +1,138 @@
-
-interface AMapMapOptions {
+export interface AMapMapOptions {
     [key:string]:any
     center:number[]
     zoom:number;
 }
+export interface AMapMapEventClick {
+    lnglat:LngLat;
+    pixel:Pixel;
+    pos:number[];
+    originEvent:{
+        lnglat:LngLat;
+        pixel:Pixel;
+    } & MouseEvent;
+    target:any;
+    type:"click"
+}
 
-class AMapMap{
+export interface AMapMapEventHotspotclick {
+    typs:string;
+    lnglat:LngLat;
+    name:string;
+    id:string;
+}
+
+export interface AMapMapEventMap {
+    "click":AMapMapEventClick
+    "dblclick":AMapMapEventClick
+    "mousemove":AMapMapEventClick
+    "mousewheel":AMapMapEventClick
+    "mouseover":AMapMapEventClick
+    "mouseout":AMapMapEventClick
+    "mouseup":AMapMapEventClick
+    "mousedown":AMapMapEventClick
+    "rightclick":AMapMapEventClick
+    "touchstart":AMapMapEventClick
+    "touchend":AMapMapEventClick
+    "complete":unknown
+    "mapmove":unknown
+    "movestart":unknown
+    "moveend":unknown
+    "zoomchange":unknown
+    "zoomstart":unknown
+    "zoomend":unknown
+    "dragstart":unknown
+    "dragging":unknown
+    "dragend":unknown
+    "resize":unknown
+    "hotspotclick": AMapMapEventHotspotclick
+    "hotspotover": AMapMapEventHotspotclick
+    "hotspotout": AMapMapEventHotspotclick
+}
+export class Circle {
+    constructor(CircleOptions:Partial<CircleOptions>) {
+    }
+}
+export interface Circle {}
+export class PolylineOptions {
+    constructor(PolylineOptions:Partial<PolylineOptions>) {
+    }
+}
+export interface Polyline {}
+export class Polygon {
+    constructor(PolygonOptions:Partial<PolygonOptions>) {
+    }
+}
+export interface PolygonOptions {}
+export interface overlayersMap {
+    "marker":Marker
+    "circle":Circle
+    "polyline":Polyline
+    "polygon":Polygon
+}
+
+export class AMapMap{
     constructor(el:any, opts:Partial<AMapMapOptions>) {}
     addControl(obj:any){}
     setBounds(Bounds:Bounds){}
+    add(overlayers:any[] | any){}
+    remove(overlayers:any[] | any){}
+    getAllOverlays<K extends keyof overlayersMap>(type?:K): overlayersMap[K]
+    on<K extends keyof AMapMapEventMap>(type:K, callback:(ev:AMapMapEventMap[K])=>any, context?:any){}
 }
 
-class Scale {
+// https://lbs.amap.com/api/javascript-api/reference/overlay#marker
+export class Marker {
+    constructor(MarkerOptions:Partial<MarkerOptions>) {
+    }
+}
+
+export class Size {
+    constructor(public width:Number, public height:Number) {
+    }
+    getWidth():number;
+    getHeight():number;
+    toString():string;
+}
+
+
+
+export class Icon {
+    constructor(IconOptions:Partial<IconOptions>) {
+    }
+    getImageSize():Size
+    setImageSize(size:Size):void
+}
+
+export interface IconOptions {
+    size:Size;
+    imageOffset:Pixel;
+    image:string;
+    imageSize:Size
+}
+
+export interface MarkerOptions {
+    map:AMapMap;
+    position:LngLat
+    anchor:string
+    offset:Pixel
+    icon:Icon | string
+    content:object | string
+}
+
+export class Pixel {
+    constructor(public x:number,public y:number) {
+    }
+    getX():number
+    getY():number
+    equals(point:Pixel):boolean
+    toString():string
+}
+
+export class Scale {
     constructor() {}
 }
-class CitySearch {
+export class CitySearch {
     getLocalCity(callback:(status:'complete' | 'error',result: {
         [key:string]:any;
         adcode:string
@@ -27,12 +145,12 @@ class CitySearch {
         status:string
     })=>void)
 }
-class Bounds {
+export class Bounds {
     className:string
     northEast:LngLat;
     southWest:LngLat;
 }
-class LngLat {
+export class LngLat {
     className:string
     KL:number;
     kT:number;
@@ -40,7 +158,7 @@ class LngLat {
     lng:number;
     pos:number[];
 }
-interface GeolocationOptions {
+export interface GeolocationOptions {
     enableHighAccuracy:boolean;
     timeout:number;
     noIpLocate:number;
@@ -61,7 +179,7 @@ interface GeolocationOptions {
     extensions:string;
 }
 
-class Geolocation {
+export class Geolocation {
     constructor(GeolocationOptions:GeolocationOptions) {}
     getCurrentPosition(callback:(status:'complete' | 'error', result:{
         [key:string]:any;
@@ -88,6 +206,13 @@ export interface AMapInstance{
     Bounds:typeof Bounds
     LngLat:typeof LngLat
     Geolocation:typeof Geolocation
+    Pixel:typeof Pixel
+    Icon:typeof Icon
+    Size:typeof Size
+    Marker:typeof Marker
+    Circle:typeof Circle
+    Polyline:typeof Polyline
+    Polygon:typeof Polygon
 }
 
 declare global {
