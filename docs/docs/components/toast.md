@@ -118,3 +118,4 @@ const tip = (dark = false) => Toast({
 | placement      | 位置       | _'top'\| 'bottom' \| 'center'_                                                           | 'bottom'   |
 | style | 自定义样式 | _string \| CSSProperties_ | - |
 | transition | 过渡名 | _string_ | 'wp-toast-fade' |
+| to | 指定容器 | _string \| RendererElement \| null \| undefined_ | 'body' |
