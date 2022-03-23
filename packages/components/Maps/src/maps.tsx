@@ -50,7 +50,7 @@ export default defineComponent({
                 'AMap.Geolocation':map=>{
                     //解析定位结果
                     const onComplete = (data)=> {
-                        console.log(data)
+                        console.log(data,1111)
                         // document.getElementById('status').innerHTML='定位成功'
                         // var str = [];
                         // str.push('定位结果：' + data.position);
@@ -63,11 +63,13 @@ export default defineComponent({
                     }
                     //解析定位错误信息
                     const onError = (data)=> {
-                        console.log(data)
+                        console.log(data,2222)
                         // document.getElementById('status').innerHTML='定位失败'
                         // document.getElementById('result').innerHTML = '失败原因排查信息:'+data.message+'</br>浏览器返回信息：'+data.originMessage;
                     }
                     var geolocation = new AMap.Geolocation({
+                        enableHighAccuracy:true,
+                        timeout:0,
                         ...(Object.prototype.toString.call(props.autoGeolocation) === '[object Object]' ? props.autoGeolocation : {}) as any
                     });
                     map.addControl(geolocation);
