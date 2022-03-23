@@ -3,7 +3,8 @@ const path = require("path")
 const vitepress = require("vitepress");
 const node_modules = path.resolve(__dirname,"../node_modules");
 const files = [
-    {id:"./.pnpm/wangeditor@4.7.12/node_modules/wangeditor/dist/wangEditor.min.js"}
+    {id:"./.pnpm/wangeditor@4.7.12/node_modules/wangeditor/dist/wangEditor.min.js"},
+    {id:"./.pnpm/@amap+amap-jsapi-loader@1.0.1/node_modules/@amap/amap-jsapi-loader/dist/index.js"},
 ];
 files.forEach(({id})=>{
     const filePath = path.resolve(node_modules, id);
