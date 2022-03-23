@@ -116,6 +116,11 @@
     transition: var(--wp-modal-duration);
 }
 
+.wp-modal-fade-enter-active,
+.wp-modal-fade-leave-active {
+    transition: var(--wp-modal-duration) cubic-bezier(.2, -.5, .2, 2);
+}
+
 .wp-modal-fade-enter-from,
 .wp-modal-fade-leave-to {
     transform: scale(.9);
