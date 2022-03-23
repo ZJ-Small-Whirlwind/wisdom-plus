@@ -109,37 +109,48 @@ export default defineComponent({
                 map.value.on("click", (ev)=>{
                     emit('mapClick', ev)
                 })
-                const contextMenuPositon = ref()
-                const contextMenu = new AMap.ContextMenu();
-                //右键放大
-                contextMenu.addItem("放大一级", function () {
-                    map.value.zoomIn();
-                }, 0);
+                // 右键菜单
+                if(Object.prototype.toString.call(props.menu) === '[object Array]'){
+                    const contextMenuPositon = ref()
+                    const contextMenu = new AMap.ContextMenu();
+                    props.menu.forEach((item, k)=>{
+                        contextMenu.addItem(item.content, (ev)=>{
+                            if(Object.prototype.toString.call(props.menu) === '[object Array]'){
+                                emit(item.emit || '', map.value, item, ev)
+                            }
+                        }, k)
+                    })
+                    //右键放大
+                    // contextMenu.addItem("放大一级", function () {
+                    //     map.value.zoomIn();
+                    // }, 0);
+                    //
+                    // //右键缩小
+                    // contextMenu.addItem("缩小一级", function () {
+                    //     map.value.zoomOut();
+                    // }, 1);
+                    //
+                    // //右键显示全国范围
+                    // contextMenu.addItem("缩放至全国范围", function (e) {
+                    //     map.value.setZoomAndCenter(4, [108.946609, 34.262324]);
+                    // }, 2);
+                    //
+                    // //右键添加Marker标记
+                    // contextMenu.addItem("添加标记", function (e) {
+                    //
+                    //     new AMap.Marker({
+                    //         map: map.value,
+                    //         position: contextMenuPositon.value //基点位置
+                    //     });
+                    // }, 3);
 
-                //右键缩小
-                contextMenu.addItem("缩小一级", function () {
-                    map.value.zoomOut();
-                }, 1);
-
-                //右键显示全国范围
-                contextMenu.addItem("缩放至全国范围", function (e) {
-                    map.value.setZoomAndCenter(4, [108.946609, 34.262324]);
-                }, 2);
-
-                //右键添加Marker标记
-                contextMenu.addItem("添加标记", function (e) {
-
-                    new AMap.Marker({
-                        map: map.value,
-                        position: contextMenuPositon.value //基点位置
+                    //地图绑定鼠标右击事件——弹出右键菜单
+                    map.value.on('rightclick', function (e) {
+                        contextMenu.open(map.value as any, e.lnglat);
+                        contextMenuPositon.value = e.lnglat;
                     });
-                }, 3);
+                }
 
-                //地图绑定鼠标右击事件——弹出右键菜单
-                map.value.on('rightclick', function (e) {
-                    contextMenu.open(map.value, e.lnglat);
-                    contextMenuPositon.value = e.lnglat;
-                });
 
                 emit('load',map.value, AMap)
             }).catch(err=>{

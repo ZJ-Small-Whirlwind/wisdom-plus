@@ -69,15 +69,17 @@ const load = (map,AMap) => {
 :::demo
 ```vue
 <template>
-    <WpMaps :menu="menu"></WpMaps>
+    <WpMaps :menu="menu" @menuClick1="menuClick1"></WpMaps>
 </template>
 <script setup>
+import { ref } from 'vue'
 const menu = ref([
-    {name:'缩小'},
-    {name:'放大'},
-    {name:'距离测量'},
-    {name:'添加标记'},
+    {content:'放大一级', emit:'menuClick1'},
+    {content:'缩小一级'},
+    {content:'缩放至全国范围'},
+    {content:'添加标记'},
 ])
+const menuClick1 = map=>map.zoomIn()
 </script>
 ```
 :::

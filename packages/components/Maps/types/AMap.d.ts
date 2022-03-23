@@ -196,6 +196,24 @@ export class Geolocation {
         crosses:any[]
     })=>void)
 }
+
+export class ContextMenu {
+    constructor(ContextMenuOptions?:Partial<ContextMenuOptions>) {
+    }
+    addItem(text:string, callback:(ev:any)=>void, num:Number)
+    removeItem(text:string, callback:(ev:any)=>void)
+    open(map:AMapMap,position:LngLat):void
+    close():void
+}
+
+export interface ContextMenuOptions {
+    position:LngLat;
+    content:string| HTMLElement
+    width:number;
+}
+
+
+
 export type AMapPluginsMapKeys = `AMap.${keyof AMapInstance}` | keyof AMapInstance;
 export type AMapPluginsMapValue = (map:AMapMap, AMapInstance:AMapInstance)=>any
 export type AMapPluginsMap =  Partial<{ [key in AMapPluginsMapKeys]:AMapPluginsMapValue }>
@@ -213,6 +231,7 @@ export interface AMapInstance{
     Circle:typeof Circle
     Polyline:typeof Polyline
     Polygon:typeof Polygon
+    ContextMenu:typeof ContextMenu
 }
 
 declare global {
