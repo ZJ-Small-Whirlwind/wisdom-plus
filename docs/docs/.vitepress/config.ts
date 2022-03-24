@@ -298,6 +298,10 @@ export default defineConfig({
                         {
                             text: 'BackTop 回到顶部',
                             link: '/components/back-top'
+                        },
+                        {
+                            text: 'Timeline 时间线',
+                            link: '/components/timeline'
                         }
                     ]
                 }

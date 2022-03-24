@@ -75,6 +75,8 @@ declare module 'vue' {
     WpBackTop: typeof import('wisdom-plus')['WpBackTop']
     WpDebug: typeof import('wisdom-plus')['WpDebug']
     WpAwait: typeof import('wisdom-plus')['WpAwait']
+    WpTimeline: typeof import('wisdom-plus')['WpTimeline']
+    WpTimelineItem: typeof import('wisdom-plus')['WpTimelineItem']
   }
 }
 

@@ -61,6 +61,10 @@ const getList = (input: string) => {
         }, 1000)
     })
 }
+
+const handleClick = () => {
+    console.log('1')
+}
 </script>
 ```
 :::

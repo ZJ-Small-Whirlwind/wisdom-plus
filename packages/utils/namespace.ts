@@ -1,6 +1,6 @@
 const prefix = 'wp'
 export const useNamespace = (name: string) => {
-    const basic = `wp-${name}`
+    const basic = `${prefix}-${name}`
     return {
         basic,
         of: (of: string, prefix?: string) => {
