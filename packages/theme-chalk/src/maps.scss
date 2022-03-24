@@ -12,4 +12,10 @@
     .amap-logo,.amap-copyright{
         display: none !important;
     }
+    &-auto-complete{
+        position: absolute;
+        left: 15px;
+        top: 15px;
+        background-color: #ffffff;
+    }
 }

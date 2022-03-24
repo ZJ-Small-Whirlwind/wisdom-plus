@@ -22,7 +22,7 @@ export const selectProps = buildProps({
         default:'value'
     },
     modelValue:{
-        type:definePropType<Array<object> | string | number | boolean>([Array, String, Number, Boolean]),
+        type:definePropType<Array<object> | string | number | boolean | object>([Array, String, Number, Boolean, Object]),
         default:null
     },
     clearable:{

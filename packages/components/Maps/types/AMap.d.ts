@@ -1,3 +1,4 @@
+export type StatusType = "complete" | 'error' | 'no_data';
 export interface AMapMapOptions {
     [key:string]:any
     center:number[]
@@ -133,7 +134,7 @@ export class Scale {
     constructor() {}
 }
 export class CitySearch {
-    getLocalCity(callback:(status:'complete' | 'error',result: {
+    getLocalCity(callback:(status:StatusType,result: {
         [key:string]:any;
         adcode:string
         bounds:Bounds
@@ -181,7 +182,7 @@ export interface GeolocationOptions {
 
 export class Geolocation {
     constructor(GeolocationOptions:GeolocationOptions) {}
-    getCurrentPosition(callback:(status:'complete' | 'error', result:{
+    getCurrentPosition(callback:(status:StatusType, result:{
         [key:string]:any;
         position:LngLat
         accuracy:number
@@ -212,6 +213,40 @@ export interface ContextMenuOptions {
     width:number;
 }
 
+export class Autocomplete {
+    constructor(AutocompleteOptions:Partial<AutocompleteOptions>) {
+    }
+    search(keyword:string, callback:(status:StatusType, result:{
+        count:number;
+        info:"OK"|'ok';
+        tips:AutocompleteSearchTipsItem[]
+    })=>void):void
+    setType(type:string):void
+    setCity(city:string):void
+    setCityLimit(isLimit:boolean):void
+}
+
+export interface AutocompleteSearchTipsItem {
+    adcode:string;
+    address:string;
+    city:any[];
+    district:string;
+    id:string;
+    location:LngLat;
+    name:string;
+    typecode:string;
+}
+
+export interface AutocompleteOptions {
+    type:string;
+    city:string;
+    datatype:string;
+    citylimit:boolean;
+    input:string | HTMLElement;
+    output:string | HTMLElement;
+    outPutDirAuto:boolean;
+}
+
 
 
 export type AMapPluginsMapKeys = `AMap.${keyof AMapInstance}` | keyof AMapInstance;
@@ -232,6 +267,7 @@ export interface AMapInstance{
     Polyline:typeof Polyline
     Polygon:typeof Polygon
     ContextMenu:typeof ContextMenu
+    Autocomplete:typeof Autocomplete
 }
 
 declare global {

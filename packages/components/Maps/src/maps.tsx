@@ -1,7 +1,8 @@
 import {defineComponent, ExtractPropTypes, ref, onMounted, computed} from "vue"
 import {buildProps} from "@wisdom-plus/utils/props";
 import AMapLoader from "@amap/amap-jsapi-loader"
-import {AMapInstance, AMapMap, AMapPluginsMap} from "../types/AMap";
+import {AMapInstance, AMapMap, AMapPluginsMap, Autocomplete} from "../types/AMap";
+import WpSelect from "../../Select";
 import {Toast} from "../../Toast";
 export const mapsProps = buildProps({
     config:{type:Object, default:null},
@@ -11,6 +12,8 @@ export const mapsProps = buildProps({
     autoIp:{type:Boolean, default:false},
     autoGeolocation:{type:[Boolean, Object], default:false},
     menu:{type:Array, default:null},
+    autoComplete:{type:Boolean, default:false},
+    city:{type:String, default:"全国"},
 })
 export type MapsProps = ExtractPropTypes<typeof mapsProps>
 
@@ -26,6 +29,8 @@ export default defineComponent({
             dark:true,
             to:container.value
         })
+        const autoCompleteServe = ref<Autocomplete>();
+        const autoCompleteModelValue = ref();
         const pluginsMap = computed<AMapPluginsMap>(()=>({
             ...(props.showScale ? {
                 'AMap.Scale':(map)=>{
@@ -85,6 +90,14 @@ export default defineComponent({
                     });
                 },
             } : {}),
+            ...(props.autoComplete ? {
+                'AMap.AutoComplete':(map)=>{
+                    autoCompleteServe.value = new AMap.Autocomplete({
+                        city: props.city,
+                        ...(Object.prototype.toString.call(props.autoComplete) === '[object Object]' ? props.autoComplete : {}) as any
+                    });
+                }
+            } : {}),
             ...(props.plugins || {})
         }))
         const pluginsNams = computed(()=>Object.keys(pluginsMap.value))
@@ -135,21 +148,41 @@ export default defineComponent({
                     map.value.on('rightclick', function (e) {
                         contextMenu.open(map.value as any, e.lnglat);
                         contextMenuPositon.value = e.lnglat;
+                        emit('mapRightclick', e)
                     });
                 }
-
-
                 emit('load',map.value, AMap)
             }).catch(err=>{
                 emit('error',err)
             })
+        }
+        const remote = (keywords)=>{
+            if(props.autoComplete &&  autoCompleteServe.value){
+                return new Promise<any[]>(resolve => {
+                    autoCompleteServe.value?.search(keywords, (status, result)=>{
+                        if(status === 'complete'){
+                            resolve(result.tips.map(item=>({
+                                label:item.name,
+                                value:item
+                            })));
+                        }else {
+                            resolve([])
+                        }
+                    })
+                })
+
+            }else {
+                return Promise.resolve([])
+            }
         }
         onMounted(()=>{
             resetMap();
         })
         return {
             container,
-            map
+            map,
+            remote,
+            autoCompleteModelValue,
         }
     },
     render(){
@@ -160,6 +193,18 @@ export default defineComponent({
                 'wp-maps-container': true
             }} ref="container"/>
             <div class="wp-maps-copyright">© 版权所有： Wisdom Plus</div>
+            <div class={{
+                'wp-maps-auto-complete':true
+            }}>
+                {this.$props.autoComplete ? <WpSelect
+                    placeholder={"请输入关键词"}
+                    filterable
+                    clearable
+                    v-model={this.autoCompleteModelValue}
+                    v-model:input={(v)=>this.$emit("auto-complete", v,1111)}
+                    remote={this.remote}>
+                </WpSelect> : null}
+            </div>
         </div>)
     }
 })
