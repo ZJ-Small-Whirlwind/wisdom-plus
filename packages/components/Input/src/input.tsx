@@ -8,6 +8,8 @@ import {
     useFormItem,
 } from '@wisdom-plus/hooks'
 import { calcTextareaHeight } from './calc-textarea-height'
+import Popover from '../../Popover'
+import Spin from '../../Spin'
 
 export const inputProps = buildProps({
     modelValue: {
@@ -55,6 +57,10 @@ export const inputProps = buildProps({
     isSelect: {
         type: Boolean,
         default: false
+    },
+    autocomplete: Boolean,
+    autocompleteList: {
+        type: [Array, Function] as PropType<string[] | ((keyword: string) => Promise<string[]>)>
     }
 })
 
@@ -119,11 +125,46 @@ export default defineComponent({
             }
         }
 
+        const autocompleteListMap = ref<string[]>([])
+        const autocompleteLoading = ref(false)
+        const autocompleteActive = ref(-1)
         watch(input, () => {
             nextTick(resizeTextarea)
             if (props.validateEvent) {
                 formItem?.validate?.('change')
             }
+        })
+
+        watch([input, focused], async() => {
+            if (!focused.value) return
+            if (props.autocomplete && !props.disabled && !props.readonly) {
+                try {
+                    autocompleteLoading.value = true
+                    if (!props.autocompleteList) {
+                        autocompleteListMap.value = []
+                    } else {
+                        if (Array.isArray(props.autocompleteList)) {
+                            if (!input.value) {
+                                autocompleteListMap.value = props.autocompleteList
+                            } else {
+                                const regExp = new RegExp(input.value.trim(), 'i')
+                                autocompleteListMap.value = props.autocompleteList.filter(item => regExp.test(item))
+                            }
+                        } else {
+                            const inputingIs = input.value
+                            const result = await props.autocompleteList(input.value || '')
+                            if (inputingIs === input.value) {
+                                autocompleteListMap.value = result
+                            }
+                        }
+                    }
+                } finally {
+                    autocompleteActive.value = -1
+                    autocompleteLoading.value = false
+                }
+            }
+        }, {
+            immediate: true
         })
 
         const onBlur = (event: Event) => {
@@ -148,7 +189,10 @@ export default defineComponent({
             resizeTextarea,
             onBlur,
             onFocus,
-            textareaCalcStyle
+            textareaCalcStyle,
+            autocompleteListMap,
+            autocompleteLoading,
+            autocompleteActive
         }
     },
     render() {
@@ -198,7 +242,7 @@ export default defineComponent({
                 }
             </div>
         )
-        return (
+        const Input = (
             <div class={[
                 'wp-input',
                 `wp-input-${this.size}`,
@@ -206,7 +250,27 @@ export default defineComponent({
                     'wp-input--disabled': this.disabled,
                     'wp-input--focused': this.focused
                 }
-            ]}>
+            ]} {...this.$attrs} onKeydown={e => {
+                if (!this.autocomplete || this.disabled || this.readonly) return
+                if (e.code === 'ArrowDown') {
+                    if (this.autocompleteActive === this.autocompleteListMap.length - 1) {
+                        this.autocompleteActive = 0
+                        return
+                    }
+                    this.autocompleteActive += 1
+                }
+                if (e.code === 'ArrowUp') {
+                    if (this.autocompleteActive <= 0) {
+                        this.autocompleteActive = this.autocompleteListMap.length - 1
+                        return
+                    }
+                    this.autocompleteActive -= 1
+                }
+                if (e.code === 'Enter' && this.autocompleteActive >= 0) {
+                    this.input = this.autocompleteListMap[this.autocompleteActive]
+                    this.focused = false
+                }
+            }}>
                 <div class={{
                     'wp-input--element-content':true
                 }}>
@@ -268,6 +332,47 @@ export default defineComponent({
                     )
                 }
             </div>
+        )
+        return (
+            this.autocomplete && !this.disabled && !this.readonly ? (
+                <Popover
+                    placement={'bottom'}
+                    width={'target'}
+                    v-model={this.focused}
+                    trigger="none"
+                    class="wp-autocompete"
+                >
+                    {{
+                        reference: () => Input,
+                        default: () => (
+                            !this.autocompleteLoading ? (
+                                this.autocompleteListMap.length === 0 ? (
+                                    <div class="wp-autocompete-empty">
+                                        暂无数据
+                                    </div>
+                                ) : (
+                                    this.autocompleteListMap.map((item, index) => (
+                                        <div class={[
+                                            'wp-autocompete-cell',
+                                            {
+                                                'wp-autocompete-cell--active': this.autocompleteActive === index
+                                            }
+                                        ]} onClick={() => {
+                                            this.input = item
+                                        }} key={item}>
+                                            { item }
+                                        </div>
+                                    ))
+                                )
+                            ) : (
+                                <div class="wp-autocompete-empty">
+                                    <Spin size="24" />
+                                </div>
+                            )
+                        )
+                    }}
+                </Popover>
+            ) : Input
         )
     }
 })

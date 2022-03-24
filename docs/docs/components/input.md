@@ -25,6 +25,46 @@ const input = ref<string>()
 ```
 :::
 
+#### 自动填充
+
+:::demo
+```vue
+<template>
+    <wp-space vertical>
+        <wp-input
+            placeholder='请输入'
+            v-model="input"
+            clearable
+            autocomplete
+            :autocomplete-list="['可以', '接收','一个', '列表']"
+        />
+        <wp-input
+            placeholder='请输入'
+            v-model="input"
+            clearable
+            autocomplete
+            :autocomplete-list="getList"
+        />
+    </wp-space>
+</template>
+
+<script lang="ts" setup>
+const SearchIcon = SearchOutlined
+
+import { ref } from 'vue'
+const input = ref<string>()
+
+const getList = (input: string) => {
+    return new Promise<string[]>((resolve) => {
+        setTimeout(() => {
+            resolve(['也可以是一个', '异步', 'Promise'])
+        }, 1000)
+    })
+}
+</script>
+```
+:::
+
 #### 密码
 
 :::demo
