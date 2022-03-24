@@ -36,7 +36,7 @@ const input = ref<string>()
             v-model="input"
             clearable
             autocomplete
-            :autocomplete-list="['可以', '接收','一个', '列表']"
+            :autocomplete-list="[{ value: '可以' }, { value: '接收' }, {value: '一个'}, {value:'列表'}]"
         />
         <wp-input
             placeholder='请输入'
@@ -57,7 +57,7 @@ const input = ref<string>()
 const getList = (input: string) => {
     return new Promise<string[]>((resolve) => {
         setTimeout(() => {
-            resolve(['也可以是一个', '异步', 'Promise'])
+            resolve([{value: '也可以是一个'}, {value: 'async', label: '异步'}, {value: 'Promise'}])
         }, 1000)
     })
 }
@@ -133,6 +133,8 @@ const SearchIcon = SearchOutlined
 | rows | 文本域的默认高度，行 | _number_ | - |
 | showPasswordIcon | 是否显示密码切换按钮 | _boolean_ | true |
 | autosize | 是否自适应高度 | _boolean \| {minRows: number, maxRows: number}_ | - |
+| autocomplete | 是否启用自动填充 | _boolean_ | false |
+| autocompleteList | 自动填充列表，如果输入的是一个数组，则会通过正则匹配排除过滤项 | _AutocompleteList[] \| ((keyword: string) => Promise\<AutocompleteList[]>)_ | - |
 
 ### Slots
 
@@ -142,3 +144,4 @@ const SearchIcon = SearchOutlined
 | suffix       | 后缀替换插槽  | - |
 | close-icon   | 关闭图标插槽  | - |
 | input-prefix | 输入框前缀插槽 | - |
+| autocomplete-item | 自动填充选项插槽 | _input: string, value: string, label: string_ |

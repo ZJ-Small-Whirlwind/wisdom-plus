@@ -11,6 +11,11 @@ import { calcTextareaHeight } from './calc-textarea-height'
 import Popover from '../../Popover'
 import Spin from '../../Spin'
 
+export type AutocompleteList = {
+    value: string,
+    label: string
+} & Record<string, any>
+
 export const inputProps = buildProps({
     modelValue: {
         type: String,
@@ -60,7 +65,7 @@ export const inputProps = buildProps({
     },
     autocomplete: Boolean,
     autocompleteList: {
-        type: [Array, Function] as PropType<string[] | ((keyword: string) => Promise<string[]>)>
+        type: [Array, Function] as PropType<AutocompleteList[] | ((keyword: string) => Promise<AutocompleteList[]>)>
     }
 })
 
@@ -125,7 +130,7 @@ export default defineComponent({
             }
         }
 
-        const autocompleteListMap = ref<string[]>([])
+        const autocompleteListMap = ref<AutocompleteList[]>([])
         const autocompleteLoading = ref(false)
         const autocompleteActive = ref(-1)
         watch(input, () => {
@@ -148,7 +153,7 @@ export default defineComponent({
                                 autocompleteListMap.value = props.autocompleteList
                             } else {
                                 const regExp = new RegExp(input.value.trim(), 'i')
-                                autocompleteListMap.value = props.autocompleteList.filter(item => regExp.test(item))
+                                autocompleteListMap.value = props.autocompleteList.filter(item => regExp.test(item.label) || regExp.test(item.value))
                             }
                         } else {
                             const inputingIs = input.value
@@ -267,7 +272,7 @@ export default defineComponent({
                     this.autocompleteActive -= 1
                 }
                 if (e.code === 'Enter' && this.autocompleteActive >= 0) {
-                    this.input = this.autocompleteListMap[this.autocompleteActive]
+                    this.input = this.autocompleteListMap[this.autocompleteActive].value
                     this.focused = false
                 }
             }}>
@@ -340,32 +345,34 @@ export default defineComponent({
                     width={'target'}
                     v-model={this.focused}
                     trigger="none"
-                    class="wp-autocompete"
+                    class="wp-autocomplete"
                 >
                     {{
                         reference: () => Input,
                         default: () => (
                             !this.autocompleteLoading ? (
                                 this.autocompleteListMap.length === 0 ? (
-                                    <div class="wp-autocompete-empty">
+                                    <div class="wp-autocomplete-empty">
                                         暂无数据
                                     </div>
                                 ) : (
                                     this.autocompleteListMap.map((item, index) => (
-                                        <div class={[
-                                            'wp-autocompete-cell',
-                                            {
-                                                'wp-autocompete-cell--active': this.autocompleteActive === index
-                                            }
-                                        ]} onClick={() => {
-                                            this.input = item
-                                        }} key={item}>
-                                            { item }
-                                        </div>
+                                        this.$slots.autocompleteItem?.({ input: this.input, ...item }) || (
+                                            <div class={[
+                                                'wp-autocomplete-cell',
+                                                {
+                                                    'wp-autocomplete-cell--active': this.autocompleteActive === index
+                                                }
+                                            ]} onClick={() => {
+                                                this.input = item.value
+                                            }} key={item.value}>
+                                                { item.label || item.value }
+                                            </div>
+                                        )
                                     ))
                                 )
                             ) : (
-                                <div class="wp-autocompete-empty">
+                                <div class="wp-autocomplete-empty">
                                     <Spin size="24" />
                                 </div>
                             )
