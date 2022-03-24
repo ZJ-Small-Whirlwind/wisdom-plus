@@ -161,9 +161,11 @@ export default defineComponent({
                     }
                 }
                 emit('update:modelValue', currentValue.value);
+                emit('change',  currentValue.value);
             }else {
                 currentValue.value = value;
                 emit('update:modelValue', value);
+                emit('change', value);
             }
             formItem?.validate('change')
         }

@@ -1,9 +1,11 @@
 import {defineComponent, ExtractPropTypes, ref, onMounted, computed} from "vue"
 import {buildProps} from "@wisdom-plus/utils/props";
 import AMapLoader from "@amap/amap-jsapi-loader"
-import {AMapInstance, AMapMap, AMapPluginsMap, Autocomplete} from "../types/AMap";
+import {AMapInstance, AMapMap, AMapPluginsMap, Autocomplete, PlaceSearch} from "../types/AMap";
 import WpSelect from "../../Select";
+import WpIcon from "../../Icon";
 import {Toast} from "../../Toast";
+import {LocationOnRound, LocalPhoneRound, EmailRound} from "@vicons/material";
 export const mapsProps = buildProps({
     config:{type:Object, default:null},
     plugins:{type:Object, default:null},
@@ -13,6 +15,7 @@ export const mapsProps = buildProps({
     autoGeolocation:{type:[Boolean, Object], default:false},
     menu:{type:Array, default:null},
     autoComplete:{type:Boolean, default:false},
+    placeSearch:{type:Boolean, default:false},
     city:{type:String, default:"全国"},
 })
 export type MapsProps = ExtractPropTypes<typeof mapsProps>
@@ -29,8 +32,17 @@ export default defineComponent({
             dark:true,
             to:container.value
         })
+        const placeSearchServe = ref<PlaceSearch>();
         const autoCompleteServe = ref<Autocomplete>();
         const autoCompleteModelValue = ref();
+        const AMapInstance = ref<AMapInstance>()
+        const getMapObj = computed(()=>{
+            return {
+                map:map.value,
+                AMap:AMapInstance.value
+            }
+        })
+
         const pluginsMap = computed<AMapPluginsMap>(()=>({
             ...(props.showScale ? {
                 'AMap.Scale':(map)=>{
@@ -98,6 +110,15 @@ export default defineComponent({
                     });
                 }
             } : {}),
+            ...(props.placeSearch ? {
+                'AMap.PlaceSearch':(map)=>{
+                    placeSearchServe.value = new AMap.PlaceSearch({
+                        city: props.city,
+                        extensions:"all",
+                        ...(Object.prototype.toString.call(props.placeSearch) === '[object Object]' ? props.placeSearch : {}) as any
+                    });
+                }
+            } : {}),
             ...(props.plugins || {})
         }))
         const pluginsNams = computed(()=>Object.keys(pluginsMap.value))
@@ -108,10 +129,12 @@ export default defineComponent({
                 ...(props.config || {}),
                 plugins: pluginsNams.value,
             }).then((AMap:AMapInstance)=>{
+                AMapInstance.value = AMap;
                 // 实例化
                 map.value = new AMap.Map(container.value, {
                     center: [116.397428, 39.90923],
                     zoom: 13,
+                    animateEnable:true,
                     ...(props.mapConfig || [])
                 });
                 // 插件注入
@@ -151,15 +174,16 @@ export default defineComponent({
                         emit('mapRightclick', e)
                     });
                 }
-                emit('load',map.value, AMap)
+                emit('load',getMapObj.value)
             }).catch(err=>{
                 emit('error',err)
             })
         }
-        const remote = (keywords)=>{
+        const search = (keywords)=>{
             if(props.autoComplete &&  autoCompleteServe.value){
                 return new Promise<any[]>(resolve => {
                     autoCompleteServe.value?.search(keywords, (status, result)=>{
+                        emit('searchChange', status, result, getMapObj.value)
                         if(status === 'complete'){
                             resolve(result.tips.map(item=>({
                                 label:item.name,
@@ -170,10 +194,24 @@ export default defineComponent({
                         }
                     })
                 })
-
-            }else {
-                return Promise.resolve([])
             }
+            if(props.placeSearch && placeSearchServe.value){
+                return new Promise<any[]>(resolve => {
+                    placeSearchServe.value?.search(keywords, (status, result)=>{
+                        emit('searchChange', status, result, getMapObj.value)
+                        if(status === 'complete'){
+                            resolve(result.poiList.pois.map(item=>({
+                                label:item.name,
+                                value:item
+                            })));
+                        }else {
+                            resolve([])
+                        }
+                        resolve([])
+                    })
+                })
+            }
+            return Promise.resolve([])
         }
         onMounted(()=>{
             resetMap();
@@ -181,8 +219,9 @@ export default defineComponent({
         return {
             container,
             map,
-            remote,
+            search,
             autoCompleteModelValue,
+            getMapObj,
         }
     },
     render(){
@@ -196,13 +235,30 @@ export default defineComponent({
             <div class={{
                 'wp-maps-auto-complete':true
             }}>
-                {this.$props.autoComplete ? <WpSelect
+                {this.$props.autoComplete || this.$props.placeSearch ? <WpSelect
                     placeholder={"请输入关键词"}
                     filterable
                     clearable
                     v-model={this.autoCompleteModelValue}
-                    v-model:input={(v)=>this.$emit("auto-complete", v,1111)}
-                    remote={this.remote}>
+                    onChange={(v)=>this.$emit("auto-complete-change", v, this.getMapObj)}
+                    PopoverConfig={{
+                        popoverClass:"wp-maps-auto-complete-panel"
+                    }}
+                    v-slots={{
+                        default: ({value})=>{
+                            return (<div class={{
+                                "wp-maps-auto-complete-panel-item":true
+                            }}>
+                                {[
+                                    <div>{value.name}</div>,
+                                    value.address ? <div><WpIcon><LocationOnRound></LocationOnRound></WpIcon>{typeof value.address === 'string' ? (value.address|| '暂无') : (value.address[0] || '暂无')}</div> : null,
+                                    value.tel ? <div><WpIcon><LocalPhoneRound></LocalPhoneRound></WpIcon>{value.tel}</div> : null,
+                                    value.email ? <div><WpIcon><EmailRound></EmailRound></WpIcon>{value.email}</div> : null,
+                                ]}
+                            </div>)
+                        }
+                    }}
+                    remote={this.search}>
                 </WpSelect> : null}
             </div>
         </div>)

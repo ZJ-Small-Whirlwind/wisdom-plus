@@ -54,7 +54,7 @@ const onClear = ()=> {
     const m = Markers.value.pop();
     m?.remove();
 };
-const load = (map,AMap) => {
+const load = ({map,AMap}) => {
     mapObj.value = map;
     onClick({lnglat:[116.397428, 39.910907]});
 }
@@ -85,7 +85,7 @@ const menu = ref([
     }},
 ])
 const menuClick1 = map=>map.zoomIn();
-const load = (map,AMap)=>{
+const load = ({map,AMap})=>{
     //创建右键菜单
     var contextMenu = new AMap.ContextMenu();
 
@@ -120,10 +120,26 @@ const load = (map,AMap)=>{
 :::demo
 ```vue
 <template>
-    <WpMaps autoComplete></WpMaps>
+    <h2>autoComplete</h2>
+    <WpMaps autoComplete @auto-complete-change="change"></WpMaps>
+    <h2>placeSearch</h2>
+    <WpMaps placeSearch @auto-complete-change="change1"></WpMaps>
 </template>
 <script setup>
 import { ref } from 'vue'
+const change = (v, {map, AMap})=>{
+    try {
+        map.clearMap();
+        new AMap.Marker({
+            map,
+            position:v.location
+        })
+        map.setCenter(v.location)
+    }catch (e){ }
+}
+const change1 = (v)=>{
+    console.log(v)
+}
 </script>
 ```
 :::
@@ -141,7 +157,8 @@ import { ref } from 'vue'
 | autoIp | 是否Ip定位                       | `boolean`         | false |
 | autoGeolocation | 是否浏览器精确定位， 类型为object则为定位选项参数 | `boolean、object ` | false |
 | menu | 右键菜单                         | `menu `       | - |
-| autoComplete | 自动完成搜索                         | `boolean `       | false |
+| autoComplete | 自动完成搜索                         | `boolean｜ object`       | false |
+| placeSearch | POI搜索                         | `boolean｜object `       | false |
 | city | 当前城市                         | `string|object `       | 全国 |
 
 #### menu
@@ -151,11 +168,20 @@ import { ref } from 'vue'
 | emit    | 回调 | `string ｜ (ev:{item,ev,pos})=>void` | -   |
 
 
+### Methods
+
+| 名称 | 说明 | 参数 |
+| ---- |--| ---- |
+| search | 搜索, 必须开启autoComplete或placeSearch  | `(keywords)=>Promise<any>` |
+
+
 ### Emits
 
 | 名称 | 说明 | 参数 |
 | ---- |--| ---- |
-| load | 地图初始化加载完成 | `(map,AMap)=>void` |
+| load | 地图初始化加载完成 | `(mapObj)=>void` |
 | mapClick | 地图点击事件 | `ev` |
 | mapRightclick | 地图右键 | `ev` |
+| auto-complete-change | 自动完成搜索选择完成 | `result, mapObj` |
+| searchChange | 搜索结果回调  | `status, result, mapObj` |
 
