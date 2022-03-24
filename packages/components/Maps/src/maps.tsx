@@ -36,12 +36,50 @@ export default defineComponent({
         const autoCompleteServe = ref<Autocomplete>();
         const autoCompleteModelValue = ref();
         const AMapInstance = ref<AMapInstance>()
-        const getMapObj = computed(()=>{
+        const getMapObj = computed<{
+            map:AMapMap
+            AMap:AMapInstance
+        }>(()=>{
             return {
                 map:map.value,
                 AMap:AMapInstance.value
-            }
+            } as any
         })
+        const createMarker = ({position})=>{
+            //构建自定义信息窗体
+            let infoWindow = new AMap.InfoWindow({
+                anchor: 'top-center',
+                content: '这是信息窗体！这是信息窗体！',
+            });
+            let newMarker = new getMapObj.value.AMap.Marker({
+                map:getMapObj.value.map,
+                position
+            });
+            let isRemove = true
+            newMarker.on("click",()=>{
+                if(infoWindow.dom.parentNode){
+                    isRemove = false;
+                    infoWindow.close();
+                }else {
+                    console.log(111)
+                    // newMarker = createMarker({position})
+                    infoWindow.open(getMapObj.value.map, position);
+                }
+            })
+            const remove = newMarker.remove;
+            newMarker.remove = ()=>{
+                remove.call(newMarker);
+                infoWindow.close();
+            }
+            infoWindow.on("close", ()=>{
+                if(isRemove){
+                    remove.call(newMarker);
+                }
+                isRemove = true;
+            })
+            infoWindow.open(getMapObj.value.map, position);
+            return newMarker;
+        }
 
         const pluginsMap = computed<AMapPluginsMap>(()=>({
             ...(props.showScale ? {
@@ -69,21 +107,10 @@ export default defineComponent({
                     //解析定位结果
                     const onComplete = (data)=> {
                         console.log(data,1111)
-                        // document.getElementById('status').innerHTML='定位成功'
-                        // var str = [];
-                        // str.push('定位结果：' + data.position);
-                        // str.push('定位类别：' + data.location_type);
-                        // if(data.accuracy){
-                        //     str.push('精度：' + data.accuracy + ' 米');
-                        // }//如为IP精确定位结果则没有精度信息
-                        // str.push('是否经过偏移：' + (data.isConverted ? '是' : '否'));
-                        // document.getElementById('result').innerHTML = str.join('<br>');
                     }
                     //解析定位错误信息
                     const onError = (data)=> {
                         console.log(data,2222)
-                        // document.getElementById('status').innerHTML='定位失败'
-                        // document.getElementById('result').innerHTML = '失败原因排查信息:'+data.message+'</br>浏览器返回信息：'+data.originMessage;
                     }
                     var geolocation = new AMap.Geolocation({
                         enableHighAccuracy:true,
@@ -222,6 +249,7 @@ export default defineComponent({
             search,
             autoCompleteModelValue,
             getMapObj,
+            createMarker,
         }
     },
     render(){

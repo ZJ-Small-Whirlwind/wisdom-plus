@@ -28,7 +28,7 @@ app.use(WpMaps)
 
 #### 覆盖物
 
-点击地图添加覆盖物
+点击地图添加覆盖物并弹出信息框
 
 :::demo
 
@@ -38,17 +38,15 @@ app.use(WpMaps)
         <WpButton @click="onClick({lnglat:[116.397428, 39.910907]})">添加覆盖物</WpButton>
         <WpButton @click="onClear">删除覆盖物</WpButton>
     </div>
-    <WpMaps @mapClick="onClick" @load="load"></WpMaps>
+    <WpMaps @mapClick="onClick" @load="load" ref="map"></WpMaps>
 </template>
 <script setup lang="ts">
 import {ref} from 'vue'
+const map = ref()
 const mapObj = ref()
 const Markers = ref([])
 const onClick = ({lnglat, ...ev}) => {
-    Markers.value.push(new AMap.Marker({
-        map:mapObj.value,
-        position:lnglat
-    }))
+    Markers.value.push(map.value.createMarker({position:lnglat}))
 }
 const onClear = ()=> {
     const m = Markers.value.pop();
@@ -123,7 +121,8 @@ const load = ({map,AMap})=>{
     <h2>autoComplete</h2>
     <WpMaps autoComplete @auto-complete-change="change"></WpMaps>
     <h2>placeSearch</h2>
-    <WpMaps placeSearch @auto-complete-change="change1"></WpMaps>
+    <div>自动定位，并在宁波检索</div>
+    <WpMaps placeSearch @auto-complete-change="change1" city="宁波" autoIp></WpMaps>
 </template>
 <script setup>
 import { ref } from 'vue'
@@ -138,7 +137,7 @@ const change = (v, {map, AMap})=>{
     }catch (e){ }
 }
 const change1 = (v)=>{
-    console.log(v)
+    console.log(v,333)
 }
 </script>
 ```
@@ -173,6 +172,7 @@ const change1 = (v)=>{
 | 名称 | 说明 | 参数 |
 | ---- |--| ---- |
 | search | 搜索, 必须开启autoComplete或placeSearch  | `(keywords)=>Promise<any>` |
+| createMarker | 创建覆盖物  | `()=>void` |
 
 
 ### Emits

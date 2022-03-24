@@ -1,4 +1,5 @@
 export type StatusType = "complete" | 'error' | 'no_data';
+export type AnchorType = 'top-left'|'top-center'|'top-right'|'middle-left'|'center'|'middle-right'|'bottom-left'|'bottom-center'|'bottom-right'
 export interface AMapMapOptions {
     [key:string]:any
     center:number[]
@@ -51,17 +52,17 @@ export interface AMapMapEventMap {
     "hotspotout": AMapMapEventHotspotclick
 }
 export class Circle {
-    constructor(CircleOptions:Partial<CircleOptions>) {
+    constructor(CircleOptions?:Partial<CircleOptions>) {
     }
 }
 export interface Circle {}
 export class PolylineOptions {
-    constructor(PolylineOptions:Partial<PolylineOptions>) {
+    constructor(PolylineOptions?:Partial<PolylineOptions>) {
     }
 }
 export interface Polyline {}
 export class Polygon {
-    constructor(PolygonOptions:Partial<PolygonOptions>) {
+    constructor(PolygonOptions?:Partial<PolygonOptions>) {
     }
 }
 export interface PolygonOptions {}
@@ -73,7 +74,7 @@ export interface overlayersMap {
 }
 
 export class AMapMap{
-    constructor(el:any, opts:Partial<AMapMapOptions>) {}
+    constructor(el:any, opts?:Partial<AMapMapOptions>) {}
     addControl(obj:any){}
     setBounds(Bounds:Bounds){}
     add(overlayers:any[] | any){}
@@ -86,8 +87,10 @@ export class AMapMap{
 
 // https://lbs.amap.com/api/javascript-api/reference/overlay#marker
 export class Marker {
-    constructor(MarkerOptions:Partial<MarkerOptions>) {
+    constructor(MarkerOptions?:Partial<MarkerOptions>) {
     }
+    remove():void
+    on<K extends keyof AMapMapEventMap>(type:K, callback:(ev:AMapMapEventMap[K])=>any, context?:any){}
 }
 
 export class Size {
@@ -101,7 +104,7 @@ export class Size {
 
 
 export class Icon {
-    constructor(IconOptions:Partial<IconOptions>) {
+    constructor(IconOptions?:Partial<IconOptions>) {
     }
     getImageSize():Size
     setImageSize(size:Size):void
@@ -183,7 +186,7 @@ export interface GeolocationOptions {
 }
 
 export class Geolocation {
-    constructor(GeolocationOptions:GeolocationOptions) {}
+    constructor(GeolocationOptions?:GeolocationOptions) {}
     getCurrentPosition(callback:(status:StatusType, result:{
         [key:string]:any;
         position:LngLat
@@ -216,7 +219,7 @@ export interface ContextMenuOptions {
 }
 
 export class PlaceSearch {
-    constructor(PlaceSearchOptions:PlaceSearchOptions) {
+    constructor(PlaceSearchOptions?:PlaceSearchOptions) {
     }
     search(keyword:string, callback:(status:StatusType, result:{
         cityList:{
@@ -262,7 +265,7 @@ export interface PlaceSearchOptions {
 }
 
 export class Autocomplete {
-    constructor(AutocompleteOptions:Partial<AutocompleteOptions>) {
+    constructor(AutocompleteOptions?:Partial<AutocompleteOptions>) {
     }
     search(keyword:string, callback:(status:StatusType, result:{
         count:number;
@@ -295,6 +298,43 @@ export interface AutocompleteOptions {
     outPutDirAuto:boolean;
 }
 
+export class InfoWindow {
+    dom:HTMLDivElement;
+    constructor(InfoWindowOptions?:Partial<InfoWindowOptions>) {
+    }
+    open(map:AMapMap,position:LngLat):void
+    close():void;
+    getIsOpen():boolean;
+    setContent(content:string|HTMLElement):void;
+    getContent():string;
+    setPosition(lnglat:LngLat):void;
+    getPosition():LngLat;
+    getAnchor():AnchorType;
+    setAnchor(anchor:AnchorType):void;
+    setSize(size:Size):void;
+    getSize():Size;
+    on<T extends keyof InfoWindowEventMap>(type:T,callback:InfoWindowEventMap[T])
+}
+
+interface InfoWindowEventMap {
+    change:()=>void
+    open:()=>void
+    close:()=>void
+}
+
+export interface InfoWindowOptions {
+    isCustom:boolean;
+    autoMove:boolean;
+    closeWhenClickMap:boolean;
+    content:string|HTMLElement;
+    size:Size;
+    anchor:AnchorType;
+    offset:Pixel;
+    position:LngLat;
+    showShadow:boolean;
+    retainWhenClose:boolean;
+}
+
 
 
 export type AMapPluginsMapKeys = `AMap.${keyof AMapInstance}` | keyof AMapInstance;
@@ -318,6 +358,7 @@ export interface AMapInstance{
     Autocomplete:typeof Autocomplete
     PlaceSearch:typeof PlaceSearch
     setCenter:typeof setCenter
+    InfoWindow:typeof InfoWindow
 }
 
 declare global {
