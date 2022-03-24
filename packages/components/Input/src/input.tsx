@@ -1,6 +1,6 @@
 import { useFocus } from "@vueuse/core"
 import { buildProps } from "@wisdom-plus/utils/props"
-import { ref, defineComponent, ExtractPropTypes, computed, Component, PropType, h, CSSProperties, watch, nextTick } from "vue"
+import { ref, defineComponent, ExtractPropTypes, computed, Component, PropType, h, watch, nextTick } from "vue"
 import Icon from '../../Icon'
 import { CloseOutlined, EyeOutlined, EyeInvisibleOutlined } from '@vicons/antd'
 import { useAutoControl } from "@wisdom-plus/utils/use-control"
@@ -183,6 +183,19 @@ export default defineComponent({
             emit('focus', event)
         }
 
+        const focusedTimeout = ref(focused.value)
+        let timer: ReturnType<typeof setTimeout> 
+        watch(focused, () => {
+            if (timer) clearTimeout(timer)
+            if (focused.value) {
+                focusedTimeout.value = true
+            } else {
+                timer = setTimeout(() => {
+                    focusedTimeout.value = false
+                }, 50)
+            }
+        })
+
         return {
             input,
             focused,
@@ -197,7 +210,8 @@ export default defineComponent({
             textareaCalcStyle,
             autocompleteListMap,
             autocompleteLoading,
-            autocompleteActive
+            autocompleteActive,
+            focusedTimeout
         }
     },
     render() {
@@ -343,7 +357,7 @@ export default defineComponent({
                 <Popover
                     placement={'bottom'}
                     width={'target'}
-                    v-model={this.focused}
+                    v-model={this.focusedTimeout}
                     trigger="none"
                     class="wp-autocomplete"
                 >
@@ -358,14 +372,19 @@ export default defineComponent({
                                 ) : (
                                     this.autocompleteListMap.map((item, index) => (
                                         this.$slots.autocompleteItem?.({ input: this.input, ...item }) || (
-                                            <div class={[
-                                                'wp-autocomplete-cell',
-                                                {
-                                                    'wp-autocomplete-cell--active': this.autocompleteActive === index
-                                                }
-                                            ]} onClick={() => {
-                                                this.input = item.value
-                                            }} key={item.value}>
+                                            <div
+                                                class={[
+                                                    'wp-autocomplete-cell',
+                                                    {
+                                                        'wp-autocomplete-cell--active': this.autocompleteActive === index
+                                                    }
+                                                ]}
+                                                onClick={e => {
+                                                    e.stopPropagation()
+                                                    this.input = item.value
+                                                }}
+                                                key={item.value}
+                                            >
                                                 { item.label || item.value }
                                             </div>
                                         )

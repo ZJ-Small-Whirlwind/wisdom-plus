@@ -1,0 +1,104 @@
+:root {
+    --wp-timeline-font-size: 14px;
+    --wp-timeline-gap: 25px;
+    --wp-timeline-line-width: 35px;
+    --wp-timeline-label-width: 100px;
+    --wp-timeline-label-color: rgb(134, 144, 156);
+    --wp-timeline-label-font-size: 12px;
+    --wp-timeline-item-dot-color: var(--wp-color-primary);
+    --wp-timeline-item-dot-size: 6px;
+    --wp-timeline-item-dot-icon-size: 12px;
+    --wp-timeline-item-line-color: rgb(229, 229, 234);
+    --wp-timeline-item-line-width: 2px;
+    --wp-timeline-duration: .2s;
+}
+
+.wp-timeline {
+    font-size: var(--wp-timeline-font-size);
+}
+
+.wp-timeline-item {
+    display: flex;
+    &-line {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: var(--wp-timeline-line-width);
+        &-dot {
+            height: var(--wp-timeline-item-dot-size);
+            width: var(--wp-timeline-item-dot-size);
+            background: var(--wp-timeline-item-dot-color);
+            border-radius: 50%;
+            margin-top: .5em;
+            transition: background var(--wp-timeline-duration);
+        }
+        &-icon {
+            color: var(--wp-timeline-item-dot-color);
+            font-size: var(--wp-timeline-item-dot-icon-size);
+            margin-top: .5em;
+            transition: color var(--wp-timeline-duration);
+        }
+        &-self {
+            flex: 1;
+            overflow: hidden;
+            width: var(--wp-timeline-item-line-width);
+            background: var(--wp-timeline-item-line-color);
+            margin-top: .5em;
+            transition: var(--wp-timeline-duration);
+        }
+    }
+    @mixin label {
+        color: var(--wp-timeline-label-color);
+        font-size: var(--wp-timeline-label-font-size);
+        line-height: 1.667;
+    }
+    &-label {
+        @include label;
+        width: var(--wp-timeline-label-width);
+        text-align: right;
+    }
+    &-content {
+        flex: 1;
+        overflow: hidden;
+        &-label {
+            @include label;
+            margin-top: .5em;
+        }
+    }
+    &--right {
+        flex-direction: row-reverse;
+        .wp-timeline-item-content {
+            text-align: right;
+        }
+        .wp-timeline-item-label {
+            text-align: left;
+        }
+    }
+    &--alternate {
+        .wp-timeline-item-label {
+            flex: 1;
+            overflow: hidden;
+            text-align: right;
+            width: auto;
+        }
+        &:nth-of-type(even) {
+            flex-direction: row-reverse;
+            .wp-timeline-item-content {
+                text-align: right;
+            }
+            .wp-timeline-item-label {
+                text-align: left;
+            }
+        }
+    }
+    &:not(:last-of-type) {
+        .wp-timeline-item-content {
+            padding-bottom: var(--wp-timeline-gap);
+        }
+    }
+    &:last-of-type {
+        .wp-timeline-item-line-self {
+            display: none;
+        }
+    }
+}
