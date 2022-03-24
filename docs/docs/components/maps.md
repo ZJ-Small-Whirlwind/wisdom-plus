@@ -26,13 +26,61 @@ app.use(WpMaps)
 ```
 :::
 
-#### 浏览器精确定位
+#### 覆盖物
+
+点击地图添加覆盖物
+
+:::demo
+
+```vue
+<template>
+    <div>
+        <WpButton @click="onClick({lnglat:[116.397428, 39.910907]})">添加覆盖物</WpButton>
+        <WpButton @click="onClear">删除覆盖物</WpButton>
+    </div>
+    <WpMaps @mapClick="onClick" @load="load"></WpMaps>
+</template>
+<script setup lang="ts">
+import {ref} from 'vue'
+const mapObj = ref()
+const Markers = ref([])
+const onClick = ({lnglat, ...ev}) => {
+    Markers.value.push(new AMap.Marker({
+        map:mapObj.value,
+        position:lnglat
+    }))
+}
+const onClear = ()=> {
+    const m = Markers.value.pop();
+    m?.remove();
+};
+const load = (map,AMap) => {
+    mapObj.value = map;
+    onClick({lnglat:[116.397428, 39.910907]});
+}
+</script>
+```
+:::
+
+
+
+#### 右键菜单
 
 :::demo
 ```vue
 <template>
-    <WpMaps autoGeolocation></WpMaps>
+    <WpMaps :menu="menu" @menuClick1="menuClick1"></WpMaps>
 </template>
+<script setup>
+import { ref } from 'vue'
+const menu = ref([
+    {content:'放大一级', emit:'menuClick1'},
+    {content:'缩小一级'},
+    {content:'缩放至全国范围'},
+    {content:'添加标记'},
+])
+const menuClick1 = map=>map.zoomIn()
+</script>
 ```
 :::
 

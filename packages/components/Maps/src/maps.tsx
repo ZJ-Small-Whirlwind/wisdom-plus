@@ -1,7 +1,7 @@
 import {defineComponent, ExtractPropTypes, ref, onMounted, computed} from "vue"
 import {buildProps} from "@wisdom-plus/utils/props";
 import AMapLoader from "@amap/amap-jsapi-loader"
-import {AMapInstance, AMapPluginsMap} from "../types/AMap";
+import {AMapInstance, AMapMap, AMapPluginsMap} from "../types/AMap";
 import {Toast} from "../../Toast";
 export const mapsProps = buildProps({
     config:{type:Object, default:null},
@@ -10,15 +10,16 @@ export const mapsProps = buildProps({
     showScale:{type:Boolean, default:false},
     autoIp:{type:Boolean, default:false},
     autoGeolocation:{type:[Boolean, Object], default:false},
+    menu:{type:Array, default:null},
 })
 export type MapsProps = ExtractPropTypes<typeof mapsProps>
 
 export default defineComponent({
     name:"WpMaps",
     props:mapsProps,
-    setup(props){
+    setup(props,{emit}){
         const container:any = ref(null)
-        const map = ref<any>()
+        const map = ref<AMapMap>()
         const massage = (message)=>Toast({
             message,
             placement:"top",
@@ -94,14 +95,66 @@ export default defineComponent({
                 ...(props.config || {}),
                 plugins: pluginsNams.value,
             }).then((AMap:AMapInstance)=>{
+                // 实例化
                 map.value = new AMap.Map(container.value, {
                     center: [116.397428, 39.90923],
                     zoom: 13,
                     ...(props.mapConfig || [])
                 });
+                // 插件注入
                 pluginsNams.value.forEach(key=>{
                     (pluginsMap.value[key] || (()=>{}) as any)(map.value, AMap)
+                });
+                // 事件注入
+                map.value.on("click", (ev)=>{
+                    emit('mapClick', ev)
                 })
+                // 右键菜单
+                if(Object.prototype.toString.call(props.menu) === '[object Array]'){
+                    const contextMenuPositon = ref()
+                    const contextMenu = new AMap.ContextMenu();
+                    props.menu.forEach((item, k)=>{
+                        contextMenu.addItem(item.content, (ev)=>{
+                            if(Object.prototype.toString.call(props.menu) === '[object Array]'){
+                                emit(item.emit || '', map.value, item, ev)
+                            }
+                        }, k)
+                    })
+                    //右键放大
+                    // contextMenu.addItem("放大一级", function () {
+                    //     map.value.zoomIn();
+                    // }, 0);
+                    //
+                    // //右键缩小
+                    // contextMenu.addItem("缩小一级", function () {
+                    //     map.value.zoomOut();
+                    // }, 1);
+                    //
+                    // //右键显示全国范围
+                    // contextMenu.addItem("缩放至全国范围", function (e) {
+                    //     map.value.setZoomAndCenter(4, [108.946609, 34.262324]);
+                    // }, 2);
+                    //
+                    // //右键添加Marker标记
+                    // contextMenu.addItem("添加标记", function (e) {
+                    //
+                    //     new AMap.Marker({
+                    //         map: map.value,
+                    //         position: contextMenuPositon.value //基点位置
+                    //     });
+                    // }, 3);
+
+                    //地图绑定鼠标右击事件——弹出右键菜单
+                    map.value.on('rightclick', function (e) {
+                        contextMenu.open(map.value as any, e.lnglat);
+                        contextMenuPositon.value = e.lnglat;
+                    });
+                }
+
+
+                emit('load',map.value, AMap)
+            }).catch(err=>{
+                emit('error',err)
             })
         }
         onMounted(()=>{
