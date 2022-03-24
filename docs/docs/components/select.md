@@ -288,6 +288,7 @@ const remote = value=>{
 |  clear  | 清除结果 | _        |
 |  blur  | 失去焦点 | value        |
 |  focus  | 焦点 | value        |
+|  change  | value变更 | value        |
 
 ### Slots
 

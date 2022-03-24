@@ -22,7 +22,7 @@ export const selectProps = buildProps({
         default:'value'
     },
     modelValue:{
-        type:definePropType<Array<object> | string | number | boolean>([Array, String, Number, Boolean]),
+        type:definePropType<Array<object> | string | number | boolean | object>([Array, String, Number, Boolean, Object]),
         default:null
     },
     clearable:{
@@ -161,9 +161,11 @@ export default defineComponent({
                     }
                 }
                 emit('update:modelValue', currentValue.value);
+                emit('change',  currentValue.value);
             }else {
                 currentValue.value = value;
                 emit('update:modelValue', value);
+                emit('change', value);
             }
             formItem?.validate('change')
         }

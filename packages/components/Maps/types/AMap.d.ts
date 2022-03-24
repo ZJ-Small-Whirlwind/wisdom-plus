@@ -1,3 +1,4 @@
+export type StatusType = "complete" | 'error' | 'no_data';
 export interface AMapMapOptions {
     [key:string]:any
     center:number[]
@@ -77,6 +78,8 @@ export class AMapMap{
     setBounds(Bounds:Bounds){}
     add(overlayers:any[] | any){}
     remove(overlayers:any[] | any){}
+    clearMap(){}
+    setCenter(position:LngLat):void;
     getAllOverlays<K extends keyof overlayersMap>(type?:K): overlayersMap[K]
     on<K extends keyof AMapMapEventMap>(type:K, callback:(ev:AMapMapEventMap[K])=>any, context?:any){}
 }
@@ -133,7 +136,7 @@ export class Scale {
     constructor() {}
 }
 export class CitySearch {
-    getLocalCity(callback:(status:'complete' | 'error',result: {
+    getLocalCity(callback:(status:StatusType,result: {
         [key:string]:any;
         adcode:string
         bounds:Bounds
@@ -181,7 +184,7 @@ export interface GeolocationOptions {
 
 export class Geolocation {
     constructor(GeolocationOptions:GeolocationOptions) {}
-    getCurrentPosition(callback:(status:'complete' | 'error', result:{
+    getCurrentPosition(callback:(status:StatusType, result:{
         [key:string]:any;
         position:LngLat
         accuracy:number
@@ -212,6 +215,86 @@ export interface ContextMenuOptions {
     width:number;
 }
 
+export class PlaceSearch {
+    constructor(PlaceSearchOptions:PlaceSearchOptions) {
+    }
+    search(keyword:string, callback:(status:StatusType, result:{
+        cityList:{
+            name:string;
+            count:number
+        }[];
+        info:"OK"|'ok'|"TIP_CITIES";
+        poiList:{
+            count:number;
+            pageIndex:number;
+            pageSize:number;
+            pois:PlaceSearchPoisItem[]
+        }
+    })=>void):void
+}
+
+export interface PlaceSearchPoisItem{
+    address:string;
+    distance:any;
+    id:string;
+    location:LngLat;
+    name:string;
+    shopinfo:string;
+    tel:string;
+    type:string;
+}
+
+export interface PlaceSearchOptions {
+    type:string;
+    city:string;
+    lang:string;
+    pageSize:number;
+    pageIndex:number;
+    extensions:'base' | 'all';
+    datatype:string;
+    children:number;
+    citylimit:boolean;
+    map:AMapMap;
+    panel:string | HTMLElement;
+    showCover:boolean;
+    renderStyle:string;
+    autoFitView:boolean;
+}
+
+export class Autocomplete {
+    constructor(AutocompleteOptions:Partial<AutocompleteOptions>) {
+    }
+    search(keyword:string, callback:(status:StatusType, result:{
+        count:number;
+        info:"OK"|'ok';
+        tips:AutocompleteSearchTipsItem[]
+    })=>void):void
+    setType(type:string):void
+    setCity(city:string):void
+    setCityLimit(isLimit:boolean):void
+}
+
+export interface AutocompleteSearchTipsItem {
+    adcode:string;
+    address:string;
+    city:any[];
+    district:string;
+    id:string;
+    location:LngLat;
+    name:string;
+    typecode:string;
+}
+
+export interface AutocompleteOptions {
+    type:string;
+    city:string;
+    datatype:string;
+    citylimit:boolean;
+    input:string | HTMLElement;
+    output:string | HTMLElement;
+    outPutDirAuto:boolean;
+}
+
 
 
 export type AMapPluginsMapKeys = `AMap.${keyof AMapInstance}` | keyof AMapInstance;
@@ -232,6 +315,9 @@ export interface AMapInstance{
     Polyline:typeof Polyline
     Polygon:typeof Polygon
     ContextMenu:typeof ContextMenu
+    Autocomplete:typeof Autocomplete
+    PlaceSearch:typeof PlaceSearch
+    setCenter:typeof setCenter
 }
 
 declare global {

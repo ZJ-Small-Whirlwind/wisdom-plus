@@ -12,4 +12,37 @@
     .amap-logo,.amap-copyright{
         display: none !important;
     }
+    &-auto-complete{
+        position: absolute;
+        left: 15px;
+        top: 15px;
+        background-color: #ffffff;
+        &-panel{
+            .wp-select-panel{
+                .wp-select-panel-option{
+                    margin-top: 0;
+                    &+.wp-select-panel-option{
+                        border-top: 1px solid #d8d8d8;
+                    }
+                }
+            }
+            &-item{
+                &>*{
+                    font-size: 12px;
+                    color: #999999;
+                    display: flex;
+                    align-items: center;
+                    .wp-icon{
+                        margin-right: 5px;
+                    }
+                    &:nth-child(1){
+                        color: #000000;
+                        font-weight: bold;
+                        font-size: 14px;
+                        margin-bottom: 5px;
+                    }
+                }
+            }
+        }
+    }
 }
