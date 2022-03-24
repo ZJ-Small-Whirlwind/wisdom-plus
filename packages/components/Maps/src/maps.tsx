@@ -45,7 +45,7 @@ export default defineComponent({
                 AMap:AMapInstance.value
             } as any
         })
-        const createMarker = ({position})=>{
+        const createMarker = ({position, showInfoWindow = true})=>{
             //构建自定义信息窗体
             let infoWindow = new AMap.InfoWindow({
                 anchor: 'top-center',
@@ -59,10 +59,9 @@ export default defineComponent({
             newMarker.on("click",()=>{
                 if(infoWindow.dom.parentNode){
                     isRemove = false;
-                    infoWindow.close();
+                    newMarker.remove();
+                    newMarker = createMarker({position, showInfoWindow:false})
                 }else {
-                    console.log(111)
-                    // newMarker = createMarker({position})
                     infoWindow.open(getMapObj.value.map, position);
                 }
             })
@@ -77,7 +76,9 @@ export default defineComponent({
                 }
                 isRemove = true;
             })
-            infoWindow.open(getMapObj.value.map, position);
+            if(showInfoWindow){
+                infoWindow.open(getMapObj.value.map, position);
+            }
             return newMarker;
         }
 
