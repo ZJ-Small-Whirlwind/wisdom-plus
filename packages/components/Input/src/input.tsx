@@ -13,7 +13,7 @@ import Spin from '../../Spin'
 
 export type AutocompleteList = {
     value: string,
-    label: string
+    label?: string
 } & Record<string, any>
 
 export const inputProps = buildProps({
