@@ -75,9 +75,14 @@ const load = (map,AMap) => {
 import { ref } from 'vue'
 const menu = ref([
     {content:'放大一级', emit:'menuClick1'},
-    {content:'缩小一级'},
-    {content:'缩放至全国范围'},
-    {content:'添加标记'},
+    {content:'缩小一级', emit:map=>map.zoomOut()},
+    {content:'缩放至全国范围', emit:map=>map.setZoomAndCenter(4, [108.946609, 34.262324])},
+    {content:'添加标记', emit:(map,ev)=>{
+        new AMap.Marker({
+            map: map,
+            position: ev.pos //基点位置
+        })
+    }},
 ])
 const menuClick1 = map=>map.zoomIn()
 </script>

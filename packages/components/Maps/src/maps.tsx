@@ -116,33 +116,20 @@ export default defineComponent({
                     props.menu.forEach((item, k)=>{
                         contextMenu.addItem(item.content, (ev)=>{
                             if(Object.prototype.toString.call(props.menu) === '[object Array]'){
-                                emit(item.emit || '', map.value, item, ev)
+                                if(Object.prototype.toString.call(item.emit) === '[object Function]') {
+                                    item.emit(map.value, {
+                                        item, ev,
+                                        pos:contextMenuPositon.value
+                                    })
+                                }else {
+                                    emit(item.emit || '', map.value, {
+                                        item, ev,
+                                        pos:contextMenuPositon.value
+                                    })
+                                }
                             }
                         }, k)
                     })
-                    //右键放大
-                    // contextMenu.addItem("放大一级", function () {
-                    //     map.value.zoomIn();
-                    // }, 0);
-                    //
-                    // //右键缩小
-                    // contextMenu.addItem("缩小一级", function () {
-                    //     map.value.zoomOut();
-                    // }, 1);
-                    //
-                    // //右键显示全国范围
-                    // contextMenu.addItem("缩放至全国范围", function (e) {
-                    //     map.value.setZoomAndCenter(4, [108.946609, 34.262324]);
-                    // }, 2);
-                    //
-                    // //右键添加Marker标记
-                    // contextMenu.addItem("添加标记", function (e) {
-                    //
-                    //     new AMap.Marker({
-                    //         map: map.value,
-                    //         position: contextMenuPositon.value //基点位置
-                    //     });
-                    // }, 3);
 
                     //地图绑定鼠标右击事件——弹出右键菜单
                     map.value.on('rightclick', function (e) {
