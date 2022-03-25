@@ -5,7 +5,15 @@ import {AMapInstance, AMapMap, AMapPluginsMap, Autocomplete, LngLat, PlaceSearch
 import WpSelect from "../../Select";
 import WpIcon from "../../Icon";
 import {Toast} from "../../Toast";
-import {LocationOnRound, LocalPhoneRound, EmailRound} from "@vicons/material";
+import Ellipsis from "../../Ellipsis";
+import WpButton from "../../Button";
+import Draggable from "../../Pro/Cascader/src/draggable/src/vuedraggable";
+import {
+    LocationOnRound,
+    LocalPhoneRound,
+    EmailRound,
+    DeleteForeverRound
+} from "@vicons/material";
 export const mapsProps = buildProps({
     config:{type:Object, default:null},
     plugins:{type:Object, default:null},
@@ -18,6 +26,7 @@ export const mapsProps = buildProps({
     placeSearch:{type:Boolean, default:false},
     city:{type:String, default:"全国"},
     autoCompleteLabelName:{type:String, default:"name"},
+    panel:{type:Boolean, default:false},
 })
 export type MapsProps = ExtractPropTypes<typeof mapsProps>
 
@@ -33,6 +42,11 @@ export default defineComponent({
             dark:true,
             to:container.value
         })
+        const panelList = ref([
+            {name:"asd1阿斯顿发看书打发时间看大卡司电话卡受到罚款"},
+            {name:"asd2"},
+            {name:"asd3"},
+        ]);
         const placeSearchServe = ref<PlaceSearch>();
         const autoCompleteServe = ref<Autocomplete>();
         const autoCompleteModelValue = ref();
@@ -268,6 +282,7 @@ export default defineComponent({
             autoCompleteModelValue,
             getMapObj,
             createMarker,
+            panelList,
         }
     },
     render(){
@@ -307,15 +322,44 @@ export default defineComponent({
                     remote={this.search}>
                 </WpSelect> : null}
             </div>
-            <div class={{
-                'wp-maps-panel':true
-            }}>
-                <div class={{
-                    'wp-maps-panel-box':true
+            {[
+                this.$props.panel ? <div class={{
+                    'wp-maps-panel': true
                 }}>
-                    {this.$slots.panel?.()}
-                </div>
-            </div>
+                    <div class={{
+                        'wp-maps-panel-draggable': true
+                    }}>
+                        {this.$slots.panel?.() || [
+                            <div class={{
+                                'wp-maps-panel-draggable-box': true,
+                            }}>
+                                <Draggable v-model={this.panelList}
+                                           itemKey={'id'}
+                                           animation={400}
+                                           v-slots={{
+                                               item: ({key, element}) => (
+                                                   <div
+                                                   key={key}
+                                                   class={{
+                                                       'wp-maps-panel-draggable-box-item': true
+                                                   }}>
+                                                       <Ellipsis>{element.name}</Ellipsis>
+                                                       <WpIcon><DeleteForeverRound></DeleteForeverRound></WpIcon>
+                                                   </div>)
+                                           }}>
+                                </Draggable>
+                            </div>,
+                            <div class={{
+                                'wp-maps-panel-box': true,
+                                'wp-maps-panel-draggable-footer': true
+                            }}>
+                                <WpButton onClick={ev=>this.$emit('panel-cancel', {ev})}>取消</WpButton>
+                                <WpButton onClick={ev=>this.$emit('panel-confirm', {ev, data:this.panelList})} type='primary'>确定</WpButton>
+                            </div>
+                        ]}
+                    </div>
+                </div> : null
+            ]}
         </div>)
     }
 })

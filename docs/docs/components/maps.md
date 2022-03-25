@@ -149,12 +149,9 @@ const change1 = (v)=>{
 :::demo
 ```vue
 <template>
-    <WpMaps  placeSearch>
+    <WpMaps placeSearch panel>
         <template #autoCompleteItem="{value}">
             <div>{{value.name}}</div>
-        </template>
-        <template #panel>
-            <div>sadas</div>
         </template>
     </WpMaps>
 </template>
@@ -181,6 +178,7 @@ import { ref } from 'vue'
 | placeSearch | POI搜索                         | `boolean｜object `       | false |
 | city | 当前城市                         | `string|object `       | 全国 |
 | autoCompleteLabelName | 搜索完成后显示名字段名称                         | `string `       | name |
+| panel | 是否显示侧方面板                         | `boolean `       | false |
 
 #### menu
 | 名称      | 说明 | 类型    | 默认值 |
@@ -206,6 +204,8 @@ import { ref } from 'vue'
 | mapRightclick | 地图右键 | `ev` |
 | auto-complete-change | 自动完成搜索选择完成 | `result, mapObj` |
 | searchChange | 搜索结果回调  | `status, result, mapObj` |
+| panel-cancel | 面板取消按钮  | `{ev:any}` |
+| panel-confirm | 面板确定按钮  | `{ev:any, data:any[]}}` |
 
 
 ### Slots
