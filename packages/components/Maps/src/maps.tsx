@@ -17,6 +17,7 @@ export const mapsProps = buildProps({
     autoComplete:{type:Boolean, default:false},
     placeSearch:{type:Boolean, default:false},
     city:{type:String, default:"全国"},
+    autoCompleteLabelName:{type:String, default:"name"},
 })
 export type MapsProps = ExtractPropTypes<typeof mapsProps>
 
@@ -230,7 +231,7 @@ export default defineComponent({
                         emit('searchChange', status, result, getMapObj.value)
                         if(status === 'complete'){
                             resolve(result.tips.map(item=>({
-                                label:item.name,
+                                label:item[props.autoCompleteLabelName],
                                 value:item
                             })));
                         }else {
@@ -245,7 +246,7 @@ export default defineComponent({
                         emit('searchChange', status, result, getMapObj.value)
                         if(status === 'complete'){
                             resolve(result.poiList.pois.map(item=>({
-                                label:item.name,
+                                label:item[props.autoCompleteLabelName],
                                 value:item
                             })));
                         }else {
@@ -294,7 +295,7 @@ export default defineComponent({
                             return (<div class={{
                                 "wp-maps-auto-complete-panel-item":true
                             }}>
-                                {this.$slots.autoCompleteItem?.(value) || [
+                                {this.$slots.autoCompleteItem?.({value}) || [
                                     <div>{value.name}</div>,
                                     value.address ? <div><WpIcon><LocationOnRound></LocationOnRound></WpIcon>{typeof value.address === 'string' ? (value.address|| '暂无') : (value.address[0] || '暂无')}</div> : null,
                                     value.tel ? <div><WpIcon><LocalPhoneRound></LocalPhoneRound></WpIcon>{value.tel}</div> : null,

@@ -151,7 +151,7 @@ const change1 = (v)=>{
 <template>
     <WpMaps  placeSearch>
         <template #autoCompleteItem="{value}">
-            <div>{{value}}</div>
+            <div>{{value.name}}</div>
         </template>
         <template #panel>
             <div>sadas</div>
@@ -180,6 +180,7 @@ import { ref } from 'vue'
 | autoComplete | 自动完成搜索                         | `boolean｜ object`       | false |
 | placeSearch | POI搜索                         | `boolean｜object `       | false |
 | city | 当前城市                         | `string|object `       | 全国 |
+| autoCompleteLabelName | 搜索完成后显示名字段名称                         | `string `       | name |
 
 #### menu
 | 名称      | 说明 | 类型    | 默认值 |
