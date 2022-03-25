@@ -30,9 +30,9 @@ app.use(WpTimelineItem)
         <wp-space>
             <wp-switch v-model="reverse" active-text="倒序" inactive-text="正序" width="55px"></wp-switch>
             <wp-switch v-model="relative" active-text="相对" inactive-text="不相对" width="70px"></wp-switch>
-            <wp-switch v-model="vertical" active-text="纵向" inactive-text="横向" width="70px"></wp-switch>
+            <wp-switch v-model="horizontal" active-text="横向" inactive-text="纵向" width="70px"></wp-switch>
         </wp-space>
-        <wp-timeline :reverse="reverse" :relative="relative" :vertical="vertical">
+        <wp-timeline :reverse="reverse" :relative="relative" :horizontal="horizontal">
             <wp-timeline-item label="2019-05-12">
                 工程启动
             </wp-timeline-item>
@@ -51,7 +51,7 @@ import { ref } from 'vue'
 
 const reverse = ref(false)
 const relative = ref(false)
-const vertical = ref(false)
+const horizontal = ref(false)
 </script>
 ```
 :::
@@ -108,7 +108,7 @@ const HomeFilledIcon = HomeFilled
 | reverse | 是否倒序       | _boolean_                                                      | _false_                  |
 | relative | 是否使用相对模式                                       | _boolean_                                                           | _false_            |
 | mode   | 显示模式                  | _'left' \| 'right' \| 'alternate'_                                                            | 'left'                  |
-| vertical | 是否使用纵向模式 | _boolean_ | false |
+| horizontal | 是否使用横向模式 | _boolean_ | false |
 
 ### Slots
 

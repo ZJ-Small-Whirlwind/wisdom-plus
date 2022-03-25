@@ -9,7 +9,7 @@ export const timelineProps = buildProps({
     mode: {
         type: String as PropType<'left' | 'right' | 'alternate'>
     },
-    vertical: Boolean
+    horizontal: Boolean
 })
 
 export type TimelineProps = ExtractPropTypes<typeof timelineProps>
@@ -34,7 +34,7 @@ export default defineComponent({
             <div class={[
                 this.basic,
                 {
-                    [this.of('vertical')]: this.vertical,
+                    [this.of('horizontal')]: this.horizontal,
                 }
             ]}>
                 { items }

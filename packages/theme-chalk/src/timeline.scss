@@ -37,9 +37,6 @@
             font-size: var(--wp-timeline-item-dot-icon-size);
             margin-top: .5em;
             transition: color var(--wp-timeline-duration);
-            .wp-icon {
-                vertical-align: middle;
-            }
         }
         &-self {
             flex: 1;
@@ -106,7 +103,7 @@
     }
 }
 
-.wp-timeline-vertical {
+.wp-timeline-horizontal {
     display: flex;
     justify-content: space-between;
     position: relative;
@@ -134,6 +131,9 @@
             &-icon,
             &-dot {
                 margin-top: 0;
+                .wp-icon {
+                    vertical-align: middle;
+                }
             }
         }
         &-content {
