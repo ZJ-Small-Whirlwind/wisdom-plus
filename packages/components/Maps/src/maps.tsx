@@ -310,7 +310,11 @@ export default defineComponent({
             <div class={{
                 'wp-maps-panel':true
             }}>
-                {this.$slots.panel?.()}
+                <div class={{
+                    'wp-maps-panel-box':true
+                }}>
+                    {this.$slots.panel?.()}
+                </div>
             </div>
         </div>)
     }
