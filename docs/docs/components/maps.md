@@ -46,7 +46,7 @@ const map = ref()
 const mapObj = ref()
 const Markers = ref([])
 const onClick = ({lnglat, ...ev}) => {
-    Markers.value.push(map.value.createMarker({position:lnglat}))
+    Markers.value.push(map.value.createMarker({position:lnglat, ...ev}))
 }
 const onClear = ()=> {
     const m = Markers.value.pop();
@@ -54,7 +54,7 @@ const onClear = ()=> {
 };
 const load = ({map,AMap}) => {
     mapObj.value = map;
-    onClick({lnglat:[116.397428, 39.910907]});
+    onClick({lnglat:[116.397428, 39.910907],content:"asdas"});
 }
 </script>
 ```
@@ -143,6 +143,27 @@ const change1 = (v)=>{
 ```
 :::
 
+
+#### 自定义搜索结果、侧方面板插槽
+
+:::demo
+```vue
+<template>
+    <WpMaps  placeSearch>
+        <template #autoCompleteItem="{value}">
+            <div>{{value}}</div>
+        </template>
+        <template #panel>
+            <div>sadas</div>
+        </template>
+    </WpMaps>
+</template>
+<script setup>
+import { ref } from 'vue'
+</script>
+```
+:::
+
 ## API
 
 ### Props
@@ -172,7 +193,7 @@ const change1 = (v)=>{
 | 名称 | 说明 | 参数 |
 | ---- |--| ---- |
 | search | 搜索, 必须开启autoComplete或placeSearch  | `(keywords)=>Promise<any>` |
-| createMarker | 创建覆盖物  | `()=>void` |
+| createMarker | 创建覆盖物  | `(config:{position:LngLat, content:any,showInfoWindow:boolean})=>void` |
 
 
 ### Emits
@@ -184,4 +205,12 @@ const change1 = (v)=>{
 | mapRightclick | 地图右键 | `ev` |
 | auto-complete-change | 自动完成搜索选择完成 | `result, mapObj` |
 | searchChange | 搜索结果回调  | `status, result, mapObj` |
+
+
+### Slots
+
+| 名称 | 说明 | 参数 |
+| ---- |--| ---- |
+| autoCompleteItem | 搜索完成下拉插槽 | `(value:any)=>any` |
+| panel | 地图侧方面板 | `-` |
 

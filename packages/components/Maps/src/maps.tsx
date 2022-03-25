@@ -1,7 +1,7 @@
-import {defineComponent, ExtractPropTypes, ref, onMounted, computed} from "vue"
+import {defineComponent, ExtractPropTypes, ref, onMounted, computed, createApp, h} from "vue"
 import {buildProps} from "@wisdom-plus/utils/props";
 import AMapLoader from "@amap/amap-jsapi-loader"
-import {AMapInstance, AMapMap, AMapPluginsMap, Autocomplete, PlaceSearch} from "../types/AMap";
+import {AMapInstance, AMapMap, AMapPluginsMap, Autocomplete, LngLat, PlaceSearch} from "../types/AMap";
 import WpSelect from "../../Select";
 import WpIcon from "../../Icon";
 import {Toast} from "../../Toast";
@@ -45,12 +45,28 @@ export default defineComponent({
                 AMap:AMapInstance.value
             } as any
         })
-        const createMarker = ({position, showInfoWindow = true})=>{
+        const createMarker = (config:{
+            position:LngLat
+        } & Partial<{
+            content:any
+            showInfoWindow:boolean
+        }>)=>{
+            const {
+                position,
+                content,
+                showInfoWindow = true,
+            } = config;
             //构建自定义信息窗体
+            const root = document.createElement("div");
             let infoWindow = new AMap.InfoWindow({
                 anchor: 'top-center',
-                content: '这是信息窗体！这是信息窗体！',
+                content: root,
             });
+            createApp({
+                render(){
+                    return h("div",content)
+                }
+            }).mount(root)
             let newMarker = new getMapObj.value.AMap.Marker({
                 map:getMapObj.value.map,
                 position
@@ -60,7 +76,7 @@ export default defineComponent({
                 if(infoWindow.dom.parentNode){
                     isRemove = false;
                     newMarker.remove();
-                    newMarker = createMarker({position, showInfoWindow:false})
+                    newMarker = createMarker(config)
                 }else {
                     infoWindow.open(getMapObj.value.map, position);
                 }
@@ -278,7 +294,7 @@ export default defineComponent({
                             return (<div class={{
                                 "wp-maps-auto-complete-panel-item":true
                             }}>
-                                {[
+                                {this.$slots.autoCompleteItem?.(value) || [
                                     <div>{value.name}</div>,
                                     value.address ? <div><WpIcon><LocationOnRound></LocationOnRound></WpIcon>{typeof value.address === 'string' ? (value.address|| '暂无') : (value.address[0] || '暂无')}</div> : null,
                                     value.tel ? <div><WpIcon><LocalPhoneRound></LocalPhoneRound></WpIcon>{value.tel}</div> : null,
@@ -289,6 +305,11 @@ export default defineComponent({
                     }}
                     remote={this.search}>
                 </WpSelect> : null}
+            </div>
+            <div class={{
+                'wp-maps-panel':true
+            }}>
+                {this.$slots.panel?.()}
             </div>
         </div>)
     }
