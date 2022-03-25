@@ -28,7 +28,7 @@ app.use(WpMaps)
 
 #### 覆盖物
 
-点击地图添加覆盖物
+点击地图添加覆盖物并弹出信息框
 
 :::demo
 
@@ -38,17 +38,15 @@ app.use(WpMaps)
         <WpButton @click="onClick({lnglat:[116.397428, 39.910907]})">添加覆盖物</WpButton>
         <WpButton @click="onClear">删除覆盖物</WpButton>
     </div>
-    <WpMaps @mapClick="onClick" @load="load"></WpMaps>
+    <WpMaps @mapClick="onClick" @load="load" ref="map"></WpMaps>
 </template>
 <script setup lang="ts">
 import {ref} from 'vue'
+const map = ref()
 const mapObj = ref()
 const Markers = ref([])
 const onClick = ({lnglat, ...ev}) => {
-    Markers.value.push(new AMap.Marker({
-        map:mapObj.value,
-        position:lnglat
-    }))
+    Markers.value.push(map.value.createMarker({position:lnglat, ...ev}))
 }
 const onClear = ()=> {
     const m = Markers.value.pop();
@@ -56,7 +54,7 @@ const onClear = ()=> {
 };
 const load = ({map,AMap}) => {
     mapObj.value = map;
-    onClick({lnglat:[116.397428, 39.910907]});
+    onClick({lnglat:[116.397428, 39.910907],content:"asdas"});
 }
 </script>
 ```
@@ -123,7 +121,8 @@ const load = ({map,AMap})=>{
     <h2>autoComplete</h2>
     <WpMaps autoComplete @auto-complete-change="change"></WpMaps>
     <h2>placeSearch</h2>
-    <WpMaps placeSearch @auto-complete-change="change1"></WpMaps>
+    <div>自动定位，并在宁波检索</div>
+    <WpMaps placeSearch @auto-complete-change="change1" city="宁波" autoIp></WpMaps>
 </template>
 <script setup>
 import { ref } from 'vue'
@@ -138,8 +137,29 @@ const change = (v, {map, AMap})=>{
     }catch (e){ }
 }
 const change1 = (v)=>{
-    console.log(v)
+    console.log(v,333)
 }
+</script>
+```
+:::
+
+
+#### 自定义搜索结果、侧方面板插槽
+
+:::demo
+```vue
+<template>
+    <WpMaps  placeSearch>
+        <template #autoCompleteItem="{value}">
+            <div>{{value.name}}</div>
+        </template>
+        <template #panel>
+            <div>sadas</div>
+        </template>
+    </WpMaps>
+</template>
+<script setup>
+import { ref } from 'vue'
 </script>
 ```
 :::
@@ -160,6 +180,7 @@ const change1 = (v)=>{
 | autoComplete | 自动完成搜索                         | `boolean｜ object`       | false |
 | placeSearch | POI搜索                         | `boolean｜object `       | false |
 | city | 当前城市                         | `string|object `       | 全国 |
+| autoCompleteLabelName | 搜索完成后显示名字段名称                         | `string `       | name |
 
 #### menu
 | 名称      | 说明 | 类型    | 默认值 |
@@ -173,6 +194,7 @@ const change1 = (v)=>{
 | 名称 | 说明 | 参数 |
 | ---- |--| ---- |
 | search | 搜索, 必须开启autoComplete或placeSearch  | `(keywords)=>Promise<any>` |
+| createMarker | 创建覆盖物  | `(config:{position:LngLat, content:any,showInfoWindow:boolean})=>void` |
 
 
 ### Emits
@@ -184,4 +206,12 @@ const change1 = (v)=>{
 | mapRightclick | 地图右键 | `ev` |
 | auto-complete-change | 自动完成搜索选择完成 | `result, mapObj` |
 | searchChange | 搜索结果回调  | `status, result, mapObj` |
+
+
+### Slots
+
+| 名称 | 说明 | 参数 |
+| ---- |--| ---- |
+| autoCompleteItem | 搜索完成下拉插槽 | `(value:any)=>any` |
+| panel | 地图侧方面板 | `-` |
 
