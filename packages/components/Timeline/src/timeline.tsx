@@ -18,11 +18,11 @@ export default defineComponent({
     name: 'WpTimeline',
     props: timelineProps,
     setup(props) {
-        const { basic, of } = useNamespace('timeline')
+        const { basic, is } = useNamespace('timeline')
         provide('wpTimelineProps', props)
         return {
             basic,
-            of
+            is
         }
     },
     render() {
@@ -34,7 +34,7 @@ export default defineComponent({
             <div class={[
                 this.basic,
                 {
-                    [this.of('horizontal')]: this.horizontal,
+                    [this.is('horizontal')]: this.horizontal,
                 }
             ]}>
                 { items }
