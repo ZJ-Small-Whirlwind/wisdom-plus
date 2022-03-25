@@ -1,7 +1,8 @@
-import {defineComponent, ExtractPropTypes, ref, onMounted, computed, createApp, h} from "vue"
+import {defineComponent, ExtractPropTypes, ref, onMounted, computed, createApp, h, watch, nextTick} from "vue"
 import {buildProps} from "@wisdom-plus/utils/props";
 import AMapLoader from "@amap/amap-jsapi-loader"
-import {AMapInstance, AMapMap, AMapPluginsMap, Autocomplete, LngLat, PlaceSearch} from "../types/AMap";
+import {AMapInstance, AMapMap, AMapPluginsMap, Autocomplete, Geocoder, LngLat, PlaceSearch} from "../types/AMap";
+import {get, cloneDeep} from "lodash";
 import WpSelect from "../../Select";
 import WpIcon from "../../Icon";
 import {Toast} from "../../Toast";
@@ -27,6 +28,8 @@ export const mapsProps = buildProps({
     city:{type:String, default:"全国"},
     autoCompleteLabelName:{type:String, default:"name"},
     panel:{type:Boolean, default:false},
+    panelList:{type:Array, default:()=>[]},
+    panelItemLabelName:{type:String, default:"name"},
 })
 export type MapsProps = ExtractPropTypes<typeof mapsProps>
 
@@ -42,11 +45,13 @@ export default defineComponent({
             dark:true,
             to:container.value
         })
-        const panelList = ref([
-            {name:"asd1阿斯顿发看书打发时间看大卡司电话卡受到罚款"},
-            {name:"asd2"},
-            {name:"asd3"},
-        ]);
+        const currentPanelList:any = ref([]);
+        const setPanelList = ()=>{
+            nextTick(()=>{
+                currentPanelList.value = cloneDeep(props.panelList)
+            })
+        }
+        const GeocoderServe = ref<Geocoder>();
         const placeSearchServe = ref<PlaceSearch>();
         const autoCompleteServe = ref<Autocomplete>();
         const autoCompleteModelValue = ref();
@@ -114,11 +119,17 @@ export default defineComponent({
         }
 
         const pluginsMap = computed<AMapPluginsMap>(()=>({
+            // 地理编码与逆地理编码服务
+            "AMap.Geocoder":map=>{
+                GeocoderServe.value = new AMap.Geocoder();
+            },
+            // 标尺
             ...(props.showScale ? {
                 'AMap.Scale':(map)=>{
                     map.addControl(new AMap.Scale());
                 }
             } : {}),
+            // 城市ip自动定位服务
             ...(props.autoIp ? {
                 'AMap.CitySearch':map=>{
                     var citysearch = new AMap.CitySearch();
@@ -134,6 +145,7 @@ export default defineComponent({
                     })
                 },
             } : {}),
+            // 自动定位服务
             ...(props.autoGeolocation ? {
                 'AMap.Geolocation':map=>{
                     //解析定位结果
@@ -161,6 +173,7 @@ export default defineComponent({
                     });
                 },
             } : {}),
+            // 搜索自动填充服务
             ...(props.autoComplete ? {
                 'AMap.AutoComplete':(map)=>{
                     autoCompleteServe.value = new AMap.Autocomplete({
@@ -169,6 +182,7 @@ export default defineComponent({
                     });
                 }
             } : {}),
+            // POI搜索自动填充服务
             ...(props.placeSearch ? {
                 'AMap.PlaceSearch':(map)=>{
                     placeSearchServe.value = new AMap.PlaceSearch({
@@ -178,6 +192,7 @@ export default defineComponent({
                     });
                 }
             } : {}),
+            // 用户自定义服务
             ...(props.plugins || {})
         }))
         const pluginsNams = computed(()=>Object.keys(pluginsMap.value))
@@ -245,7 +260,7 @@ export default defineComponent({
                         emit('searchChange', status, result, getMapObj.value)
                         if(status === 'complete'){
                             resolve(result.tips.map(item=>({
-                                label:item[props.autoCompleteLabelName],
+                                label:get(item,props.autoCompleteLabelName),
                                 value:item
                             })));
                         }else {
@@ -260,7 +275,7 @@ export default defineComponent({
                         emit('searchChange', status, result, getMapObj.value)
                         if(status === 'complete'){
                             resolve(result.poiList.pois.map(item=>({
-                                label:item[props.autoCompleteLabelName],
+                                label:get(item,props.autoCompleteLabelName),
                                 value:item
                             })));
                         }else {
@@ -272,8 +287,12 @@ export default defineComponent({
             }
             return Promise.resolve([])
         }
+        watch(computed(()=> props.panelList),()=>{
+            setPanelList()
+        })
         onMounted(()=>{
             resetMap();
+            setPanelList();
         })
         return {
             container,
@@ -282,7 +301,10 @@ export default defineComponent({
             autoCompleteModelValue,
             getMapObj,
             createMarker,
-            panelList,
+            currentPanelList,
+            GeocoderServe,
+            placeSearchServe,
+            autoCompleteServe,
         }
     },
     render(){
@@ -333,18 +355,22 @@ export default defineComponent({
                             <div class={{
                                 'wp-maps-panel-draggable-box': true,
                             }}>
-                                <Draggable v-model={this.panelList}
-                                           itemKey={'id'}
+                                <Draggable list={this.currentPanelList}
+                                           itemKey={()=>{
+                                               return Date.now()+Math.random().toString()
+                                           }}
                                            animation={400}
                                            v-slots={{
-                                               item: ({key, element}) => (
+                                               item: ({index, element}) => (
                                                    <div
-                                                   key={key}
+                                                   key={index}
                                                    class={{
                                                        'wp-maps-panel-draggable-box-item': true
                                                    }}>
-                                                       <Ellipsis>{element.name}</Ellipsis>
-                                                       <WpIcon><DeleteForeverRound></DeleteForeverRound></WpIcon>
+                                                       {this.$slots.panelItem?.({index, element}) || ([
+                                                           <Ellipsis>{get(element, this.$props.panelItemLabelName)}</Ellipsis>,
+                                                           <WpIcon onClick={()=>this.currentPanelList.splice(index, 1)}><DeleteForeverRound></DeleteForeverRound></WpIcon>,
+                                                       ])}
                                                    </div>)
                                            }}>
                                 </Draggable>
@@ -354,7 +380,7 @@ export default defineComponent({
                                 'wp-maps-panel-draggable-footer': true
                             }}>
                                 <WpButton onClick={ev=>this.$emit('panel-cancel', {ev})}>取消</WpButton>
-                                <WpButton onClick={ev=>this.$emit('panel-confirm', {ev, data:this.panelList})} type='primary'>确定</WpButton>
+                                <WpButton onClick={ev=>this.$emit('panel-confirm', {ev, data:this.currentPanelList})} type='primary'>确定</WpButton>
                             </div>
                         ]}
                     </div>
