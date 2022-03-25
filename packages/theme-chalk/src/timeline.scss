@@ -37,6 +37,9 @@
             font-size: var(--wp-timeline-item-dot-icon-size);
             margin-top: .5em;
             transition: color var(--wp-timeline-duration);
+            .wp-icon {
+                vertical-align: middle;
+            }
         }
         &-self {
             flex: 1;
@@ -44,7 +47,7 @@
             width: var(--wp-timeline-item-line-width);
             background: var(--wp-timeline-item-line-color);
             margin-top: .5em;
-            transition: var(--wp-timeline-duration);
+            transition: background var(--wp-timeline-duration);
         }
     }
     @mixin label {
@@ -99,6 +102,73 @@
     &:last-of-type {
         .wp-timeline-item-line-self {
             display: none;
+        }
+    }
+}
+
+.wp-timeline-vertical {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    .wp-timeline-item {
+        flex-direction: column;
+        flex: 1;
+        &-label {
+            width: auto;
+            height: calc(var(--wp-timeline-label-width) / 2);
+            display: flex;
+            align-items: flex-end;
+        }
+        &-line {
+            height: var(--wp-timeline-line-width);
+            width: auto;
+            flex-direction: row;
+            position: relative;
+            &-self {
+                width: 100%;
+                height: var(--wp-timeline-item-line-width);
+                margin-left: .5em;
+                margin-right: .5em;
+                margin-top: 0;
+            }
+            &-icon,
+            &-dot {
+                margin-top: 0;
+            }
+        }
+        &-content {
+            padding-bottom: 0 !important;
+        }
+        &:last-of-type {
+            .wp-timeline-item-line-self {
+                display: block;
+            }
+        }
+        &--left {
+            .wp-timeline-item-label {
+                text-align: left;
+            }
+        }
+        &--right {
+            .wp-timeline-item-label {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+        &--alternate {
+            .wp-timeline-item-label {
+                flex: initial;
+                width: 100%;
+                justify-content: center;
+            }
+            .wp-timeline-item-content {
+                text-align: center;
+            }
+        }
+        &:not(.wp-timeline-item--relative) {
+            .wp-timeline-item-label {
+                display: none;
+            }
         }
     }
 }

@@ -8,7 +8,8 @@ export const timelineProps = buildProps({
     relative: Boolean,
     mode: {
         type: String as PropType<'left' | 'right' | 'alternate'>
-    }
+    },
+    vertical: Boolean
 })
 
 export type TimelineProps = ExtractPropTypes<typeof timelineProps>
@@ -17,10 +18,11 @@ export default defineComponent({
     name: 'WpTimeline',
     props: timelineProps,
     setup(props) {
-        const { basic } = useNamespace('timeline')
+        const { basic, of } = useNamespace('timeline')
         provide('wpTimelineProps', props)
         return {
-            basic
+            basic,
+            of
         }
     },
     render() {
@@ -29,7 +31,12 @@ export default defineComponent({
         if (this.reverse) items.reverse()
 
         return (
-            <div class={this.basic}>
+            <div class={[
+                this.basic,
+                {
+                    [this.of('vertical')]: this.vertical,
+                }
+            ]}>
                 { items }
             </div>
         )

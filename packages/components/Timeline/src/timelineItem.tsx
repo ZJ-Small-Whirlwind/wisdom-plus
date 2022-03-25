@@ -68,7 +68,10 @@ export default defineComponent({
         return (
             <div class={[
                 this.basic,
-                this.is(this.timelineProps?.mode || 'left')
+                this.is(this.timelineProps?.mode || 'left'),
+                {
+                    [this.is('relative')]: this.timelineProps?.relative
+                }
             ]} style={{
                 '--wp-timeline-item-dot-color': this.dotColor || '',
                 '--wp-timeline-item-line-color': this.lineColor || ''
