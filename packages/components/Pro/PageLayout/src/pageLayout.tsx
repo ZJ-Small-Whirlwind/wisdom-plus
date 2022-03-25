@@ -222,7 +222,7 @@ export default defineComponent({
             handleQuery(false)
         }
 
-        const doQuery = ref(false)
+        const doQuery = ref(true)
         onActivated(() => {
             if (doQuery.value) return
             if (props.queryOnActive) handleQuery(false, false, true)
@@ -231,7 +231,6 @@ export default defineComponent({
             doQuery.value = false
         })
         handleQuery()
-        doQuery.value = true
 
         /**
          * 分页
