@@ -50,8 +50,52 @@
         right: 15px;
         top: 15px;
         background-color: #ffffff;
+        max-width: 30%;
+        width: 300px;
+        height: calc(100% - 30px);
         &-box{
             padding: 15px;
+        }
+        &-draggable{
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            &-box{
+                flex: 1;
+                overflow-x: hidden;
+                &-item{
+                    padding: 10px 15px;
+                    display: flex;
+                    align-items: center;
+                    &+&{
+                        border-top: 1px dashed #d8d8d8;
+                    }
+                    &:hover{
+                        background-color: #eeeeee;
+                    }
+                    .wp-ellipsis{
+                        width: 100%;
+                        flex: 1;
+                        font-size: 14px;
+                    }
+                    .wp-icon{
+                        color: #ababab;
+                        cursor: pointer;
+                        &:hover{
+                            color: #ff0000;
+                        }
+                    }
+                }
+            }
+            &-footer{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-top: 10px;
+                &>*{
+                    flex: 1;
+                }
+            }
         }
     }
 }
