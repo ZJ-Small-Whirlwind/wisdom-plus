@@ -1,4 +1,4 @@
-import { defineComponent, ExtractPropTypes, PropType, onActivated, ref, watch, computed, reactive } from "vue"
+import { defineComponent, ExtractPropTypes, PropType, onActivated, ref, watch, computed, reactive, onDeactivated } from "vue"
 
 import { WpButton } from '../../../Button'
 import { WpSpace, SpaceProps } from '../../../Space'
@@ -70,7 +70,8 @@ export const proPageLayoutProps = buildProps({
             delete?: (ids: (number | string)[]) => Promise<any>
         }>,
         default: () => ({})
-    }
+    },
+    async: Boolean
 })
 
 export type ProPageLayoutProps = ExtractPropTypes<typeof proPageLayoutProps>
@@ -221,8 +222,13 @@ export default defineComponent({
             handleQuery(false)
         }
 
+        const doQuery = ref(true)
         onActivated(() => {
+            if (doQuery.value) return
             if (props.queryOnActive) handleQuery(false, false, true)
+        })
+        onDeactivated(() => {
+            doQuery.value = false
         })
         handleQuery()
 
