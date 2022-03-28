@@ -11,6 +11,7 @@ import { WpPagination } from '../../../Pagination'
 
 import { buildProps } from '@wisdom-plus/utils/props'
 import { useVModel } from '@vueuse/core'
+import { usePageEnter } from "./utils"
 
 export interface PageMap {
     page: string | number,
@@ -222,15 +223,9 @@ export default defineComponent({
             handleQuery(false)
         }
 
-        const doQuery = ref(true)
-        onActivated(() => {
-            if (doQuery.value) return
+        usePageEnter(handleQuery, () => {
             if (props.queryOnActive) handleQuery(false, false, true)
         })
-        onDeactivated(() => {
-            doQuery.value = false
-        })
-        handleQuery()
 
         /**
          * 分页

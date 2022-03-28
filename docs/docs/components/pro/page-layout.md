@@ -54,6 +54,21 @@ const data = ref([{
 ```
 :::
 
+### usePageEnter
+
+针对 Keep-alive 的组件，使用 usePageEnter 函数可以在第一次进入时通过 created 生命周期执行函数，未来进入时通过 activated 生命周期执行函数。
+
+```ts
+import { usePageEnter } from 'wisdom-plus'
+usePageEnter(handleQuery)
+```
+
+函数签名
+
+```ts
+const usePageEnter: (handleCreated: () => void, handleActivated?: (() => void) | undefined) => void
+```
+
 ### Props
 
 | 参数      | 说明                                          | 类型                                                                  | 默认值                |
@@ -72,6 +87,7 @@ const data = ref([{
 ### 插槽
 
 本组件继承了 table 组件的所有插槽
+
 ### Slots
 
 | 名称    | 说明     | 参数 |

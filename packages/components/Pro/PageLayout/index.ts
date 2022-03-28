@@ -5,3 +5,4 @@ export const WpProPageLayout = withInstall(PageLayout)
 export default WpProPageLayout
 
 export * from './src/pageLayout'
+export * from './src/utils'
