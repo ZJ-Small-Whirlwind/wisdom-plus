@@ -336,6 +336,30 @@ export interface InfoWindowOptions {
 }
 
 
+export class Geocoder{
+    constructor(GeocoderOptions?:Partial<GeocoderOptions>) {
+    }
+    getLocation(address:String, callback:(status:StatusType,result:{
+        info:string;
+        geocodes:number[];
+        resultNum:number;
+    })=>void):void
+    getAddress(location:LngLat, callback:(status:StatusType,result:{
+        info:string;
+        geocodes:number[];
+        resultNum:number;
+    })=>void):void
+    setCity(city:string):void
+}
+
+export interface GeocoderOptions {
+    city:string
+    radius:number
+    lang:string
+    batch:boolean
+    extensions:string
+}
+
 
 export type AMapPluginsMapKeys = `AMap.${keyof AMapInstance}` | keyof AMapInstance;
 export type AMapPluginsMapValue = (map:AMapMap, AMapInstance:AMapInstance)=>any
@@ -359,6 +383,7 @@ export interface AMapInstance{
     PlaceSearch:typeof PlaceSearch
     setCenter:typeof setCenter
     InfoWindow:typeof InfoWindow
+    Geocoder:typeof Geocoder
 }
 
 declare global {

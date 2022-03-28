@@ -149,14 +149,30 @@ const change1 = (v)=>{
 :::demo
 ```vue
 <template>
-    <WpMaps placeSearch panel>
+    <WpMaps ref="map" placeSearch panel  @panel-confirm="confirm" :panelList="panelList" @mapClick="mapClick">
         <template #autoCompleteItem="{value}">
             <div>{{value.name}}</div>
+        </template>
+        <template #panelItem="{element}">
+            <div>
+                <div>{{element.result.regeocode.formattedAddress}}</div>
+                <div>{{element.ev.pos.join()}}</div>
+            </div>
         </template>
     </WpMaps>
 </template>
 <script setup>
 import { ref } from 'vue'
+const map = ref([]);
+const panelList = ref([]);
+const confirm = ({data})=>{
+    console.log(panelList.value, data)
+}
+const mapClick = ev=>{
+    map.value.GeocoderServe.getAddress(ev.lnglat, (status, result)=> {
+        panelList.value = panelList.value.concat([{ev,result}])
+    })
+}
 </script>
 ```
 :::
@@ -179,6 +195,7 @@ import { ref } from 'vue'
 | city | 当前城市                         | `string|object `       | 全国 |
 | autoCompleteLabelName | 搜索完成后显示名字段名称                         | `string `       | name |
 | panel | 是否显示侧方面板                         | `boolean `       | false |
+| panelItemLabelName | 侧方面板列表显示名字段名称                     | `string `       | name |
 
 #### menu
 | 名称      | 说明 | 类型    | 默认值 |
@@ -214,4 +231,5 @@ import { ref } from 'vue'
 | ---- |--| ---- |
 | autoCompleteItem | 搜索完成下拉插槽 | `(value:any)=>any` |
 | panel | 地图侧方面板 | `-` |
+| panelItem | 地图侧方面板列表元素插槽 | `-` |
 
