@@ -68,6 +68,7 @@ export default defineComponent({
 
         const scrollRef = ref<InstanceType<typeof XScroll> | null>(null)
         const activeTabTitle = ref<null | HTMLDivElement>(null)
+        const tabsTitle = ref<null | HTMLDivElement>(null)
         const tabsRef = ref<null | HTMLDivElement>(null)
 
         const left = ref(0)
@@ -133,6 +134,7 @@ export default defineComponent({
         })
 
         useResizeObserver(activeTabTitle, getLeft)
+        useResizeObserver(tabsTitle, getLeft)
 
         const spaceSize = computed<[string | number, string | number]>(() => {
             if (props.position === 'top' || props.position === 'bottom') {
@@ -170,7 +172,8 @@ export default defineComponent({
             propsHandle,
             init,
             update: getLeft,
-            scrollToView
+            scrollToView,
+            tabsTitle
         }
     },
     expose: ['update', 'scrollToView'],
@@ -233,7 +236,7 @@ export default defineComponent({
         )
 
         const TitleRender = (
-            <div class="wp-tabs--title">
+            <div class="wp-tabs--title" ref={'tabsTitle'}>
                 <XScroll ref="scrollRef" {...this.xScrollProps}>
                     { TitleCellsRender() }
                 </XScroll>
@@ -241,7 +244,7 @@ export default defineComponent({
         )
 
         const TitleVerticalRender = (
-            <div class="wp-tabs--title">
+            <div class="wp-tabs--title" ref="tabsTitle">
                 {TitleCellsRender(true)}
             </div>
         )
