@@ -38,7 +38,7 @@ export type SpinProps = ExtractPropTypes<typeof spinProps>;
 export default defineComponent({
     name: 'WpSpin',
     props: spinProps,
-    setup(props, { slots }) {
+    setup(props, { slots, attrs }) {
         const renderText = () => {
             if (slots.text || props.text) {
                 return (
@@ -103,7 +103,7 @@ export default defineComponent({
                                         height: '100%',
                                         width: '100%',
                                         zIndex: zIndex.value
-                                    } : undefined}>
+                                    } : undefined} { ...attrs }>
                                         {slots.default?.()}
                                         <Transition name='wp-spin-transition'>
                                             {
