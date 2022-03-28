@@ -1,0 +1,7 @@
+// Vitest Snapshot v1
+
+exports[`Attrs > Add class > class="test" 1`] = `"<teleport-stub class=\\"test\\"></teleport-stub>"`;
+
+exports[`Attrs > Add class > class="test" 2`] = `"<teleport-stub class=\\"test\\"></teleport-stub>"`;
+
+exports[`Attrs > Add class > test 1`] = `"<teleport-stub class=\\"test\\"></teleport-stub>"`;
