@@ -38,6 +38,7 @@ export type SpinProps = ExtractPropTypes<typeof spinProps>;
 export default defineComponent({
     name: 'WpSpin',
     props: spinProps,
+    inheritAttrs: false,
     setup(props, { slots, attrs }) {
         const renderText = () => {
             if (slots.text || props.text) {
@@ -83,7 +84,7 @@ export default defineComponent({
                 ]} style={{
                     fontSize: addUnit(props.size),
                     color: props.color
-                }}>
+                }} {...attrs}>
                     <span class={'wp-spin__spinner'}>
                         {CircularIcon}
                     </span>

@@ -5,3 +5,7 @@ exports[`Attrs > Add class > class="test" 1`] = `"<teleport-stub class=\\"test\\
 exports[`Attrs > Add class > class="test" 2`] = `"<teleport-stub class=\\"test\\"></teleport-stub>"`;
 
 exports[`Attrs > Add class > test 1`] = `"<teleport-stub class=\\"test\\"></teleport-stub>"`;
+
+exports[`Attrs > Add class 1`] = `"<teleport-stub></teleport-stub>"`;
+
+exports[`Attrs > Add class 2`] = `"<teleport-stub></teleport-stub>"`;
