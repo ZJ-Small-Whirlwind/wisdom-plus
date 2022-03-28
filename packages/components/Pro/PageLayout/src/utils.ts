@@ -1,6 +1,6 @@
 import { ref, onActivated, onDeactivated } from "vue"
 
-export const usePageEnter = (handleCreated: () => void, handleActivated?: () => void) => {
+export const onPageEnter = (handleCreated: () => void, handleActivated?: () => void) => {
     const doQuery = ref(true)
     onActivated(() => {
         if (doQuery.value) return

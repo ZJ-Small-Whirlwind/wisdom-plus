@@ -54,19 +54,19 @@ const data = ref([{
 ```
 :::
 
-### usePageEnter
+### onPageEnter
 
-针对 Keep-alive 的组件，使用 usePageEnter 函数可以在第一次进入时通过 created 生命周期执行函数，未来进入时通过 activated 生命周期执行函数。
+针对 Keep-alive 的组件，使用 onPageEnter 函数可以在第一次进入时通过 created 生命周期执行函数，未来进入时通过 activated 生命周期执行函数。
 
 ```ts
-import { usePageEnter } from 'wisdom-plus'
-usePageEnter(handleQuery)
+import { onPageEnter } from 'wisdom-plus'
+onPageEnter(handleQuery)
 ```
 
 函数签名
 
 ```ts
-const usePageEnter: (handleCreated: () => void, handleActivated?: (() => void) | undefined) => void
+const onPageEnter: (handleCreated: () => void, handleActivated?: (() => void) | undefined) => void
 ```
 
 ### Props
