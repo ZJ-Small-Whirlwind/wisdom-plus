@@ -6,7 +6,7 @@ import WpCalendar, {calendarProps} from "../../Calendar";
 import WpButton from "../../Button";
 import WpIcon from "../../Icon";
 import WpTimePicker from "../../TimePicker";
-import {DateRangeOutlined} from "@vicons/material";
+import { Calendar } from '@element-plus/icons'
 export const datePickerProps = buildProps({
     modelValue:{type:[String, Array, Date, Number],default:null},
     format:{type:String, default:null},
@@ -658,7 +658,7 @@ export default defineComponent({
                           prefixIcon:()=>bool ? (<WpIcon class={{
                               "wp-date-picker-prefix-icon":true,
                           }}>
-                              <DateRangeOutlined></DateRangeOutlined>
+                              <Calendar></Calendar>
                           </WpIcon>) : null,
                           panel:()=>bool ? [
                               this.isDaterange ? (<div class={{
