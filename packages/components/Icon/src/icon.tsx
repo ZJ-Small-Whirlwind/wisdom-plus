@@ -1,6 +1,7 @@
 import { defineComponent, ExtractPropTypes, h } from 'vue'
 import { buildProps, definePropType } from '@wisdom-plus/utils/props'
 import { addUnit } from '@wisdom-plus/utils/util'
+// import a from '//at.alicdn.com/t/font_3282174_c02x383zxbq.js'
 
 export const iconProps = buildProps({
     size: definePropType<string | number>([String, Number]),
@@ -28,9 +29,7 @@ export default defineComponent({
                     },
                     class: 'wp-icon'
                 },
-                {
-                    default: slots.default || (() => h('i', { class: props.name }))
-                }
+                slots.default?.() || h('i', { class: props.name })
             )
         )
     },
