@@ -9,12 +9,7 @@ import {Toast} from "../../Toast";
 import Ellipsis from "../../Ellipsis";
 import WpButton from "../../Button";
 import Draggable from "../../Pro/Cascader/src/draggable/src/vuedraggable";
-import {
-    LocationOnRound,
-    LocalPhoneRound,
-    EmailRound,
-    DeleteForeverRound
-} from "@vicons/material";
+import { Location, Message, Cellphone, Delete   } from '@element-plus/icons'
 export const mapsProps = buildProps({
     config:{type:Object, default:null},
     plugins:{type:Object, default:null},
@@ -334,9 +329,9 @@ export default defineComponent({
                             }}>
                                 {this.$slots.autoCompleteItem?.({value}) || [
                                     <div>{value.name}</div>,
-                                    value.address ? <div><WpIcon><LocationOnRound></LocationOnRound></WpIcon>{typeof value.address === 'string' ? (value.address|| '暂无') : (value.address[0] || '暂无')}</div> : null,
-                                    value.tel ? <div><WpIcon><LocalPhoneRound></LocalPhoneRound></WpIcon>{value.tel}</div> : null,
-                                    value.email ? <div><WpIcon><EmailRound></EmailRound></WpIcon>{value.email}</div> : null,
+                                    value.address ? <div><WpIcon><Location></Location></WpIcon>{typeof value.address === 'string' ? (value.address|| '暂无') : (value.address[0] || '暂无')}</div> : null,
+                                    value.tel ? <div><WpIcon><Cellphone></Cellphone></WpIcon>{value.tel}</div> : null,
+                                    value.email ? <div><WpIcon><Message></Message></WpIcon>{value.email}</div> : null,
                                 ]}
                             </div>)
                         }
@@ -369,7 +364,7 @@ export default defineComponent({
                                                    }}>
                                                        {this.$slots.panelItem?.({index, element}) || ([
                                                            <Ellipsis>{get(element, this.$props.panelItemLabelName)}</Ellipsis>,
-                                                           <WpIcon onClick={()=>this.currentPanelList.splice(index, 1)}><DeleteForeverRound></DeleteForeverRound></WpIcon>,
+                                                           <WpIcon onClick={() => this.currentPanelList.splice(index, 1)}><Delete></Delete></WpIcon>,
                                                        ])}
                                                    </div>)
                                            }}>

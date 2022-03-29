@@ -7,7 +7,7 @@ import Panel, { timePanelProps } from './timePanel'
 import Space from '../../Space'
 import dayjs from 'dayjs'
 
-import { AccessTimeFilled } from '@vicons/material'
+import { Clock } from '@element-plus/icons'
 import { useFormItem } from "@wisdom-plus/hooks"
 
 const timePickerPropsMap = buildProps({
@@ -105,7 +105,7 @@ export default defineComponent({
                     this.time = ''
                 }}
                 v-model:input={this.timeShow}
-                arrowIcon={AccessTimeFilled}
+                arrowIcon={Clock}
                 placeholder={this.placeholder}
             >
                 <div class={this.is('wrapper')}>

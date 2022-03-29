@@ -8,8 +8,6 @@ import WpIcon from "../../Icon";
 import WpTimePicker from "../../TimePicker";
 // import {DateRangeOutlined} from "@vicons/material";
 import {DateRangeOutlined} from "@wisdom-plus/icons";
-
-console.log(DateRangeOutlined)
 export const datePickerProps = buildProps({
     modelValue:{type:[String, Array, Date, Number],default:null},
     format:{type:String, default:null},
