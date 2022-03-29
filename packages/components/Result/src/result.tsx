@@ -7,7 +7,7 @@ export const resultProps = buildProps({
     message: String,
     description: String,
     icon: {
-        type: Object as PropType<String>,
+        type: String as PropType<string>,
         default: '✋'
     }
 })
