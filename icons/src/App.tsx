@@ -16,9 +16,9 @@ export default defineComponent({
         const searchChange = async ()=>{
             loading.value = true;
             if(search.value){
-                // IconList.value = (await (await fetch(`http://localhost:81/Dome/Iconfont/search?search=${search.value}`)).json()).data;
+                IconList.value = (await (await fetch(`http://localhost:81/Dome/Iconfont/search?search=${search.value}`)).json()).data;
             }else {
-
+                // console.log((await (await fetch(`http://localhost:81/Dome/Iconfont/getConfigs`)).json()).data)
             }
             loading.value = false;
         }
