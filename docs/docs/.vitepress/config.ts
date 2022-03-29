@@ -302,6 +302,10 @@ export default defineConfig({
                         {
                             text: 'Timeline 时间线',
                             link: '/components/timeline'
+                        },
+                        {
+                            text: 'Result 结果',
+                            link: '/components/result'
                         }
                     ]
                 }
