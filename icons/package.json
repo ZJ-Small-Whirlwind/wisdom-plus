@@ -1,0 +1,11 @@
+{
+  "name": "icons",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "icons:dev": "uf & vite"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@wisdom-plus/icons",
+  "version": "0.0.0",
+  "main": "index.tsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.zhijiasoft.com/xuyi/wisdom-plus.git"
+  },
+  "description": ""
+}
