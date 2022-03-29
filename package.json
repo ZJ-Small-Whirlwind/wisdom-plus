@@ -57,6 +57,7 @@
     "@wisdom-plus/theme-chalk": "workspace:*",
     "@wisdom-plus/tokens": "workspace:*",
     "@wisdom-plus/utils": "workspace:*",
+    "@wisdom-plus/icons": "workspace:*",
     "async-validator": "^4.0.7",
     "dayjs": "^1.10.7",
     "lodash": "^4.17.21",

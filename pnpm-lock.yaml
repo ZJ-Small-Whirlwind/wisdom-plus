@@ -26,6 +26,7 @@ importers:
       '@wisdom-plus/components': workspace:*
       '@wisdom-plus/directives': workspace:*
       '@wisdom-plus/hooks': workspace:*
+      '@wisdom-plus/icons': workspace:*
       '@wisdom-plus/locale': workspace:*
       '@wisdom-plus/test-utils': workspace:*
       '@wisdom-plus/theme-chalk': workspace:*
@@ -82,6 +83,7 @@ importers:
       '@wisdom-plus/components': link:packages/components
       '@wisdom-plus/directives': link:packages/directives
       '@wisdom-plus/hooks': link:packages/hooks
+      '@wisdom-plus/icons': link:packages/icons
       '@wisdom-plus/locale': link:packages/locale
       '@wisdom-plus/test-utils': link:packages/test-utils
       '@wisdom-plus/theme-chalk': link:packages/theme-chalk
@@ -155,6 +157,9 @@ importers:
     specifiers: {}
 
   packages/hooks:
+    specifiers: {}
+
+  packages/icons:
     specifiers: {}
 
   packages/locale:

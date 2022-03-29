@@ -2,6 +2,7 @@
 packages:
   - 'packages/**'
   - '!packages/__mocks__'
+  - icons
   - docs
   - play
   - '!**/__tests__/**'
