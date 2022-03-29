@@ -1,0 +1,44 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.icons-main{
+    &-header{
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 0 5px #d8d8d8;
+        .logo{
+            height: 50px;
+        }
+        .search{
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 15px;
+            .wp-input{
+                flex: 0.5;
+            }
+        }
+        .navs{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            &>*{
+                padding: 0 15px;
+                height: 100%;
+                color: #47a0da;
+                cursor: pointer;
+                &:hover{
+                    color: #0088FF;
+                }
+                &+*{
+                    border-left: 1px solid #d8d8d8;
+                }
+            }
+        }
+
+    }
+}

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "vite"
+    "icons:dev": "uf & vite"
   },
   "author": "",
   "license": "ISC"

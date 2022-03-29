@@ -10,6 +10,7 @@
     "clean": "pnpm run clean:lib && pnpm run clean -r --stream",
     "clean:lib": "rimraf dist",
     "tsc": "tsc --noEmit",
+    "icons:dev": "pnpm run -C icons icons:dev",
     "docs:dev": "pnpm run -C docs docs:dev",
     "docs:build": "pnpm run -C docs docs:build",
     "test": "vitest -w"
