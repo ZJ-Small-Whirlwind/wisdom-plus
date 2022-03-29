@@ -75,6 +75,7 @@ declare global {
     const WpAwait: typeof import('wisdom-plus')['WpAwait']
     const WpTimeline: typeof import('wisdom-plus')['WpTimeline']
     const WpTimelineItem: typeof import('wisdom-plus')['WpTimelineItem']
+    const WpResult: typeof import('wisdom-plus')['WpResult']
 }
 
 export {}

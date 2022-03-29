@@ -1,0 +1,19 @@
+.wp-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 2;
+    &-icon {
+        font-size: 80px;
+        line-height: 1.5;
+    }
+    &-message {
+        font-size: 30px;
+        font-weight: bold;
+        color: #000;
+    }
+    &-description {
+        font-size: 14px;
+        color: #999;
+    }
+}

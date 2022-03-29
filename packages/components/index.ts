@@ -73,6 +73,7 @@ export * from './Await'
 export * from './Debug'
 export * from './Maps'
 export * from './Timeline'
+export * from './Result'
 
 export * from './Pro/Upload'
 export * from './Pro/Editor'
