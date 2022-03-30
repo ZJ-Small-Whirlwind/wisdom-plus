@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "icons:dev": "sudo uf & vite"
+    "icons:dev": "sudo uf & vite",
+    "icons:sync": "ts-node iconsSync.ts"
   },
   "author": "",
   "license": "ISC"

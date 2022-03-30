@@ -11,6 +11,7 @@
     "clean:lib": "rimraf dist",
     "tsc": "tsc --noEmit",
     "icons:dev": "pnpm run -C icons icons:dev",
+    "icons:sync": "pnpm run -C icons icons:sync",
     "docs:dev": "pnpm run -C docs docs:dev",
     "docs:build": "pnpm run -C docs docs:build",
     "test": "vitest -w"

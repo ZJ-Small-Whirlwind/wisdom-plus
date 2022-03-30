@@ -8,20 +8,11 @@ import {
     Dialog
 } from "@wisdom-plus/components"
 import logo from "../../wisdom-plus.png"
-import * as console from "console";
-type Icon = {
-    id:number
-    show_svg:string
-    name:string
-    font_class:string
-}
+import {getConfigs, setConfigs, Icon, synchronousConfigs, searchIcon} from "../config"
+
 export default defineComponent({
     name:"App",
     setup(){
-        const api = "http://localhost:81/Dome/Iconfont";
-        const getApi = (url:string)=>{
-            return `${api}${url}`
-        }
         const search = ref("");
         const MyIconList = ref<Array<{
             [key:number]:Icon
@@ -29,13 +20,13 @@ export default defineComponent({
         const IconList = ref<Array<Icon>>([]);
         const loading = ref(false);
         const getMyIconList = async ()=>{
-            MyIconList.value = (await (await fetch(getApi(`/getConfigs`))).json()).data;
+            MyIconList.value = await getConfigs();
         }
         const searchChange = async ()=>{
             loading.value = true;
             if(search.value){
                 // 搜索图标
-                IconList.value = (await (await fetch(getApi(`/search?search=${search.value}`))).json()).data;
+                IconList.value = await searchIcon(search.value);
             }else {
                 await getMyIconList();
                 IconList.value = Object.values(MyIconList.value) as any
@@ -62,7 +53,7 @@ export default defineComponent({
         const IconClick = async (icon:Icon)=>{
             if(MyIconList.value[icon.id]){
                 // 我的图标
-                onCopy(icon.font_class.toUpperCase())
+                onCopy(icon.font_class)
                 WpToast({
                     message:`已复制`,
                     placement:"top",
@@ -71,13 +62,7 @@ export default defineComponent({
             }else {
                 // 添加图标
                 loading.value = true;
-                await fetch(getApi(`/setConfigs`),{
-                    method:"post",
-                    headers:{
-                        "Content-Type":"application/json; charset=utf-8"
-                    },
-                    body:JSON.stringify(icon)
-                })
+                await setConfigs(icon);
                 await getMyIconList();
                 loading.value = false;
                 WpToast({
@@ -94,16 +79,10 @@ export default defineComponent({
                 content:`确定删除该【${icon.name}】图标吗`,
             }).then(async ()=>{
                 loading.value = true;
-                await fetch(getApi(`/setConfigs`),{
-                    method:"post",
-                    headers:{
-                        "Content-Type":"application/json; charset=utf-8"
-                    },
-                    body:JSON.stringify({
-                        ...icon,
-                        is_delete_wp_icon:true,
-                    })
-                })
+                await setConfigs({
+                    ...icon,
+                    is_delete_wp_icon:true,
+                });
                 await getMyIconList();
                 loading.value = false;
                 WpToast({
@@ -111,6 +90,17 @@ export default defineComponent({
                     placement:"top",
                     dark:true
                 })
+            })
+        }
+        const synchronousIconConfigs = async ()=>{
+            loading.value = true;
+            await synchronousConfigs();
+            await getMyIconList();
+            loading.value = false;
+            WpToast({
+                message:"同步成功",
+                placement:"top",
+                dark:true
             })
         }
         onMounted(async ()=>{
@@ -133,8 +123,7 @@ export default defineComponent({
                     ></WpInput>
                 </div>
                 <div class={"navs"}>
-                    <div>中文</div>
-                    <div>帮助文档</div>
+                    <div onclick={synchronousIconConfigs}>本地同步</div>
                 </div>
             </div>
             {loading.value ? <WpSpin></WpSpin> : null}
