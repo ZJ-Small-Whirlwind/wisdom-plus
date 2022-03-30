@@ -8,5 +8,9 @@
     "icons:sync": "ts-node iconsSync.ts"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "github-markdown-css": "^5.1.0",
+    "vite-plugin-md": "^0.12.4"
+  }
 }
