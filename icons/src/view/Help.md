@@ -31,3 +31,13 @@ sudo visudo 或者 sudo vi /etc/sudoers
 将%admin ALL=(ALL) ALL
 替换为 %admin ALL=(ALL) NOPASSWD: ALL
 ```
+
+### uf-node 控制台错误及解决办法
+
+错误一
+
+> Could not find expected browser (chrome) locally. Run `npm install` to download the correct Chromium revision (901912).
+
+执行以下命令, 前提是已经npm全局安装过[ts-node](https://www.npmjs.com/package/uf-node)， 如为安装，请看使用方法1
+
+`uf-install`

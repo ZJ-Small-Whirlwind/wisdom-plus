@@ -148,6 +148,14 @@ importers:
       vitepress: 0.22.3_sass@1.49.9
       vitepress-theme-demoblock: 1.4.2_sass@1.49.9
 
+  icons:
+    specifiers:
+      github-markdown-css: ^5.1.0
+      vite-plugin-md: ^0.12.4
+    devDependencies:
+      github-markdown-css: 5.1.0
+      vite-plugin-md: 0.12.4_vite@2.8.6
+
   packages/components:
     specifiers: {}
 
@@ -359,6 +367,10 @@ packages:
     resolution: {integrity: sha512-UU8TLr/EoXdg7OjMp0h9oDoIAVr+Z/oW9cpOxQQyrsz6Qzd2ms/1CdWx8fl2OQdFpxGmq5Vc4TwfLHId6nAZjA==}
     dependencies:
       '@types/throttle-debounce': 2.1.0
+    dev: true
+
+  /@antfu/utils/0.5.0:
+    resolution: {integrity: sha512-MrAQ/MrPSxbh1bBrmwJjORfJymw4IqSHFBXqvxaga3ZdDM+/zokYF8DjyJpSjY2QmpmgQrajDUBJOWrYeARfzA==}
     dev: true
 
   /@arr/every/1.0.1:
@@ -4249,6 +4261,10 @@ packages:
       assert-plus: 1.0.0
     dev: true
 
+  /github-markdown-css/5.1.0:
+    resolution: {integrity: sha512-QLtORwHHtUHhPMHu7i4GKfP6Vx5CWZn+NKQXe+cBhslY1HEt0CTEkP4d/vSROKV0iIJSpl4UtlQ16AD8C6lMug==}
+    dev: true
+
   /glob-parent/3.1.0:
     resolution: {integrity: sha1-nmr2KZ2NO9K9QEMIMr0RPfkGxa4=}
     dependencies:
@@ -5401,6 +5417,17 @@ packages:
 
   /markdown-it/12.3.0:
     resolution: {integrity: sha512-T345UZZ6ejQWTjG6PSEHplzNy5m4kF6zvUpHVDv8Snl/pEU0OxIK0jGg8YLVNwJvT8E0YJC7/2UvssJDk/wQCQ==}
+    hasBin: true
+    dependencies:
+      argparse: 2.0.1
+      entities: 2.1.0
+      linkify-it: 3.0.3
+      mdurl: 1.0.1
+      uc.micro: 1.0.6
+    dev: true
+
+  /markdown-it/12.3.2:
+    resolution: {integrity: sha512-TchMembfxfNVpHkbtriWltGWc+m3xszaRD0CZup7GFFhzIgQqxIfn3eGj1yZpfuflzPvfkt611B2Q/Bsk1YnGg==}
     hasBin: true
     dependencies:
       argparse: 2.0.1
@@ -7798,6 +7825,20 @@ packages:
       vite: 2.8.6_sass@1.49.9
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /vite-plugin-md/0.12.4_vite@2.8.6:
+    resolution: {integrity: sha512-qtkzpHAvdp/Zo/2ntmCpfph2JD4F0+tOl1vK3QVAZztpWyoO7Yi8Y2Dqu7Urrnh/fPH7PnIWlrrQy1XV/D92Pg==}
+    peerDependencies:
+      vite: ^2.0.0
+    dependencies:
+      '@antfu/utils': 0.5.0
+      '@rollup/pluginutils': 4.2.0
+      '@types/markdown-it': 12.2.3
+      '@vue/runtime-core': 3.2.31
+      gray-matter: 4.0.3
+      markdown-it: 12.3.2
+      vite: 2.8.6_sass@1.49.9
     dev: true
 
   /vite/2.7.3_sass@1.49.9:
