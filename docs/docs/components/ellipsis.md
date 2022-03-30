@@ -72,7 +72,7 @@ app.use(WpEllipsis)
             因为爱情总是难舍难分<br>
             何必在意那一点点温存<br>
         </wp-ellipsis>
-        <wp-ellipsis :line="2" nwp-tooltip>
+        <wp-ellipsis :line="2" no-tooltip>
             <template #title>
                 何必在意那一点点温存
             </template>
