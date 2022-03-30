@@ -22,6 +22,10 @@ export default defineComponent({
         const page = ref(1);
         const size = ref(54);
         const search:any = inject("search", ref(''))
+        const searchReset = ()=>{
+            count.value = 0;
+            page.value = 1;
+        }
         const getMyIconList = async ()=>{
             nextTick(async ()=>{
                 MyIconList.value = await getConfigs();
@@ -47,8 +51,7 @@ export default defineComponent({
                 IconList.value = res.icons;
             }else {
                 await getMyIconList();
-                count.value = 0;
-                page.value = 1;
+                searchReset();
             }
             loading.value = false;
         }
@@ -89,6 +92,7 @@ export default defineComponent({
                     placement:"top",
                     dark:true
                 })
+                searchReset();
             }
         }
         const delIcon = (icon:Icon, ev:any)=>{
@@ -109,6 +113,7 @@ export default defineComponent({
                     placement:"top",
                     dark:true
                 })
+                searchReset();
             })
         }
 
@@ -121,6 +126,7 @@ export default defineComponent({
                 placement:"top",
                 dark:true
             })
+            searchReset();
         }
 
         expose({
