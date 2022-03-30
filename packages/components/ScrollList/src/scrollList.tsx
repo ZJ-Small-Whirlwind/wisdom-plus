@@ -51,6 +51,10 @@ export const scrollListProps = buildProps({
     base: {
         type: String as PropType<'first' | 'last'>,
         default: 'first'
+    },
+    count: {
+        type: Number,
+        default: 1
     }
 })
 
@@ -89,11 +93,13 @@ export default defineComponent({
             if (scrollListRef.value) {
                 if (scrollListRef.value.$el.scrollHeight <= scrollListRef.value.$el.offsetHeight) return
             }
-            const firstChild = slotsElements.value.shift()
-            if (firstChild) {
-                firstChild.id = Symbol('id')
-                slotsElements.value.push(firstChild)
-            }
+            const count = props.count > slotsElements.value.length ? slotsElements.value.length : props.count
+            const pushTo = slotsElements.value.slice(0, count)
+            slotsElements.value.splice(0, count)
+            pushTo.forEach(child => {
+                child.id = Symbol('id')
+                slotsElements.value.push(child)
+            })
         }
         const timer = ref<null | ReturnType<typeof setInterval>>(null)
         const end = () => {
