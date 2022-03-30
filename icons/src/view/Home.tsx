@@ -1,12 +1,12 @@
-import {defineComponent, ref, h, onMounted, nextTick} from "vue"
-import {useRoute} from "vue-router"
+import {defineComponent, ref, h, onMounted, nextTick, inject} from "vue"
 import {
     WpImage,
     WpInput,
     WpSpin,
     Toast as WpToast,
     WpEllipsis,
-    Dialog
+    Dialog,
+    WpPagination
 } from "@wisdom-plus/components"
 import {getConfigs, setConfigs, Icon, synchronousConfigs, searchIcon} from "../../config"
 
@@ -18,19 +18,37 @@ export default defineComponent({
         }>>({} as any);
         const IconList = ref<Array<Icon>>([]);
         const loading = ref(false);
+        const count = ref(0);
+        const page = ref(1);
+        const size = ref(54);
+        const search:any = inject("search", ref(''))
         const getMyIconList = async ()=>{
             nextTick(async ()=>{
                 MyIconList.value = await getConfigs();
                 IconList.value = Object.values(MyIconList.value) as any
             })
         }
-        const searchChange = async (search?:string)=>{
+        const pageChage = async p=>{
+            page.value = p;
+            await searchChange()
+        }
+        const searchChange = async ()=>{
             loading.value = true;
-            if(search){
+            if(search.value){
                 // 搜索图标
-                IconList.value = await searchIcon(search);
+                const res = await searchIcon(search.value, {
+                    page:page.value,
+                    sortType:"updated_at",
+                    fromCollection:"-1",
+                    fills:"",
+                    t:Date.now(),
+                });
+                count.value = res.count;
+                IconList.value = res.icons;
             }else {
                 await getMyIconList();
+                count.value = 0;
+                page.value = 1;
             }
             loading.value = false;
         }
@@ -149,6 +167,15 @@ export default defineComponent({
                 </div>))}
                 {IconList.value.length === 0 ? <div class={'notSearchResult'}>暂无数据！</div> : null}
             </div>
+            {count.value > 0 ? <div class={{
+
+            }}>
+                <WpPagination total={count.value}
+                              size={size.value}
+                              v-model={page.value}
+                              onChange={pageChage}>
+                </WpPagination>
+            </div> : null}
         </div>)
     }
 })

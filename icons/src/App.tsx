@@ -1,4 +1,4 @@
-import {defineComponent, onMounted, ref, h} from "vue"
+import {defineComponent, onMounted, ref, h, provide} from "vue"
 import {Toast as WpToast, WpImage, WpInput, WpSpin} from "@wisdom-plus/components";
 import logo from "../../wisdom-plus.png";
 import {synchronousConfigs} from "../config";
@@ -10,11 +10,12 @@ export default defineComponent({
         const loading = ref(false);
         const route = ref(null)
         const searchChange = async ()=>{
-            route.value.searchChange(search.value)
+            route.value.searchChange()
         }
         const synchronousIconConfigs = async ()=>{
             route.value.synchronousIconConfigs()
         }
+        provide("search",search)
         return {
             search,
             searchChange,
@@ -44,7 +45,12 @@ export default defineComponent({
                 </div>
             </div>
             <router-view v-slots={{
-                default:({Component})=>h(Component || 'div', {ref:"route"})
+                default:({Component})=>h(Component || 'div', {
+                    ref:"route",
+                    props:{
+                        search:this.search
+                    }
+                })
             }}></router-view>
         </div>)
     }

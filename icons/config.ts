@@ -35,4 +35,4 @@ export const setConfigs = async (icon)=>await fetch(getApi(`/setConfigs`),{
 export const synchronousConfigs = async ()=> await fetch(getApi(`/synchronousConfigs`))
 
 // 搜索图标
-export const searchIcon = async (keyword:string)=>(await (await fetch(getApi(`/search?search=${keyword}`))).json()).data
+export const searchIcon = async (keyword:string, params?: { [key:string]:any })=>(await (await fetch(getApi(`/search?q=${keyword}&${new URLSearchParams(params || {}).toString()}`))).json()).data
