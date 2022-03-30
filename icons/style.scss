@@ -54,7 +54,7 @@
         flex-wrap: wrap;
         gap: 5px;
         &-item{
-            width: calc((100% - (5px * 9)) / 10);
+            width: calc((100% - (5px * 9) - 30px) / 10);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -118,5 +118,11 @@
                 }
             }
         }
+    }
+    &-pagination{
+        display: flex;
+        justify-content: center;
+        padding: 15px;
+        margin-top: 30px;
     }
 }

@@ -168,7 +168,7 @@ export default defineComponent({
                 {IconList.value.length === 0 ? <div class={'notSearchResult'}>暂无数据！</div> : null}
             </div>
             {count.value > 0 ? <div class={{
-
+                "icons-main-pagination":true
             }}>
                 <WpPagination total={count.value}
                               size={size.value}
