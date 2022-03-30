@@ -1,4 +1,7 @@
 import Toast from './src/toast'
 
-export { Toast }
+const WpToast: Partial<typeof Toast> = { ...Toast }
+delete WpToast.install
+
+export { Toast, WpToast }
 export type { ToastOptions } from './src/toast'

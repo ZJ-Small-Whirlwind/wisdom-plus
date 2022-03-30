@@ -1,4 +1,4 @@
-import { defineComponent, ExtractPropTypes, PropType, onActivated, ref, watch, computed, reactive, onDeactivated } from "vue"
+import { defineComponent, ExtractPropTypes, PropType, ref, watch, computed, reactive } from "vue"
 
 import { WpButton } from '../../../Button'
 import { WpSpace, SpaceProps } from '../../../Space'
@@ -8,10 +8,13 @@ import { WpTable, TableProps } from '../../../Table'
 import { WpInput } from '../../../Input'
 import { WpXScroll } from '../../../XScroll'
 import { WpPagination } from '../../../Pagination'
+import BackTop from '../../../BackTop'
 
 import { buildProps } from '@wisdom-plus/utils/props'
 import { useVModel } from '@vueuse/core'
 import { onPageEnter } from "./utils"
+import { useScrollParent } from "@wisdom-plus/utils/use-scroll-parent"
+
 
 export interface PageMap {
     page: string | number,
@@ -62,6 +65,14 @@ export const proPageLayoutProps = buildProps({
         default: () => ({})
     },
     queryOnActive: {
+        type: Boolean,
+        default: true
+    },
+    backTop: {
+        type: Boolean,
+        default: true
+    },
+    backTopAfterQuery: {
         type: Boolean,
         default: true
     },
@@ -142,12 +153,21 @@ export default defineComponent({
             }
         })
 
+        const layoutRef = ref<HTMLElement>()
+        const parent = useScrollParent(layoutRef)
         const formDataBackup = ref<Record<string, any>>({})
         const handleQuery = async(resetPage = true, backup = false, refresh = false) => {
             if (resetPage) page.page = 1
             if (backup) formDataBackup.value = { ...formData.value }
             if (!refresh && !props.table?.keepSelection) {
                 tableRef.value?.clearCheckbox()
+            }
+            if (props.backTopAfterQuery && parent.value) {
+                const element = parent.value === document.body ? window : parent.value
+                element.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                })
             }
             if (props.apis.list) {
                 const res = await props.apis.list(formDataBackup.value, page)
@@ -189,8 +209,7 @@ export default defineComponent({
             } else {
                 await props.delete?.([row])
             }
-            Toast({
-                message: '删除成功',
+            Toast.success('删除成功', {
                 placement: 'center'
             })
             handleQuery(false)
@@ -198,8 +217,7 @@ export default defineComponent({
 
         const handleDeleteSelect = async() => {
             if (selections.value.length === 0) {
-                Toast({
-                    message: '请先选中任意项',
+                Toast.info('请先选中任意项', {
                     placement: 'center'
                 })
                 return
@@ -216,8 +234,7 @@ export default defineComponent({
                 await props.delete?.(selections.value)
             }
             tableRef.value?.clearCheckbox()
-            Toast({
-                message: '删除成功',
+            Toast.success('删除成功', {
                 placement: 'center'
             })
             handleQuery(false)
@@ -254,6 +271,7 @@ export default defineComponent({
             totalShow,
             dataShow,
             page,
+            layoutRef,
             refresh: (resetPage = false, backup?: boolean) => handleQuery(resetPage, backup, true),
             getSelections: () => tableRef.value?.getCheckbox() || [],
             tableProps
@@ -262,7 +280,7 @@ export default defineComponent({
     expose: ['refresh', 'getSelections', 'handleDelete'],
     render() {
         return (
-            <div class="wp-pro-page-layout">
+            <div class="wp-pro-page-layout" ref="layoutRef">
                 <WpSpace size={15} vertical itemStyle={{
                     common: {
                         width: '100%',
@@ -352,6 +370,11 @@ export default defineComponent({
                         }
                     </div>
                 </WpSpace>
+                {
+                    this.backTop && (
+                        <BackTop bottom={60} right={20} />
+                    )
+                }
             </div>
         )
     }

@@ -83,6 +83,8 @@ const onPageEnter: (handleCreated: () => void, handleActivated?: (() => void) | 
 | delete | 删除函数，填写本字段则不会使用 apis 内的 delete | _(items: any[]) => Promise\<unknown>_ | - |
 | spaceProps | Space 组件的 Props | _Partial\<SpaceProps>_ | - |
 | queryOnActive | 在激活的时候查询（仅 keep-alive 模式下有效） | _boolean_ | - |
+| backTop | 是否使用 backTop 组件 | _boolean_ | true |
+| backTopAfterQuery | 是否在查询后返回顶部 | _boolean_ | false |
 
 ### 插槽
 

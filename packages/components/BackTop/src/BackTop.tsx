@@ -31,7 +31,7 @@ export default defineComponent({
     components: {WpIcon},
     inheritAttrs: false,
     props: backTopProps,
-    setup(props) {
+    setup(props, { expose }) {
         const backTopRef = ref<HTMLDivElement>()
         const el = useScrollParent(backTopRef)
         const targetRef = computed(() => {
@@ -49,6 +49,11 @@ export default defineComponent({
                 behavior: "smooth"
             })
         }
+
+        expose({
+            scrollToTop: handleClick,
+            y
+        })
         return {
             backTopRef,
             handleClick,

@@ -33,13 +33,21 @@
         padding: 8px 12px;
         font-size: 13px;
         border-radius: 10px;
-        max-width: 200px;
+        max-width: 300px;
         line-height: 20px;
         box-shadow: 0 6px 6px -4px rgba(0, 0, 0, 0.03), 0 6px 16px 0 rgba(0, 0, 0, 0.02), 0 9px 28px 8px rgba(0, 0, 0, 0.03);
         &__dark {
             color: #fff;
             background-color: #333;
         }
+    }
+}
+
+.wp-toast--spec {
+    display: flex;
+    align-items: center;
+    > .wp-icon {
+        margin-right: .5em;
     }
 }
 
