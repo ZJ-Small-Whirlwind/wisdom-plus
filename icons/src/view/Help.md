@@ -17,3 +17,4 @@
 
 ### 使用方法
 
+使用前请先全局 安装 [`npm i uf-node -g`](https://www.npmjs.com/package/uf-node)
