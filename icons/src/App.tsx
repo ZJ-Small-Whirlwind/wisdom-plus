@@ -2,6 +2,7 @@ import {defineComponent, onMounted, ref, h, provide} from "vue"
 import {Toast as WpToast, WpImage, WpInput, WpSpin} from "@wisdom-plus/components";
 import logo from "../../wisdom-plus.png";
 import {synchronousConfigs} from "../config";
+import {useRoute} from "vue-router";
 
 export default defineComponent({
     name:"App",
@@ -32,16 +33,17 @@ export default defineComponent({
                 "icons-main-header": true
             }}>
                 <WpImage class={'logo'} src={logo}></WpImage>
-                <div class="search">
+                {this.$route.path === '/' ? <div class="search">
                     <WpInput placeholder={'搜索图标'}
                              clearable
                              v-model={this.search}
                              onKeyup={e => e.code === 'Enter' ? this.searchChange() : null}
                              onClear={this.searchChange}
                     ></WpInput>
-                </div>
+                </div> : null}
                 <div class={"navs"}>
-                    <div onClick={this.synchronousIconConfigs}>本地同步</div>
+                    {this.$route.path === '/' ? <div onClick={this.synchronousIconConfigs}>本地同步</div> : <div  onClick={()=>this.$router.push("/")}>首页</div>}
+                    <div onClick={()=>this.$router.push("/help")}>帮助说明</div>
                 </div>
             </div>
             <router-view v-slots={{
