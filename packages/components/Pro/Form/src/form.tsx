@@ -137,7 +137,7 @@ export const proFormGenerate = (name = 'WpProForm',Form: Component = WpForm, For
                         ...schema.componentProps,
                         [schema.model || 'modelValue']: this.data[schema.prop],
                         [`onUpdate:${schema.model || 'modelValue'}`]: (value: unknown) => this.data[schema.prop] = value
-                    }))
+                    }, schema.componentSlots))
                 ) : (
                     this.$slots[`${schema.prop}_plain`]?.() || this.data[schema.prop]
                 )
@@ -150,7 +150,7 @@ export const proFormGenerate = (name = 'WpProForm',Form: Component = WpForm, For
                     { ...this.props }
                     model={this.data}
                     rules={this.rulesMap}
-                    onKeydown={e => {
+                    onKeydown={(e: KeyboardEvent) => {
                         if (e.code === 'Enter') {
                             this.submit(true, e)
                         }
