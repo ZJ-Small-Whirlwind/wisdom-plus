@@ -21,7 +21,7 @@ export interface ToastOptions {
 const Toast = (options: ToastOptions) => {
     const defaltOptions: ToastOptions = {
         duration: 3000,
-        placement: 'bottom',
+        placement: 'center',
         to: 'body'
     }
     options = Object.assign(defaltOptions, options)
