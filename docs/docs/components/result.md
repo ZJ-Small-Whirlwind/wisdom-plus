@@ -31,7 +31,7 @@ app.use(WpResult)
 :::demo
 ```vue
 <template>
-    <wp-result icon="❌" message="401 Unauthorized" description="您可能未被授权访问本页面" />
+    <wp-result icon="Authentication" message="401 Unauthorized" description="您可能未被授权访问本页面" />
 </template>
 ```
 :::
@@ -85,7 +85,7 @@ app.use(WpResult)
 
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
-| icon   | 图标       | _string_          | ✋     |
+| icon   | 图标       | _'Authentication' | 'LocationSearch' | 'PageNotFound' | 'SecureLogin' | 'WaitingForYou'_          | 'PageNotFound'     |
 | message     | 消息   | _string_           | -      |
 | description   | 描述 | _string_ | -      |
 

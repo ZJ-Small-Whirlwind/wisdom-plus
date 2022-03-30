@@ -4,8 +4,9 @@
     align-items: center;
     line-height: 2;
     &-icon {
-        font-size: 80px;
-        line-height: 1.5;
+        font-size: 200px;
+        line-height: 1;
+        display: flex;
     }
     &-message {
         font-size: 30px;

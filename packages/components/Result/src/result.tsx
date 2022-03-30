@@ -1,14 +1,15 @@
 import { useNamespace } from "@wisdom-plus/utils/namespace";
 import { buildProps } from "@wisdom-plus/utils/props";
-import { defineComponent, ExtractPropTypes, Component, PropType } from "vue";
+import { defineComponent, ExtractPropTypes, h, PropType } from "vue";
 import Icon from '../../Icon'
+import * as icons from './icon'
 
 export const resultProps = buildProps({
     message: String,
     description: String,
     icon: {
-        type: String as PropType<string>,
-        default: '✋'
+        type: String as PropType<keyof typeof icons>,
+        default: 'PageNotFound'
     }
 })
 
@@ -29,7 +30,7 @@ export default defineComponent({
         return (
             <div class={this.basic}>
                 <div class={this.of('icon')}>
-                    <Icon>{this.$slots.icon?.() || this.icon}</Icon>
+                    <Icon>{this.$slots.icon?.() || h(icons[this.icon])}</Icon>
                 </div>
                 {
                     (this.$slots.message || this.message) && (

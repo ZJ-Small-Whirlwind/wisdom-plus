@@ -1,0 +1,5 @@
+export { default as Authentication } from './Authentication.vue'
+export { default as LocationSearch } from './LocationSearch.vue'
+export { default as PageNotFound } from './PageNotFound.vue'
+export { default as SecureLogin } from './SecureLogin.vue'
+export { default as WaitingForYou } from './WaitingForYou.vue'
