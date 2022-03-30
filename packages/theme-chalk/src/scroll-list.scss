@@ -8,7 +8,11 @@
 }
 
 .wp-scroll-list__cell {
-    transition: all var(--duration, 2s) ease;
+    transition: all var(--duration, 2s) linear;
+}
+
+.wp-scroll-list__cell.linear {
+    transition: all var(--duration, 2s) linear;
 }
 
 .wp-scroll-flip-leave-to,

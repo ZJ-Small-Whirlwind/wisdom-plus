@@ -13,6 +13,7 @@ export type Schema<T extends string | object = string> = Partial<ColumnSchema> &
     grid?: Partial<GridItemProps>,
     component?: Component | string | VNode | (abstract new (...args: any) => any),
     componentProps?: Record<string, any>,
+    componentSlots?: Record<string, (...args: any[]) => any>,
     plain?: boolean,
     hide?: boolean,
     raw?: boolean,

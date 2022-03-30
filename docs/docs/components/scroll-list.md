@@ -21,7 +21,7 @@ app.use(WpScrollList)
 :::demo
 ```vue
 <template>
-    <wp-scroll-list height="43.2px" :duration="2000" :animation-duration="2000">
+    <wp-scroll-list height="43.2px" :duration="1000" :animation-duration="1000">
         <div>
             第一行
         </div>
@@ -44,7 +44,7 @@ app.use(WpScrollList)
 :::demo
 ```vue
 <template>
-    <wp-scroll-list height="43.2px" :duration="2000" :animation-duration="300" reverse base="last">
+    <wp-scroll-list height="43.2px" :duration="1500" :animation-duration="500" reverse base="last">
         <div>
             第一行
         </div>
@@ -72,7 +72,7 @@ app.use(WpScrollList)
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | height   | 容器高度       | _number \| string_          | 'auto'     |
 | tag     | 容器渲染的标签   | _string_           | 'div'      |
-| duration   | 滚动的间隔时长 `ms` | _number_ | 2000      |
+| duration   | 滚动的间隔时长（不包含滚动的动画时长） `ms` | _number_ | 2000      |
 | animationDuration  | 滚动的动画时长 `ms`       | _number_                                                           | 400  |
 | hoverToStop      | 鼠标放置在上面时是否停止动画       | _boolean_                                                           | true   |
 | space | 每行间距     | _number \| string_                                                    | 0     |
@@ -81,6 +81,7 @@ app.use(WpScrollList)
 | reverse | 反向播放     | _boolean_                                                    | true     |
 | autoUpdate | 是否自动更新元素。设置为 `true` 时，元素发生任意变化就会重置元素位置。设置为 `false` 时，可主动调用 `update` 方法更新元素 | _boolean_ | true |
 | count | 一次滚动的数量 | _number_ | 1 |
+| linear | 是否使用线性动画 | _boolean_ | false |
 
 ### Expose
 
