@@ -17,4 +17,17 @@
 
 ### 使用方法
 
-使用前请先全局 安装 [`npm i uf-node -g`](https://www.npmjs.com/package/uf-node)
+* 1、使用前请先全局 安装 [`npm i uf-node -g`](https://www.npmjs.com/package/uf-node)
+* 2、如遇到权限问题 请参阅 [mac 免输sudo密码](https://www.cnblogs.com/amize/p/14540156.html) 或 以下 【mac 免输sudo密码】 教程
+
+### mac 免输sudo密码
+
+```shell
+# 1
+sudo visudo 或者 sudo vi /etc/sudoers
+
+
+# 2
+将%admin ALL=(ALL) ALL
+替换为 %admin ALL=(ALL) NOPASSWD: ALL
+```
