@@ -1,8 +1,8 @@
 import {createApp} from "vue"
 import "./style.scss"
 import "@wisdom-plus/theme-chalk/src/index.scss"
-// import wisdomPlus from "@wisdom-plus/components"
+import route from "./src/router"
 import App from "./src/App"
 createApp(App)
-    // .use(wisdomPlus)
+    .use(route)
     .mount("#app")
