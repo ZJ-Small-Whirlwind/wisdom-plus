@@ -1,6 +1,13 @@
-import { createApp, defineComponent, ref, VNode, Transition, Teleport, App, CSSProperties, RendererElement } from 'vue'
+import { createApp, defineComponent, ref, VNode, Transition, Teleport, App, CSSProperties, RendererElement, h, Component } from 'vue'
 
 import { getMaxZIndex } from '@wisdom-plus/utils/get-max-zindex'
+import Icon from '../../Icon'
+import {
+    CheckCircleFilled,
+    WarningFilled,
+    InfoCircleFilled,
+    CloseCircleFilled
+} from '@vicons/antd'
 export interface ToastOptions {
     dark?: boolean;
     message?: VNode | string;
@@ -57,5 +64,26 @@ const Toast = (options: ToastOptions) => {
 Toast.install = (app: App<Element>) => {
     app.config.globalProperties.$toast = Toast
 }
+
+const specToast = (color: string, icon: Component) => {
+    return (message: string | VNode, options: Omit<ToastOptions, 'message'> = {}) => {
+        Toast({
+            ...options,
+            message: 
+                h('div', { class: 'wp-toast--spec' }, {
+                    default: () => [h(Icon, {
+                        color
+                    }, {
+                        default: () => h(icon)
+                    }), message]
+                })
+        })
+    }
+}
+
+Toast.success = specToast('var(--wp-color-success)', CheckCircleFilled)
+Toast.warning = specToast('var(--wp-color-warning)', WarningFilled)
+Toast.info = specToast('var(--wp-color-info)', InfoCircleFilled)
+Toast.error = specToast('var(--wp-color-danger)', CloseCircleFilled)
 
 export default Toast

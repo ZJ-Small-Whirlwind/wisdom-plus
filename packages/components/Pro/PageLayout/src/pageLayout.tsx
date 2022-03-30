@@ -209,8 +209,7 @@ export default defineComponent({
             } else {
                 await props.delete?.([row])
             }
-            Toast({
-                message: '删除成功',
+            Toast.success('删除成功', {
                 placement: 'center'
             })
             handleQuery(false)
@@ -218,8 +217,7 @@ export default defineComponent({
 
         const handleDeleteSelect = async() => {
             if (selections.value.length === 0) {
-                Toast({
-                    message: '请先选中任意项',
+                Toast.info('请先选中任意项', {
                     placement: 'center'
                 })
                 return
@@ -236,8 +234,7 @@ export default defineComponent({
                 await props.delete?.(selections.value)
             }
             tableRef.value?.clearCheckbox()
-            Toast({
-                message: '删除成功',
+            Toast.success('删除成功', {
                 placement: 'center'
             })
             handleQuery(false)

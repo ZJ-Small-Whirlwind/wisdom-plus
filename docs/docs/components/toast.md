@@ -79,6 +79,37 @@ const tip3 = () => Toast({
 ```
 :::
 
+#### 预设
+
+:::demo
+```vue
+<template>
+    <wp-space>
+        <wp-button @click="tip()">
+            成功
+        </wp-button>
+        <wp-button @click="tip1()">
+            警告
+        </wp-button>
+        <wp-button @click="tip2()">
+            信息
+        </wp-button>
+        <wp-button @click="tip3()">
+            错误
+        </wp-button>
+    </wp-space>
+</template>
+
+<script lang="ts" setup>
+import { h } from 'vue'
+const tip = () => Toast.success('我成功了！')
+const tip1 = () => Toast.warning('我被警告了了！')
+const tip2 = () => Toast.info('信息呢？')
+const tip3 = () => Toast.error('出错了！')
+</script>
+```
+:::
+
 ### 指定容器
 
 :::demo
@@ -119,3 +150,20 @@ const tip = (dark = false) => Toast({
 | style | 自定义样式 | _string \| CSSProperties_ | - |
 | transition | 过渡名 | _string_ | 'wp-toast-fade' |
 | to | 指定容器 | _string \| RendererElement \| null \| undefined_ | 'body' |
+
+### Preset
+
+Toast 函数上有一些静态方法可供使用，他们的函数签名为
+
+```ts
+(message: string | VNode, options?: Omit<ToastOptions, 'message'>) => void
+```
+
+具体函数有
+
+```ts
+Toast.success()
+Toast.info()
+Toast.warning()
+Toast.error()
+```
