@@ -75,6 +75,7 @@ export * from './Maps'
 export * from './Timeline'
 export * from './Result'
 export * from './CountDown'
+export * from './LimitedInput'
 
 export * from './Pro/Upload'
 export * from './Pro/Editor'

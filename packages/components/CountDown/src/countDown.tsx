@@ -53,14 +53,14 @@ export default defineComponent({
                 clear()
                 return
             }
-            count.value = Math.ceil(countFinal.value - ((new Date().getTime() - countStart.value) / 1000))
+            count.value = Math.ceil(countFinal.value - ((performance.now() - countStart.value) / 1000))
             if (count.value <= 0) {
                 count.value = 0
             }
         }
 
         const start = () => {
-            countStart.value = new Date().getTime()
+            countStart.value = performance.now()
             countFinal.value = count.value || 0
             playTimer.value = setInterval(counting, 200)
             emit('play')
@@ -79,7 +79,7 @@ export default defineComponent({
 
         watch(count, (to, from) => {
             if ((to || 0) - (from || 0) !== -1) {
-                countStart.value = new Date().getTime()
+                countStart.value = performance.now()
                 countFinal.value = count.value || 0
             }
             if (play.value && !playTimer.value) {

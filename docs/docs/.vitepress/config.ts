@@ -115,6 +115,10 @@ export default defineConfig({
                             link: '/components/input'
                         },
                         {
+                            text: 'LimitedInput 有限输入',
+                            link: '/components/limited-input'
+                        },
+                        {
                             text: 'InputNumber 数字输入框',
                             link: '/components/input-number'
                         },

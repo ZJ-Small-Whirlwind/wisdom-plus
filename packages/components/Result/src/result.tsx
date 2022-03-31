@@ -30,7 +30,7 @@ export default defineComponent({
         return (
             <div class={this.basic}>
                 <div class={this.of('icon')}>
-                    <Icon>{this.$slots.icon?.() || h(icons[this.icon])}</Icon>
+                    <Icon fill={false}>{this.$slots.icon?.() || h(icons[this.icon])}</Icon>
                 </div>
                 {
                     (this.$slots.message || this.message) && (

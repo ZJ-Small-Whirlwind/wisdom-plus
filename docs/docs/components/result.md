@@ -85,7 +85,7 @@ app.use(WpResult)
 
 | 参数      | 说明           | 类型                                                                | 默认值 |
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
-| icon   | 图标       | _'Authentication' | 'LocationSearch' | 'PageNotFound' | 'SecureLogin' | 'WaitingForYou'_          | 'PageNotFound'     |
+| icon   | 图标       | _'Authentication' \| 'LocationSearch' \| 'PageNotFound' \| 'SecureLogin' \| 'WaitingForYou'_          | 'PageNotFound'     |
 | message     | 消息   | _string_           | -      |
 | description   | 描述 | _string_ | -      |
 
