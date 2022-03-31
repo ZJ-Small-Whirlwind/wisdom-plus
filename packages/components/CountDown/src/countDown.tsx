@@ -46,6 +46,9 @@ export default defineComponent({
                 return
             }
             count.value = countFinal.value - Math.abs(Math.round((countStart.value - new Date().getTime()) / 1000))
+            if (count.value <= 0) {
+                count.value = 0
+            }
         }
 
         const start = () => {
