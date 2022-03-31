@@ -655,7 +655,7 @@ export default defineComponent({
                       collapseTags={this.isMultiple}
                       onClear={()=>this.onClear(true)}
                       v-slots={{
-                          prefixIcon:()=>bool ? (<WpIcon class={{
+                          prefixIcon:()=>bool ? (<WpIcon fill={false} class={{
                               "wp-date-picker-prefix-icon":true,
                           }}>
                               <CALENDAR></CALENDAR>

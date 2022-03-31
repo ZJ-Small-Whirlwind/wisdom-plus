@@ -10,6 +10,7 @@ export const iconProps = buildProps({
         type: String,
         default: 'span',
     },
+    fill:{type:Boolean, default:true},
     name: String,
 })
 
@@ -27,7 +28,10 @@ export default defineComponent({
                         fontSize: addUnit(props.size),
                         color: props.color
                     },
-                    class: 'wp-icon'
+                    class: {
+                        'wp-icon':true,
+                        'wp-icon-fill':!!props.fill,
+                    }
                 },
                 slots.default?.() || h('i', { class: props.name })
             )

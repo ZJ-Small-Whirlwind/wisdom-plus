@@ -6,7 +6,15 @@
         width: 1em;
         height: 1em;
     }
-    svg:not([fill]) {
-        fill: currentColor;
+
+    &-fill{
+        svg:not([fill]) {
+            fill: currentColor;
+        }
+        svg{
+            *{
+                fill: currentColor;
+            }
+        }
     }
 }
