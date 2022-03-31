@@ -38,14 +38,22 @@ export default defineComponent({
         const playTimer = ref<ReturnType<typeof setInterval>>()
         const countStart = ref<number>()
         const countFinal = ref<number>(0)
+
+        const clear = () => {
+            if (playTimer.value) {
+                clearInterval(playTimer.value)
+                playTimer.value = undefined
+            }
+        }
+
         const counting = () => {
             if (!countStart.value) return
             if ((count.value || 0) <= 0) {
                 emit('stop')
-                if (playTimer.value) clearInterval(playTimer.value)
+                clear()
                 return
             }
-            count.value = countFinal.value - Math.abs(Math.round((countStart.value - new Date().getTime()) / 1000))
+            count.value = Math.ceil(countFinal.value - ((new Date().getTime() - countStart.value) / 1000))
             if (count.value <= 0) {
                 count.value = 0
             }
@@ -54,12 +62,12 @@ export default defineComponent({
         const start = () => {
             countStart.value = new Date().getTime()
             countFinal.value = count.value || 0
-            playTimer.value = setInterval(counting, 1000)
+            playTimer.value = setInterval(counting, 200)
             emit('play')
         }
 
         watch(play, () => {
-            if (playTimer.value) clearInterval(playTimer.value)
+            clear()
             if (play.value) {
                 start()
             } else {
@@ -69,18 +77,18 @@ export default defineComponent({
             immediate: true
         })
 
-        watch(count, () => {
-            countStart.value = new Date().getTime()
-            countFinal.value = count.value || 0
-            if (play.value) {
-                if (playTimer.value) clearInterval(playTimer.value)
+        watch(count, (to, from) => {
+            if ((to || 0) - (from || 0) !== -1) {
+                countStart.value = new Date().getTime()
+                countFinal.value = count.value || 0
+            }
+            if (play.value && !playTimer.value) {
+                clear()
                 start()
             }
         })
 
-        onUnmounted(() => {
-            if (playTimer.value) clearInterval(playTimer.value)
-        })
+        onUnmounted(clear)
 
         return {
             count,
