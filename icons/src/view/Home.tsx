@@ -1,7 +1,5 @@
 import {defineComponent, ref, h, onMounted, nextTick, inject} from "vue"
 import {
-    WpImage,
-    WpInput,
     WpSpin,
     Toast as WpToast,
     WpEllipsis,
@@ -9,6 +7,7 @@ import {
     WpPagination
 } from "@wisdom-plus/components"
 import {getConfigs, setConfigs, Icon, synchronousConfigs, searchIcon} from "../../config"
+import {useClipboard} from "@vueuse/core"
 
 export default defineComponent({
     name:"Home",
@@ -22,6 +21,7 @@ export default defineComponent({
         const page = ref(1);
         const size = ref(54);
         const search:any = inject("search", ref(''))
+        const isLocalSearch:any = inject("isLocalSearch", ref(false))
         const searchReset = ()=>{
             count.value = 0;
             page.value = 1;
@@ -29,7 +29,10 @@ export default defineComponent({
         const getMyIconList = async ()=>{
             nextTick(async ()=>{
                 MyIconList.value = await getConfigs();
-                IconList.value = Object.values(MyIconList.value) as any
+                const results = (Object.values(MyIconList.value) as any)
+                IconList.value = isLocalSearch.value ? results.filter((e:Icon)=>{
+                    return e.name.indexOf(search.value) > -1 || e.font_class === search.value
+                }) : results
             })
         }
         const pageChage = async p=>{
@@ -38,44 +41,34 @@ export default defineComponent({
         }
         const searchChange = async ()=>{
             loading.value = true;
-            if(search.value){
-                // 搜索图标
-                const res = await searchIcon(search.value, {
-                    page:page.value,
-                    sortType:"updated_at",
-                    fromCollection:"-1",
-                    fills:"",
-                    t:Date.now(),
-                });
-                count.value = res.count;
-                IconList.value = res.icons;
-            }else {
+            if(isLocalSearch.value){
                 await getMyIconList();
                 searchReset();
+            }else {
+                if(search.value){
+                    // 搜索图标
+                    const res = await searchIcon(search.value, {
+                        page:page.value,
+                        sortType:"updated_at",
+                        fromCollection:"-1",
+                        fills:"",
+                        t:Date.now(),
+                    });
+                    count.value = res.count;
+                    IconList.value = res.icons;
+                }else {
+                    await getMyIconList();
+                    searchReset();
+                }
             }
             loading.value = false;
         }
-        const onCopy = function (text) {
-            const callback = function (e) {
-                e.preventDefault();
-                if (e.clipboardData) {
-                    e.clipboardData.setData('text/plain', text);
-                } else {
-                    // @ts-ignore
-                    if (window.clipboardData) {
-                        // @ts-ignore
-                        window.clipboardData.setData('Text', text);
-                    }
-                }
-            }
-            window.addEventListener('copy', callback);
-            document.execCommand('copy');
-            window.removeEventListener('copy', callback);
-        }
+
+        const {copy:onCopy} = useClipboard();
         const IconClick = async (icon:Icon)=>{
             if(MyIconList.value[icon.id]){
                 // 我的图标
-                onCopy(icon.font_class)
+                await onCopy(icon.font_class)
                 WpToast({
                     message:`已复制`,
                     placement:"top",

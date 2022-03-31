@@ -14,12 +14,22 @@
         }
         .search{
             flex: 1;
+            margin: 0 15px;
+            height: 40px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            margin: 0 15px;
-            .wp-input{
-                flex: 0.5;
+            overflow: hidden;
+            &-box{
+                width: 50%;
+                .wp-input{
+                    width: 100%;
+                }
+                .is-local-search{
+                    border-color: #ffcbbd;
+                    &:hover{
+                        border-color: #ff724b !important;
+                    }
+                }
             }
         }
         .navs{
