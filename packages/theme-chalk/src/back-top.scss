@@ -1,20 +1,13 @@
 :root {
-  --wp-bezier: cubic-bezier(0.4, 0, 0.2, 1);
-  --wp-border-radius: 22px;
-  --wp-height: 44px;
-  --wp-width: 44px;
-  --wp-box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.12);
-  --wp-box-shadow-hover: 0 2px 12px 0px rgba(0, 0, 0, 0.18);
-  --wp-box-shadow-pressed: 0 2px 12px 0px rgba(0, 0, 0, 0.18);
-  --wp-color: #fff;
-  --wp-color-blue: #6ab2e0;
-  --wp-icon-size: 26px;
-  --wp-icon-color: rgb(51, 54, 57);
-  --wp-icon-color-hover: #36ad6a;
-  --wp-icon-color-pressed: #0c7a43;
-  --wp-text-color: rgb(51, 54, 57);
-  --wp-text-color-white: rgb(255, 255, 255);
-  --wp-back-top-duration: 0.3s
+  --wp-back-top-bezier: cubic-bezier(0.4, 0, 0.2, 1);
+  --wp-back-top-background-radius: 22px;
+  --wp-back-top-background-height: 44px;
+  --wp-back-top-background-width: 44px;
+  --wp-back-top-background-color: rgb(9, 150, 239);
+  --wp-back-top-box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.12);
+  --wp-back-top-duration: 0.3s;
+  --wp-back-top-icon-color: rgb(255, 255, 255);
+  --wp-back-top-icon-size: 20px;
 }
 
 .wp-back-view {
@@ -34,17 +27,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--wp-text-color-white);
   pointer-events: all;
-  transition: color .3s var(--wp-bezier),
-  box-shadow .3s var(--wp-bezier),
-  background-color .3s var(--wp-bezier);
-  border-radius: var(--wp-border-radius);
-  height: var(--wp-height);
-  min-width: var(--wp-width);
-  box-shadow: var(--wp-box-shadow);
-  background-color: var(--wp-color-blue);
-
+  color: var(--wp-back-top-icon-color);
+  transition: color .3s var(--wp-back-top-bezier),
+  box-shadow .3s var(--wp-back-top-bezier),
+  background-color .3s var(--wp-back-top-bezier);
+  border-radius: var(--wp-back-top-background-radius);
+  height: var(--wp-back-top-background-height);
+  width: var(--wp-back-top-background-width);
+  box-shadow: var(--wp-back-top-box-shadow);
+  background-color: var(--wp-back-top-background-color);
+  font-size: var(--wp-back-top-icon-size);
 }
 
 .wp-back-top-fade-enter-active,

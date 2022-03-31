@@ -249,8 +249,22 @@ export default defineComponent({
 | --------- | -------------- | ------------------------------------------------------------------- | ------ |
 | right      | 右侧距离      | _string \| number_        | 40   |
 | bottom | 底部距离 | _string \| number_ | 40 |
-| listen-to | 监听组件的ref   | _boolean_   | -      |
+| listen-to | 监听组件的ref   | _string \| HTMLElement_   | -      |
 | visibilityHeight   | 显示组件的滚动距离 | _number_ | 180      |
 
+## 定制
 
+### 全局 CSS 变量
+
+| 变量名 | 默认值 | 说明 |
+| ---- | ---- | ---- |
+| --wp-back-top-bezier |  cubic-bezier(0.4, 0, 0.2, 1) | 过渡动画 |
+| --wp-back-top-background-radius | 22px | 图标背景色半径 |
+| --wp-back-top-background-height | 44px | 图标背景色高度 |
+| --wp-back-top-background-width | 44px | 图标背景色宽度 |
+| --wp-back-top-background-color | rgb(9, 150, 239) | 图标背景色颜色 |
+| --wp-back-top-box-shadow | 0 2px 8px 0px rgba(0, 0, 0, 0.12) | 阴影 |
+| --wp-back-top-duration | 0.3s | 动画时长 |
+| --wp-back-top-icon-color | rgb(255, 255, 255) | 图标颜色 |
+| --wp-back-top-icon-size | 20px |图标大小 |
 
