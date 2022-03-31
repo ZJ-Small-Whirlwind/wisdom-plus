@@ -85,14 +85,14 @@ export default defineComponent({
                 // 添加图标
                 loading.value = true;
                 await setConfigs(icon);
-                await getMyIconList();
+                // await getMyIconList();
                 loading.value = false;
                 WpToast({
                     message:"保存成功",
                     placement:"top",
                     dark:true
                 })
-                searchReset();
+                // searchReset();
             }
         }
         const delIcon = (icon:Icon, ev:any)=>{
