@@ -244,6 +244,10 @@ export default defineConfig({
                             link: '/components/scroll-list'
                         },
                         {
+                            text: 'CountDown 倒计时',
+                            link: '/components/count-down'
+                        },
+                        {
                             text: 'CountTo 数值动画',
                             link: '/components/count-to'
                         },
