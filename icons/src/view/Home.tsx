@@ -26,13 +26,16 @@ export default defineComponent({
             count.value = 0;
             page.value = 1;
         }
-        const getMyIconList = async ()=>{
+        const getMyIconList = async (isreset: boolean = true)=>{
             nextTick(async ()=>{
                 MyIconList.value = await getConfigs();
-                const results = (Object.values(MyIconList.value) as any)
-                IconList.value = isLocalSearch.value ? results.filter((e:Icon)=>{
-                    return e.name.indexOf(search.value) > -1 || e.font_class === search.value
-                }) : results
+                if(isreset){
+                    const results = (Object.values(MyIconList.value) as any)
+                    IconList.value = isLocalSearch.value ? results.filter((e:Icon)=>{
+                        const str = (search.value || "").toLowerCase()
+                        return e.name.indexOf(str) > -1 || e.font_class.toLowerCase().indexOf(str) > -1;
+                    }) : results
+                }
             })
         }
         const pageChage = async p=>{
@@ -78,7 +81,7 @@ export default defineComponent({
                 // 添加图标
                 loading.value = true;
                 await setConfigs(icon);
-                // await getMyIconList();
+                await getMyIconList(false);
                 loading.value = false;
                 WpToast({
                     message:"保存成功",
